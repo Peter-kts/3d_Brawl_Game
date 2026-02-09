@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0b68b0d588693940977e42760e9263c, type: 3}
+  m_Name: PlayerComboSet
+  m_EditorClassIdentifier: Assembly-CSharp::ComboSet
+  forwardJab:
+    range: 1.6
+    damage: 10
+    hitboxRadius: 0.6
+    lockDuration: 0.8
+    cooldown: 0.8
+    comboWindowDelay: 0.3
+    comboWindowDuration: 0.5
+    knockback: 10
+    knockbackUp: 0
+    hitstun: 0.15
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-F1
+    crossfadeDuration: 0.05
+    lungeFrame: 0.2
+    lungeDistance: 1.2
+    lungeDuration: 0.2
+    hitboxOffset: {x: 0, y: 1.6, z: 0}
+    hitboxDelay: 0.11
+    hitStopDuration: 0.17
+    trackingDuration: 0.5
+    trackingSpeed: 540
+  forwardJab2:
+    range: 1.6
+    damage: 12
+    hitboxRadius: 0.6
+    lockDuration: 0.5
+    cooldown: 0.4
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 6
+    knockbackUp: 0
+    hitstun: 0.2
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-F2
+    crossfadeDuration: 0.05
+    lungeFrame: 0.2
+    lungeDistance: 0.5
+    lungeDuration: 0.1
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 0
+    trackingSpeed: 540
+  neutralJab:
+    range: 1.6
+    damage: 8
+    hitboxRadius: 0.6
+    lockDuration: 0.3
+    cooldown: 0.15
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 3
+    knockbackUp: 0
+    hitstun: 0.12
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-N1
+    crossfadeDuration: 0.05
+    lungeFrame: 0
+    lungeDistance: 0
+    lungeDuration: 0
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 0
+    trackingSpeed: 540
+  neutralJab2:
+    range: 1.6
+    damage: 10
+    hitboxRadius: 0.6
+    lockDuration: 0.4
+    cooldown: 0.3
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 5
+    knockbackUp: 0
+    hitstun: 0.18
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-N2
+    crossfadeDuration: 0.05
+    lungeFrame: 0
+    lungeDistance: 0
+    lungeDuration: 0
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 0
+    trackingSpeed: 540
+  heavyAttack:
+    range: 2
+    damage: 22
+    hitboxRadius: 0.6
+    lockDuration: 0.8
+    cooldown: 0.75
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 10
+    knockbackUp: 2
+    hitstun: 0.4
+    makesAirborne: 1
+    airborneDuration: 0.6
+    animationTrigger: HeavyPunch
+    crossfadeDuration: 0.05
+    lungeFrame: 0.15
+    lungeDistance: 0.8
+    lungeDuration: 0.15
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 0
+    trackingSpeed: 540
+  comboWindowDelay: 0.1
+  comboWindowDuration: 0.25

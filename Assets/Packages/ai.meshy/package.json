@@ -1,0 +1,23 @@
+{
+  "name": "ai.meshy",
+  "version": "0.2.1",
+  "description": "Meshy Unity Plugin - Bridge Edition: Direct 3D model import from Meshy.ai to Unity Editor",
+  "unity": "2021.3",
+  "dependencies": {
+    "com.unity.formats.fbx": "4.1.3"
+  },
+  "keywords": [
+    "meshy",
+    "3d",
+    "ai",
+    "bridge",
+    "import",
+    "glb",
+    "fbx",
+    "model"
+  ],
+  "author": "Meshy <team@meshy.ai> (https://www.meshy.ai/)",
+  "displayName": "Meshy Bridge",
+  "license": "GPL-3.0",
+  "licensesUrl": "https://github.com/meshy-dev/meshy-unity-plugin/blob/main/LICENSE"
+}

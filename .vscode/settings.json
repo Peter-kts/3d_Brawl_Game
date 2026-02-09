@@ -1,0 +1,5 @@
+{
+    "omnisharp.projectLoadTimeout": 120,
+    "omnisharp.useModernNet": true,
+    "dotnet.defaultSolution": "3dbrawlerlearn.sln"
+}
