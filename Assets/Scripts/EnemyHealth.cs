@@ -77,8 +77,6 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private SimpleEnemyAI enemyAI;        // Reference to AI for triggering hit animations
     private bool isDying;                 // True once death animation starts (prevents further hits)
     private float getUpUntil;             // Time.time when get-up stun ends (0 = not getting up)
-    private float getUpAnimationStartTime; // When to play get-up animation (0 = not scheduled); delay holds crash pose first
-    private float getUpDurationThisRun;   // Duration passed to StartGetUp, used when triggering get-up animation
     private float crashUntil;             // Time.time when crash phase ends (0 = not in crash phase); playing crashed animation, can't act
 
     // ========================================================================
@@ -135,36 +133,27 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     }
 
     /// <summary>
-    /// Clear get-up timer when expired; when delay ends, trigger get-up animation. Get-up is started by SimpleEnemyAI when the crash phase finishes.
+    /// Clear get-up timer when expired. Get-up is started (and get-up animation triggered) by SimpleEnemyAI when the crash phase finishes.
     /// </summary>
     void UpdateGetUpOnCrash()
     {
         if (getUpUntil > 0f && Time.time >= getUpUntil)
-        {
             getUpUntil = 0f;
-            getUpAnimationStartTime = 0f;
-        }
         // PATH A (simple crash) only: crashUntil is set by StartCrashPhase() when IsAirborne ends and we force-play the crash state.
-        // When it expires, the crash animation has finished; notify the AI so it can start get-up (or complete death if killed by the launch).
+        // When it expires, notify the AI so it can start get-up and trigger get-up animation (or complete death if killed by the launch).
         if (crashUntil > 0f && Time.time >= crashUntil)
         {
             if (enemyAI != null)
                 enemyAI.OnCrashPhaseComplete(IsDying);
             crashUntil = 0f;
         }
-        if (getUpAnimationStartTime > 0f && Time.time >= getUpAnimationStartTime)
-        {
-            getUpAnimationStartTime = 0f;
-            if (enemyAI != null)
-                enemyAI.TriggerGetUpAnimation(getUpDurationThisRun);
-        }
     }
 
     /// <summary>
     /// Start the get-up sequence. Called by SimpleEnemyAI when the airborne crash phase has finished.
-    /// For delay seconds the character holds the crash pose (stunned, no movement); then get-up animation plays for duration.
+    /// Caller triggers the get-up animation immediately after this. Duration is how long the get-up stun lasts.
     /// </summary>
-    /// <param name="delay">Delay before get-up animation starts (character holds crash pose).</param>
+    /// <param name="delay">Ignored (kept for API compatibility). Delay is folded into crash phase.</param>
     /// <param name="duration">How long the get-up stun/animation lasts (passed from SimpleEnemyAI.getUpDuration).</param>
     public void StartGetUp(float delay, float duration)
     {
@@ -172,11 +161,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (getUpUntil > 0f && Time.time < getUpUntil)
             return;
         crashUntil = 0f; // Exit crash phase when entering get-up
-        getUpDurationThisRun = duration;
-        if (delay > 0f && enemyAI != null)
-            enemyAI.FreezeAnimatorForGetUpDelay();
-        getUpUntil = Time.time + delay + duration;
-        getUpAnimationStartTime = delay > 0f ? Time.time + delay : Time.time;
+        getUpUntil = Time.time + duration;
     }
 
     /// <summary>
@@ -417,7 +402,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
          * 
          * We pass hitstun so the animation speed can be scaled to match.
          */
-        if (enemyAI != null && airborneDuration <= 0f)
+        if (enemyAI != null)
         {
             enemyAI.TriggerHitAnimation(hitstun);
         }

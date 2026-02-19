@@ -155,10 +155,10 @@ public class SimpleEnemyAI : MonoBehaviour
      * because the Liftoff/Loop/Crash system handles crash internally.
      */
     [Tooltip("Optional: animator state name for crash/land when NOT using Liftoff/Loop/Crash. When airborne ends, this state is forced so the looping section can be interrupted even before one full loop. Leave empty to rely on animator transitions only. Default 'New State' matches enemy.controller Stun layer crash state.")]
-    public string airborneCrashStateName = "New State";
+    public string airborneCrashStateName = "Crash";
     [Tooltip("Animator layer index for airborne crash state (1 = Stun layer if using default enemy setup).")]
     public int airborneCrashLayer = 1;
-    [Tooltip("When NOT using Liftoff/Loop/Crash: delay before starting get-up after playing crash state (seconds). Get-up starts after this so crash can play.")]
+    [Tooltip("When NOT using Liftoff/Loop/Crash: time playing crash state (seconds). Get-up delay is added so total crash phase = this + getUpDelay.")]
     public float crashStateDuration = 0.5f;
 
     /*
@@ -201,7 +201,7 @@ public class SimpleEnemyAI : MonoBehaviour
      * act while still getting off the ground.
      */
     [Header("Get Up (after airborne crash)")]
-    [Tooltip("Delay before get-up animation starts. Character holds crash/land pose for this long, then plays get-up.")]
+    [Tooltip("Added to crash phase (PATH A) so character holds crash/land pose this long before get-up. Get-up animation starts as soon as crash phase ends.")]
     public float getUpDelay = 0.5f;
     [Tooltip("Duration the enemy is stunned while getting up (and length the get-up animation is scaled to).")]
     public float getUpDuration = 1.5f;
@@ -558,7 +558,7 @@ public class SimpleEnemyAI : MonoBehaviour
             if (wasAirborne && !isAirborne && !string.IsNullOrEmpty(airborneCrashStateName) && !airborneAnimation.IsConfigured)
             {
                 animator.Play(airborneCrashStateName, airborneCrashLayer, 0f);
-                health.StartCrashPhase(crashStateDuration);
+                health.StartCrashPhase(crashStateDuration + getUpDelay);
             }
             
             animator.SetBool(airborneParameter, GetAirborneForAnimator());
@@ -664,8 +664,7 @@ public class SimpleEnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// Triggers the get-up animation after landing from airborne. Called by EnemyHealth when get-up delay ends.
-    /// Unfreezes animator first (was frozen on last frame during delay).
+    /// Triggers the get-up animation after landing from airborne. Called from OnAirborneCrashFinished when crash phase ends.
     /// </summary>
     public void TriggerGetUpAnimation(float duration)
     {
@@ -688,7 +687,7 @@ public class SimpleEnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// Shared handler for "airborne crash sequence just finished": either start get-up (freeze pose, then play get-up anim)
+    /// Shared handler for "airborne crash sequence just finished": either start get-up (and trigger get-up anim immediately)
     /// or complete death if the enemy was killed by the launch. Called from OnCrashPhaseComplete (PATH A) and from
     /// UpdateAirborneAnimation when normalizedTime >= crashEnd (PATH B).
     /// </summary>
@@ -697,7 +696,10 @@ public class SimpleEnemyAI : MonoBehaviour
         if (isDying)
             health.OnAirborneSequenceComplete();
         else
-            health.StartGetUp(getUpDelay, getUpDuration);
+        {
+            health.StartGetUp(0f, getUpDuration);
+            TriggerGetUpAnimation(getUpDuration);
+        }
     }
 
     /// <summary>

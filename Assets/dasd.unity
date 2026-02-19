@@ -3425,9 +3425,9 @@ MonoBehaviour:
   deathTriggerParameter: Death
   airborneParameter: IsAirborne
   stunParameter: IsStunned 0
-  airborneCrashStateName: New State
+  airborneCrashStateName: Crash
   airborneCrashLayer: 1
-  crashStateDuration: 1
+  crashStateDuration: 5
   airborneAnimation:
     airborneStateName: Airborne
     airborneAnimationLayer: 1
@@ -3438,8 +3438,8 @@ MonoBehaviour:
     loopEnd: 0.23
     crashStart: 0.23
     crashEnd: 1
-  getUpDelay: 0.5
-  getUpDuration: 1
+  getUpDelay: 5
+  getUpDuration: 5
   getUpStateName: GetUp
   getUpLayer: 1
   baseGetUpAnimDuration: 1.2
@@ -3617,6 +3617,7 @@ MonoBehaviour:
   size: 0.3
   dyingColor: {r: 0.5, g: 0, b: 0, a: 0.9}
   airborneColor: {r: 0.5, g: 0, b: 1, a: 0.8}
+  crashedColor: {r: 0.9, g: 0.4, b: 0, a: 0.8}
   stunnedColor: {r: 1, g: 0.3, b: 0, a: 0.8}
   gettingUpColor: {r: 1, g: 0.6, b: 0, a: 0.8}
   normalColor: {r: 0, g: 1, b: 0, a: 0.5}
