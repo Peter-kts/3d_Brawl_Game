@@ -106,12 +106,22 @@ public class AttackDataDrawer : PropertyDrawer
                     if (foldoutStates[stateKey])
                     {
                         EditorGUI.indentLevel++;
-                        foreach (string path in group.relativePaths)
+                        if (group.relativePaths.Count == 2 && (group.header == "Start up" || group.header == "Recovery"))
                         {
-                            SerializedProperty child = property.serializedObject.FindProperty(path);
-                            if (child != null)
-                                EditorGUILayout.PropertyField(child, true);
+                            SerializedProperty p0 = property.serializedObject.FindProperty(group.relativePaths[0]);
+                            SerializedProperty p1 = property.serializedObject.FindProperty(group.relativePaths[1]);
+                            if (p0 != null && p1 != null)
+                            {
+                                EditorGUILayout.BeginHorizontal();
+                                EditorGUILayout.PropertyField(p0, new GUIContent("Length"), GUILayout.MinWidth(60f));
+                                EditorGUILayout.PropertyField(p1, new GUIContent("Speed"), GUILayout.MinWidth(60f));
+                                EditorGUILayout.EndHorizontal();
+                            }
+                            else
+                                DrawGroupChildren(property, group);
                         }
+                        else
+                            DrawGroupChildren(property, group);
                         EditorGUI.indentLevel--;
                     }
                 }
@@ -131,6 +141,16 @@ public class AttackDataDrawer : PropertyDrawer
     {
         // Only the top foldout line; expanded content is drawn via EditorGUILayout
         return EditorGUIUtility.singleLineHeight;
+    }
+
+    private void DrawGroupChildren(SerializedProperty property, ChildGroup group)
+    {
+        foreach (string path in group.relativePaths)
+        {
+            SerializedProperty child = property.serializedObject.FindProperty(path);
+            if (child != null)
+                EditorGUILayout.PropertyField(child, true);
+        }
     }
 
     // ------------------------------------------------------------------

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1437e5d74e31a834281e627bef740d79, type: 3}
+  m_Name: MoveTemplate
+  m_EditorClassIdentifier: Assembly-CSharp::MoveTemplate
+  attackData:
+    range: 2
+    damage: 22
+    hitboxRadius: 0.8
+    lockDuration: 1.4
+    cooldown: 2
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 40
+    knockbackUp: 40
+    hitstun: 2
+    makesAirborne: 1
+    airborneDuration: 0.6
+    animationTrigger: HeavyPunch
+    crossfadeDuration: 0.05
+    lungeFrame: 0.15
+    lungeDistance: 1
+    lungeDuration: 0.12
+    hitboxOffset: {x: 0, y: 1, z: 0.35}
+    hitboxDelay: 0.58
+    hitStopDuration: 0.5
+    trackingDuration: 0.5
+    trackingSpeed: 540

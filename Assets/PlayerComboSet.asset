@@ -15,117 +15,132 @@ MonoBehaviour:
   forwardJab:
     range: 1.6
     damage: 10
-    hitboxRadius: 0.6
+    hitboxRadius: 0.5
     lockDuration: 0.8
     cooldown: 0.8
     comboWindowDelay: 0.3
     comboWindowDuration: 0.5
-    knockback: 10
+    knockback: 20
     knockbackUp: 0
-    hitstun: 0.15
+    hitstun: 0.3
     makesAirborne: 0
     airborneDuration: 0
     animationTrigger: Punch-F1
-    crossfadeDuration: 0.05
-    lungeFrame: 0.2
-    lungeDistance: 1.2
-    lungeDuration: 0.2
-    hitboxOffset: {x: 0, y: 1.6, z: 0}
-    hitboxDelay: 0.11
-    hitStopDuration: 0.17
-    trackingDuration: 0.5
-    trackingSpeed: 540
+    startUpLength: 0.12
+    startUpSpeed: 0.8
+    recoveryLength: 0.16
+    recoverySpeed: 0.5
+    lungeFrame: 0.19
+    lungeDistance: 2
+    lungeDuration: 0.1
+    hitboxOffset: {x: 0, y: 1.6, z: -0.2}
+    hitboxDelay: 0.2
+    hitStopDuration: 0.105
+    trackingDuration: 1
+    trackingSpeed: 720
   forwardJab2:
-    range: 1.6
+    range: 1.9
     damage: 12
-    hitboxRadius: 0.6
-    lockDuration: 0.5
+    hitboxRadius: 0.61
+    lockDuration: 0.8
     cooldown: 0.4
-    comboWindowDelay: -1
-    comboWindowDuration: -1
+    comboWindowDelay: 0.8
+    comboWindowDuration: 0.2
     knockback: 6
     knockbackUp: 0
-    hitstun: 0.2
+    hitstun: 0.3
     makesAirborne: 0
     airborneDuration: 0
     animationTrigger: Punch-F2
-    crossfadeDuration: 0.05
-    lungeFrame: 0.2
+    startUpLength: 0
+    startUpSpeed: 1
+    recoveryLength: 0
+    recoverySpeed: 1
+    lungeFrame: 0.1
     lungeDistance: 0.5
     lungeDuration: 0.1
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
-    hitStopDuration: 0
-    trackingDuration: 0
+    hitboxOffset: {x: 0, y: 1, z: 0.25}
+    hitboxDelay: 0.25
+    hitStopDuration: 0.105
+    trackingDuration: 1
     trackingSpeed: 540
   neutralJab:
-    range: 1.6
-    damage: 8
-    hitboxRadius: 0.6
-    lockDuration: 0.3
-    cooldown: 0.15
+    range: 1.2
+    damage: 5
+    hitboxRadius: 0.5
+    lockDuration: 0.9
+    cooldown: 1
     comboWindowDelay: -1
     comboWindowDuration: -1
-    knockback: 3
+    knockback: 2
     knockbackUp: 0
-    hitstun: 0.12
+    hitstun: 1.5
     makesAirborne: 0
     airborneDuration: 0
     animationTrigger: Punch-N1
-    crossfadeDuration: 0.05
+    startUpLength: 0.12
+    startUpSpeed: 0.8
+    recoveryLength: 0.5
+    recoverySpeed: 0.8
     lungeFrame: 0
-    lungeDistance: 0
-    lungeDuration: 0
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
-    hitStopDuration: 0
-    trackingDuration: 0
+    lungeDistance: 0.2
+    lungeDuration: 0.05
+    hitboxOffset: {x: 0, y: 1.6, z: 0}
+    hitboxDelay: 0.23
+    hitStopDuration: 0.105
+    trackingDuration: 0.5
     trackingSpeed: 540
   neutralJab2:
-    range: 1.6
+    range: 1.55
     damage: 10
-    hitboxRadius: 0.6
-    lockDuration: 0.4
-    cooldown: 0.3
+    hitboxRadius: 0.7
+    lockDuration: 0.8
+    cooldown: 0.85
     comboWindowDelay: -1
     comboWindowDuration: -1
-    knockback: 5
+    knockback: 25
     knockbackUp: 0
-    hitstun: 0.18
+    hitstun: 0.8
     makesAirborne: 0
     airborneDuration: 0
     animationTrigger: Punch-N2
-    crossfadeDuration: 0.05
-    lungeFrame: 0
-    lungeDistance: 0
-    lungeDuration: 0
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
-    hitStopDuration: 0
-    trackingDuration: 0
+    startUpLength: 0.12
+    startUpSpeed: 0.8
+    recoveryLength: 0.5
+    recoverySpeed: 0.8
+    lungeFrame: 0.2
+    lungeDistance: 0.5
+    lungeDuration: 0.01
+    hitboxOffset: {x: 0, y: -0.1, z: 0}
+    hitboxDelay: 0.29
+    hitStopDuration: 0.12
+    trackingDuration: 1
     trackingSpeed: 540
   heavyAttack:
-    range: 2
+    range: 1
     damage: 22
-    hitboxRadius: 0.6
-    lockDuration: 0.8
-    cooldown: 0.75
+    hitboxRadius: 0.7
+    lockDuration: 1.1
+    cooldown: 1.3
     comboWindowDelay: -1
     comboWindowDuration: -1
-    knockback: 10
-    knockbackUp: 2
-    hitstun: 0.4
+    knockback: 30
+    knockbackUp: 20
+    hitstun: 1
     makesAirborne: 1
-    airborneDuration: 0.6
+    airborneDuration: 0.21
     animationTrigger: HeavyPunch
-    crossfadeDuration: 0.05
+    startUpLength: 0.21
+    startUpSpeed: 0.4
+    recoveryLength: 0.32
+    recoverySpeed: 0.71
     lungeFrame: 0.15
-    lungeDistance: 0.8
-    lungeDuration: 0.15
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
-    hitStopDuration: 0
-    trackingDuration: 0
+    lungeDistance: 1
+    lungeDuration: 0.12
+    hitboxOffset: {x: 0, y: 1.5, z: 0.35}
+    hitboxDelay: 0.66
+    hitStopDuration: 0.15
+    trackingDuration: 0.5
     trackingSpeed: 540
-  comboWindowDelay: 0.1
+  comboWindowDelay: 0.2
   comboWindowDuration: 0.25

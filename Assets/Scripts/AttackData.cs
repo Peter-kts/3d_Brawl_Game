@@ -52,8 +52,23 @@ public class AttackData
     [Tooltip("Animation state name to play")]
     public string animationTrigger = "Punch";
     
-    [Tooltip("Crossfade blend duration in seconds (0 = instant snap)")]
-    public float crossfadeDuration = 0.05f;
+    [Header("Start up")]
+    [Tooltip("Normalized (0-1) portion of the animation played as start-up. 0 = no start-up slowdown.")]
+    [Range(0f, 1f)]
+    public float startUpLength = 0f;
+    
+    [Tooltip("Playback speed for the start-up portion (e.g. 0.5 = half speed). Rest of animation plays at 1.")]
+    [Range(0.01f, 1f)]
+    public float startUpSpeed = 1f;
+    
+    [Header("Recovery")]
+    [Tooltip("Normalized (0-1) portion of the animation at the end played as recovery. E.g. 0.3 = last 30%, slowdown starts at 0.7. 0 = no recovery slowdown.")]
+    [Range(0f, 1f)]
+    public float recoveryLength = 0f;
+    
+    [Tooltip("Playback speed for the recovery portion (e.g. 0.5 = half speed). Middle of animation plays at 1. Ensure the attack Animator state does not exit early (e.g. Exit Time = 1) or recovery won't apply.")]
+    [Range(0.01f, 1f)]
+    public float recoverySpeed = 1f;
     
     [Header("Forward Lunge")]
     [Tooltip("The normalized time (0-1) at which to apply forward movement")]

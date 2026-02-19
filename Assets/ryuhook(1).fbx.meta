@@ -84,7 +84,7 @@ ModelImporter:
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
-    optimizeBones: 1
+    optimizeBones: 0
     generateMeshLods: 0
     meshLodGenerationFlags: 0
     maximumMeshLod: -1
@@ -111,423 +111,7 @@ ModelImporter:
   importAnimation: 1
   humanDescription:
     serializedVersion: 3
-    human:
-    - boneName: hips_JNT
-      humanName: Hips
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_upleg_JNT
-      humanName: LeftUpperLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_upleg_JNT
-      humanName: RightUpperLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_leg_JNT
-      humanName: LeftLowerLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_leg_JNT
-      humanName: RightLowerLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_foot_JNT
-      humanName: LeftFoot
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_foot_JNT
-      humanName: RightFoot
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: spine_JNT
-      humanName: Spine
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: spine1_JNT
-      humanName: Chest
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: neck_JNT
-      humanName: Neck
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: head_JNT
-      humanName: Head
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_shoulder_JNT
-      humanName: LeftShoulder
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_shoulder_JNT
-      humanName: RightShoulder
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_arm_JNT
-      humanName: LeftUpperArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_arm_JNT
-      humanName: RightUpperArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_forearm_JNT
-      humanName: LeftLowerArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_forearm_JNT
-      humanName: RightLowerArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_hand_JNT
-      humanName: LeftHand
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_hand_JNT
-      humanName: RightHand
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_toebase_JNT
-      humanName: LeftToes
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_toebase_JNT
-      humanName: RightToes
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handThumb1_JNT
-      humanName: Left Thumb Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handThumb2_JNT
-      humanName: Left Thumb Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handThumb3_JNT
-      humanName: Left Thumb Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handIndex1_JNT
-      humanName: Left Index Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handIndex2_JNT
-      humanName: Left Index Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handIndex3_JNT
-      humanName: Left Index Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handMiddle1_JNT
-      humanName: Left Middle Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handMiddle2_JNT
-      humanName: Left Middle Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handMiddle3_JNT
-      humanName: Left Middle Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handRing1_JNT
-      humanName: Left Ring Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handRing2_JNT
-      humanName: Left Ring Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handRing3_JNT
-      humanName: Left Ring Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handPinky1_JNT
-      humanName: Left Little Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handPinky2_JNT
-      humanName: Left Little Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: l_handPinky3_JNT
-      humanName: Left Little Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handThumb1_JNT
-      humanName: Right Thumb Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handThumb2_JNT
-      humanName: Right Thumb Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handThumb3_JNT
-      humanName: Right Thumb Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handIndex1_JNT
-      humanName: Right Index Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handIndex2_JNT
-      humanName: Right Index Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handIndex3_JNT
-      humanName: Right Index Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handMiddle1_JNT
-      humanName: Right Middle Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handMiddle2_JNT
-      humanName: Right Middle Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handMiddle3_JNT
-      humanName: Right Middle Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handRing1_JNT
-      humanName: Right Ring Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handRing2_JNT
-      humanName: Right Ring Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handRing3_JNT
-      humanName: Right Ring Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handPinky1_JNT
-      humanName: Right Little Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handPinky2_JNT
-      humanName: Right Little Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: r_handPinky3_JNT
-      humanName: Right Little Distal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: spine2_JNT
-      humanName: UpperChest
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
+    human: []
     skeleton:
     - name: ryuhook(1)(Clone)
       parentName: 
@@ -587,8 +171,8 @@ ModelImporter:
     - name: head_JNT_end
       parentName: head_JNT
       position: {x: -0, y: 0.0006231677, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.70710677, y: 0.000000052992256, z: -0.0000000010289751, w: 0.7071069}
+      scale: {x: 1.0000001, y: 1.0000002, z: 0.99999976}
     - name: l_shoulder_JNT
       parentName: spine2_JNT
       position: {x: -0.00043991834, y: 0.001286099, z: -0.00014850423}
@@ -627,8 +211,8 @@ ModelImporter:
     - name: l_handThumb3_JNT_end
       parentName: l_handThumb3_JNT
       position: {x: -0, y: 0.00026146055, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: 0.000000044760455, z: 0.000000014920147, w: 0.7071068}
+      scale: {x: 1.0000004, y: 1, z: 0.99999976}
     - name: l_handIndex1_JNT
       parentName: l_hand_JNT
       position: {x: -0.0010514783, y: -0.0000041038916, z: 0.00021975923}
@@ -647,8 +231,8 @@ ModelImporter:
     - name: l_handIndex3_JNT_end
       parentName: l_handIndex3_JNT
       position: {x: -0, y: 0.00023558855, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: -1.8041124e-15, z: -0.000000004115906, w: 0.7071068}
+      scale: {x: 1.0000005, y: 1.0000008, z: 0.9999993}
     - name: l_handMiddle1_JNT
       parentName: l_hand_JNT
       position: {x: -0.0010067202, y: 0.000013919361, z: 0.0000059632116}
@@ -667,8 +251,8 @@ ModelImporter:
     - name: l_handMiddle3_JNT_end
       parentName: l_handMiddle3_JNT
       position: {x: -0, y: 0.00023292421, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: -0.00000001646362, z: -0.00000000823181, w: 0.7071068}
+      scale: {x: 1.0000001, y: 1.0000006, z: 0.9999994}
     - name: l_handRing1_JNT
       parentName: l_hand_JNT
       position: {x: -0.00094680965, y: 0.000013224557, z: -0.00018097978}
@@ -687,8 +271,8 @@ ModelImporter:
     - name: l_handRing3_JNT_end
       parentName: l_handRing3_JNT
       position: {x: -0, y: 0.00022461175, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: -0.00000002469542, z: -0.000000024695424, w: 0.7071068}
+      scale: {x: 1.0000006, y: 1.0000007, z: 0.99999946}
     - name: l_handPinky1_JNT
       parentName: l_hand_JNT
       position: {x: -0.0008490778, y: -0.0000077812, z: -0.00035840986}
@@ -707,8 +291,8 @@ ModelImporter:
     - name: l_handPinky3_JNT_end
       parentName: l_handPinky3_JNT
       position: {x: -0, y: 0.00019514322, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: 0.00000004939085, z: 0.00000009878167, w: 0.7071068}
+      scale: {x: 1.0000001, y: 1.0000001, z: 0.9999996}
     - name: r_shoulder_JNT
       parentName: spine2_JNT
       position: {x: 0.0004397824, y: 0.0012860642, z: -0.0001485}
@@ -747,8 +331,8 @@ ModelImporter:
     - name: r_handThumb3_JNT_end
       parentName: r_handThumb3_JNT
       position: {x: -0, y: 0.00026144623, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: 0.0000000041158987, z: 0.000000020579522, w: 0.7071068}
+      scale: {x: 1.0000005, y: 0.9999996, z: 1.0000005}
     - name: r_handIndex1_JNT
       parentName: r_hand_JNT
       position: {x: 0.0010514901, y: -0.000004101917, z: 0.0002197517}
@@ -767,8 +351,8 @@ ModelImporter:
     - name: r_handIndex3_JNT_end
       parentName: r_handIndex3_JNT
       position: {x: -0, y: 0.00023558617, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: 0.000000032927225, z: -0.000000032927236, w: 0.7071068}
+      scale: {x: 1.0000001, y: 0.9999999, z: 1.0000004}
     - name: r_handMiddle1_JNT
       parentName: r_hand_JNT
       position: {x: 0.0010067059, y: 0.000014003887, z: 0.000005959272}
@@ -787,8 +371,8 @@ ModelImporter:
     - name: r_handMiddle3_JNT_end
       parentName: r_handMiddle3_JNT
       position: {x: -0, y: 0.00023292421, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: -0.000000049390845, z: 0.000000032927236, w: 0.7071068}
+      scale: {x: 1.0000006, y: 1.0000002, z: 1.0000002}
     - name: r_handRing1_JNT
       parentName: r_hand_JNT
       position: {x: 0.0009468053, y: 0.000013302266, z: -0.00018098562}
@@ -807,8 +391,8 @@ ModelImporter:
     - name: r_handRing3_JNT_end
       parentName: r_handRing3_JNT
       position: {x: -0, y: 0.00022461056, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: -1.7763568e-15, z: -0.000000016463611, w: 0.7071068}
+      scale: {x: 1.0000001, y: 0.9999999, z: 0.99999964}
     - name: r_handPinky1_JNT
       parentName: r_hand_JNT
       position: {x: 0.0008490784, y: -0.000007696896, z: -0.00035841356}
@@ -827,8 +411,8 @@ ModelImporter:
     - name: r_handPinky3_JNT_end
       parentName: r_handPinky3_JNT
       position: {x: -0, y: 0.0001951456, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071068, y: 0.000000057622643, z: 0.000000032927232, w: 0.7071068}
+      scale: {x: 1.0000001, y: 1.0000001, z: 0.99999964}
     - name: l_upleg_JNT
       parentName: hips_JNT
       position: {x: -0.0010061412, y: -0.00051858026, z: -0.00007062402}
@@ -852,8 +436,8 @@ ModelImporter:
     - name: l_toebase_JNT_end
       parentName: l_toebase_JNT
       position: {x: -0, y: 0.0015237039, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071069, y: 0.000000016487732, z: 0.000000020587558, w: 0.70710677}
+      scale: {x: 1, y: 0.9999999, z: 0.9999995}
     - name: r_upleg_JNT
       parentName: hips_JNT
       position: {x: 0.0010060947, y: -0.0005185722, z: -0.0000706222}
@@ -877,8 +461,8 @@ ModelImporter:
     - name: r_toebase_JNT_end
       parentName: r_toebase_JNT
       position: {x: -0, y: 0.0015237004, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
+      rotation: {x: -0.7071069, y: 0.000000014405662, z: 0.000000018425098, w: 0.70710677}
+      scale: {x: 0.99999994, y: 0.9999996, z: 0.99999976}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5

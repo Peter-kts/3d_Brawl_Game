@@ -70,9 +70,16 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private float stunUntil;              // Time.time when stun ends
     private float airborneUntil;          // Time.time when airborne state ends
     private float hitStopEndTime;          // Time.time when hitstop ends (0 = not in hitstop); position frozen until then
+    private Vector3 pendingKnockback;
+    private float pendingAirborneDuration;
+    private float pendingLaunchApplyTime;  // When hitstop ends, apply knockback/launch so we "cut to midair"
     private CharacterController cc;       // For collision-aware knockback movement
     private SimpleEnemyAI enemyAI;        // Reference to AI for triggering hit animations
     private bool isDying;                 // True once death animation starts (prevents further hits)
+    private float getUpUntil;             // Time.time when get-up stun ends (0 = not getting up)
+    private float getUpAnimationStartTime; // When to play get-up animation (0 = not scheduled); delay holds crash pose first
+    private float getUpDurationThisRun;   // Duration passed to StartGetUp, used when triggering get-up animation
+    private float crashUntil;             // Time.time when crash phase ends (0 = not in crash phase); playing crashed animation, can't act
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -102,7 +109,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         // Skip other processing while death animation plays
         if (isDying) return;
         
-        ApplyAirbornePhysics();
+        UpdateGetUpOnCrash();
     }
     
     // ========================================================================
@@ -125,6 +132,84 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         // Nothing special needed here - the IsAirborne property is checked by SimpleEnemyAI
         // The knockback velocity (including upward component) handles the actual movement
+    }
+
+    /// <summary>
+    /// Clear get-up timer when expired; when delay ends, trigger get-up animation. Get-up is started by SimpleEnemyAI when the crash phase finishes.
+    /// </summary>
+    void UpdateGetUpOnCrash()
+    {
+        if (getUpUntil > 0f && Time.time >= getUpUntil)
+        {
+            getUpUntil = 0f;
+            getUpAnimationStartTime = 0f;
+        }
+        // PATH A (simple crash) only: crashUntil is set by StartCrashPhase() when IsAirborne ends and we force-play the crash state.
+        // When it expires, the crash animation has finished; notify the AI so it can start get-up (or complete death if killed by the launch).
+        if (crashUntil > 0f && Time.time >= crashUntil)
+        {
+            if (enemyAI != null)
+                enemyAI.OnCrashPhaseComplete(IsDying);
+            crashUntil = 0f;
+        }
+        if (getUpAnimationStartTime > 0f && Time.time >= getUpAnimationStartTime)
+        {
+            getUpAnimationStartTime = 0f;
+            if (enemyAI != null)
+                enemyAI.TriggerGetUpAnimation(getUpDurationThisRun);
+        }
+    }
+
+    /// <summary>
+    /// Start the get-up sequence. Called by SimpleEnemyAI when the airborne crash phase has finished.
+    /// For delay seconds the character holds the crash pose (stunned, no movement); then get-up animation plays for duration.
+    /// </summary>
+    /// <param name="delay">Delay before get-up animation starts (character holds crash pose).</param>
+    /// <param name="duration">How long the get-up stun/animation lasts (passed from SimpleEnemyAI.getUpDuration).</param>
+    public void StartGetUp(float delay, float duration)
+    {
+        // Already in get-up sequence (e.g. PATH A and PATH B both fired); avoid playing get-up twice
+        if (getUpUntil > 0f && Time.time < getUpUntil)
+            return;
+        crashUntil = 0f; // Exit crash phase when entering get-up
+        getUpDurationThisRun = duration;
+        if (delay > 0f && enemyAI != null)
+            enemyAI.FreezeAnimatorForGetUpDelay();
+        getUpUntil = Time.time + delay + duration;
+        getUpAnimationStartTime = delay > 0f ? Time.time + delay : Time.time;
+    }
+
+    /// <summary>
+    /// Start the crash phase (landed from airborne, playing crashed animation). Similar to stunned but distinct; AI cannot act until it ends.
+    /// Used by PATH A (simple crash): SimpleEnemyAI calls this when IsAirborne goes false and force-plays the crash state;
+    /// when duration elapses, UpdateGetUpOnCrash calls enemyAI.OnCrashPhaseComplete to start get-up or complete death.
+    /// </summary>
+    /// <param name="duration">How long the crash phase lasts (typically crash animation length).</param>
+    public void StartCrashPhase(float duration)
+    {
+        crashUntil = Time.time + duration;
+    }
+
+    /// <summary>
+    /// Called by SimpleEnemyAI when the airborne sequence (liftoff/loop/crash) finishes.
+    /// If the enemy was killed by an airborne attack, this completes the death (disables logic, keeps mesh visible).
+    /// </summary>
+    public void OnAirborneSequenceComplete()
+    {
+        if (isDying)
+            CompleteDeath();
+    }
+
+    /// <summary>
+    /// Disables AI, combat, and movement so the corpse stays visible; does not disable the GameObject/mesh.
+    /// </summary>
+    public void CompleteDeath()
+    {
+        if (enemyAI != null) enemyAI.enabled = false;
+        var combat = GetComponent<EnemyCombat>();
+        if (combat != null) combat.enabled = false;
+        if (cc != null) cc.enabled = false;
+        enabled = false;
     }
     
     // ========================================================================
@@ -149,6 +234,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
          * 
          * This creates smooth "slide back" effect, not instant teleport
          */
+        // When hitstop ends, apply delayed launch so we "cut to midair"
+        if (pendingLaunchApplyTime > 0f && Time.time >= pendingLaunchApplyTime)
+        {
+            kbVel += pendingKnockback;
+            airborneUntil = Mathf.Max(airborneUntil, Time.time + pendingAirborneDuration);
+            pendingLaunchApplyTime = 0f;
+        }
+
+        // Only move/decay if knockback is meaningful (sqrMagnitude avoids sqrt; 0.01^2 = 0.0001)
         if (kbVel.sqrMagnitude > 0.0001f)
         {
             /*
@@ -226,6 +320,20 @@ public class EnemyHealth : MonoBehaviour, IDamageable
      * Used by other systems to disable mechanics while death animation plays.
      */
     public bool IsDying => isDying;
+
+    /*
+     * IsGettingUp property:
+     * True when the enemy has just landed from airborne and is in the get-up stun (playing get-up animation).
+     * During this time the AI does not act - they are stunned until the timer expires.
+     */
+    public bool IsGettingUp => getUpUntil > 0f && Time.time < getUpUntil;
+
+    /*
+     * IsCrashed property:
+     * True when the enemy has just landed from airborne and is in the crash phase (playing crashed animation).
+     * Similar to stunned but distinct; during this time the AI does not act.
+     */
+    public bool IsCrashed => crashUntil > 0f && Time.time < crashUntil;
     
     /*
      * CurrentHp / MaxHp properties:
@@ -268,15 +376,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         // STEP 2: Apply knockback (stored; movement frozen during hitstop, resumes after)
         // --------------------------------------------------------------------
         
-        /*
-         * Using += instead of = allows knockback stacking
-         * 
-         * If hit twice quickly, velocities add up
-         * Creates "juggle" effects in fighting games
-         * 
-         * Alternative: kbVel = knockback (overwrite, no stacking)
-         */
-        kbVel += knockback;
+        if (airborneDuration > 0f)
+        {
+            pendingKnockback = knockback;
+            pendingAirborneDuration = airborneDuration;
+        }
+        else
+        {
+            kbVel += knockback;
+        }
         if (hitStopDuration > 0f)
             hitStopEndTime = Time.time + hitStopDuration;
         
@@ -294,6 +402,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
          * Example: If stunned for 0.5s and hit with 0.1s stun, stay stunned for 0.5s
          */
         stunUntil = Mathf.Max(stunUntil, Time.time + hitstun);
+        if (airborneDuration > 0f)
+            pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;  // launch when hit stop ends
         
         // --------------------------------------------------------------------
         // STEP 4: Trigger hit animation
@@ -307,30 +417,14 @@ public class EnemyHealth : MonoBehaviour, IDamageable
          * 
          * We pass hitstun so the animation speed can be scaled to match.
          */
-        if (enemyAI != null)
+        if (enemyAI != null && airborneDuration <= 0f)
         {
             enemyAI.TriggerHitAnimation(hitstun);
         }
         
         // --------------------------------------------------------------------
-        // STEP 5: Apply airborne state (if attack launches)
+        // STEP 5: Apply airborne state (if attack launches) — delayed until hitstop ends (applied in ApplyKnockback)
         // --------------------------------------------------------------------
-        
-        /*
-         * Set airborne expiration time:
-         * 
-         * If airborneDuration > 0, the attack launches this enemy into the air
-         * While airborne:
-         *   - SimpleEnemyAI suspends normal gravity
-         *   - Enemy floats based on knockback velocity
-         *   - Additional attacks can "juggle" the enemy
-         * 
-         * Using Mathf.Max ensures we don't shorten existing airborne time
-         */
-        if (airborneDuration > 0f)
-        {
-            airborneUntil = Mathf.Max(airborneUntil, Time.time + airborneDuration);
-        }
 
         // --------------------------------------------------------------------
         // STEP 6: Check for death
@@ -338,26 +432,23 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         
         if (hp <= 0)
         {
-            /*
-             * Death animation system:
-             * 
-             * 1. Set isDying flag to prevent further hits
-             * 2. Trigger death animation via SimpleEnemyAI
-             * 3. Animation Event calls OnDeathAnimationComplete() when done
-             * 4. That method disables the GameObject
-             * 
-             * This allows the death animation to play fully before the enemy disappears.
-             */
             isDying = true;
-            
-            if (enemyAI != null)
+            /*
+             * If killed by an airborne attack, the airborne animation (liftoff/loop/crash)
+             * is used as the death — don't play a separate death animation. SimpleEnemyAI
+             * will call OnAirborneSequenceComplete() when the airborne sequence ends.
+             */
+            if (airborneDuration > 0f)
             {
-                enemyAI.TriggerDeathAnimation();
+                if (enemyAI == null)
+                    CompleteDeath();
             }
             else
             {
-                // Fallback if no AI component - just disable immediately
-                gameObject.SetActive(false);
+                if (enemyAI != null)
+                    enemyAI.TriggerDeathAnimation();
+                else
+                    CompleteDeath();
             }
             
             /*

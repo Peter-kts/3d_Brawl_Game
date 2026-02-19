@@ -62,11 +62,32 @@ public class EnemyCombat : MonoBehaviour
         hitStopDuration = 0.1f
     };
 
+    [Header("Dodge Punish Attack")]
+    [Tooltip("Used when the player recently dodged and is at punish distance. E.g. longer range / different animation.")]
+    public AttackData dodgePunishAttack = new AttackData
+    {
+        range = 2.8f,
+        damage = 10,
+        hitboxRadius = 0.5f,
+        lockDuration = 0.7f,
+        cooldown = 0.5f,
+        knockback = 6f,
+        knockbackUp = 0f,
+        hitstun = 0.25f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "Punch",
+        lungeDistance = 0.8f,
+        lungeDuration = 0.15f,
+        hitStopDuration = 0.1f
+    };
+
     // ========================================================================
     // PRIVATE STATE
     // ========================================================================
 
     private float attackEndTime;           // When the current attack lock expires
+    private AttackData currentAttack;      // Which attack is active (for hitbox/lunge)
     private Animator animator;
     private CharacterController cc;
 
@@ -90,6 +111,13 @@ public class EnemyCombat : MonoBehaviour
     }
     private float hitStopEndTime;
     private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>();
+    
+    // Start-up and recovery (play first/last portion of attack animation slower)
+    private float currentStartUpLength;
+    private float currentStartUpSpeed;
+    private float currentRecoveryLength;
+    private float currentRecoverySpeed;
+    private string currentAttackStateName;
 
     // ========================================================================
     // PUBLIC PROPERTIES
@@ -114,9 +142,18 @@ public class EnemyCombat : MonoBehaviour
 
     void Update()
     {
+        var h = GetComponent<EnemyHealth>();
+        if (h != null && h.IsStunned)
+        {
+            attackEndTime = 0f;
+            hitboxPending = false;
+            lungePending = false;
+            return;
+        }
         UpdateLunge();
         UpdatePendingHitbox();
         UpdateHitStop();
+        UpdateAttackStartUpSpeed();
     }
 
     // ========================================================================
@@ -124,70 +161,52 @@ public class EnemyCombat : MonoBehaviour
     // ========================================================================
 
     /// <summary>
-    /// Execute the basic attack. Creates a hitbox, deals damage, plays animation.
-    /// Called by behaviors (e.g., StandoffBehavior) when the enemy decides to attack.
+    /// Execute the basic attack. Called by behaviors when the enemy decides to attack (default).
     /// </summary>
     public void DoAttack()
     {
-        // Set the attack lock (enemy can't act until this expires)
-        attackEndTime = Time.time + basicAttack.lockDuration;
-        
-        // Cancel any pending hitbox from previous attack
+        DoAttack(basicAttack);
+    }
+
+    /// <summary>
+    /// Execute a specific attack. Used for dodge-punish or other conditional attacks.
+    /// </summary>
+    public void DoAttack(AttackData attack)
+    {
+        currentAttack = attack;
+        attackEndTime = Time.time + attack.lockDuration;
+        currentStartUpLength = attack.startUpLength;
+        currentStartUpSpeed = attack.startUpSpeed;
+        currentRecoveryLength = attack.recoveryLength;
+        currentRecoverySpeed = attack.recoverySpeed;
+        currentAttackStateName = !string.IsNullOrEmpty(attack.animationTrigger) ? attack.animationTrigger : null;
+
         hitboxPending = false;
 
-        // --------------------------------------------------------------------
-        // Forward lunge setup
-        // --------------------------------------------------------------------
-
-        /*
-         * Same lunge system as player Combat.cs:
-         * The enemy steps forward during the attack for added reach/impact.
-         * lungeFrame determines WHEN during the attack the step happens.
-         * lungeDistance/lungeDuration control HOW FAR and HOW FAST.
-         */
-        if (basicAttack.lungeDistance > 0)
+        if (attack.lungeDistance > 0)
         {
             lungePending = true;
-            lungeTriggerTime = Time.time + (basicAttack.lockDuration * basicAttack.lungeFrame);
-            lungeEndTime = lungeTriggerTime + basicAttack.lungeDuration;
-            currentLungeDistance = basicAttack.lungeDistance;
-            currentLungeDuration = basicAttack.lungeDuration;
+            lungeTriggerTime = Time.time + (attack.lockDuration * attack.lungeFrame);
+            lungeEndTime = lungeTriggerTime + attack.lungeDuration;
+            currentLungeDistance = attack.lungeDistance;
+            currentLungeDuration = attack.lungeDuration;
             lungeDirection = transform.forward;
-        }
-
-        // --------------------------------------------------------------------
-        // Animation
-        // --------------------------------------------------------------------
-
-        if (animator != null && !string.IsNullOrEmpty(basicAttack.animationTrigger))
-        {
-            if (basicAttack.crossfadeDuration > 0f)
-            {
-                animator.CrossFadeInFixedTime(
-                    basicAttack.animationTrigger,
-                    basicAttack.crossfadeDuration,
-                    0, 0f
-                );
-            }
-            else
-            {
-                animator.Play(basicAttack.animationTrigger, 0, 0f);
-            }
-        }
-
-        // --------------------------------------------------------------------
-        // Hitbox (scheduled with optional delay)
-        // --------------------------------------------------------------------
-
-        if (basicAttack.hitboxDelay > 0f)
-        {
-            // Schedule hitbox for later (syncs with animation)
-            hitboxPending = true;
-            hitboxTriggerTime = Time.time + basicAttack.hitboxDelay;
         }
         else
         {
-            // Fire immediately (backward compatible, delay = 0)
+            lungePending = false;
+        }
+
+        if (animator != null && !string.IsNullOrEmpty(attack.animationTrigger))
+            animator.Play(attack.animationTrigger, 0, 0f);
+
+        if (attack.hitboxDelay > 0f)
+        {
+            hitboxPending = true;
+            hitboxTriggerTime = Time.time + attack.hitboxDelay;
+        }
+        else
+        {
             ExecuteHitbox();
         }
     }
@@ -197,15 +216,16 @@ public class EnemyCombat : MonoBehaviour
     // ========================================================================
     
     /// <summary>
-    /// Calculate the hitbox center using range + local-space offset.
+    /// Calculate the hitbox center using range + local-space offset for the current attack.
     /// </summary>
     Vector3 CalculateHitboxCenter()
     {
+        AttackData a = currentAttack != null ? currentAttack : basicAttack;
         return transform.position
-            + transform.forward * basicAttack.range
-            + transform.right   * basicAttack.hitboxOffset.x
-            + transform.up      * basicAttack.hitboxOffset.y
-            + transform.forward * basicAttack.hitboxOffset.z;
+            + transform.forward * a.range
+            + transform.right   * a.hitboxOffset.x
+            + transform.up      * a.hitboxOffset.y
+            + transform.forward * a.hitboxOffset.z;
     }
     
     /// <summary>
@@ -215,12 +235,13 @@ public class EnemyCombat : MonoBehaviour
     void ExecuteHitbox()
     {
         hitboxPending = false;
-        
+        AttackData a = currentAttack != null ? currentAttack : basicAttack;
+
         Vector3 center = CalculateHitboxCenter();
 
         Collider[] hits = Physics.OverlapSphere(
             center,
-            basicAttack.hitboxRadius,
+            a.hitboxRadius,
             ~0,
             QueryTriggerInteraction.Ignore
         );
@@ -249,14 +270,14 @@ public class EnemyCombat : MonoBehaviour
             if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
             horizontalDir.Normalize();
 
-            Vector3 knockbackVector = (horizontalDir * basicAttack.knockback)
-                                    + (Vector3.up * basicAttack.knockbackUp);
+            Vector3 knockbackVector = (horizontalDir * a.knockback)
+                                    + (Vector3.up * a.knockbackUp);
 
-            float airborne = basicAttack.makesAirborne ? basicAttack.airborneDuration : 0f;
-            damageable.TakeHit(basicAttack.damage, knockbackVector, basicAttack.hitstun, airborne, basicAttack.hitStopDuration);
-            
+            float airborne = a.makesAirborne ? a.airborneDuration : 0f;
+            damageable.TakeHit(a.damage, knockbackVector, a.hitstun, airborne, a.hitStopDuration);
+
             // Freeze target's animator for hit stop
-            if (basicAttack.hitStopDuration > 0f)
+            if (a.hitStopDuration > 0f)
             {
                 Animator targetAnim = targetTransform.GetComponentInChildren<Animator>();
                 if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
@@ -270,9 +291,9 @@ public class EnemyCombat : MonoBehaviour
         }
         
         // Apply hit stop to attacker if we hit something
-        if (didHit && basicAttack.hitStopDuration > 0f)
+        if (didHit && a.hitStopDuration > 0f)
         {
-            hitStopEndTime = Time.time + basicAttack.hitStopDuration;
+            hitStopEndTime = Time.time + a.hitStopDuration;
             
             if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
             {
@@ -310,7 +331,41 @@ public class EnemyCombat : MonoBehaviour
             frozenAnimators.Clear();
         }
     }
-
+    
+    void UpdateAttackStartUpSpeed()
+    {
+        if (animator == null) return;
+        if (Time.time >= attackEndTime)
+        {
+            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && !frozenAnimators.Any(f => f.animator == animator))
+                animator.speed = 1f;
+            return;
+        }
+        if (frozenAnimators.Any(f => f.animator == animator)) return;
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        if (!string.IsNullOrEmpty(currentAttackStateName) && !state.IsName(currentAttackStateName))
+        {
+            animator.speed = 1f;
+            return;
+        }
+        bool useStartUp = currentStartUpLength > 0f && currentStartUpSpeed < 1f;
+        bool useRecovery = currentRecoveryLength > 0f && currentRecoverySpeed < 1f;
+        if (!useStartUp && !useRecovery)
+        {
+            animator.speed = 1f;
+            return;
+        }
+        float nt = state.normalizedTime;
+        if (nt >= 1f)
+            animator.speed = 1f;
+        else if (useStartUp && nt < currentStartUpLength)
+            animator.speed = currentStartUpSpeed;
+        else if (useRecovery && nt >= (1f - currentRecoveryLength))
+            animator.speed = currentRecoverySpeed;
+        else
+            animator.speed = 1f;
+    }
+    
     // ========================================================================
     // LUNGE (forward movement during attack)
     // ========================================================================

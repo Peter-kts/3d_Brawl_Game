@@ -40,6 +40,7 @@
  * ============================================================================
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 /*
@@ -94,6 +95,14 @@ public class SimpleEnemyAI : MonoBehaviour
     
     [Tooltip("Brief pause before attacking (telegraph for player to react)")]
     public float attackTelegraphDuration = 0.2f;
+
+    [Header("Attack - Dodge Punish")]
+    [Tooltip("Use dodge-punish attack when player dodged within this many seconds")]
+    public float dodgePunishWindow = 0.6f;
+    [Tooltip("Use dodge-punish attack only when distance to player is at least this")]
+    public float dodgePunishDistMin = 2.5f;
+    [Tooltip("Use dodge-punish attack only when distance to player is at most this")]
+    public float dodgePunishDistMax = 6f;
     
     [Header("Physics")]
     [Tooltip("Gravity applied to the enemy (should match player's gravity)")]
@@ -118,7 +127,7 @@ public class SimpleEnemyAI : MonoBehaviour
     [Tooltip("Animator parameter name for hit animation speed multiplier")]
     public string hitSpeedParameter = "HitSpeed";
     
-    [Tooltip("Base duration of the hit animation clip (seconds). Used to scale animation to match hitstun.")]
+    [Tooltip("Fallback base duration (seconds) when auto-detect fails. Hit state length is auto-fetched from the Animator and cached; use this if a state has no motion or to override.")]
     public float baseHitAnimDuration = 0.4f;
     
     [Tooltip("Optional: multiple hit reaction state names. If set, one is chosen at random (never the same twice in a row). Leave empty to use hitStateName only.")]
@@ -130,6 +139,79 @@ public class SimpleEnemyAI : MonoBehaviour
     [Tooltip("Animator parameter name for airborne state (bool)")]
     public string airborneParameter = "IsAirborne";
 
+    [Tooltip("Animator bool for stun (hitstun or get-up). Drive Stunned state entry/exit from this in the controller, not Speed. Must match parameter name in Animator (e.g. 'IsStunned 0' in enemy.controller).")]
+    public string stunParameter = "IsStunned 0";
+
+    /*
+     * SIMPLE CRASH (non-Liftoff/Loop/Crash path):
+     * 
+     * These fields provide a simpler alternative when you DON'T want the full
+     * three-phase airborne animation system. When IsAirborne ends:
+     *   - Force-play the crash state (e.g. a separate landing clip)
+     *   - Wait crashStateDuration seconds for it to finish
+     *   - Then trigger get-up
+     * 
+     * This is SKIPPED when airborneAnimation.IsConfigured is true,
+     * because the Liftoff/Loop/Crash system handles crash internally.
+     */
+    [Tooltip("Optional: animator state name for crash/land when NOT using Liftoff/Loop/Crash. When airborne ends, this state is forced so the looping section can be interrupted even before one full loop. Leave empty to rely on animator transitions only. Default 'New State' matches enemy.controller Stun layer crash state.")]
+    public string airborneCrashStateName = "New State";
+    [Tooltip("Animator layer index for airborne crash state (1 = Stun layer if using default enemy setup).")]
+    public int airborneCrashLayer = 1;
+    [Tooltip("When NOT using Liftoff/Loop/Crash: delay before starting get-up after playing crash state (seconds). Get-up starts after this so crash can play.")]
+    public float crashStateDuration = 0.5f;
+
+    /*
+     * LIFTOFF / LOOP / CRASH SYSTEM:
+     * 
+     * Splits a SINGLE animation clip into three phases so the airborne
+     * spinning portion can loop for as long as the enemy stays in the air:
+     * 
+     *   [--- Liftoff ---][--- Loop (repeats) ---][--- Crash ---]
+     *   0.0         liftoffEnd/loopStart    loopEnd/crashStart    1.0
+     * 
+     * How it works:
+     *   1. Enemy gets hit with makesAirborne = true
+     *   2. IsAirborne goes true → Liftoff plays (hit reaction, launch up)
+     *   3. When normalizedTime >= liftoffEnd → Loop starts (spinning in air)
+     *   4. Loop portion repeats: when normalizedTime >= loopEnd, jump back to loopStart
+     *   5. IsAirborne goes false → Crash plays (slam to ground)
+     *   6. When normalizedTime >= crashEnd → phase done, triggers get-up
+     * 
+     * Configure the normalized time boundaries in the Inspector by scrubbing
+     * through your animation clip to find where each phase starts/ends.
+     * 
+     * Leave airborneStateName EMPTY to disable this system entirely and
+     * fall back to the simple crash path above.
+     */
+    [Header("Airborne Animation (Liftoff / Loop / Crash)")]
+    [Tooltip("Settings for splitting a single airborne animation into liftoff, loop, and crash phases. Leave airborneStateName empty to disable.")]
+    public AirborneAnimationSettings airborneAnimation = new AirborneAnimationSettings();
+
+    /*
+     * GET-UP SYSTEM:
+     * 
+     * After the crash animation finishes (either from the simple crash path
+     * or the Liftoff/Loop/Crash system), the enemy plays a get-up animation.
+     * 
+     * Timeline:
+     *   [Crash ends] → [getUpDelay pause] → [get-up animation plays] → [enemy resumes AI]
+     * 
+     * The enemy stays stunned for the full getUpDuration so they can't
+     * act while still getting off the ground.
+     */
+    [Header("Get Up (after airborne crash)")]
+    [Tooltip("Delay before get-up animation starts. Character holds crash/land pose for this long, then plays get-up.")]
+    public float getUpDelay = 0.5f;
+    [Tooltip("Duration the enemy is stunned while getting up (and length the get-up animation is scaled to).")]
+    public float getUpDuration = 1.5f;
+    [Tooltip("Animator state name for get-up animation (stunned while getting up). Leave empty to skip get-up animation.")]
+    public string getUpStateName = "GetUp";
+    [Tooltip("Animator layer index for get-up state (e.g. 1 = Stun layer).")]
+    public int getUpLayer = 1;
+    [Tooltip("Base duration of get-up clip (seconds). Speed is scaled so animation matches getUpDuration. Ignored if 0.")]
+    public float baseGetUpAnimDuration = 1.2f;
+
     // ========================================================================
     // PRIVATE REFERENCES
     // ========================================================================
@@ -138,11 +220,35 @@ public class SimpleEnemyAI : MonoBehaviour
     private EnemyHealth health;       // Reference to our health component
     private Vector3 velocity;         // Tracks vertical velocity for gravity
     
-    // Animation state
-    private float currentAnimSpeed;   // Smoothed animation speed value
-    private float targetAnimSpeed;    // Target speed this frame (set by movement)
+    // Animation state (Speed parameter driven by behaviors, smoothed here)
+    /// <summary>Smoothed value sent to the Animator each frame. Lerps toward targetAnimSpeed so transitions aren't instant.</summary>
+    private float currentAnimSpeed;
+    /// <summary>Desired speed for this frame: 0 = idle, 0.5 = circling/strafe, 1 = full run. Set by current behavior in HandleMovement; reset to 0 at start of FixedUpdate.</summary>
+    private float targetAnimSpeed;
     private int lastHitStateIndex = -1;  // Last played index in hitStateNames (-1 when using single hitStateName)
-    
+    private Dictionary<string, float> cachedHitStateDurations;  // Auto-fetched from Animator per state name
+    private int cachedAirborneStateNameHash;  // Hash of airborne state name for fast per-frame check (0 = not set)
+
+    /*
+     * Airborne animation phase state machine:
+     * 
+     * AirbornePhase tracks which portion of the animation is currently playing:
+     *   None    = not in airborne animation (normal behavior)
+     *   Liftoff = playing the initial hit/launch portion of the clip
+     *   Loop    = repeating the mid-air spinning portion
+     *   Crash   = playing the landing/slam portion after IsAirborne ended
+     * 
+     * wasAirborne detects rising/falling edges of health.IsAirborne:
+     *   - Rising edge  (false → true):  start Liftoff phase
+     *   - Falling edge (true → false):  start Crash phase
+     * 
+     * wasAirborne is updated only in UpdateAnimator() so both paths use the same edge detection.
+     */
+    private enum AirbornePhase { None, Liftoff, Loop, Crash }
+    private AirbornePhase airbornePhase = AirbornePhase.None;
+    private bool wasAirborne;  // Updated only in UpdateAnimator(); used for airborne rising/falling edge in both paths
+    private float animatorSpeedBeforeGetUpFreeze = 1f;      // Saved animator speed before get-up delay freeze, restored when get-up starts
+
     // Behavior system
     private EnemyBehavior currentBehavior;
     private ChaseBehavior chaseBehavior;
@@ -160,14 +266,40 @@ public class SimpleEnemyAI : MonoBehaviour
     
     /// <summary>Enemy health component (for stun/airborne checks).</summary>
     public EnemyHealth Health => health;
+
+    /// <summary>
+    /// Current logical state (Dying &gt; Airborne &gt; Crashed &gt; Stunned &gt; GettingUp &gt; Normal).
+    /// Single source of truth so callers don't duplicate the priority order. Combines EnemyHealth timers and airborne phase.
+    /// </summary>
+    public EnemyState CurrentState
+    {
+        get
+        {
+            if (health == null) return EnemyState.Normal;
+            if (health.IsDying) return EnemyState.Dying;
+            if (health.IsAirborne || (airborneAnimation.IsConfigured && airbornePhase != AirbornePhase.None && airbornePhase != AirbornePhase.Crash))
+                return EnemyState.Airborne;
+            if (InAirborneCrash) return EnemyState.Crashed;
+            if (health.IsStunned) return EnemyState.Stunned;
+            if (health.IsGettingUp) return EnemyState.GettingUp;
+            return EnemyState.Normal;
+        }
+    }
+
+    /// <summary>True when the enemy can run behavior (chase, standoff, attack). False when health is missing or during stun, airborne, crash, get-up, or dying.</summary>
+    public bool CanAct => health != null && CurrentState == EnemyState.Normal;
     
     /// <summary>Enemy combat component (for attack execution). May be null if not present.</summary>
     public EnemyCombat EnemyCombat { get; private set; }
+
+    /// <summary>Player's controller (for dodge detection). May be null if player not set.</summary>
+    public PlayerController PlayerController { get; private set; }
     
     /// <summary>
-    /// Target animation speed this frame. Set by behaviors:
-    /// 0 = idle, 0.5 = strafing/circling, 1 = full run.
-    /// Smoothed by UpdateAnimator() for natural transitions.
+    /// Target animation speed this frame. Set by behaviors (ChaseBehavior = 1, StandoffBehavior = 0.5 or 0).
+    /// Values: 0 = idle, 0.5 = strafing/circling, 1 = full run.
+    /// UpdateAnimator() lerps currentAnimSpeed toward this and passes it to the Animator's Speed parameter;
+    /// the Animator Controller uses that parameter in transition conditions (e.g. Speed &gt; 0.1 to leave Idle).
     /// </summary>
     public float TargetAnimSpeed { get => targetAnimSpeed; set => targetAnimSpeed = value; }
 
@@ -202,7 +334,9 @@ public class SimpleEnemyAI : MonoBehaviour
             var p = GameObject.FindGameObjectWithTag("Player");
             if (p != null) player = p.transform;
         }
-        
+        if (player != null)
+            PlayerController = player.GetComponent<PlayerController>();
+
         // Auto-find animator on this object or children (e.g., on the visual model)
         if (animator == null) animator = GetComponent<Animator>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
@@ -219,19 +353,156 @@ public class SimpleEnemyAI : MonoBehaviour
 
     void Update()
     {
-        // While dying: only apply gravity (so they fall), skip everything else
-        if (health != null && health.IsDying)
+        ApplyGravity();
+        UpdateAirborneAnimation();
+        UpdateAnimator();
+        // While dying (including airborne-as-death): skip movement/behavior
+        if (health != null && health.IsDying) return;
+        // Default: no movement. Behaviors set TargetAnimSpeed inside HandleMovement (chase=1, standoff=0.5 or 0).
+        targetAnimSpeed = 0f;
+        HandleMovement();
+    }
+    
+    // ========================================================================
+    // AIRBORNE ANIMATION (Liftoff → Loop → Crash)
+    // ========================================================================
+    
+    /*
+     * UpdateAirborneAnimation:
+     * Drives a three-phase animation from a single clip when the enemy is
+     * launched airborne. Configured via the public airborneAnimation settings.
+     * 
+     * Phases:
+     *   1. Liftoff: plays once from liftoffStart to liftoffEnd
+     *   2. Loop:    repeats between loopStart and loopEnd while IsAirborne
+     *   3. Crash:   plays once from crashStart when IsAirborne ends
+     * 
+     * If airborneAnimation is not configured (empty state name), the system
+     * falls back to the existing IsAirborne bool parameter on the Animator.
+     */
+    void UpdateAirborneAnimation()
+    {
+        // Only runs when the Liftoff/Loop/Crash system is configured
+        if (animator == null || health == null) return;
+        if (!airborneAnimation.IsConfigured) return;
+        
+        bool isAirborne = health.IsAirborne;
+        
+        /*
+         * RISING EDGE: IsAirborne just turned true (enemy was just launched).
+         * 
+         * Start the Liftoff phase by playing the animator state from liftoffStart.
+         * Uses crossfade if configured, so the transition from the hit reaction
+         * into the airborne animation is smooth rather than a hard cut.
+         */
+        if (isAirborne && !wasAirborne)
         {
-            ApplyGravity();
-            return;
+            airbornePhase = AirbornePhase.Liftoff;
+            // No speed scaling for airborne: play at 1x so liftoff/loop/crash use natural timing.
+            if (!string.IsNullOrEmpty(hitSpeedParameter))
+                animator.SetFloat(hitSpeedParameter, 1f);
+            
+            if (airborneAnimation.crossfadeDuration > 0f)
+            {
+                animator.CrossFadeInFixedTime(
+                    airborneAnimation.airborneStateName,
+                    airborneAnimation.crossfadeDuration,
+                    airborneAnimation.airborneAnimationLayer,
+                    airborneAnimation.liftoffStart);
+            }
+            else
+            {
+                animator.Play(
+                    airborneAnimation.airborneStateName,
+                    airborneAnimation.airborneAnimationLayer,
+                    airborneAnimation.liftoffStart);
+            }
         }
         
-        // Reset animation target each frame (movement will set it if moving)
-        targetAnimSpeed = 0f;
+        /*
+         * FALLING EDGE: IsAirborne just turned false (airborne duration expired).
+         * 
+         * Start the Crash phase by jumping to crashStart in the same animation.
+         * This is a hard Play() (no crossfade) because the loop and crash are
+         * adjacent portions of the same clip — a blend would look wrong.
+         */
+        if (!isAirborne && wasAirborne && airbornePhase != AirbornePhase.None)
+        {
+            airbornePhase = AirbornePhase.Crash;
+            animator.Play(
+                airborneAnimation.airborneStateName,
+                airborneAnimation.airborneAnimationLayer,
+                airborneAnimation.crashStart);
+        }
         
-        HandleMovement();
-        ApplyGravity();
-        UpdateAnimator();
+        // Nothing to do if we're not in any airborne phase
+        if (airbornePhase == AirbornePhase.None) return;
+        
+        /*
+         * PER-FRAME PHASE LOGIC:
+         * 
+         * Read the current normalizedTime (0-1) from the Animator to decide
+         * when to transition between phases or loop back. Only use it when we're
+         * actually in the airborne state (avoids wrong timing if layer is in transition).
+         * Use shortNameHash for the check to avoid string comparison every frame.
+         */
+        if (cachedAirborneStateNameHash == 0)
+            cachedAirborneStateNameHash = Animator.StringToHash(airborneAnimation.airborneStateName);
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(airborneAnimation.airborneAnimationLayer);
+        if (stateInfo.shortNameHash != cachedAirborneStateNameHash)
+            return;
+        float normalizedTime = stateInfo.normalizedTime;
+        
+        switch (airbornePhase)
+        {
+            case AirbornePhase.Liftoff:
+                /*
+                 * Liftoff plays once. When the clip reaches liftoffEnd,
+                 * jump to the loop portion by playing from loopStart.
+                 */
+                if (normalizedTime >= airborneAnimation.liftoffEnd)
+                {
+                    airbornePhase = AirbornePhase.Loop;
+                    animator.Play(
+                        airborneAnimation.airborneStateName,
+                        airborneAnimation.airborneAnimationLayer,
+                        airborneAnimation.loopStart);
+                }
+                break;
+                
+            case AirbornePhase.Loop:
+                /*
+                 * Loop repeats indefinitely while IsAirborne is true.
+                 * Each frame, if the clip has reached loopEnd, jump back
+                 * to loopStart. This creates a seamless spin cycle.
+                 * 
+                 * The loop exits when IsAirborne goes false (falling edge
+                 * above sets phase to Crash).
+                 */
+                if (normalizedTime >= airborneAnimation.loopEnd)
+                {
+                    animator.Play(
+                        airborneAnimation.airborneStateName,
+                        airborneAnimation.airborneAnimationLayer,
+                        airborneAnimation.loopStart);
+                }
+                break;
+                
+            case AirbornePhase.Crash:
+                /*
+                 * Crash plays once to completion. When it finishes: clear the phase (so GetAirborneForAnimator goes false
+                 * and the Animator can leave the airborne state), then use the same "crash just ended" handler as PATH A
+                 * so get-up or death completion is handled in one place.
+                 */
+                if (normalizedTime >= airborneAnimation.crashEnd)
+                {
+                    airbornePhase = AirbornePhase.None;
+                    cachedAirborneStateNameHash = 0;  // Invalidate so state name changes are picked up next time
+                    if (health != null)
+                        OnAirborneCrashFinished(health.IsDying);
+                }
+                break;
+        }
     }
     
     // ========================================================================
@@ -239,65 +510,96 @@ public class SimpleEnemyAI : MonoBehaviour
     // ========================================================================
     
     /*
-     * UpdateAnimator:
-     * Smoothly blends the animation speed parameter for natural transitions.
-     * 
-     * Uses the same approach as PlayerController:
-     *   - Exponential lerp for framerate-independent smoothing
-     *   - Snap to zero when close to prevent floating-point drift
+     * UpdateAnimator - Drives the Animator's "Speed" parameter from AI behavior.
+     *
+     * WHAT THIS DOES:
+     * Behaviors set TargetAnimSpeed each frame (0 = idle, 0.5 = circle, 1 = run). We don't pass that
+     * value straight to the Animator; we smooth it into currentAnimSpeed and send that. The Animator
+     * Controller (e.g. enemy.controller) uses the Speed parameter in transition conditions (e.g.
+     * "Speed > 0.1" to leave Idle, "Speed < 0.1" to go to Idle). So this code only updates a parameter;
+     * the actual state machine and transitions are defined in the Animator Controller asset.
+     *
+     * SMOOTHING:
+     * Exponential lerp (1 - Exp(-k*dt)) gives framerate-independent decay toward target. Without it,
+     * Speed would snap from 1 to 0 when the enemy stops, causing a visible pop. Snapping to 0 when
+     * both current and target are near zero avoids floating-point drift (Speed never quite reaching 0).
      */
     void UpdateAnimator()
     {
         if (animator == null) return;
-        
-        // Smooth the animation speed for natural transitions
-        currentAnimSpeed = Mathf.Lerp(
-            currentAnimSpeed, 
-            targetAnimSpeed, 
-            1f - Mathf.Exp(-animationDamping * Time.deltaTime)
-        );
-        
-        // Snap to 0 when very close (prevents floating-point drift)
+
+        // Lerp current toward target: smooth, framerate-independent (same formula as PlayerController).
+        float t = 1f - Mathf.Exp(-animationDamping * Time.deltaTime);
+        currentAnimSpeed = Mathf.Lerp(currentAnimSpeed, targetAnimSpeed, t);
+
+        // Avoid drift: when we're aiming for 0 and very close, clamp to exactly 0.
         if (currentAnimSpeed < 0.001f && targetAnimSpeed == 0f)
-        {
             currentAnimSpeed = 0f;
-        }
+
+        // Send to Animator. During airborne (liftoff/loop/crash) use 1 so the spin animation isn't slowed by locomotion Speed.
+        float speedToApply = (airbornePhase != AirbornePhase.None) ? 1f : currentAnimSpeed;
+        animator.SetFloat(speedParameter, speedToApply);
         
-        // Set animator parameters
-        animator.SetFloat(speedParameter, currentAnimSpeed);
-        
-        // Set airborne state (for floating/falling animation when launched)
+        /*
+         * AIRBORNE BOOL PARAMETER (Animator "IsAirborne"):
+         * - PATH A (simple crash): Bool follows health.IsAirborne. When it goes false we force-play the crash state and
+         *   call health.StartCrashPhase(crashStateDuration). EnemyHealth then calls us back via OnCrashPhaseComplete when
+         *   crashUntil expires, so we don't need a separate timer here.
+         * - PATH B (Liftoff/Loop/Crash): Bool must stay true until airbornePhase is None, so the Animator stays in the
+         *   airborne state through the Crash phase. health.IsAirborne is already false by then; GetAirborneForAnimator()
+         *   keeps the bool true via the (airbornePhase != AirbornePhase.None) term.
+         */
         if (health != null)
         {
-            animator.SetBool(airborneParameter, health.IsAirborne);
+            bool isAirborne = health.IsAirborne;
+            
+            // PATH A only: falling edge of IsAirborne (airborne duration expired). Force-play the crash/land state on the
+            // Stun layer and start the crash phase in health; health will call OnCrashPhaseComplete() when crashStateDuration elapses.
+            if (wasAirborne && !isAirborne && !string.IsNullOrEmpty(airborneCrashStateName) && !airborneAnimation.IsConfigured)
+            {
+                animator.Play(airborneCrashStateName, airborneCrashLayer, 0f);
+                health.StartCrashPhase(crashStateDuration);
+            }
+            
+            animator.SetBool(airborneParameter, GetAirborneForAnimator());
+            // Single place for edge detection: both PATH A and PATH B use this for rising/falling edge of IsAirborne.
+            wasAirborne = isAirborne;
+
+            // Stun: drive from game state. Keep false during Liftoff/Loop/Crash so the crash animation isn't interrupted by a transition to Stunned.
+            if (!string.IsNullOrEmpty(stunParameter))
+                animator.SetBool(stunParameter, (airbornePhase == AirbornePhase.None && !health.IsAirborne && health.IsStunned) || health.IsGettingUp);
+
+            // Reset HitSpeed to 1 when not in a hit/get-up/airborne flow so regular stuns always get a clean scale next time.
+            if (airbornePhase == AirbornePhase.None && !health.IsStunned && !health.IsGettingUp && !string.IsNullOrEmpty(hitSpeedParameter))
+                animator.SetFloat(hitSpeedParameter, 1f);
         }
     }
-    
+
+    /// <summary>
+    /// Value to drive the Animator's IsAirborne bool. True when: (1) health says we're airborne, or (2) we're in
+    /// Liftoff/Loop/Crash and still playing the airborne clip (including Crash phase, so we don't transition away early).
+    /// </summary>
+    bool GetAirborneForAnimator()
+    {
+        return health != null && (health.IsAirborne || (airborneAnimation.IsConfigured && airbornePhase != AirbornePhase.None));
+    }
+
+    /// <summary>
+    /// True when the enemy is in the "crashed" state (landed from airborne, playing crash/land animation, cannot act).
+    /// Unifies PATH A (health.IsCrashed, from StartCrashPhase) and PATH B (airbornePhase == Crash) for behavior blocking.
+    /// </summary>
+    bool InAirborneCrash => (airbornePhase == AirbornePhase.Crash) || (health != null && health.IsCrashed);
+
     /// <summary>
     /// Triggers the hit reaction animation. Called by EnemyHealth when taking damage.
-    /// Uses a trigger (not a bool) so it fires once and doesn't restart every frame.
+    /// Plays the chosen state (hitStateName or random from hitStateNames) and scales speed to match hitstun.
+    /// The Stun layer must NOT have an Any State transition for the stun bool, or that transition would override this and always show one state.
     /// </summary>
-    /// <param name="hitstun">Duration of the hitstun - animation speed is scaled to match this.</param>
+    /// <param name="hitstun">Duration of the hitstun; animation is scaled to match.</param>
     public void TriggerHitAnimation(float hitstun)
     {
-        // #region agent log
-        try { var tn = (gameObject?.name ?? "").Replace("\\", "\\\\").Replace("\"", "\\\""); System.IO.File.AppendAllText(@"c:\Users\peter\3dbrawlerlearn\3dbrawlerlearn\.cursor\debug.log", "{\"location\":\"SimpleEnemyAI.cs:TriggerHitAnimation\",\"message\":\"TriggerHitAnimation\",\"data\":{\"target\":\"" + tn + "\"},\"timestamp\":" + (long)(UnityEngine.Time.realtimeSinceStartup * 1000) + ",\"hypothesisId\":\"H1\"}\n"); } catch { }
-        // #endregion
         if (animator != null)
         {
-            /*
-             * Scale animation speed to match hitstun duration:
-             * 
-             * If baseHitAnimDuration = 0.4s and hitstun = 0.2s:
-             *   speedMultiplier = 0.4 / 0.2 = 2.0 (plays 2x faster)
-             * 
-             * If baseHitAnimDuration = 0.4s and hitstun = 0.8s:
-             *   speedMultiplier = 0.4 / 0.8 = 0.5 (plays at half speed)
-             * 
-             * This ensures the animation finishes exactly when hitstun ends.
-             */
-            float speedMultiplier = baseHitAnimDuration / Mathf.Max(hitstun, 0.01f);
-            animator.SetFloat(hitSpeedParameter, speedMultiplier);
             string stateToPlay;
             if (hitStateNames != null && hitStateNames.Length > 0)
             {
@@ -309,23 +611,95 @@ public class SimpleEnemyAI : MonoBehaviour
                 while (hitStateNames.Length >= 2 && chosenIndex == lastHitStateIndex);
                 lastHitStateIndex = chosenIndex;
                 stateToPlay = hitStateNames[chosenIndex];
-                // #region agent log
-                try { var sn = (stateToPlay ?? "").Replace("\\", "\\\\").Replace("\"", "\\\""); System.IO.File.AppendAllText(@"c:\Users\peter\3dbrawlerlearn\3dbrawlerlearn\.cursor\debug.log", "{\"location\":\"SimpleEnemyAI.cs:TriggerHitAnimation\",\"message\":\"hitState\",\"data\":{\"useArray\":true,\"arrayLen\":" + hitStateNames.Length + ",\"chosenIndex\":" + chosenIndex + ",\"stateToPlay\":\"" + sn + "\"},\"timestamp\":" + (long)(UnityEngine.Time.realtimeSinceStartup * 1000) + ",\"hypothesisId\":\"H3\"}\n"); } catch { }
-                // #endregion
             }
             else
             {
                 lastHitStateIndex = -1;
                 stateToPlay = hitStateName;
-                // #region agent log
-                try { var sn = (stateToPlay ?? "").Replace("\\", "\\\\").Replace("\"", "\\\""); System.IO.File.AppendAllText(@"c:\Users\peter\3dbrawlerlearn\3dbrawlerlearn\.cursor\debug.log", "{\"location\":\"SimpleEnemyAI.cs:TriggerHitAnimation\",\"message\":\"hitState\",\"data\":{\"useArray\":false,\"stateToPlay\":\"" + sn + "\"},\"timestamp\":" + (long)(UnityEngine.Time.realtimeSinceStartup * 1000) + ",\"hypothesisId\":\"H3\"}\n"); } catch { }
-                // #endregion
             }
+
+            // Play at 1x first so we can read the state length (when not cached), then scale to match hitstun.
+            if (!string.IsNullOrEmpty(hitSpeedParameter))
+                animator.SetFloat(hitSpeedParameter, 1f);
             animator.Play(stateToPlay, hitAnimationLayer, 0f);
             animator.Update(0f);
+
+            // Use cached duration when available to avoid GetCurrentAnimatorStateInfo every hit.
+            float baseDuration = baseHitAnimDuration;
+            if (cachedHitStateDurations != null && cachedHitStateDurations.TryGetValue(stateToPlay, out float cached))
+                baseDuration = cached;
+            else
+            {
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(hitAnimationLayer);
+                if (stateInfo.IsName(stateToPlay) && stateInfo.length > 0f)
+                {
+                    if (cachedHitStateDurations == null)
+                        cachedHitStateDurations = new Dictionary<string, float>();
+                    cachedHitStateDurations[stateToPlay] = stateInfo.length;
+                    baseDuration = stateInfo.length;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(hitSpeedParameter) && baseDuration > 0f)
+            {
+                float speed = (hitstun > 0.001f) ? (baseDuration / hitstun) : 1f;
+                animator.SetFloat(hitSpeedParameter, speed);
+            }
+            else if (!string.IsNullOrEmpty(hitSpeedParameter))
+                animator.SetFloat(hitSpeedParameter, 1f);
         }
     }
     
+    /// <summary>
+    /// Freezes the animator on the current frame (e.g. last frame of crash). Called by EnemyHealth when get-up delay starts.
+    /// Unfreeze happens when TriggerGetUpAnimation is called.
+    /// </summary>
+    public void FreezeAnimatorForGetUpDelay()
+    {
+        if (animator != null)
+        {
+            animatorSpeedBeforeGetUpFreeze = animator.speed;
+            animator.speed = 0f;
+        }
+    }
+
+    /// <summary>
+    /// Triggers the get-up animation after landing from airborne. Called by EnemyHealth when get-up delay ends.
+    /// Unfreezes animator first (was frozen on last frame during delay).
+    /// </summary>
+    public void TriggerGetUpAnimation(float duration)
+    {
+        if (animator == null || string.IsNullOrEmpty(getUpStateName)) return;
+        animator.speed = animatorSpeedBeforeGetUpFreeze;
+        if (!string.IsNullOrEmpty(hitSpeedParameter))
+            animator.SetFloat(hitSpeedParameter, 1f);
+        animator.Play(getUpStateName, getUpLayer, 0f);
+    }
+
+    /// <summary>
+    /// Called by EnemyHealth when the crash phase ends (PATH A only: crashUntil just expired after StartCrashPhase).
+    /// This is the single entry point for "airborne crash just finished" from the health side; we delegate to
+    /// OnAirborneCrashFinished so both PATH A (here) and PATH B (from UpdateAirborneAnimation when Crash phase hits crashEnd) use the same logic.
+    /// </summary>
+    /// <param name="isDying">True if the enemy was killed by the airborne attack; we complete death instead of get-up.</param>
+    public void OnCrashPhaseComplete(bool isDying)
+    {
+        OnAirborneCrashFinished(isDying);
+    }
+
+    /// <summary>
+    /// Shared handler for "airborne crash sequence just finished": either start get-up (freeze pose, then play get-up anim)
+    /// or complete death if the enemy was killed by the launch. Called from OnCrashPhaseComplete (PATH A) and from
+    /// UpdateAirborneAnimation when normalizedTime >= crashEnd (PATH B).
+    /// </summary>
+    void OnAirborneCrashFinished(bool isDying)
+    {
+        if (isDying)
+            health.OnAirborneSequenceComplete();
+        else
+            health.StartGetUp(getUpDelay, getUpDuration);
+    }
+
     /// <summary>
     /// Triggers the death animation. Called by EnemyHealth when HP reaches 0.
     /// The actual disable happens when OnDeathAnimationComplete() is called via Animation Event.
@@ -340,11 +714,14 @@ public class SimpleEnemyAI : MonoBehaviour
     
     /// <summary>
     /// Called by Animation Event at the end of the death animation.
-    /// Add this as an event on your death animation clip in Unity.
+    /// Disables logic but keeps the mesh visible (corpse stays).
     /// </summary>
     public void OnDeathAnimationComplete()
     {
-        gameObject.SetActive(false);
+        if (health != null)
+            health.CompleteDeath();
+        else
+            gameObject.SetActive(false);
     }
     
     // ========================================================================
@@ -360,16 +737,8 @@ public class SimpleEnemyAI : MonoBehaviour
         // No player reference? Can't do anything
         if (player == null) return;
         
-        /*
-         * Check if we're stunned (recently hit)
-         * 
-         * This is a GLOBAL check that pauses ALL behaviors:
-         *   - Enemy gets hit
-         *   - EnemyHealth sets stunUntil
-         *   - AI pauses (no behavior executes)
-         *   - After stun wears off, current behavior resumes
-         */
-        if (health != null && health.IsStunned) return;
+        // Block all behavior when not in Normal state (stun, airborne, crash, get-up, dying)
+        if (!CanAct) return;
 
         // --------------------------------------------------------------------
         // STEP 2: Check behavior transitions (distance-based)

@@ -105,6 +105,9 @@ public class DebugSettings : MonoBehaviour
     [Tooltip("Color of heavy attack hitbox")]
     public Color heavyAttackColor = new Color(1f, 0.5f, 0f, 0.5f);
 
+    [Tooltip("Log attack start and hitbox fire timing to Console (for debugging hitbox vs animation desync)")]
+    public bool logAttackTiming = false;
+
     // ========================================================================
     // THREAT SYSTEM VISUALIZATION
     // ========================================================================

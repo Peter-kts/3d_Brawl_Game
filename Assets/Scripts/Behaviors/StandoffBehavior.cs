@@ -240,8 +240,16 @@ public class StandoffBehavior : EnemyBehavior
         preAttackTimer -= Time.deltaTime;
         if (preAttackTimer <= 0f)
         {
-            // Telegraph done - fire the attack
-            ai.EnemyCombat.DoAttack();
+            // Choose attack: dodge-punish when player recently dodged and is in range, else default
+            float dist = ai.player != null ? Vector3.Distance(ai.transform.position, ai.player.position) : 0f;
+            bool usePunish = ai.PlayerController != null
+                && ai.PlayerController.RecentlyDodged(ai.dodgePunishWindow)
+                && dist >= ai.dodgePunishDistMin
+                && dist <= ai.dodgePunishDistMax;
+            if (usePunish)
+                ai.EnemyCombat.DoAttack(ai.EnemyCombat.dodgePunishAttack);
+            else
+                ai.EnemyCombat.DoAttack();
             state = SubState.Attacking;
         }
     }

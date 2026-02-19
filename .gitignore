@@ -64,3 +64,10 @@ InitTestScene*.unity*
 /[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
 
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Plastic SCM (if you switch to Git)
+.plastic/
+
+# macOS resource forks (can break sync on other OS)
+._*
+.DS_Store

@@ -1,33 +1,29 @@
 /*
  * ============================================================================
- * PLAYERCONTROLLER.CS - Dual-mode movement: Free Roam + Combat Mode
+ * PLAYERCONTROLLER.CS - Ninja Gaiden style: camera-relative movement + soft lock
  * ============================================================================
  * 
- * COMBAT MOVEMENT PHILOSOPHY:
- * ---------------------------
+ * MOVEMENT:
+ * ---------
+ * - Camera-relative movement in all situations (free roam and when holding LT).
+ * - Character turns to face movement direction; no hard lock to target.
+ * - Hold LT/RMB still toggles "combat mode" (animator/UI); movement is unchanged.
  * 
- * This system has TWO distinct modes:
- * 
- * 1. FREE ROAM (default):
- *    - Camera-relative movement
- *    - Character turns freely with movement
- *    - For navigation, exploration, escape
- *    - NOT for fighting
- * 
- * 2. COMBAT MODE (hold LT/Right Mouse):
- *    - Character-relative footwork
- *    - Deliberate steps: advance, backstep, sidestep
- *    - Facing maintained toward threats
- *    - Attacks only allowed here
+ * SOFT LOCK:
+ * ----------
+ * - LockOnSystem provides a soft focus target for attack tracking and camera bias.
+ * - No snap-on-enter; no forced facing. Idle in combat: soft rotate toward threat in cone.
+ * - Attacks allowed anytime (no combat-mode gate).
  * 
  * CORE RULE: Attacks never solve spacing or targeting.
- * The player must manually position and face enemies.
  * 
  * ============================================================================
  */
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+public enum DashDirectionType { Forward, Back, Left, Right }
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -107,6 +103,38 @@ public class PlayerController : MonoBehaviour
     // SHARED SETTINGS
     // ========================================================================
     
+    [Header("Dash")]
+    [Tooltip("Distance covered by one dash")]
+    public float dashDistance = 5f;
+    [Tooltip("Duration of the dash in seconds")]
+    public float dashDuration = 0.12f;
+    [Tooltip("Cooldown before the next dash can be used (seconds)")]
+    public float dashCooldown = 0.8f;
+    [Tooltip("If an enemy is in this range ahead during dash, you get pulled toward them")]
+    public float dashSuckRange = 4f;
+    [Tooltip("Half-angle of cone in front (degrees) that triggers dash suck")]
+    public float dashSuckConeAngle = 90f;
+    [Tooltip("How strongly to curve toward the enemy per second (higher = stronger pull)")]
+    public float dashSuckStrength = 8f;
+
+    [Header("Dash - Stop Past Enemy")]
+    [Tooltip("Enable stopping at a set distance past the enemy during forward dashes")]
+    public bool enableDashStopPastEnemy = true;
+    [Tooltip("How far past the enemy the forward dash stops (0 = stop at enemy)")]
+    public float dashStopDistancePastEnemy = 1f;
+
+    [Header("Dash - Animation States")]
+    [Tooltip("Animator state name for forward dash")]
+    public string dashForwardState = "DashForward";
+    [Tooltip("Animator state name for back dash")]
+    public string dashBackState = "DashBack";
+    [Tooltip("Animator state name for left dash")]
+    public string dashLeftState = "DashLeft";
+    [Tooltip("Animator state name for right dash")]
+    public string dashRightState = "DashRight";
+    [Tooltip("Crossfade duration when transitioning into dash animation (seconds)")]
+    public float dashCrossfadeDuration = 0.1f;
+
     [Header("Physics")]
     public float gravity = -20f;
     
@@ -143,6 +171,12 @@ public class PlayerController : MonoBehaviour
     /// Other systems (Combat.cs) check this to allow/deny attacks
     /// </summary>
     public bool IsInCombatMode { get; private set; }
+
+    /// <summary>True while the player is in the middle of a dash (dodge).</summary>
+    public bool IsDashing => Time.time < dashEndTime;
+
+    /// <summary>True if the player's dodge ended within the last windowSeconds. Used by enemies to choose punish attacks.</summary>
+    public bool RecentlyDodged(float windowSeconds) => lastDashEndTime > 0f && (Time.time - lastDashEndTime) <= windowSeconds;
     
     /// <summary>
     /// Current stick input in character space (for attack direction sampling)
@@ -172,6 +206,16 @@ public class PlayerController : MonoBehaviour
     
     // Step sync state
     private float stepCycleTimer = 0f;  // Current position in the step cycle (0 to stepCycleDuration)
+
+    // Dash state
+    private float dashEndTime = 0f;
+    private float nextDashTime = 0f;
+    private Vector3 dashDirection;
+    private float dashSpeed;
+    private DashDirectionType dashDirType;
+    private Transform dashCapTarget;
+    private float lastDashEndTime = -999f;
+    private bool wasDashing;
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -205,6 +249,75 @@ public class PlayerController : MonoBehaviour
         // Check combat mode input
         UpdateCombatModeState();
         
+        // Dash input (B / keyboard B): dash in movement stick direction, camera-relative
+        bool dashPressed = (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
+                          (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame);
+        if (dashPressed && Time.time >= nextDashTime && Time.time >= dashEndTime)
+        {
+            StartDash();
+        }
+        
+        // If dashing, apply dash movement and skip normal movement
+        if (Time.time < dashEndTime)
+        {
+            if (dashDirType == DashDirectionType.Forward)
+            {
+                // Forward dash: suck toward enemy + face enemy
+                Transform suckTarget = GetNearestEnemyInDashCone(dashSuckRange, dashSuckConeAngle);
+                if (suckTarget != null)
+                {
+                    Vector3 toEnemy = suckTarget.position - transform.position;
+                    toEnemy.y = 0f;
+                    if (toEnemy.sqrMagnitude > 0.01f)
+                    {
+                        toEnemy.Normalize();
+                        dashDirection = Vector3.Slerp(dashDirection, toEnemy, dashSuckStrength * Time.deltaTime).normalized;
+                        transform.rotation = Quaternion.LookRotation(toEnemy, Vector3.up);
+                    }
+                }
+
+                // Stop-past-enemy cap
+                Transform capTarget = dashCapTarget != null ? dashCapTarget : suckTarget;
+                if (enableDashStopPastEnemy && capTarget != null)
+                {
+                    Vector3 capPoint = capTarget.position;
+                    capPoint.y = transform.position.y;
+                    capPoint += dashDirection * dashStopDistancePastEnemy;
+
+                    Vector3 desiredPos = transform.position + dashDirection * dashSpeed * Time.deltaTime;
+                    desiredPos.y = transform.position.y;
+
+                    if (Vector3.Dot(desiredPos - capPoint, dashDirection) > 0f)
+                    {
+                        // Would overshoot: clamp to cap and end dash
+                        Vector3 clampMove = capPoint - transform.position;
+                        clampMove.y = 0f;
+                        if (Vector3.Dot(clampMove, dashDirection) > 0f)
+                            cc.Move(clampMove);
+                        dashEndTime = Time.time;
+                    }
+                    else
+                    {
+                        cc.Move(dashDirection * dashSpeed * Time.deltaTime);
+                    }
+                }
+                else
+                {
+                    cc.Move(dashDirection * dashSpeed * Time.deltaTime);
+                }
+            }
+            else
+            {
+                // Back/Left/Right: no suck, no rotation override, just move
+                cc.Move(dashDirection * dashSpeed * Time.deltaTime);
+            }
+
+        ApplyGravity();
+        UpdateAnimator();
+        TrackDashEnd();
+        return;
+        }
+
         // Handle movement based on mode
         if (IsInCombatMode)
         {
@@ -217,7 +330,150 @@ public class PlayerController : MonoBehaviour
         
         ApplyGravity();
         UpdateAnimator();
+        TrackDashEnd();
     }
+
+    void TrackDashEnd()
+    {
+        bool nowDashing = Time.time < dashEndTime;
+        if (wasDashing && !nowDashing)
+            lastDashEndTime = Time.time;
+        wasDashing = nowDashing;
+    }
+    
+    void StartDash()
+    {
+        bool hasTarget = threatSystem != null && threatSystem.HasSoftTarget;
+        Vector3 moveDir;
+        dashDirType = DashDirectionType.Forward;
+        dashCapTarget = null;
+
+        if (hasTarget)
+        {
+            Vector3 toTarget = threatSystem.SoftTarget.position - transform.position;
+            toTarget.y = 0f;
+
+            if (toTarget.sqrMagnitude > 0.01f)
+            {
+                toTarget.Normalize();
+
+                Vector2 stick = GetStickInput();
+                if (stick.sqrMagnitude >= 0.01f)
+                {
+                    Camera cam = Camera.main;
+                    if (cam != null)
+                    {
+                        Vector3 camForward = cam.transform.forward;
+                        camForward.y = 0f; camForward.Normalize();
+                        Vector3 camRight = cam.transform.right;
+                        camRight.y = 0f; camRight.Normalize();
+                        Vector3 worldMove = (camForward * stick.y + camRight * stick.x).normalized;
+                        Vector3 localMove = transform.InverseTransformDirection(worldMove);
+
+                        if (Mathf.Abs(localMove.x) > Mathf.Abs(localMove.z))
+                            dashDirType = localMove.x < 0f ? DashDirectionType.Left : DashDirectionType.Right;
+                        else
+                            dashDirType = localMove.z >= 0f ? DashDirectionType.Forward : DashDirectionType.Back;
+                    }
+                }
+
+                switch (dashDirType)
+                {
+                    case DashDirectionType.Forward:
+                        moveDir = toTarget;
+                        dashCapTarget = threatSystem.SoftTarget;
+                        break;
+                    case DashDirectionType.Back:
+                        moveDir = -toTarget;
+                        break;
+                    case DashDirectionType.Left:
+                        moveDir = -transform.right;
+                        moveDir.y = 0f; moveDir.Normalize();
+                        break;
+                    case DashDirectionType.Right:
+                        moveDir = transform.right;
+                        moveDir.y = 0f; moveDir.Normalize();
+                        break;
+                    default:
+                        moveDir = toTarget;
+                        break;
+                }
+            }
+            else
+            {
+                moveDir = transform.forward;
+                moveDir.y = 0f;
+                if (moveDir.sqrMagnitude < 0.01f) moveDir = Vector3.forward;
+                else moveDir.Normalize();
+            }
+        }
+        else
+        {
+            // Not locked on: always dash forward
+            moveDir = transform.forward;
+            moveDir.y = 0f;
+            if (moveDir.sqrMagnitude < 0.01f) moveDir = Vector3.forward;
+            else moveDir.Normalize();
+        }
+
+        dashDirection = moveDir;
+        dashSpeed = dashDuration > 0f ? dashDistance / dashDuration : 0f;
+        dashEndTime = Time.time + dashDuration;
+        nextDashTime = Time.time + dashCooldown;
+
+        // Play dash animation state directly
+        if (animator != null)
+        {
+            string state = null;
+            switch (dashDirType)
+            {
+                case DashDirectionType.Forward: state = dashForwardState; break;
+                case DashDirectionType.Back:    state = dashBackState;    break;
+                case DashDirectionType.Left:    state = dashLeftState;    break;
+                case DashDirectionType.Right:   state = dashRightState;   break;
+            }
+            if (!string.IsNullOrEmpty(state))
+            {
+                if (dashCrossfadeDuration > 0f)
+                    animator.CrossFadeInFixedTime(state, dashCrossfadeDuration, 0, 0f);
+                else
+                    animator.Play(state, 0, 0f);
+            }
+        }
+    }
+    
+    /// <summary>Returns nearest enemy in a cone ahead (dash direction). Used for dash suck.</summary>
+    Transform GetNearestEnemyInDashCone(float range, float coneHalfAngle)
+    {
+        int hitCount = Physics.OverlapSphereNonAlloc(transform.position, range, dashOverlapBuffer, -1, QueryTriggerInteraction.Ignore);
+        Transform nearest = null;
+        float nearestDist = range + 1f;
+        Vector3 forward = dashDirection;
+        forward.y = 0f;
+        if (forward.sqrMagnitude < 0.01f) return null;
+        forward.Normalize();
+        for (int i = 0; i < hitCount; i++)
+        {
+            if (dashOverlapBuffer[i] == null) continue;
+            var enemyHealth = dashOverlapBuffer[i].GetComponentInParent<EnemyHealth>();
+            if (enemyHealth == null) continue;
+            Vector3 toEnemy = enemyHealth.transform.position - transform.position;
+            toEnemy.y = 0f;
+            float dist = toEnemy.magnitude;
+            if (dist < 0.01f) continue;
+            float angle = Vector3.Angle(forward, toEnemy / dist);
+            if (angle > coneHalfAngle) continue;
+            if (dist < nearestDist)
+            {
+                nearestDist = dist;
+                nearest = enemyHealth.transform;
+            }
+        }
+        return nearest;
+    }
+    
+    private const int DASH_OVERLAP_SIZE = 24;
+    private Collider[] dashOverlapBuffer = new Collider[DASH_OVERLAP_SIZE];
     
     // ========================================================================
     // COMBAT MODE INPUT
@@ -261,19 +517,7 @@ public class PlayerController : MonoBehaviour
             IsInCombatMode = Time.time < combatModeLockUntil;
         }
         
-        // Snap facing to camera aim when entering combat mode (only if enemy in snap cone)
-        if (IsInCombatMode && !wasInCombatMode)
-        {
-            if (Time.time - lastCombatSnapTime >= combatSnapCooldown)
-            {
-                if (threatSystem != null && threatSystem.HasThreatInSnapCone())
-                {
-                    SnapFacingToCamera();
-                    lastCombatSnapTime = Time.time;
-                }
-            }
-        }
-        
+        // Ninja Gaiden style: no snap when entering combat (soft lock only)
         wasInCombatMode = IsInCombatMode;
     }
 
@@ -376,73 +620,110 @@ public class PlayerController : MonoBehaviour
     void HandleCombatMovement()
     {
         /*
-         * COMBAT MODE FOOTWORK:
-         * 
-         * Movement is CHARACTER-RELATIVE, not camera-relative:
-         * - Forward stick = advance step (toward where character faces)
-         * - Back stick = backstep (away from facing)
-         * - Left/Right = sidestep (strafe)
-         * 
-         * Speeds are asymmetric:
-         * - Backstep is fastest (disengage)
-         * - Sidestep is medium
-         * - Advance is slowest (controlled approach)
-         * 
-         * Diagonals are penalized (less stable footwork)
+         * COMBAT STRAFE:
+         * - Face the soft lock target (from LockOnSystem)
+         * - Move camera-relative but keep facing the target (strafing)
+         * - Use directional speeds: advance / backstep / sidestep
+         * - Falls back to free roam style if no soft target
          */
         
         // Block movement during attacks
         if (combat != null && combat.IsAttacking)
         {
             targetAnimSpeed = 0f;
+            GetStepSyncMultiplier(false);
             return;
         }
         
         Vector2 stickInput = GetStickInput();
-        CombatStickInput = stickInput;  // Store for attack direction sampling
+        CombatStickInput = stickInput;
+        Vector3 input = new Vector3(stickInput.x, 0f, stickInput.y);
+        input = Vector3.ClampMagnitude(input, 1f);
         
-        // Handle facing first (soft auto-face toward threats)
-        HandleCombatFacing();
+        bool hasTarget = threatSystem != null && threatSystem.HasSoftTarget;
         
-        // No movement if no input
-        if (stickInput.sqrMagnitude < 0.01f)
+        if (input.sqrMagnitude < 0.01f)
         {
+            currentFreeRoamTurnSpeed = 0f;
             targetAnimSpeed = 0f;
+            GetStepSyncMultiplier(false);
+            HandleCombatFacing();  // Soft face threat when idle
             return;
         }
         
-        // Determine movement type based on stick direction
-        float forward = stickInput.y;  // Positive = advance, Negative = backstep
-        float lateral = stickInput.x;  // Left/Right = sidestep
+        Camera cam = Camera.main;
+        if (cam == null) return;
         
-        // Calculate speeds based on direction
-        float forwardSpeed = forward > 0 ? advanceSpeed : backstepSpeed;
-        float lateralSpeed = sidestepSpeed;
+        // Build camera-relative move direction
+        Vector3 camForward = cam.transform.forward;
+        camForward.y = 0f;
+        camForward.Normalize();
+        Vector3 camRight = cam.transform.right;
+        camRight.y = 0f;
+        camRight.Normalize();
+        Vector3 moveDir = (camForward * input.z + camRight * input.x).normalized;
         
-        // Build movement vector in character space
-        Vector3 charSpaceMove = Vector3.zero;
-        charSpaceMove += transform.forward * forward * forwardSpeed;
-        charSpaceMove += transform.right * lateral * lateralSpeed;
-        
-        // Apply diagonal penalty (less stable footwork)
-        bool isDiagonal = Mathf.Abs(forward) > 0.3f && Mathf.Abs(lateral) > 0.3f;
-        if (isDiagonal)
+        if (hasTarget)
         {
-            charSpaceMove *= diagonalPenalty;
+            // --- STRAFE MODE: face target, move freely ---
+            Vector3 toTarget = threatSystem.SoftTarget.position - transform.position;
+            toTarget.y = 0f;
+            
+            if (toTarget.sqrMagnitude > 0.01f)
+            {
+                // Rotate to face target
+                Quaternion targetRot = Quaternion.LookRotation(toTarget.normalized, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation, targetRot, combatTurnSpeed * Time.deltaTime);
+                
+                // Calculate directional speed relative to facing
+                Vector3 localMove = transform.InverseTransformDirection(moveDir);
+                float forward = localMove.z;  // positive = toward target, negative = away
+                float lateral = Mathf.Abs(localMove.x);
+                
+                float speed;
+                bool isDiagonal = Mathf.Abs(forward) > 0.2f && lateral > 0.2f;
+                
+                if (isDiagonal)
+                {
+                    // Blend between forward/back and lateral speeds, apply diagonal penalty
+                    float fwdSpeed = forward >= 0f ? advanceSpeed : backstepSpeed;
+                    speed = Mathf.Lerp(sidestepSpeed, fwdSpeed, Mathf.Abs(forward)) * diagonalPenalty;
+                }
+                else if (lateral > Mathf.Abs(forward))
+                {
+                    speed = sidestepSpeed;
+                }
+                else
+                {
+                    speed = forward >= 0f ? advanceSpeed : backstepSpeed;
+                }
+                
+                float stepMultiplier = GetStepSyncMultiplier(true);
+                cc.Move(moveDir * speed * stepMultiplier * input.magnitude * Time.deltaTime);
+            }
+            else
+            {
+                float stepMultiplier = GetStepSyncMultiplier(true);
+                cc.Move(moveDir * sidestepSpeed * stepMultiplier * input.magnitude * Time.deltaTime);
+            }
+        }
+        else
+        {
+            // --- NO TARGET: free roam style turning + movement ---
+            Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
+            if (currentFreeRoamTurnSpeed <= 0f)
+                currentFreeRoamTurnSpeed = freeRoamTurnSpeedMin;
+            currentFreeRoamTurnSpeed = Mathf.MoveTowards(
+                currentFreeRoamTurnSpeed, freeRoamTurnSpeed, freeRoamTurnAcceleration * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, targetRot, currentFreeRoamTurnSpeed * Time.deltaTime);
+            
+            float stepMultiplier = GetStepSyncMultiplier(true);
+            cc.Move(moveDir * freeRoamSpeed * stepMultiplier * input.magnitude * Time.deltaTime);
         }
         
-        // Normalize to prevent faster diagonal movement, then apply magnitude
-        float inputMag = Mathf.Clamp01(stickInput.magnitude);
-        if (charSpaceMove.sqrMagnitude > 0.01f)
-        {
-            charSpaceMove = charSpaceMove.normalized * charSpaceMove.magnitude * inputMag;
-        }
-        
-        // Move
-        cc.Move(charSpaceMove * Time.deltaTime);
-        
-        // Set animation speed (lower in combat mode for footwork feel)
-        targetAnimSpeed = inputMag * 0.5f;  // Half speed in combat mode
+        targetAnimSpeed = input.magnitude;
     }
     
     void HandleCombatFacing()

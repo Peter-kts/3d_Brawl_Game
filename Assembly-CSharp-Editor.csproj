@@ -62,7 +62,9 @@
   <ItemGroup>
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Editor\ComboSetEditor.cs" />
+    <Compile Include="Assets\Editor\DebugSettingsEditor.cs" />
     <Compile Include="Assets\Editor\FoldoutHeaderEditor.cs" />
+    <Compile Include="Assets\Editor\EnemyCombatEditor.cs" />
     <Compile Include="Assets\Editor\ScriptEditors.cs" />
     <Compile Include="Assets\Editor\AttackDataDrawer.cs" />
   </ItemGroup>

@@ -64,9 +64,11 @@
     <Compile Include="Assets\Scripts\Behaviors\EnemyBehavior.cs" />
     <Compile Include="Assets\Scripts\EnemyStateDebugVisual.cs" />
     <Compile Include="Assets\Scripts\Combat.cs" />
+    <Compile Include="Assets\Scripts\MoveTemplate.cs" />
     <Compile Include="Assets\Scripts\PlayerStepDebugVisual.cs" />
     <Compile Include="Assets\Scripts\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\AirborneAnimationSettings.cs" />
     <Compile Include="Assets\Scripts\DebugDrawHelper.cs" />
     <Compile Include="Assets\Scripts\EnemyCombat.cs" />
     <Compile Include="Assets\Brawler Animations Sample\DisplayAnimation.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Assets\Scripts\Behaviors\StandoffBehavior.cs" />
     <Compile Include="Assets\Scripts\CombatHitboxDebugVisual.cs" />
     <Compile Include="Assets\Scripts\EnemyBehaviorDebugVisual.cs" />
+    <Compile Include="Assets\Scripts\EnemyState.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\EnemyFacingDebugVisual.cs" />
@@ -90,6 +93,7 @@
   <ItemGroup>
     <None Include="Assets\Universal Animation Library[Standard](1)\Universal Animation Library[Standard]\License.txt" />
     <None Include="Assets\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\License.txt" />
+    <None Include="Assets\Frank_Fighting_Set4\Documentation\Frank FS4 Motion list.files\filelist.xml" />
     <None Include="Assets\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\Female Mannequin\README.txt" />
     <None Include="Assets\Packages\ai.meshy\Third-Party Notices.txt" />
     <None Include="Assets\Packages\ai.meshy\README.txt" />

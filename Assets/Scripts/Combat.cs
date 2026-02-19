@@ -38,6 +38,7 @@
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -142,6 +143,16 @@ public class Combat : MonoBehaviour
     // Current attack offset for debug visualization API
     private Vector3 currentAttackOffset;
 
+    // When the current attack started (for timing debug)
+    private float currentAttackStartTime;
+    
+    // Start-up and recovery (play first/last portion of attack animation slower)
+    private float currentStartUpLength;
+    private float currentStartUpSpeed;
+    private float currentRecoveryLength;
+    private float currentRecoverySpeed;
+    private string currentAttackStateName;  // Only apply speed when we're still in this state
+
     // ========================================================================
     // UNITY LIFECYCLE
     // ========================================================================
@@ -160,14 +171,31 @@ public class Combat : MonoBehaviour
     {
         if (isAttacking && Time.time >= currentAttackEndTime)
         {
+            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator))
+                animator.speed = 1f;
             isAttacking = false;
             hitboxPending = false;
+        }
+        var damageableForStun = GetComponentInParent<IDamageable>();
+        if (damageableForStun != null && damageableForStun.IsStunned && (isAttacking || hitboxPending))
+        {
+            isAttacking = false;
+            hitboxPending = false;
+            foreach (var frozen in frozenAnimators)
+            {
+                if (frozen.animator != null)
+                    frozen.animator.speed = frozen.originalSpeed;
+            }
+            frozenAnimators.Clear();
+            hitStopEndTime = 0f;
+            hasAppliedTorsoRotation = false;
         }
         UpdateComboState();
         UpdateAttackTracking();
         UpdateAttackLunge();
         UpdatePendingHitbox();
         UpdateHitStop();
+        UpdateAttackStartUpSpeed();
         
         // Revert torso rotation after attack window
         if (hasAppliedTorsoRotation && Time.time >= currentAttackEndTime)
@@ -185,15 +213,14 @@ public class Combat : MonoBehaviour
             (Keyboard.current != null && Keyboard.current.kKey.wasPressedThisFrame) ||
             (Gamepad.current != null && Gamepad.current.rightTrigger.wasPressedThisFrame);
         
-        // CRITICAL: Attacks only allowed in Combat Mode and not during hit stun
-        bool canAttack = playerController != null && playerController.IsInCombatMode;
-        var damageable = GetComponent<IDamageable>();
+        // Ninja Gaiden style: attacks allowed anytime (soft lock only; no combat-mode gate)
+        bool canAttack = playerController != null;
+        var damageable = GetComponentInParent<IDamageable>();
         if (damageable != null && damageable.IsStunned)
             canAttack = false;
         
         if (!canAttack)
         {
-            // Reset combo when exiting combat mode
             lightComboCount = 0;
             return;
         }
@@ -349,8 +376,9 @@ public class Combat : MonoBehaviour
         if (lightComboCount == 0)
         {
             // Starting a new combo - check if holding forward
-            bool holdingForward = playerController != null && playerController.CombatStickInput.y > 0.3f;
+            bool holdingForward = playerController != null && GetRawStickInput().y > 0.3f;
             isNeutralCombo = !holdingForward;
+            Debug.Log($"[Combat] holdingForward: {holdingForward}");
             
             // First jab - starts the combo
             AttackData jab1 = isNeutralCombo ? comboSet.neutralJab : comboSet.forwardJab;
@@ -383,6 +411,7 @@ public class Combat : MonoBehaviour
     
     void DoAttack(AttackData attack, Color visualColor)
     {
+        currentAttackStartTime = Time.time;
         // Set cooldown (when you can attack again) and lock duration (when you can move again)
         nextAttackTime = Time.time + attack.cooldown;
         currentAttackEndTime = Time.time + attack.lockDuration;
@@ -390,7 +419,26 @@ public class Combat : MonoBehaviour
         currentAttackRadius = attack.hitboxRadius;
         currentAttackColor = visualColor;
         currentAttackOffset = attack.hitboxOffset;
+        currentStartUpLength = attack.startUpLength;
+        currentStartUpSpeed = attack.startUpSpeed;
+        currentRecoveryLength = attack.recoveryLength;
+        currentRecoverySpeed = attack.recoverySpeed;
+        currentAttackStateName = !string.IsNullOrEmpty(attack.animationTrigger) ? attack.animationTrigger : null;
         isAttacking = true;
+        
+        // Clear attacker's hit stop so the new animation and lunge run immediately (keeps F1→F2 in sync)
+        if (animator != null)
+        {
+            for (int i = frozenAnimators.Count - 1; i >= 0; i--)
+            {
+                if (frozenAnimators[i].animator == animator)
+                {
+                    frozenAnimators[i].animator.speed = frozenAnimators[i].originalSpeed;
+                    frozenAnimators.RemoveAt(i);
+                    break;
+                }
+            }
+        }
         
         // Cancel any pending hitbox from a previous attack
         hitboxPending = false;
@@ -413,18 +461,17 @@ public class Combat : MonoBehaviour
             SetupLunge(attack);
         }
         
-        // Play attack animation with crossfade for smooth blending between attacks
+        // Play attack animation (no crossfade — keeps hitbox timing consistent)
         if (animator != null && !string.IsNullOrEmpty(attack.animationTrigger))
         {
-            Debug.Log($"Playing animation trigger: '{attack.animationTrigger}'");
-            if (attack.crossfadeDuration > 0f)
+            if (DebugSettings.Instance != null && DebugSettings.Instance.logAttackTiming)
             {
-                animator.CrossFadeInFixedTime(attack.animationTrigger, attack.crossfadeDuration, 0, 0f);
+                var state = animator.GetCurrentAnimatorStateInfo(0);
+                Debug.Log($"[AttackStart] trigger='{attack.animationTrigger}' hitboxDelay={attack.hitboxDelay:F3} startUp=({attack.startUpLength:F2},{attack.startUpSpeed:F2}) recovery=({attack.recoveryLength:F2},{attack.recoverySpeed:F2}) | fromStateHash={state.shortNameHash} fromNT={state.normalizedTime:F3}");
             }
             else
-            {
-                animator.Play(attack.animationTrigger, 0, 0f);
-            }
+                Debug.Log($"Playing animation trigger: '{attack.animationTrigger}'");
+            animator.Play(attack.animationTrigger, 0, 0f);
         }
         
         // --------------------------------------------------------------------
@@ -579,6 +626,20 @@ public class Combat : MonoBehaviour
         hitboxHasFired = true;
         hitboxPending = false;
         
+        if (DebugSettings.Instance != null && DebugSettings.Instance.logAttackTiming)
+        {
+            float realTimeSinceStart = Time.time - currentAttackStartTime;
+            string stateName = "";
+            float nt = -1f;
+            if (animator != null)
+            {
+                var state = animator.GetCurrentAnimatorStateInfo(0);
+                nt = state.normalizedTime;
+                stateName = state.shortNameHash.ToString();
+            }
+            Debug.Log($"[HitboxFire] realTimeSinceStart={realTimeSinceStart:F3} (expected ~{attack.hitboxDelay:F3}) | animatorStateHash={stateName} normalizedTime={nt:F3}");
+        }
+        
         Vector3 center = CalculateHitboxCenter(attack);
         
         // Find hits
@@ -649,6 +710,9 @@ public class Combat : MonoBehaviour
                 frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
                 animator.speed = 0f;
             }
+            
+            if (Gamepad.current != null)
+                StartCoroutine(RumbleForSeconds(attack.hitStopDuration));
         }
     }
     
@@ -692,6 +756,47 @@ public class Combat : MonoBehaviour
             }
             frozenAnimators.Clear();
         }
+    }
+    
+    /// <summary>
+    /// During attack, set animator speed: start-up and recovery portions can play slower, middle at 1.
+    /// Only applies while we're still in the attack state (so recovery works; animator must not exit early).
+    /// </summary>
+    void UpdateAttackStartUpSpeed()
+    {
+        if (!isAttacking || animator == null) return;
+        if (frozenAnimators.Any(f => f.animator == animator)) return;
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        if (!string.IsNullOrEmpty(currentAttackStateName) && !state.IsName(currentAttackStateName))
+        {
+            animator.speed = 1f;
+            return;
+        }
+        bool useStartUp = currentStartUpLength > 0f && currentStartUpSpeed < 1f;
+        bool useRecovery = currentRecoveryLength > 0f && currentRecoverySpeed < 1f;
+        if (!useStartUp && !useRecovery)
+        {
+            animator.speed = 1f;
+            return;
+        }
+        float nt = state.normalizedTime;
+        if (nt >= 1f)
+            animator.speed = 1f;
+        else if (useStartUp && nt < currentStartUpLength)
+            animator.speed = currentStartUpSpeed;
+        else if (useRecovery && nt >= (1f - currentRecoveryLength))
+            animator.speed = currentRecoverySpeed;
+        else
+            animator.speed = 1f;
+    }
+    
+    IEnumerator RumbleForSeconds(float duration)
+    {
+        var gamepad = Gamepad.current;
+        if (gamepad == null) yield break;
+        gamepad.SetMotorSpeeds(0.25f, 0.5f);
+        yield return new WaitForSecondsRealtime(duration);
+        gamepad.SetMotorSpeeds(0f, 0f);
     }
 
 }
