@@ -151,11 +151,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     /// <summary>
     /// Start the get-up sequence. Called by SimpleEnemyAI when the airborne crash phase has finished.
-    /// Caller triggers the get-up animation immediately after this. Duration is how long the get-up stun lasts.
+    /// Caller triggers the get-up animation immediately after this.
     /// </summary>
-    /// <param name="delay">Ignored (kept for API compatibility). Delay is folded into crash phase.</param>
-    /// <param name="duration">How long the get-up stun/animation lasts (passed from SimpleEnemyAI.getUpDuration).</param>
-    public void StartGetUp(float delay, float duration)
+    /// <param name="duration">How long the get-up stun lasts (passed from SimpleEnemyAI.getUpDuration).</param>
+    public void StartGetUp(float duration)
     {
         // Already in get-up sequence (e.g. PATH A and PATH B both fired); avoid playing get-up twice
         if (getUpUntil > 0f && Time.time < getUpUntil)

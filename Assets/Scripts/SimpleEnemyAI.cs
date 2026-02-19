@@ -247,7 +247,6 @@ public class SimpleEnemyAI : MonoBehaviour
     private enum AirbornePhase { None, Liftoff, Loop, Crash }
     private AirbornePhase airbornePhase = AirbornePhase.None;
     private bool wasAirborne;  // Updated only in UpdateAnimator(); used for airborne rising/falling edge in both paths
-    private float animatorSpeedBeforeGetUpFreeze = 1f;      // Saved animator speed before get-up delay freeze, restored when get-up starts
 
     // Behavior system
     private EnemyBehavior currentBehavior;
@@ -651,25 +650,12 @@ public class SimpleEnemyAI : MonoBehaviour
     }
     
     /// <summary>
-    /// Freezes the animator on the current frame (e.g. last frame of crash). Called by EnemyHealth when get-up delay starts.
-    /// Unfreeze happens when TriggerGetUpAnimation is called.
-    /// </summary>
-    public void FreezeAnimatorForGetUpDelay()
-    {
-        if (animator != null)
-        {
-            animatorSpeedBeforeGetUpFreeze = animator.speed;
-            animator.speed = 0f;
-        }
-    }
-
-    /// <summary>
     /// Triggers the get-up animation after landing from airborne. Called from OnAirborneCrashFinished when crash phase ends.
     /// </summary>
     public void TriggerGetUpAnimation(float duration)
     {
         if (animator == null || string.IsNullOrEmpty(getUpStateName)) return;
-        animator.speed = animatorSpeedBeforeGetUpFreeze;
+        animator.speed = 1f;
         if (!string.IsNullOrEmpty(hitSpeedParameter))
             animator.SetFloat(hitSpeedParameter, 1f);
         animator.Play(getUpStateName, getUpLayer, 0f);
@@ -697,7 +683,7 @@ public class SimpleEnemyAI : MonoBehaviour
             health.OnAirborneSequenceComplete();
         else
         {
-            health.StartGetUp(0f, getUpDuration);
+            health.StartGetUp(getUpDuration);
             TriggerGetUpAnimation(getUpDuration);
         }
     }
