@@ -395,8 +395,8 @@
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\StickyNote\StickyNote.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Pooling\ListPool.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Ensure\EnsureThat.Comparables.cs" />
-    <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Cloning\Cloners\EnumerableCloner.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\EditorBinding\Inspector\InspectorToggleLeftAttribute.cs" />
+    <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Cloning\Cloners\EnumerableCloner.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Input\PressState.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Collections\ISet.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Listeners\MonoBehaviour\UnityOnTriggerExit2DMListener.cs" />

@@ -240,14 +240,18 @@ public class StandoffBehavior : EnemyBehavior
         preAttackTimer -= Time.deltaTime;
         if (preAttackTimer <= 0f)
         {
-            // Choose attack: dodge-punish when player recently dodged and is in range, else default
-            float dist = ai.player != null ? Vector3.Distance(ai.transform.position, ai.player.position) : 0f;
+            // Choose attack: dodge-punish when player recently dodged and is in range, else kick if out of punch range, else punch
+            Vector3 toPlayer = ai.player != null ? ai.player.position - ai.transform.position : Vector3.zero;
+            toPlayer.y = 0f;
+            float dist = toPlayer.magnitude;
             bool usePunish = ai.PlayerController != null
                 && ai.PlayerController.RecentlyDodged(ai.dodgePunishWindow)
                 && dist >= ai.dodgePunishDistMin
                 && dist <= ai.dodgePunishDistMax;
             if (usePunish)
                 ai.EnemyCombat.DoAttack(ai.EnemyCombat.dodgePunishAttack);
+            else if (dist > ai.EnemyCombat.basicAttack.range)
+                ai.EnemyCombat.DoAttack(ai.EnemyCombat.kickAttack);
             else
                 ai.EnemyCombat.DoAttack();
             state = SubState.Attacking;

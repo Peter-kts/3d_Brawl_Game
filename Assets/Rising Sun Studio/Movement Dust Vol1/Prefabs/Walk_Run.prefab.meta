@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dfc6722c4106e1543960326a2bfbb16f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 27808
+  packageName: Dust Animation for Character Movement
+  packageVersion: 1.0
+  assetPath: Assets/Rising Sun Studio/Movement Dust Vol1/Prefabs/Walk_Run.prefab
+  uploadId: 601804

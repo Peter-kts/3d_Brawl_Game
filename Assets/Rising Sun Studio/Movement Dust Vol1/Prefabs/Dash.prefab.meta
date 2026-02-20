@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dd99efc64c8808c42b2c4808539a4bd5
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 27808
+  packageName: Dust Animation for Character Movement
+  packageVersion: 1.0
+  assetPath: Assets/Rising Sun Studio/Movement Dust Vol1/Prefabs/Dash.prefab
+  uploadId: 601804

@@ -3332,6 +3332,7 @@ GameObject:
   - component: {fileID: 335216250}
   - component: {fileID: 335216249}
   - component: {fileID: 335216248}
+  - component: {fileID: 335216251}
   m_Layer: 6
   m_Name: Enemy_01 (2)
   m_TagString: Enemy
@@ -3425,9 +3426,6 @@ MonoBehaviour:
   deathTriggerParameter: Death
   airborneParameter: IsAirborne
   stunParameter: IsStunned 0
-  airborneCrashStateName: Crash
-  airborneCrashLayer: 1
-  crashStateDuration: 5
   airborneAnimation:
     airborneStateName: Airborne
     airborneAnimationLayer: 1
@@ -3438,8 +3436,8 @@ MonoBehaviour:
     loopEnd: 0.23
     crashStart: 0.23
     crashEnd: 1
-  getUpDelay: 5
-  getUpDuration: 5
+  groundedDuration: 5
+  getUpDuration: 1
   getUpStateName: GetUp
   getUpLayer: 1
   baseGetUpAnimDuration: 1.2
@@ -3457,6 +3455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHp: 100
   knockbackFriction: 12
+  crashRelaunchAirborneDurationDefault: 0.1
 --- !u!136 &335216244
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3575,8 +3574,42 @@ MonoBehaviour:
     hitStopDuration: 0.1
     trackingDuration: 0.2
     trackingSpeed: 540
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  kickAttack:
+    range: 2.6
+    damage: 8
+    hitboxRadius: 0.5
+    lockDuration: 0.65
+    cooldown: 0.5
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 5
+    knockbackUp: 0
+    hitstun: 1
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Kick01
+    startUpLength: 0
+    startUpSpeed: 1
+    recoveryLength: 0
+    recoverySpeed: 1
+    lungeFrame: 0.2
+    lungeDistance: 0.7
+    lungeDuration: 0.12
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0.4
+    hitStopDuration: 0.11
+    trackingDuration: 1
+    trackingSpeed: 540
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   dodgePunishAttack:
-    range: 1
+    range: 0.7
     damage: 10
     hitboxRadius: 0.5
     lockDuration: 0.7
@@ -3589,10 +3622,10 @@ MonoBehaviour:
     makesAirborne: 1
     airborneDuration: 0.2
     animationTrigger: Kick01
-    startUpLength: 0
-    startUpSpeed: 1
-    recoveryLength: 0
-    recoverySpeed: 1
+    startUpLength: 0.12
+    startUpSpeed: 0.4
+    recoveryLength: 0.6
+    recoverySpeed: 0.6
     lungeFrame: 0.2
     lungeDistance: 0.8
     lungeDuration: 0.15
@@ -3601,6 +3634,12 @@ MonoBehaviour:
     hitStopDuration: 0.1
     trackingDuration: 1
     trackingSpeed: 820
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  attackStartVfxPrefab: {fileID: 0}
+  hitConnectVfxPrefab: {fileID: 0}
 --- !u!114 &335216248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3654,6 +3693,25 @@ MonoBehaviour:
   circlingColor: {r: 0, g: 1, b: 1, a: 0.8}
   preAttackColor: {r: 1, g: 1, b: 0, a: 0.8}
   attackingColor: {r: 1, g: 0, b: 0, a: 0.8}
+--- !u!114 &335216251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335216239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2226c00c1245875499ba74a2417cff76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthDebugVisual
+  height: 2
+  barWidth: 80
+  barHeight: 8
+  barBackgroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.9}
+  barFullColor: {r: 0, g: 1, b: 0.3, a: 0.9}
+  barLowColor: {r: 1, g: 0.2, b: 0, a: 0.9}
+  lowHpThreshold: 0.25
 --- !u!1 &361315551
 GameObject:
   m_ObjectHideFlags: 0
@@ -7391,7 +7449,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f8b7f66e75b113447bb3ef978c4e42c4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1402219875}
   m_SourcePrefab: {fileID: 100100000, guid: f8b7f66e75b113447bb3ef978c4e42c4, type: 3}
 --- !u!1 &642298167
 GameObject:
@@ -7899,6 +7960,7 @@ GameObject:
   - component: {fileID: 679812515}
   - component: {fileID: 679812514}
   - component: {fileID: 679812518}
+  - component: {fileID: 679812520}
   m_Layer: 3
   m_Name: Controller
   m_TagString: Player
@@ -7943,6 +8005,8 @@ MonoBehaviour:
   playerController: {fileID: 679812509}
   threatSystem: {fileID: 679812508}
   animator: {fileID: 1402219874}
+  attackStartVfxPrefab: {fileID: 0}
+  hitConnectVfxPrefab: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
   maxTorsoRotation: 20
   stickDeadzone: 0.3
   comboSet: {fileID: 11400000, guid: 149dba92214ec5d4581d4ff0489b69f4, type: 2}
@@ -8004,14 +8068,14 @@ MonoBehaviour:
   autoFaceAngleLimit: 90
   minCombatHoldTime: 0.35
   combatSnapCooldown: 0.5
-  dashDistance: 1.5
+  dashDistance: 1.1
   dashDuration: 0.12
-  dashCooldown: 2
-  dashSuckRange: 4
+  dashCooldown: 1
+  dashSuckRange: 0.5
   dashSuckConeAngle: 90
   dashSuckStrength: 8
   enableDashStopPastEnemy: 1
-  dashStopDistancePastEnemy: 1
+  dashStopDistancePastEnemy: 0.5
   dashForwardState: DashForward
   dashBackState: DashBack
   dashLeftState: DashLeft
@@ -8210,7 +8274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHp: 100
-  knockbackFriction: 0.25
+  knockbackFriction: 14
   animator: {fileID: 1402219874}
   hitStateName: Hit
   hitAnimationLayer: 1
@@ -8229,6 +8293,25 @@ MonoBehaviour:
     loopEnd: 0.6
     crashStart: 0.6
     crashEnd: 1
+--- !u!114 &679812520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679812505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2226c00c1245875499ba74a2417cff76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthDebugVisual
+  height: 2
+  barWidth: 80
+  barHeight: 8
+  barBackgroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.9}
+  barFullColor: {r: 0, g: 1, b: 0.3, a: 0.9}
+  barLowColor: {r: 1, g: 0.2, b: 0, a: 0.9}
+  lowHpThreshold: 0.25
 --- !u!1 &706544157
 GameObject:
   m_ObjectHideFlags: 0
@@ -8531,6 +8614,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &758249904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758249901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2226c00c1245875499ba74a2417cff76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthDebugVisual
+  height: 5
+  barWidth: 80
+  barHeight: 8
+  barBackgroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.9}
+  barFullColor: {r: 0, g: 1, b: 0.3, a: 0.9}
+  barLowColor: {r: 1, g: 0.2, b: 0, a: 0.9}
+  lowHpThreshold: 0.25
 --- !u!1 &765750117
 GameObject:
   m_ObjectHideFlags: 0
@@ -10998,6 +11100,7 @@ MonoBehaviour:
   showEnemyFacing: 1
   showEnemyStateIndicator: 1
   showEnemyBehaviorIndicator: 1
+  showHealthIndicator: 1
 --- !u!1 &1064068278
 GameObject:
   m_ObjectHideFlags: 0
@@ -11481,6 +11584,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104341139}
   m_Mesh: {fileID: -1021830052359966761, guid: 3837803ff786d72469b0e9a038688f34, type: 3}
+--- !u!1 &1120487518 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f8b7f66e75b113447bb3ef978c4e42c4, type: 3}
+  m_PrefabInstance: {fileID: 624040212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1123789694
 GameObject:
   m_ObjectHideFlags: 0
@@ -13622,6 +13730,25 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: f8b7f66e75b113447bb3ef978c4e42c4, type: 3}
   m_PrefabInstance: {fileID: 624040212}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1402219875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120487518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2226c00c1245875499ba74a2417cff76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthDebugVisual
+  height: 5
+  barWidth: 80
+  barHeight: 8
+  barBackgroundColor: {r: 0.2, g: 0.2, b: 0.2, a: 0.9}
+  barFullColor: {r: 0, g: 1, b: 0.3, a: 0.9}
+  barLowColor: {r: 1, g: 0.2, b: 0, a: 0.9}
+  lowHpThreshold: 0.25
 --- !u!1 &1411853177
 GameObject:
   m_ObjectHideFlags: 0
@@ -19405,6 +19532,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d810e4005f751946abe466f715226d0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 758249903}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d810e4005f751946abe466f715226d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 758249904}
   m_SourcePrefab: {fileID: 100100000, guid: 9d810e4005f751946abe466f715226d0, type: 3}
 --- !u!1 &1998316998
 GameObject:

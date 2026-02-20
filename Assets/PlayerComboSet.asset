@@ -38,6 +38,10 @@ MonoBehaviour:
     hitStopDuration: 0.105
     trackingDuration: 1
     trackingSpeed: 720
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   forwardJab2:
     range: 1.9
     damage: 12
@@ -64,6 +68,10 @@ MonoBehaviour:
     hitStopDuration: 0.105
     trackingDuration: 1
     trackingSpeed: 540
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.7, y: 0, z: -0.5}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab:
     range: 1.2
     damage: 5
@@ -90,6 +98,10 @@ MonoBehaviour:
     hitStopDuration: 0.105
     trackingDuration: 0.5
     trackingSpeed: 540
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.2, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab2:
     range: 1.55
     damage: 10
@@ -116,6 +128,10 @@ MonoBehaviour:
     hitStopDuration: 0.12
     trackingDuration: 1
     trackingSpeed: 540
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.25, y: -0.1, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
   heavyAttack:
     range: 1
     damage: 22
@@ -142,5 +158,9 @@ MonoBehaviour:
     hitStopDuration: 0.15
     trackingDuration: 0.5
     trackingSpeed: 540
+    attackStartVfxPositionOffset: {x: 0, y: -1.2, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   comboWindowDelay: 0.2
   comboWindowDuration: 0.25
