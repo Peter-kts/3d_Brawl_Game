@@ -56,6 +56,7 @@ public class StandoffBehavior : EnemyBehavior
      * making group encounters look more dynamic.
      */
     private float circleDirection = 1f;
+    private bool circleDirectionInitialized;
     private float directionChangeTimer;
     private float attackTimer;
     private float preAttackTimer;
@@ -78,8 +79,12 @@ public class StandoffBehavior : EnemyBehavior
     {
         state = SubState.Circling;
 
-        // Randomly pick initial circle direction
-        circleDirection = Random.value > 0.5f ? 1f : -1f;
+        // Randomly pick circle direction only the first time we enter standoff (avoids re-randomizing every time we cross the hysteresis band)
+        if (!circleDirectionInitialized)
+        {
+            circleDirection = Random.value > 0.5f ? 1f : -1f;
+            circleDirectionInitialized = true;
+        }
 
         ResetDirectionTimer();
         ResetAttackTimer();

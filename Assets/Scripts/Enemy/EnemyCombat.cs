@@ -436,7 +436,7 @@ public class EnemyCombat : MonoBehaviour
         if (Time.time >= lungeTriggerTime && Time.time < lungeEndTime)
         {
             float moveAmount = (currentLungeDistance / currentLungeDuration) * Time.deltaTime;
-            if (cc != null)
+            if (cc != null && cc.enabled)
             {
                 cc.Move(lungeDirection * moveAmount);
             }

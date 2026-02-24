@@ -76,6 +76,8 @@ public class LockOnSystem : MonoBehaviour
     [Header("Target Stickiness")]
     [Tooltip("New top-scored target must beat current target's score by this margin to switch (reduces flicker)")]
     public float switchThreshold = 0.2f;
+    [Tooltip("After LT (look-at) target, suppress auto-switch for this duration so focus doesn't jump to the other enemy in cone")]
+    public float lookAtOverrideDuration = 0.8f;
 
     // ========================================================================
     // PUBLIC PROPERTIES
@@ -115,7 +117,9 @@ public class LockOnSystem : MonoBehaviour
 
     // Stickiness: score of current SoftTarget when selected (for hysteresis)
     private float currentTargetScore;
-    
+    // After SetTargetToLookAt: don't auto-switch to a different target until this time
+    private float lookAtOverrideEndTime;
+
     // Performance: Pre-allocated physics array (avoids GC)
     private const int MAX_COLLIDERS = 32;
     private Collider[] colliderBuffer = new Collider[MAX_COLLIDERS];
@@ -200,12 +204,9 @@ public class LockOnSystem : MonoBehaviour
         Transform candidate = TrackedThreats[0].transform;
         float candidateScore = TrackedThreats[0].score;
 
+        // Don't auto-pick when not locked on; player locks on with LT
         if (SoftTarget == null)
-        {
-            SoftTarget = candidate;
-            currentTargetScore = candidateScore;
             return;
-        }
 
         // Current target lost (no longer in list or invalid)?
         bool currentStillTracked = false;
@@ -234,6 +235,13 @@ public class LockOnSystem : MonoBehaviour
             return;
         }
 
+        // After LT look-at: keep chosen target for a short time so it doesn't cycle to "next best"
+        if (Time.time < lookAtOverrideEndTime && currentStillTracked)
+        {
+            currentTargetScore = currentScore;
+            return;
+        }
+
         // Different target: switch only if new one wins by margin
         if (candidateScore > currentTargetScore + switchThreshold)
         {
@@ -241,7 +249,123 @@ public class LockOnSystem : MonoBehaviour
             currentTargetScore = candidateScore;
         }
     }
-    
+
+    /// <summary>
+    /// Set soft target to the enemy the camera is looking at (raycast from camera center, or closest by angle).
+    /// Call when the player presses LT (or equivalent) to snap focus to current aim.
+    /// </summary>
+    public void SetTargetToLookAt()
+    {
+        if (mainCamera == null) mainCamera = Camera.main;
+        if (mainCamera == null) return;
+
+        // Raycast from camera through screen center
+        Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        float maxDist = detectionRadius;
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDist, threatMask, QueryTriggerInteraction.Ignore))
+        {
+            var enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
+            if (enemyHealth != null && enemyHealth.transform != transform)
+            {
+                SoftTarget = enemyHealth.transform;
+                currentTargetScore = CalculateThreatScore(SoftTarget, out _, out _);
+                lookAtOverrideEndTime = Time.time + lookAtOverrideDuration;
+                return;
+            }
+        }
+
+        // No hit: pick tracked threat with smallest angle to camera forward
+        if (TrackedThreats.Count == 0)
+        {
+            SoftTarget = null;
+            return;
+        }
+        Vector3 camForward = mainCamera.transform.forward;
+        camForward.y = 0f;
+        if (camForward.sqrMagnitude < 0.0001f) camForward = transform.forward;
+        camForward.Normalize();
+
+        int bestIdx = 0;
+        float bestAngle = float.MaxValue;
+        for (int i = 0; i < TrackedThreats.Count; i++)
+        {
+            Vector3 toThreat = TrackedThreats[i].transform.position - transform.position;
+            toThreat.y = 0f;
+            if (toThreat.sqrMagnitude < 0.01f) continue;
+            toThreat.Normalize();
+            float angle = Vector3.Angle(camForward, toThreat);
+            if (angle < bestAngle)
+            {
+                bestAngle = angle;
+                bestIdx = i;
+            }
+        }
+        SoftTarget = TrackedThreats[bestIdx].transform;
+        currentTargetScore = TrackedThreats[bestIdx].score;
+        lookAtOverrideEndTime = Time.time + lookAtOverrideDuration;
+    }
+
+    /// <summary>
+    /// When already locked on: cycle to the next target closest to camera center (excluding current).
+    /// Order: all tracked threats sorted by angle to camera forward; next = (currentIndex + 1) % count.
+    /// </summary>
+    public void CycleToNextTargetInLookDirection()
+    {
+        if (mainCamera == null) mainCamera = Camera.main;
+        if (mainCamera == null || TrackedThreats.Count == 0) return;
+
+        Vector3 camForward = mainCamera.transform.forward;
+        camForward.y = 0f;
+        if (camForward.sqrMagnitude < 0.0001f) camForward = transform.forward;
+        camForward.Normalize();
+
+        // Sort by angle to camera center (ascending) - reuse a temp list
+        threatsByAngleBuffer.Clear();
+        for (int i = 0; i < TrackedThreats.Count; i++)
+        {
+            Transform t = TrackedThreats[i].transform;
+            Vector3 toThreat = t.position - transform.position;
+            toThreat.y = 0f;
+            float angle = toThreat.sqrMagnitude < 0.01f ? 0f : Vector3.Angle(camForward, toThreat.normalized);
+            threatsByAngleBuffer.Add((t, angle));
+        }
+        threatsByAngleBuffer.Sort((a, b) => a.angle.CompareTo(b.angle));
+
+        int currentIdx = -1;
+        for (int i = 0; i < threatsByAngleBuffer.Count; i++)
+        {
+            if (threatsByAngleBuffer[i].transform == SoftTarget)
+            {
+                currentIdx = i;
+                break;
+            }
+        }
+
+        int nextIdx = currentIdx < 0 ? 0 : (currentIdx + 1) % threatsByAngleBuffer.Count;
+        Transform next = threatsByAngleBuffer[nextIdx].transform;
+        SoftTarget = next;
+        foreach (var t in TrackedThreats)
+        {
+            if (t.transform == next)
+            {
+                currentTargetScore = t.score;
+                break;
+            }
+        }
+        lookAtOverrideEndTime = Time.time + lookAtOverrideDuration;
+    }
+
+    /// <summary>
+    /// Clear lock-on. Player returns to free roam; next LT will lock on to who they're looking at.
+    /// </summary>
+    public void ReleaseFocus()
+    {
+        SoftTarget = null;
+    }
+
+    // Buffer for CycleToNextTargetInLookDirection (angle-sorted list)
+    private List<(Transform transform, float angle)> threatsByAngleBuffer = new List<(Transform, float)>();
+
     float CalculateThreatScore(Transform threat, out float distance, out float angle)
     {
         float score = 0f;

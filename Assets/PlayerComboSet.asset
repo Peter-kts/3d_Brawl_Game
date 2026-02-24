@@ -164,3 +164,31 @@ MonoBehaviour:
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   comboWindowDelay: 0.2
   comboWindowDuration: 0.25
+  throwData:
+    enableThrow: 1
+    grabAttemptAnimationTrigger: GrabAttempt
+    attemptLockDuration: 0.5
+    hitboxDelay: 0.25
+    throwAnimationTrigger: Throw
+    throwPhaseDuration: 2
+    grabHitStopDuration: 0.08
+    grabConnectVfxPrefab: {fileID: 3297430504707544264, guid: c166a98cbf45fe14488e05032a04cd59, type: 3}
+    throwEndVfxPrefab: {fileID: 0}
+    range: 1.4
+    hitboxRadius: 0.6
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    endDamage: 15
+    endKnockback: 50
+    endKnockbackUp: 5
+    endHitstun: 2
+    endAirborneDuration: 0.4
+    faceVictimTowardThrowDirection: 1
+    releaseProfiles:
+    - faceTowardThrowDirection: 1
+      endDamage: 0
+      endKnockback: 0
+      endKnockbackUp: 0
+      endHitstun: 0
+      endAirborneDuration: 0
+    enemyThrownStateName: Thrown
+    throwCooldown: 0.8

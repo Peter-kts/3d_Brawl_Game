@@ -248,7 +248,24 @@ public class PlayerController : MonoBehaviour
         
         // Check combat mode input
         UpdateCombatModeState();
-        
+
+        // Right stick click (R3) or Tab: clear lock-on
+        bool clearLockPressed = (Gamepad.current != null && Gamepad.current.rightStickButton.wasPressedThisFrame) ||
+                               (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame);
+        if (clearLockPressed && threatSystem != null)
+            threatSystem.ReleaseFocus();
+
+        // LT (or RMB) press: lock on to center of view, or cycle to next target if already locked on
+        bool ltPressed = (Gamepad.current != null && Gamepad.current.leftTrigger.wasPressedThisFrame) ||
+                         (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame);
+        if (ltPressed && threatSystem != null)
+        {
+            if (threatSystem.HasSoftTarget)
+                threatSystem.CycleToNextTargetInLookDirection();
+            else
+                threatSystem.SetTargetToLookAt();
+        }
+
         // Dash input (B / keyboard B): dash in movement stick direction, camera-relative
         bool dashPressed = (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
                           (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame);
@@ -262,8 +279,8 @@ public class PlayerController : MonoBehaviour
         {
             if (dashDirType == DashDirectionType.Forward)
             {
-                // Forward dash: suck toward enemy + face enemy
-                Transform suckTarget = GetNearestEnemyInDashCone(dashSuckRange, dashSuckConeAngle);
+                // Only suck toward enemy / stop past enemy when we started dash with a lock-on target
+                Transform suckTarget = (dashCapTarget != null) ? GetNearestEnemyInDashCone(dashSuckRange, dashSuckConeAngle) : null;
                 if (suckTarget != null)
                 {
                     Vector3 toEnemy = suckTarget.position - transform.position;
@@ -276,7 +293,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
 
-                // Stop-past-enemy cap
+                // Stop-past-enemy cap (only when we had a target at dash start)
                 Transform capTarget = dashCapTarget != null ? dashCapTarget : suckTarget;
                 if (enableDashStopPastEnemy && capTarget != null)
                 {
@@ -412,11 +429,40 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // Not locked on: always dash forward
-            moveDir = transform.forward;
-            moveDir.y = 0f;
-            if (moveDir.sqrMagnitude < 0.01f) moveDir = Vector3.forward;
-            else moveDir.Normalize();
+            // Not locked on: dash in movement stick direction (camera-relative)
+            Vector2 stick = GetStickInput();
+            if (stick.sqrMagnitude >= 0.01f)
+            {
+                Camera cam = Camera.main;
+                if (cam != null)
+                {
+                    Vector3 camForward = cam.transform.forward;
+                    camForward.y = 0f; camForward.Normalize();
+                    Vector3 camRight = cam.transform.right;
+                    camRight.y = 0f; camRight.Normalize();
+                    moveDir = (camForward * stick.y + camRight * stick.x).normalized;
+                }
+                else
+                {
+                    moveDir = transform.forward;
+                    moveDir.y = 0f;
+                    if (moveDir.sqrMagnitude < 0.01f) moveDir = Vector3.forward;
+                    else moveDir.Normalize();
+                }
+                // Set dash dir type for animation (optional; Forward used if stick ~forward)
+                Vector3 localMove = transform.InverseTransformDirection(moveDir);
+                if (Mathf.Abs(localMove.x) > Mathf.Abs(localMove.z))
+                    dashDirType = localMove.x < 0f ? DashDirectionType.Left : DashDirectionType.Right;
+                else
+                    dashDirType = localMove.z >= 0f ? DashDirectionType.Forward : DashDirectionType.Back;
+            }
+            else
+            {
+                moveDir = transform.forward;
+                moveDir.y = 0f;
+                if (moveDir.sqrMagnitude < 0.01f) moveDir = Vector3.forward;
+                else moveDir.Normalize();
+            }
         }
 
         dashDirection = moveDir;

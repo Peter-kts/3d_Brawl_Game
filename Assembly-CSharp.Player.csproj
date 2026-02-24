@@ -72,9 +72,11 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyStateDebugVisual.cs" />
     <Compile Include="Assets\Scripts\Enemy\SimpleEnemyAI.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyCombat.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyMeshParentDebugVisual.cs" />
     <Compile Include="Assets\Brawler Animations Sample\DisplayAnimation.cs" />
     <Compile Include="Assets\Scripts\Airborne\AirborneAnimationSettings.cs" />
     <Compile Include="Assets\Scripts\Airborne\AirborneSequence.cs" />
+    <Compile Include="Assets\Scripts\Combat\ThrowData.cs" />
     <Compile Include="Assets\Scripts\Debug\HealthDebugVisual.cs" />
     <Compile Include="Assets\Scripts\Combat\CombatHitboxGizmos.cs" />
     <Compile Include="Assets\Scripts\Behaviors\StandoffBehavior.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyBehaviorDebugVisual.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Combat\MoveTemplate.cs" />
+    <Compile Include="Assets\Scripts\Combat\ThrowAnimationEventForwarder.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerFacingDebugVisual.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\LockOn\LockOnDebugVisuals.cs" />

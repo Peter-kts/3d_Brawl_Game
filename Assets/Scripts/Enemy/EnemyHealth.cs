@@ -322,6 +322,25 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         airborneSpeedMultiplier = 1f;
     }
 
+    /// <summary>Clear current knockback velocity and pending knockback. Use when releasing a throw victim so leftover velocity doesn't move them after we bake position.</summary>
+    public void ClearKnockback()
+    {
+        kbVel = Vector3.zero;
+        pendingKnockback = Vector3.zero;
+        hitStopEndTime = 0f;
+    }
+
+    /// <summary>
+    /// Start throw-victim state: stun for duration and play the thrown animation (no damage/knockback here; applied at throw end by Combat).
+    /// </summary>
+    public void StartThrowVictim(float durationSeconds, string thrownStateName)
+    {
+        if (isDying) return;
+        stunUntil = Mathf.Max(stunUntil, Time.time + durationSeconds);
+        if (enemyAI != null)
+            enemyAI.TriggerThrownAnimation(durationSeconds, thrownStateName);
+    }
+
     /*
      * TakeHit: The "damage interface" for this enemy (implements IDamageable)
      * 

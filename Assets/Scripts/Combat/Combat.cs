@@ -72,6 +72,10 @@ public class Combat : MonoBehaviour
     [Tooltip("Animator for playing attack animations. Auto-finds on this object or children if not set.")]
     public Animator animator;
     
+    [Header("Throw (grab socket)")]
+    [Tooltip("Empty child transform at hands/chest. Victim is parented here during hold so they ride the throw anim. Add Animation Event 'OnThrowRelease' at the chuck frame.")]
+    public Transform grabSocket;
+    
     [Header("VFX (optional)")]
     [Tooltip("Optional. Spawned when the attack animation starts (e.g. swing trail).")]
     public GameObject attackStartVfxPrefab;
@@ -162,6 +166,22 @@ public class Combat : MonoBehaviour
     private float currentRecoverySpeed;
     private string currentAttackStateName;  // Only apply speed when we're still in this state
 
+    // Throw state (synced throw: attempted grab then throw on success)
+    private bool pendingThrowHitbox;
+    private float throwHitboxTriggerTime;
+    private IDamageable currentThrowVictim;  // Non-null when we have a victim to apply end-of-throw damage to
+    private float nextThrowTime;
+    private bool _throwVictimRootMotionRestore;
+    private bool _throwVictimRootMotionChanged;
+    private bool _playerThrowRootMotionRestore;
+    private bool _playerThrowRootMotionChanged;
+    private bool _deferThrowReleaseToLateUpdate;
+    private int _deferThrowReleaseProfileIndex;
+    private Transform _reapplyThrowBakeTransform;
+    private Vector3 _reapplyThrowBakePosition;
+    private Quaternion _reapplyThrowBakeRotation;
+    private bool _reapplyThrowBakeNextFrame;
+
     // ========================================================================
     // UNITY LIFECYCLE
     // ========================================================================
@@ -175,21 +195,90 @@ public class Combat : MonoBehaviour
         if (animator == null) animator = GetComponent<Animator>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
     }
-    
+
+    void LateUpdate()
+    {
+        if (_reapplyThrowBakeNextFrame && _reapplyThrowBakeTransform != null)
+        {
+            _reapplyThrowBakeTransform.position = _reapplyThrowBakePosition;
+            _reapplyThrowBakeTransform.rotation = _reapplyThrowBakeRotation;
+            _reapplyThrowBakeNextFrame = false;
+            _reapplyThrowBakeTransform = null;
+        }
+        if (!_deferThrowReleaseToLateUpdate || currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;
+        _deferThrowReleaseToLateUpdate = false;
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        if (vt == null) { currentThrowVictim = null; return; }
+        BakePlayerThrowRootMotionAndRestore();
+        ReleaseThrowVictimFromSocket();
+        if (comboSet.throwData.launchVictimOnRelease)
+            ApplyThrowEndDamage(_deferThrowReleaseProfileIndex);
+        else
+        {
+            var victimAI = vt.GetComponent<SimpleEnemyAI>();
+            if (victimAI != null) victimAI.TriggerGetUpFromThrow();
+        }
+        SetThrowVictimCollisionIgnore(vt, false);
+        currentThrowVictim = null;
+        isAttacking = false;
+        hitboxPending = false;
+        pendingThrowHitbox = false;
+        if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
+            animator.speed = 1f;
+        foreach (var frozen in frozenAnimators)
+        {
+            if (frozen.animator != null)
+                frozen.animator.speed = frozen.originalSpeed;
+        }
+        frozenAnimators.Clear();
+        hitStopEndTime = 0f;
+    }
+
     void Update()
     {
         if (isAttacking && Time.time >= currentAttackEndTime)
         {
-            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator))
-                animator.speed = 1f;
-            isAttacking = false;
-            hitboxPending = false;
+            if (currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
+            {
+                if (!_deferThrowReleaseToLateUpdate)
+                {
+                    _deferThrowReleaseToLateUpdate = true;
+                    _deferThrowReleaseProfileIndex = -1;
+                }
+            }
+            else
+            {
+                if (currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
+                {
+                    Transform vt = (currentThrowVictim as Component)?.transform;
+                    BakePlayerThrowRootMotionAndRestore();
+                    ReleaseThrowVictimFromSocket();
+                    if (comboSet.throwData.launchVictimOnRelease)
+                        ApplyThrowEndDamage();
+                    SetThrowVictimCollisionIgnore(vt, false);
+                    currentThrowVictim = null;
+                }
+                if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator))
+                    animator.speed = 1f;
+                isAttacking = false;
+                hitboxPending = false;
+                pendingThrowHitbox = false;
+            }
         }
         var damageableForStun = GetComponentInParent<IDamageable>();
         if (damageableForStun != null && damageableForStun.IsStunned && (isAttacking || hitboxPending))
         {
+            if (currentThrowVictim != null)
+            {
+                Transform vt = (currentThrowVictim as Component)?.transform;
+                BakePlayerThrowRootMotionAndRestore();
+                ReleaseThrowVictimFromSocket();
+                SetThrowVictimCollisionIgnore(vt, false);
+            }
             isAttacking = false;
             hitboxPending = false;
+            pendingThrowHitbox = false;
+            currentThrowVictim = null;
             foreach (var frozen in frozenAnimators)
             {
                 if (frozen.animator != null)
@@ -222,6 +311,10 @@ public class Combat : MonoBehaviour
             (Keyboard.current != null && Keyboard.current.kKey.wasPressedThisFrame) ||
             (Gamepad.current != null && Gamepad.current.rightTrigger.wasPressedThisFrame);
         
+        bool throwInput =
+            (Keyboard.current != null && Keyboard.current.gKey.wasPressedThisFrame) ||
+            (Gamepad.current != null && Gamepad.current.leftStickButton.wasPressedThisFrame);
+        
         // Ninja Gaiden style: attacks allowed anytime (soft lock only; no combat-mode gate)
         bool canAttack = playerController != null;
         var damageable = GetComponentInParent<IDamageable>();
@@ -235,6 +328,13 @@ public class Combat : MonoBehaviour
         }
         
         if (comboSet == null) return;
+        
+        // Throw: dedicated input and cooldown (cannot throw during attack)
+        if (throwInput && !isAttacking && Time.time >= nextThrowTime && comboSet.throwData.enableThrow)
+        {
+            DoThrow();
+            return;
+        }
         
         // Check if we're in the cancel window for combo
         bool inCancelWindow = (lightComboCount == 1) && 
@@ -564,6 +664,251 @@ public class Combat : MonoBehaviour
     }
 
     // ========================================================================
+    // THROW (attempted grab -> throw on success, hit stop + VFX)
+    // ========================================================================
+    
+    void DoThrow()
+    {
+        ThrowData t = comboSet.throwData;
+        if (!t.enableThrow) return;
+        currentAttackStartTime = Time.time;
+        nextThrowTime = Time.time + t.throwCooldown;
+        currentAttackEndTime = Time.time + t.attemptLockDuration;
+        currentAttackStateName = t.grabAttemptAnimationTrigger;
+        currentThrowVictim = null;
+        isAttacking = true;
+        hitboxPending = false;
+        hitboxHasFired = false;
+        pendingThrowHitbox = true;
+        throwHitboxTriggerTime = Time.time + t.hitboxDelay;
+        if (animator != null && !string.IsNullOrEmpty(t.grabAttemptAnimationTrigger))
+            animator.Play(t.grabAttemptAnimationTrigger, 0, 0f);
+    }
+    
+    void ExecuteThrowHitbox()
+    {
+        ThrowData t = comboSet.throwData;
+        if (!t.enableThrow) return;
+        Vector3 center = CalculateThrowHitboxCenter(t);
+        Collider[] hits = Physics.OverlapSphere(center, t.hitboxRadius, ~0, QueryTriggerInteraction.Ignore);
+        EnemyHealth victim = null;
+        IDamageable victimDamageable = null;
+        foreach (var c in hits)
+        {
+            var damageable = c.GetComponentInParent<IDamageable>();
+            if (damageable == null || (damageable as Component)?.gameObject == gameObject) continue;
+            var eh = (damageable as Component)?.GetComponent<EnemyHealth>();
+            if (eh == null) continue;
+            victim = eh;
+            victimDamageable = damageable;
+            break;
+        }
+        if (victim == null) return;
+        currentThrowVictim = victimDamageable;
+        Transform victimTransform = (victimDamageable as Component).transform;
+        SetThrowVictimCollisionIgnore(victimTransform, true);
+        if (grabSocket != null)
+        {
+            Vector3 worldScaleBefore = victimTransform.lossyScale;
+            victimTransform.SetParent(grabSocket, false);
+            victimTransform.localPosition = Vector3.zero;
+            Vector3 p = grabSocket.lossyScale;
+            if (p.x != 0f && p.y != 0f && p.z != 0f)
+                victimTransform.localScale = new Vector3(worldScaleBefore.x / p.x, worldScaleBefore.y / p.y, worldScaleBefore.z / p.z);
+            var victimCC = victimTransform.GetComponent<CharacterController>();
+            if (victimCC != null) victimCC.enabled = false;
+            var victimRb = victimTransform.GetComponent<Rigidbody>();
+            if (victimRb != null) victimRb.isKinematic = true;
+            Vector3 toPlayer = transform.position - victimTransform.position;
+            toPlayer.y = 0f;
+            if (toPlayer.sqrMagnitude > 0.001f)
+            {
+                toPlayer.Normalize();
+                victimTransform.rotation = Quaternion.LookRotation(toPlayer);
+            }
+            var victimAnim = victimTransform.GetComponentInChildren<Animator>();
+            if (victimAnim != null)
+            {
+                _throwVictimRootMotionRestore = victimAnim.applyRootMotion;
+                victimAnim.applyRootMotion = true;
+                _throwVictimRootMotionChanged = true;
+            }
+        }
+        var victimAI = victim.GetComponent<SimpleEnemyAI>();
+        string thrownState = (victimAI != null && !string.IsNullOrEmpty(victimAI.thrownStateName)) ? victimAI.thrownStateName : t.enemyThrownStateName;
+        victim.StartThrowVictim(t.throwPhaseDuration, thrownState);
+        if (t.grabHitStopDuration > 0f)
+        {
+            hitStopEndTime = Time.time + t.grabHitStopDuration;
+            if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
+                frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
+            animator.speed = 0f;
+            Animator targetAnim = (victimDamageable as Component)?.transform.GetComponentInChildren<Animator>();
+            if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
+            {
+                frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
+                targetAnim.speed = 0f;
+            }
+        }
+        if (t.grabConnectVfxPrefab != null)
+        {
+            Quaternion rot = (center - transform.position).sqrMagnitude > 0.001f ? Quaternion.LookRotation(center - transform.position) : transform.rotation;
+            var go = Instantiate(t.grabConnectVfxPrefab, center, rot);
+            PlayVfx(go);
+        }
+        currentAttackEndTime = Time.time + t.grabHitStopDuration + t.throwPhaseDuration;
+        if (animator != null && !string.IsNullOrEmpty(t.throwAnimationTrigger))
+        {
+            animator.Play(t.throwAnimationTrigger, 0, 0f);
+            _playerThrowRootMotionRestore = animator.applyRootMotion;
+            animator.applyRootMotion = true;
+            _playerThrowRootMotionChanged = true;
+        }
+        if (threatSystem != null)
+            threatSystem.RegisterInteraction((victimDamageable as Component).transform);
+    }
+
+    /// <summary>Bake player's Animator root-motion result into transform and restore applyRootMotion. Call when throw ends.</summary>
+    void BakePlayerThrowRootMotionAndRestore()
+    {
+        if (!_playerThrowRootMotionChanged || animator == null) return;
+        Vector3 bakePosition = animator.transform.position;
+        Quaternion bakeRotation = animator.transform.rotation;
+        animator.applyRootMotion = _playerThrowRootMotionRestore;
+        _playerThrowRootMotionChanged = false;
+        transform.position = bakePosition;
+        transform.rotation = bakeRotation;
+        if (animator.transform != transform)
+        {
+            animator.transform.localPosition = Vector3.zero;
+            animator.transform.localRotation = Quaternion.identity;
+        }
+    }
+
+    /// <summary>Unparent victim and re-enable CharacterController/Rigidbody. Bakes mesh position into root and zeros mesh local *before* unparenting so both stay where the mesh ended up when we unparent.</summary>
+    void ReleaseThrowVictimFromSocket()
+    {
+        if (currentThrowVictim == null) return;
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        if (vt == null) return;
+        var victimAnim = vt.GetComponentInChildren<Animator>();
+        Vector3 bakePosition = vt.position;
+        Quaternion bakeRotation = vt.rotation;
+        if (victimAnim != null)
+        {
+            bakePosition = victimAnim.transform.position;
+            bakeRotation = victimAnim.transform.rotation;
+            UnityEngine.Debug.Log($"[Throw] Mesh (Animator) at: pos={bakePosition}, rot={bakeRotation.eulerAngles}");
+        }
+        UnityEngine.Debug.Log($"[Throw] Root before set: pos={vt.position}, rot={vt.rotation.eulerAngles}");
+        if (_throwVictimRootMotionChanged && victimAnim != null)
+        {
+            victimAnim.applyRootMotion = _throwVictimRootMotionRestore;
+            _throwVictimRootMotionChanged = false;
+        }
+        // Set root to mesh position and zero mesh local *while still parented* so when we unparent both keep this world position
+        vt.position = bakePosition;
+        vt.rotation = bakeRotation;
+        if (victimAnim != null && victimAnim.transform != vt)
+        {
+            victimAnim.transform.localPosition = Vector3.zero;
+            victimAnim.transform.localRotation = Quaternion.identity;
+        }
+        vt.SetParent(null);
+        UnityEngine.Debug.Log($"[Throw] Root after unparent: pos={vt.position}, rot={vt.rotation.eulerAngles}");
+        var cc = vt.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = true;
+        var rb = vt.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = false;
+        var victimHealth = vt.GetComponent<EnemyHealth>();
+        if (victimHealth != null)
+            victimHealth.ClearKnockback();
+        if (!comboSet.throwData.launchVictimOnRelease)
+        {
+            _reapplyThrowBakeTransform = vt;
+            _reapplyThrowBakePosition = bakePosition;
+            _reapplyThrowBakeRotation = bakeRotation;
+            _reapplyThrowBakeNextFrame = true;
+        }
+    }
+
+    /// <summary>Called from Animation Event at the throw release frame. Unparents victim, re-enables CC/RB, applies damage + launch. Pass no arg or -1 to use default throw data; pass 0,1,2... to use releaseProfiles[index].</summary>
+    public void OnThrowRelease()
+    {
+        OnThrowRelease(-1);
+    }
+    public void OnThrowRelease(int releaseProfileIndex)
+    {
+        if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        if (vt == null) return;
+        _deferThrowReleaseToLateUpdate = true;
+        _deferThrowReleaseProfileIndex = releaseProfileIndex;
+    }
+
+    /// <summary>Ignore or restore collision between player and victim for the throw duration so they don't push each other.</summary>
+    void SetThrowVictimCollisionIgnore(Transform victimTransform, bool ignore)
+    {
+        if (victimTransform == null) return;
+        Collider[] playerCols = GetComponentsInChildren<Collider>();
+        Collider[] victimCols = victimTransform.GetComponentsInChildren<Collider>();
+        foreach (var pc in playerCols)
+        {
+            if (pc == null || !pc.enabled) continue;
+            foreach (var vc in victimCols)
+            {
+                if (vc == null || !vc.enabled || pc == vc) continue;
+                Physics.IgnoreCollision(pc, vc, ignore);
+            }
+        }
+    }
+
+    void ApplyThrowEndDamage(int releaseProfileIndex = -1)
+    {
+        ThrowData t = comboSet.throwData;
+        if (!t.enableThrow || currentThrowVictim == null) return;
+        Transform victimTransform = (currentThrowVictim as Component)?.transform;
+        if (victimTransform == null) return;
+        Vector3 horizontalDir = (victimTransform.position - transform.position);
+        horizontalDir.y = 0f;
+        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
+        horizontalDir.Normalize();
+        bool faceDirection;
+        int damage;
+        float knockback, knockbackUp, hitstun, airborneDuration;
+        if (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)
+        {
+            var p = t.releaseProfiles[releaseProfileIndex];
+            faceDirection = p.faceTowardThrowDirection;
+            damage = p.endDamage;
+            knockback = p.endKnockback;
+            knockbackUp = p.endKnockbackUp;
+            hitstun = p.endHitstun;
+            airborneDuration = p.endAirborneDuration;
+        }
+        else
+        {
+            faceDirection = t.faceVictimTowardThrowDirection;
+            damage = t.endDamage;
+            knockback = t.endKnockback;
+            knockbackUp = t.endKnockbackUp;
+            hitstun = t.endHitstun;
+            airborneDuration = t.endAirborneDuration;
+        }
+        if (faceDirection)
+            victimTransform.rotation = Quaternion.LookRotation(horizontalDir);
+        Vector3 knockbackVector = (horizontalDir * knockback) + (Vector3.up * knockbackUp);
+        currentThrowVictim.TakeHit(damage, knockbackVector, hitstun, airborneDuration);
+        if (t.throwEndVfxPrefab != null)
+        {
+            var go = Instantiate(t.throwEndVfxPrefab, victimTransform.position, Quaternion.identity);
+            PlayVfx(go);
+        }
+        if (threatSystem != null)
+            threatSystem.RegisterInteraction(victimTransform);
+    }
+
+    // ========================================================================
     // HITBOX HELPERS
     // ========================================================================
     
@@ -639,6 +984,16 @@ public class Combat : MonoBehaviour
             + transform.right   * attack.hitboxOffset.x
             + transform.up      * attack.hitboxOffset.y
             + transform.forward * attack.hitboxOffset.z;
+    }
+    
+    Vector3 CalculateThrowHitboxCenter(ThrowData t)
+    {
+        Transform origin = hitOrigin != null ? hitOrigin : transform;
+        return origin.position
+            + transform.forward * t.range
+            + transform.right   * t.hitboxOffset.x
+            + transform.up      * t.hitboxOffset.y
+            + transform.forward * t.hitboxOffset.z;
     }
     
     /// <summary>
@@ -752,10 +1107,16 @@ public class Combat : MonoBehaviour
     }
     
     /// <summary>
-    /// Check if a scheduled hitbox is ready to fire.
+    /// Check if a scheduled hitbox is ready to fire (normal attack or throw).
     /// </summary>
     void UpdatePendingHitbox()
     {
+        if (pendingThrowHitbox && Time.time >= throwHitboxTriggerTime)
+        {
+            ExecuteThrowHitbox();
+            pendingThrowHitbox = false;
+            return;
+        }
         if (!hitboxPending) return;
         
         if (Time.time >= hitboxTriggerTime)

@@ -17,7 +17,12 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'metarig.001|metarig.001Action' has import animation
+      warnings that might lower retargeting quality:\nNote: Activate translation
+      DOF on avatar to improve retargeting quality.\n\t'spine.006' is inbetween humanoid
+      transforms and has rotation animation that will be discarded.\n\t'toe.L' is
+      inbetween humanoid transforms and has rotation animation that will be discarded.\n\t'toe.R'
+      is inbetween humanoid transforms and has rotation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -155,7 +160,7 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
-    - boneName: spine.005
+    - boneName: spine.004
       humanName: Neck
       limit:
         min: {x: 0, y: 0, z: 0}
@@ -163,7 +168,7 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
-    - boneName: spine.006
+    - boneName: spine.005
       humanName: Head
       limit:
         min: {x: 0, y: 0, z: 0}
@@ -235,7 +240,7 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
-    - boneName: toe.L
+    - boneName: heel.02.L
       humanName: LeftToes
       limit:
         min: {x: 0, y: 0, z: 0}
@@ -243,7 +248,7 @@ ModelImporter:
         value: {x: 0, y: 0, z: 0}
         length: 0
         modified: 0
-    - boneName: toe.R
+    - boneName: toe.R_end
       humanName: RightToes
       limit:
         min: {x: 0, y: 0, z: 0}

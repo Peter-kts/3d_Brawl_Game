@@ -108,4 +108,28 @@ public class ComboSet : ScriptableObject
 
     [Tooltip("How long the cancel window stays open")]
     public float comboWindowDuration = 0.25f;
+
+    [Header("Throw")]
+    [Tooltip("Throw move config (attempted grab then synced throw on success). Expand to edit; uncheck Enable Throw to disable.")]
+    public ThrowData throwData = new ThrowData
+    {
+        enableThrow = true,
+        grabAttemptAnimationTrigger = "GrabAttempt",
+        attemptLockDuration = 0.5f,
+        hitboxDelay = 0.25f,
+        throwAnimationTrigger = "Throw",
+        throwPhaseDuration = 1f,
+        grabHitStopDuration = 0.08f,
+        range = 1.4f,
+        hitboxRadius = 0.6f,
+        launchVictimOnRelease = true,
+        endDamage = 15,
+        endKnockback = 6f,
+        endKnockbackUp = 0f,
+        endHitstun = 0.2f,
+        endAirborneDuration = 0.8f,
+        faceVictimTowardThrowDirection = true,
+        enemyThrownStateName = "Thrown",
+        throwCooldown = 0.8f
+    };
 }

@@ -5,8 +5,8 @@ using UnityEngine;
 public class ComboSetEditor : Editor
 {
     private const string PrefsKeyPrefix = "ComboSetEditor_SelectedIndex_";
-    private static readonly string[] MoveNames = { "Forward Jab 1", "Forward Jab 2", "Neutral Jab 1", "Neutral Jab 2", "Heavy Attack" };
-    private static readonly string[] PropertyNames = { "forwardJab", "forwardJab2", "neutralJab", "neutralJab2", "heavyAttack" };
+    private static readonly string[] MoveNames = { "Forward Jab 1", "Forward Jab 2", "Neutral Jab 1", "Neutral Jab 2", "Heavy Attack", "Throw" };
+    private static readonly string[] PropertyNames = { "forwardJab", "forwardJab2", "neutralJab", "neutralJab2", "heavyAttack", "throwData" };
 
     public override void OnInspectorGUI()
     {
@@ -26,50 +26,53 @@ public class ComboSetEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("comboWindowDelay"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("comboWindowDuration"));
 
-        // Dropdown: which of the 5 moves we're editing (selection persisted per asset via EditorPrefs)
+        // Dropdown: which of the 6 moves we're editing (selection persisted per asset via EditorPrefs)
         EditorGUILayout.Space(6);
         string prefsKey = PrefsKeyPrefix + target.GetInstanceID();
         int selectedIndex = EditorPrefs.GetInt(prefsKey, 0);
         selectedIndex = EditorGUILayout.Popup("Edit move:", selectedIndex, MoveNames);
         EditorPrefs.SetInt(prefsKey, selectedIndex);
 
-        // Selected move's AttackData (damage, knockback, hitstun, hitbox frames, etc.)
+        // Selected move: AttackData for attacks 0..4, ThrowData for Throw (5)
         EditorGUILayout.Space(4);
-        SerializedProperty attackProp = serializedObject.FindProperty(PropertyNames[selectedIndex]);
-        if (attackProp != null)
-            EditorGUILayout.PropertyField(attackProp, new GUIContent(MoveNames[selectedIndex]), true);
+        SerializedProperty moveProp = serializedObject.FindProperty(PropertyNames[selectedIndex]);
+        if (moveProp != null)
+            EditorGUILayout.PropertyField(moveProp, new GUIContent(MoveNames[selectedIndex]), true);
 
-        // Move template: load template into current move (JSON clone), or save current move as new template asset
-        EditorGUILayout.Space(8);
-        EditorGUILayout.LabelField("Move Template", EditorStyles.boldLabel);
-        EditorGUILayout.BeginHorizontal();
-        MoveTemplate loadTemplate = (MoveTemplate)EditorGUILayout.ObjectField("Template", null, typeof(MoveTemplate), false);
-        if (GUILayout.Button("Load into move", GUILayout.Width(120)) && loadTemplate != null)
+        // Move template: only for attack moves (not Throw)
+        if (selectedIndex < 5)
         {
-            serializedObject.ApplyModifiedProperties();
-            AttackData copy = JsonUtility.FromJson<AttackData>(JsonUtility.ToJson(loadTemplate.attackData));
-            ApplyMoveToComboSet((ComboSet)target, selectedIndex, copy);
-            serializedObject.Update();
-        }
-        EditorGUILayout.EndHorizontal();
-        if (GUILayout.Button("Save current move as template"))
-        {
-            serializedObject.ApplyModifiedProperties();
-            AttackData current = GetMoveFromComboSet((ComboSet)target, selectedIndex);
-            string path = EditorUtility.SaveFilePanelInProject("Save move as template", "MoveTemplate", "asset", "Save MoveTemplate asset");
-            if (!string.IsNullOrEmpty(path))
+            EditorGUILayout.Space(8);
+            EditorGUILayout.LabelField("Move Template", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+            MoveTemplate loadTemplate = (MoveTemplate)EditorGUILayout.ObjectField("Template", null, typeof(MoveTemplate), false);
+            if (GUILayout.Button("Load into move", GUILayout.Width(120)) && loadTemplate != null)
             {
-                var template = CreateInstance<MoveTemplate>();
-                template.attackData = JsonUtility.FromJson<AttackData>(JsonUtility.ToJson(current));
-                AssetDatabase.CreateAsset(template, path);
-                AssetDatabase.SaveAssets();
+                serializedObject.ApplyModifiedProperties();
+                AttackData copy = JsonUtility.FromJson<AttackData>(JsonUtility.ToJson(loadTemplate.attackData));
+                ApplyMoveToComboSet((ComboSet)target, selectedIndex, copy);
+                serializedObject.Update();
+            }
+            EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Save current move as template"))
+            {
+                serializedObject.ApplyModifiedProperties();
+                AttackData current = GetMoveFromComboSet((ComboSet)target, selectedIndex);
+                string path = EditorUtility.SaveFilePanelInProject("Save move as template", "MoveTemplate", "asset", "Save MoveTemplate asset");
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var template = CreateInstance<MoveTemplate>();
+                    template.attackData = JsonUtility.FromJson<AttackData>(JsonUtility.ToJson(current));
+                    AssetDatabase.CreateAsset(template, path);
+                    AssetDatabase.SaveAssets();
+                }
             }
         }
 
         serializedObject.ApplyModifiedProperties();
     }
 
-    /// <summary>Map dropdown index (0..4) to the corresponding AttackData on the ComboSet.</summary>
+    /// <summary>Map dropdown index (0..4) to the corresponding AttackData on the ComboSet. Index 5 is Throw (no AttackData).</summary>
     private static AttackData GetMoveFromComboSet(ComboSet comboSet, int index)
     {
         switch (index)
@@ -83,7 +86,7 @@ public class ComboSetEditor : Editor
         }
     }
 
-    /// <summary>Write AttackData into the selected move slot on the ComboSet.</summary>
+    /// <summary>Write AttackData into the selected move slot on the ComboSet. Only used for indices 0..4 (not Throw).</summary>
     private static void ApplyMoveToComboSet(ComboSet comboSet, int index, AttackData data)
     {
         switch (index)

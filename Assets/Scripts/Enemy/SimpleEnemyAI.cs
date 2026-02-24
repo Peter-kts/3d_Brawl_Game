@@ -148,6 +148,10 @@ public class SimpleEnemyAI : MonoBehaviour
     [Tooltip("Optional: multiple hit reaction state names. If set, one is chosen at random (never the same twice in a row). Leave empty to use hitStateName only.")]
     public string[] hitStateNames;
     
+    [Header("Throw (as victim)")]
+    [Tooltip("Animator state name when this enemy is thrown by the player. Same layer as hit reaction. If empty, uses the throw's default from the player's ThrowData.")]
+    public string thrownStateName = "Thrown";
+    
     [Tooltip("Animator trigger name for death animation")]
     public string deathTriggerParameter = "Death";
     
@@ -469,6 +473,48 @@ public class SimpleEnemyAI : MonoBehaviour
                 animator.SetFloat(hitSpeedParameter, 1f);
         }
     }
+
+    /// <summary>
+    /// Plays the thrown/grabbed state for the given duration (scaled to match). Used for synced throw.
+    /// </summary>
+    public void TriggerThrownAnimation(float duration, string stateName)
+    {
+        if (animator == null || string.IsNullOrEmpty(stateName)) return;
+        if (!string.IsNullOrEmpty(hitSpeedParameter))
+            animator.SetFloat(hitSpeedParameter, 1f);
+        animator.Play(stateName, hitAnimationLayer, 0f);
+        animator.Update(0f);
+        float baseDuration = baseHitAnimDuration;
+        if (cachedHitStateDurations != null && cachedHitStateDurations.TryGetValue(stateName, out float cached))
+            baseDuration = cached;
+        else
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(hitAnimationLayer);
+            if (stateInfo.IsName(stateName) && stateInfo.length > 0f)
+            {
+                if (cachedHitStateDurations == null)
+                    cachedHitStateDurations = new Dictionary<string, float>();
+                cachedHitStateDurations[stateName] = stateInfo.length;
+                baseDuration = stateInfo.length;
+            }
+        }
+        if (!string.IsNullOrEmpty(hitSpeedParameter) && baseDuration > 0f && duration > 0.001f)
+            animator.SetFloat(hitSpeedParameter, baseDuration / duration);
+        else if (!string.IsNullOrEmpty(hitSpeedParameter))
+            animator.SetFloat(hitSpeedParameter, 1f);
+    }
+
+    /// <summary>
+    /// Start get-up after a throw release (no launch). Plays get-up state and sets get-up stun so the enemy stands up.
+    /// </summary>
+    public void TriggerGetUpFromThrow()
+    {
+        if (health == null || animator == null || string.IsNullOrEmpty(getUpStateName)) return;
+        health.StartGetUp(getUpDuration);
+        animator.Play(getUpStateName, getUpLayer, 0f);
+        if (baseGetUpAnimDuration > 0f && getUpDuration > 0.001f && !string.IsNullOrEmpty(hitSpeedParameter))
+            animator.SetFloat(hitSpeedParameter, baseGetUpAnimDuration / getUpDuration);
+    }
     
     /// <summary>
     /// Triggers the death animation. Called by EnemyHealth when HP reaches 0.
@@ -506,6 +552,7 @@ public class SimpleEnemyAI : MonoBehaviour
         
         // No player reference? Can't do anything
         if (player == null) return;
+        if (!cc.enabled) return;
         
         // Block all behavior when not in Normal state (stun, airborne, crash, get-up, dying)
         if (!CanAct) return;
@@ -586,6 +633,7 @@ public class SimpleEnemyAI : MonoBehaviour
      */
     void ApplyGravity()
     {
+        if (!cc.enabled) return;
         // Check if we're airborne (launched by an attack)
         bool isAirborne = health != null && health.IsAirborne;
 
