@@ -62,6 +62,9 @@ public class EnemyCombat : MonoBehaviour
         hitStopDuration = 0.1f
     };
 
+    [Tooltip("Max distance to player to use punch; beyond this uses kick. Tune so enemy punches when close (e.g. 2.2) and kicks when farther.")]
+    public float punchRangeThreshold = 2.2f;
+
     [Header("Kick Attack (out of punch range)")]
     [Tooltip("Used when the player is out of range of the basic attack. Longer range so the enemy can still connect.")]
     public AttackData kickAttack = new AttackData
