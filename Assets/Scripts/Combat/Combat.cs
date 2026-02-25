@@ -43,7 +43,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-public class Combat : MonoBehaviour
+public partial class Combat : MonoBehaviour
 {
     /// <summary>Debug visualization state for hitbox. Used by CombatHitboxDebugVisual.</summary>
     public struct HitboxDebugState
@@ -166,29 +166,6 @@ public class Combat : MonoBehaviour
     private float currentRecoverySpeed;
     private string currentAttackStateName;  // Only apply speed when we're still in this state
 
-    // --- Throw state (synced throw: attempted grab -> hitbox -> hold -> release) ---
-    private bool pendingThrowHitbox;           // True after DoThrow until the grab hitbox fires (or attempt ends)
-    private float throwHitboxTriggerTime;      // Time when the grab OverlapSphere runs; hitbox fires in UpdatePendingHitbox when Time.time >= this
-    private IDamageable currentThrowVictim;    // Set when grab connects; non-null means we're holding and will apply release (launch or get-up)
-    private float nextThrowTime;               // Cooldown: next throw input allowed after this time
-    private bool _throwVictimRootMotionRestore;   // Victim Animator.applyRootMotion value before we set it true for the thrown anim
-    private bool _throwVictimRootMotionChanged;   // True if we enabled root motion on the victim (so we restore it in ReleaseThrowVictimFromSocket)
-    private bool _playerThrowRootMotionRestore;   // Player Animator.applyRootMotion before we set it true for the throw anim
-    private bool _playerThrowRootMotionChanged;  // True if we enabled it (so we bake and restore in BakePlayerThrowRootMotionAndRestore)
-    private bool _deferThrowReleaseToLateUpdate; // Set by OnThrowRelease or timer; when true, LateUpdate runs full release after Animator has updated
-    private int _deferThrowReleaseProfileIndex;   // Index into releaseProfiles for damage/knockback (from Animation Event); -1 = use throwData defaults
-    private bool _currentThrowIsBack;            // Set at throw commit; used in ExecuteThrowHitbox for back vs neutral anim/state
-    private bool _deferThrowDamageToLateUpdate;  // Set by OnThrowDamage animation event; apply damage in LateUpdate
-    private int _deferThrowDamageProfileIndex;   // Profile index for deferred throw damage (-1 = use throwData defaults)
-    private Transform _reapplyThrowBakeTransform; // No-launch only: victim root to re-apply position to next frame
-    private Vector3 _reapplyThrowBakePosition;
-    private Quaternion _reapplyThrowBakeRotation;
-    private bool _reapplyThrowBakeNextFrame;     // When true, next LateUpdate re-applies baked pos/rot so gravity/other logic don't overwrite
-    private Vector3 _throwVictimMeshLocalPosition; // Mesh local position at grab (restore on release instead of zeroing)
-    private Quaternion _throwVictimMeshLocalRotation;
-    private Vector3 _throwPlayerMeshLocalPosition;  // Player Animator local at grab (restore on release)
-    private Quaternion _throwPlayerMeshLocalRotation;
-
     // ========================================================================
     // UNITY LIFECYCLE
     // ========================================================================
@@ -227,29 +204,9 @@ public class Combat : MonoBehaviour
         _deferThrowReleaseToLateUpdate = false;
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) { currentThrowVictim = null; return; }
-        BakePlayerThrowRootMotionAndRestore();  // Copy Animator root-motion result to player transform and restore applyRootMotion
-        ReleaseThrowVictimFromSocket();         // Bake victim mesh pose into root, unparent, re-enable CC/RB, clear knockback; optionally schedule reapply
-        if (comboSet.throwData.launchVictimOnRelease && !throwDamageAppliedThisFrame)
-            ApplyThrowEndDamage(_deferThrowReleaseProfileIndex);
-        else
-        {
-            var victimAI = vt.GetComponent<SimpleEnemyAI>();
-            if (victimAI != null) victimAI.TriggerGetUpFromThrow();
-        }
-        SetThrowVictimCollisionIgnore(vt, false);
-        currentThrowVictim = null;
-        isAttacking = false;
-        hitboxPending = false;
-        pendingThrowHitbox = false;
-        if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
-            animator.speed = 1f;
-        foreach (var frozen in frozenAnimators)
-        {
-            if (frozen.animator != null)
-                frozen.animator.speed = frozen.originalSpeed;
-        }
-        frozenAnimators.Clear();
-        hitStopEndTime = 0f;
+        BakePlayerThrowRootMotionAndRestore();
+        ReleaseThrowVictimFromSocket();
+        CompleteThrowRelease(vt, _deferThrowReleaseProfileIndex, throwDamageAppliedThisFrame, applyReleaseEffects: true);
     }
 
     void Update()
@@ -267,16 +224,13 @@ public class Combat : MonoBehaviour
             }
             else
             {
-                // Not holding a victim: normal attack ended; clean up and restore animator speed
+                // Attack ended without deferring (e.g. no victim or throw disabled); release victim if any, then clean up
                 if (currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
                 {
                     Transform vt = (currentThrowVictim as Component)?.transform;
                     BakePlayerThrowRootMotionAndRestore();
                     ReleaseThrowVictimFromSocket();
-                    if (comboSet.throwData.launchVictimOnRelease)
-                        ApplyThrowEndDamage();
-                    SetThrowVictimCollisionIgnore(vt, false);
-                    currentThrowVictim = null;
+                    CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: false, applyReleaseEffects: true);
                 }
                 if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator))
                     animator.speed = 1f;
@@ -288,25 +242,16 @@ public class Combat : MonoBehaviour
         var damageableForStun = GetComponentInParent<IDamageable>();
         if (damageableForStun != null && damageableForStun.IsStunned && (isAttacking || hitboxPending))
         {
-            // Player was stunned (e.g. hit during throw): release victim cleanly without applying launch damage or get-up
+            // Player stunned (e.g. hit during throw): release victim without damage/get-up, then clear state
             if (currentThrowVictim != null)
             {
                 Transform vt = (currentThrowVictim as Component)?.transform;
                 BakePlayerThrowRootMotionAndRestore();
                 ReleaseThrowVictimFromSocket();
-                SetThrowVictimCollisionIgnore(vt, false);
+                CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: false);
             }
-            isAttacking = false;
-            hitboxPending = false;
-            pendingThrowHitbox = false;
-            currentThrowVictim = null;
-            foreach (var frozen in frozenAnimators)
-            {
-                if (frozen.animator != null)
-                    frozen.animator.speed = frozen.originalSpeed;
-            }
-            frozenAnimators.Clear();
-            hitStopEndTime = 0f;
+            else
+                ClearThrowState();
             hasAppliedTorsoRotation = false;
         }
         UpdateComboState();
@@ -407,14 +352,6 @@ public class Combat : MonoBehaviour
         }
         
         return input;
-    }
-    
-    const float BackThrowStickThreshold = 0.4f;
-    /// <summary>True when stick is clearly backward (camera-relative). Used at throw commit for back vs neutral.</summary>
-    bool IsBackThrowStickInput()
-    {
-        Vector2 stick = playerController != null ? playerController.CombatStickInput : GetRawStickInput();
-        return stick.y < -BackThrowStickThreshold;
     }
     
     void UpdateComboState()
@@ -694,355 +631,6 @@ public class Combat : MonoBehaviour
     }
 
     // ========================================================================
-    // THROW (attempted grab -> throw on success, hit stop + VFX)
-    // ========================================================================
-    //
-    // HOW IT WORKS:
-    // 1. Grab phase: Player plays grab attempt anim; hitbox fires after hitboxDelay. If an enemy is in range,
-    //    we parent the victim to grabSocket (so they ride the player's throw anim), disable their CC/RB,
-    //    enable root motion on both player and victim so the throw/thrown anims drive position.
-    // 2. Hold phase: Victim stays parented to the socket; root motion moves the mesh (and visually the parent
-    //    moves with the socket). Release is triggered by an Animation Event (OnThrowRelease) or by timer.
-    // 3. Release: We DEFER the actual release to LateUpdate so we read positions AFTER the Animator has
-    //    applied root motion this frame. Then we bake the victim's mesh world position into the victim root
-    //    and zero the mesh local WHILE STILL PARENTED, so when we unparent both stay where the mesh ended up.
-    //    We re-enable CC/RB, clear leftover knockback, and either apply launch damage or trigger get-up.
-    //
-    
-    /// <summary>Starts a throw attempt: sets attack state, schedules the grab hitbox after hitboxDelay, plays grab-attempt anim.</summary>
-    void DoThrow()
-    {
-        ThrowData t = comboSet.throwData;
-        if (!t.enableThrow) return;
-        _currentThrowIsBack = IsBackThrowStickInput();
-        currentAttackStartTime = Time.time;
-        nextThrowTime = Time.time + t.throwCooldown;           // Block throw input until cooldown ends
-        currentAttackEndTime = Time.time + t.attemptLockDuration;  // Attack lock ends after this (whiff); overwritten if grab connects
-        currentAttackStateName = t.grabAttemptAnimationTrigger;
-        currentThrowVictim = null;                            // No victim until ExecuteThrowHitbox finds one
-        isAttacking = true;
-        hitboxPending = false;
-        hitboxHasFired = false;
-        pendingThrowHitbox = true;                             // UpdatePendingHitbox will run grab hitbox when time reached
-        throwHitboxTriggerTime = Time.time + t.hitboxDelay;
-        if (animator != null && !string.IsNullOrEmpty(t.grabAttemptAnimationTrigger))
-            animator.Play(t.grabAttemptAnimationTrigger, 0, 0f);
-    }
-    
-    /// <summary>Runs when the grab hitbox connects: find victim, parent to socket, enable root motion, hit stop, play throw anim.</summary>
-    void ExecuteThrowHitbox()
-    {
-        ThrowData t = comboSet.throwData;
-        if (!t.enableThrow) return;
-
-        // --- Find grab target: sphere at origin + range/offset, non-trigger colliders only ---
-        Vector3 center = CalculateThrowHitboxCenter(t);
-        Collider[] hits = Physics.OverlapSphere(center, t.hitboxRadius, ~0, QueryTriggerInteraction.Ignore);
-        EnemyHealth victim = null;
-        IDamageable victimDamageable = null;
-        // Take first object that is IDamageable + has EnemyHealth (grabbable enemy); ignore player self
-        foreach (var c in hits)
-        {
-            var damageable = c.GetComponentInParent<IDamageable>();
-            if (damageable == null || (damageable as Component)?.gameObject == gameObject) continue;
-            var eh = (damageable as Component)?.GetComponent<EnemyHealth>();
-            if (eh == null) continue;
-            victim = eh;
-            victimDamageable = damageable;
-            break;
-        }
-        if (victim == null) return;  // Whiff: no valid target in grab range; attack lock ends at currentAttackEndTime
-
-        currentThrowVictim = victimDamageable;
-        Transform victimTransform = (victimDamageable as Component).transform;
-        SetThrowVictimCollisionIgnore(victimTransform, true);  // Ignore collision so player and victim don't push each other during hold
-
-        if (grabSocket != null)
-        {
-            // Parent victim to socket so they ride the player's throw animation (socket moves with anim)
-            Vector3 worldScaleBefore = victimTransform.lossyScale;
-            victimTransform.SetParent(grabSocket, false);
-            victimTransform.localPosition = Vector3.zero;
-            // Preserve world scale: after parenting, localScale = worldScale / parent.lossyScale
-            Vector3 p = grabSocket.lossyScale;
-            if (p.x != 0f && p.y != 0f && p.z != 0f)
-                victimTransform.localScale = new Vector3(worldScaleBefore.x / p.x, worldScaleBefore.y / p.y, worldScaleBefore.z / p.z);
-
-            // Disable CC/RB so they don't fight parenting; re-enable in ReleaseThrowVictimFromSocket
-            var victimCC = victimTransform.GetComponent<CharacterController>();
-            if (victimCC != null) victimCC.enabled = false;
-            var victimRb = victimTransform.GetComponent<Rigidbody>();
-            if (victimRb != null) victimRb.isKinematic = true;
-
-            // Face victim toward player for the hold (horizontal only)
-            Vector3 toPlayer = transform.position - victimTransform.position;
-            toPlayer.y = 0f;
-            if (toPlayer.sqrMagnitude > 0.001f)
-            {
-                toPlayer.Normalize();
-                victimTransform.rotation = Quaternion.LookRotation(toPlayer);
-            }
-
-            // Enable root motion on victim so their thrown animation can move the mesh; we bake that pose at release in ReleaseThrowVictimFromSocket
-            var victimAnim = victimTransform.GetComponentInChildren<Animator>();
-            if (victimAnim != null)
-            {
-                _throwVictimRootMotionRestore = victimAnim.applyRootMotion;
-                victimAnim.applyRootMotion = true;
-                _throwVictimRootMotionChanged = true;
-                if (victimAnim.transform != victimTransform)
-                {
-                    _throwVictimMeshLocalPosition = victimAnim.transform.localPosition;
-                    _throwVictimMeshLocalRotation = victimAnim.transform.localRotation;
-                }
-            }
-        }
-
-        // Stun victim and play their thrown/held state for the throw duration (EnemyHealth timer; release via event or this timer)
-        var victimAI = victim.GetComponent<SimpleEnemyAI>();
-        string thrownState;
-        if (_currentThrowIsBack && !string.IsNullOrEmpty(t.backEnemyThrownStateName))
-            thrownState = t.backEnemyThrownStateName;
-        else
-            thrownState = (victimAI != null && !string.IsNullOrEmpty(victimAI.thrownStateName)) ? victimAI.thrownStateName : t.enemyThrownStateName;
-        victim.StartThrowVictim(t.throwPhaseDuration, thrownState);
-
-        // Hit stop: freeze player and victim animators briefly on grab connect
-        if (t.grabHitStopDuration > 0f)
-        {
-            hitStopEndTime = Time.time + t.grabHitStopDuration;
-            if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
-                frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
-            animator.speed = 0f;
-            Animator targetAnim = (victimDamageable as Component)?.transform.GetComponentInChildren<Animator>();
-            if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
-            {
-                frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
-                targetAnim.speed = 0f;
-            }
-        }
-        if (t.grabConnectVfxPrefab != null)
-        {
-            Quaternion rot = (center - transform.position).sqrMagnitude > 0.001f ? Quaternion.LookRotation(center - transform.position) : transform.rotation;
-            var go = Instantiate(t.grabConnectVfxPrefab, center, rot);
-            PlayVfx(go);
-        }
-
-        currentAttackEndTime = Time.time + t.grabHitStopDuration + t.throwPhaseDuration;  // When throw phase ends (release by event or timer)
-        // Play player throw anim and enable root motion so we bake player pose at release
-        string playerThrowTrigger = (_currentThrowIsBack && !string.IsNullOrEmpty(t.backThrowAnimationTrigger)) ? t.backThrowAnimationTrigger : t.throwAnimationTrigger;
-        if (animator != null && !string.IsNullOrEmpty(playerThrowTrigger))
-        {
-            animator.Play(playerThrowTrigger, 0, 0f);
-            _playerThrowRootMotionRestore = animator.applyRootMotion;
-            animator.applyRootMotion = true;
-            _playerThrowRootMotionChanged = true;
-            if (animator.transform != transform)
-            {
-                _throwPlayerMeshLocalPosition = animator.transform.localPosition;
-                _throwPlayerMeshLocalRotation = animator.transform.localRotation;
-            }
-        }
-        if (threatSystem != null)
-            threatSystem.RegisterInteraction((victimDamageable as Component).transform);
-    }
-
-    /// <summary>Bake player's Animator root-motion result into transform and restore applyRootMotion. Call when throw ends.</summary>
-    void BakePlayerThrowRootMotionAndRestore()
-    {
-        if (!_playerThrowRootMotionChanged || animator == null) return;
-        // Read pose after Animator has applied root motion this frame (we're called from LateUpdate or after)
-        Vector3 bakePosition = animator.transform.position;
-        Quaternion bakeRotation = animator.transform.rotation;
-        animator.applyRootMotion = _playerThrowRootMotionRestore;
-        _playerThrowRootMotionChanged = false;
-        // Keep current Y so we don't lift the player (animator may be on a child with higher pivot, or root motion has vertical drift)
-        bakePosition.y = transform.position.y;
-        // Upright standing rotation (keep only yaw so no tilt from throw anim)
-        Quaternion standingRotation = Quaternion.Euler(0f, bakeRotation.eulerAngles.y, 0f);
-        transform.position = bakePosition;
-        transform.rotation = standingRotation;
-        // Restore player mesh (Animator) local to what it was at grab so we don't lift or squash
-        if (animator.transform != transform)
-        {
-            animator.transform.localPosition = _throwPlayerMeshLocalPosition;
-            animator.transform.localRotation = _throwPlayerMeshLocalRotation;
-        }
-    }
-
-    /*
-     * ReleaseThrowVictimFromSocket
-     *
-     * We need the victim (root + mesh) to stay exactly where the mesh ended up after root motion.
-     * If we unparent first, the root keeps the SOCKET's world position and the mesh keeps its local
-     * transform, so the mesh would snap to (socket + local offset) and we'd lose the correct pose.
-     *
-     * So we: (1) read the mesh world position/rotation, (2) set the ROOT to that pose and zero the
-     * mesh local WHILE STILL PARENTED, (3) then unparent. Both root and mesh are already at the
-     * desired world position, so unparenting preserves it. Then we re-enable CC/RB and clear
-     * knockback so nothing moves them. Optionally we re-apply the position next frame (no-launch
-     * case) so any other system that ran after us doesn't overwrite.
-     */
-    void ReleaseThrowVictimFromSocket()
-    {
-        // If there is no current victim being thrown, exit the function early
-        if (currentThrowVictim == null) return;
-        // Try to get the Transform component from the currentThrowVictim object (expects it to be a Unity Component)
-        Transform vt = (currentThrowVictim as Component)?.transform;
-        // If we failed to get a valid Transform, exit to prevent null reference errors
-        if (vt == null) return;
-
-        var victimAnim = vt.GetComponentInChildren<Animator>();
-        // --- 1. Bake pose: use Animator rootPosition/rootRotation when available, else root transform ---
-        Vector3 bakePosition = vt.position;
-        Quaternion bakeRotation = vt.rotation;
-        if (victimAnim != null)
-        {
-            bakePosition = victimAnim.rootPosition;
-            bakeRotation = victimAnim.rootRotation;
-            UnityEngine.Debug.Log($"[Throw] Bake (rootPosition/rootRotation): pos={bakePosition}, rot={bakeRotation.eulerAngles}");
-        }
-        // Use grab socket for horizontal (XZ) only; keep baked Y so victim doesn't teleport vertically to socket
-        // if (grabSocket != null)
-            // bakePosition = new Vector3(grabSocket.position.x, bakePosition.y, grabSocket.position.z);
-        UnityEngine.Debug.Log($"[Throw] Root before set: pos={vt.position}, rot={vt.rotation.eulerAngles}");
-
-        // --- 2. Restore victim's applyRootMotion before we move the root (so we don't get double motion later) ---
-        if (_throwVictimRootMotionChanged && victimAnim != null)
-        {
-            victimAnim.applyRootMotion = _throwVictimRootMotionRestore;
-            _throwVictimRootMotionChanged = false;
-        }
-
-        // Upright standing rotation (keep only yaw so no tilt from thrown pose)
-        Quaternion standingRotation = Quaternion.Euler(0f, 0f, 0f);
-
-        // --- 3. Bake while STILL PARENTED: root = baked pose, restore mesh local to pre-throw, then unparent ---
-        vt.position = bakePosition;
-        vt.rotation = standingRotation;
-        if (victimAnim != null && victimAnim.transform != vt)
-        {
-            victimAnim.transform.localPosition = _throwVictimMeshLocalPosition;
-            victimAnim.transform.localRotation = _throwVictimMeshLocalRotation;
-        }
-        vt.SetParent(null);
-        UnityEngine.Debug.Log($"[Throw] Root after unparent: pos={vt.position}, rot={vt.rotation.eulerAngles}");
-
-        // --- 4. Re-enable physics so the victim can move again (and receive knockback if we launch) ---
-        var cc = vt.GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = true;
-        var rb = vt.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = false;
-
-        // --- 5. Clear any leftover knockback velocity so the victim doesn't inherit old movement next frame ---
-        var victimHealth = vt.GetComponent<EnemyHealth>();
-        if (victimHealth != null)
-            victimHealth.ClearKnockback();
-
-        // --- 6. No-launch (get-up): schedule re-apply of baked position next LateUpdate ---
-        // Other systems (gravity, AI, etc.) may run in Update and overwrite position. Re-applying once next frame keeps the victim
-        // exactly where we left them until their get-up logic takes over.
-        if (!comboSet.throwData.launchVictimOnRelease)
-        {
-            _reapplyThrowBakeTransform = vt;
-            _reapplyThrowBakePosition = bakePosition;
-            _reapplyThrowBakeRotation = standingRotation;
-            _reapplyThrowBakeNextFrame = true;
-        }
-    }
-
-    /// <summary>Called from Animation Event at the throw release frame. Defers actual release to LateUpdate so we read mesh/root position after Animator has applied root motion this frame.</summary>
-    public void OnThrowRelease()
-    {
-        OnThrowRelease(-1);
-    }
-
-    /// <summary>Called from Animation Event to apply damage on a specific frame (e.g. hit frame). Schedules ApplyThrowEndDamage for LateUpdate; does not trigger release.</summary>
-    public void OnThrowDamage()
-    {
-        OnThrowDamage(-1);
-    }
-    /// <summary>Animation Event can pass release profile index for variant damage/knockback.</summary>
-    public void OnThrowDamage(int profileIndex)
-    {
-        if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;
-        _deferThrowDamageToLateUpdate = true;
-        _deferThrowDamageProfileIndex = profileIndex;
-    }
-    /// <summary>Animation Event can pass release profile index for variant damage/knockback (e.g. light vs heavy release).</summary>
-    public void OnThrowRelease(int releaseProfileIndex)
-    {
-        if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;  // No victim, no combo set, or throws disabled
-        Transform vt = (currentThrowVictim as Component)?.transform;  // Victim root transform for release
-        if (vt == null) return;  // Shouldn't happen if currentThrowVictim was valid
-        _deferThrowReleaseToLateUpdate = true;   // Do actual release in LateUpdate so we read pose after Animator has applied root motion this frame
-        _deferThrowReleaseProfileIndex = releaseProfileIndex;  // Which release profile (damage/knockback) to use; from Animation Event or -1 for default
-    }
-
-    /// <summary>Ignore or restore collision between player and victim for the throw duration so they don't push each other.</summary>
-    void SetThrowVictimCollisionIgnore(Transform victimTransform, bool ignore)
-    {
-        if (victimTransform == null) return;
-        Collider[] playerCols = GetComponentsInChildren<Collider>();
-        Collider[] victimCols = victimTransform.GetComponentsInChildren<Collider>();
-        foreach (var pc in playerCols)
-        {
-            if (pc == null || !pc.enabled) continue;
-            foreach (var vc in victimCols)
-            {
-                if (vc == null || !vc.enabled || pc == vc) continue;
-                Physics.IgnoreCollision(pc, vc, ignore);
-            }
-        }
-    }
-
-    /// <summary>Apply launch damage/knockback/airborne at throw release. Uses releaseProfiles[releaseProfileIndex] if valid, else throwData defaults.</summary>
-    void ApplyThrowEndDamage(int releaseProfileIndex = -1)
-    {
-        ThrowData t = comboSet.throwData;
-        if (!t.enableThrow || currentThrowVictim == null) return;
-        Transform victimTransform = (currentThrowVictim as Component)?.transform;
-        if (victimTransform == null) return;
-        Vector3 horizontalDir = (victimTransform.position - transform.position);
-        horizontalDir.y = 0f;
-        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
-        horizontalDir.Normalize();
-        bool faceDirection;
-        int damage;
-        float knockback, knockbackUp, hitstun, airborneDuration;
-        if (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)
-        {
-            var p = t.releaseProfiles[releaseProfileIndex];
-            faceDirection = p.faceTowardThrowDirection;
-            damage = p.endDamage;
-            knockback = p.endKnockback;
-            knockbackUp = p.endKnockbackUp;
-            hitstun = p.endHitstun;
-            airborneDuration = p.endAirborneDuration;
-        }
-        else
-        {
-            faceDirection = t.faceVictimTowardThrowDirection;
-            damage = t.endDamage;
-            knockback = t.endKnockback;
-            knockbackUp = t.endKnockbackUp;
-            hitstun = t.endHitstun;
-            airborneDuration = t.endAirborneDuration;
-        }
-        if (faceDirection)
-            victimTransform.rotation = Quaternion.LookRotation(-horizontalDir);
-        Vector3 knockbackVector = (horizontalDir * knockback) + (Vector3.up * knockbackUp);
-        currentThrowVictim.TakeHit(damage, knockbackVector, hitstun, airborneDuration);
-        if (t.throwEndVfxPrefab != null)
-        {
-            var go = Instantiate(t.throwEndVfxPrefab, victimTransform.position, Quaternion.identity);
-            PlayVfx(go);
-        }
-        if (threatSystem != null)
-            threatSystem.RegisterInteraction(victimTransform);
-    }
-
-    // ========================================================================
     // HITBOX HELPERS
     // ========================================================================
     
@@ -1118,17 +706,6 @@ public class Combat : MonoBehaviour
             + transform.right   * attack.hitboxOffset.x
             + transform.up      * attack.hitboxOffset.y
             + transform.forward * attack.hitboxOffset.z;
-    }
-    
-    /// <summary>World position of the throw grab hitbox (origin + range and hitboxOffset in local axes).</summary>
-    Vector3 CalculateThrowHitboxCenter(ThrowData t)
-    {
-        Transform origin = hitOrigin != null ? hitOrigin : transform;
-        return origin.position
-            + transform.forward * t.range
-            + transform.right   * t.hitboxOffset.x
-            + transform.up      * t.hitboxOffset.y
-            + transform.forward * t.hitboxOffset.z;
     }
     
     /// <summary>

@@ -178,7 +178,7 @@ MonoBehaviour:
     range: 1.4
     hitboxRadius: 0.6
     hitboxOffset: {x: 0, y: 0, z: 0}
-    launchVictimOnRelease: 1
+    launchVictimOnRelease: 0
     endDamage: 15
     endKnockback: 20
     endKnockbackUp: 1
