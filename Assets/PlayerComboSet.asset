@@ -170,6 +170,7 @@ MonoBehaviour:
     attemptLockDuration: 0.5
     hitboxDelay: 0.25
     throwAnimationTrigger: Throw
+    backThrowAnimationTrigger: BackThrow
     throwPhaseDuration: 2
     grabHitStopDuration: 0.08
     grabConnectVfxPrefab: {fileID: 3297430504707544264, guid: c166a98cbf45fe14488e05032a04cd59, type: 3}
@@ -177,18 +178,14 @@ MonoBehaviour:
     range: 1.4
     hitboxRadius: 0.6
     hitboxOffset: {x: 0, y: 0, z: 0}
+    launchVictimOnRelease: 1
     endDamage: 15
-    endKnockback: 50
-    endKnockbackUp: 5
-    endHitstun: 2
-    endAirborneDuration: 0.4
+    endKnockback: 20
+    endKnockbackUp: 1
+    endHitstun: 0
+    endAirborneDuration: 0.05
     faceVictimTowardThrowDirection: 1
-    releaseProfiles:
-    - faceTowardThrowDirection: 1
-      endDamage: 0
-      endKnockback: 0
-      endKnockbackUp: 0
-      endHitstun: 0
-      endAirborneDuration: 0
+    releaseProfiles: []
     enemyThrownStateName: Thrown
+    backEnemyThrownStateName: BackThrown
     throwCooldown: 0.8

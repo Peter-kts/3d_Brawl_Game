@@ -18,4 +18,16 @@ public class ThrowAnimationEventForwarder : MonoBehaviour
         if (combat != null)
             combat.OnThrowRelease(releaseProfileIndex);
     }
+    public void OnThrowDamage()
+    {
+        var combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnThrowDamage();
+    }
+    public void OnThrowDamage(int profileIndex)
+    {
+        var combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnThrowDamage(profileIndex);
+    }
 }

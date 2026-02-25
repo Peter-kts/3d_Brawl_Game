@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Debug: draw text above this enemy showing mesh (Animator) position and parent (root) position.
+/// Debug: draw text above this enemy showing world position, local position (root), and mesh (Animator) world position.
 /// Add to the enemy root (e.g. Enemy_01). Disable when not needed.
 /// </summary>
 public class EnemyMeshParentDebugVisual : MonoBehaviour
@@ -25,9 +25,10 @@ public class EnemyMeshParentDebugVisual : MonoBehaviour
         Camera cam = Camera.main;
         if (cam == null) return;
 
-        Vector3 rootPos = transform.position;
+        Vector3 worldPos = transform.position;
+        Vector3 localPos = transform.localPosition;
         Vector3 meshPos = _anim.transform.position;
-        Vector3 labelWorld = rootPos + Vector3.up * height;
+        Vector3 labelWorld = worldPos + Vector3.up * height;
         Vector3 screen = cam.WorldToScreenPoint(labelWorld);
         screen.y = Screen.height - screen.y;
 
@@ -39,10 +40,11 @@ public class EnemyMeshParentDebugVisual : MonoBehaviour
             _labelStyle.alignment = TextAnchor.MiddleCenter;
         }
 
-        string meshStr = $"Mesh:  X={meshPos.x,8:F3}  Y={meshPos.y,8:F3}  Z={meshPos.z,8:F3}";
-        string parentStr = $"Parent: X={rootPos.x,8:F3}  Y={rootPos.y,8:F3}  Z={rootPos.z,8:F3}";
+        string worldStr = $"World:  X={worldPos.x,8:F3}  Y={worldPos.y,8:F3}  Z={worldPos.z,8:F3}";
+        string localStr = $"Local:  X={localPos.x,8:F3}  Y={localPos.y,8:F3}  Z={localPos.z,8:F3}";
+        string meshStr = $"Mesh:   X={meshPos.x,8:F3}  Y={meshPos.y,8:F3}  Z={meshPos.z,8:F3}";
         float lineH = 18f;
-        Rect r = new Rect(screen.x - 150f, screen.y - lineH, 300f, lineH * 2f);
-        GUI.Label(r, meshStr + "\n" + parentStr, _labelStyle);
+        Rect r = new Rect(screen.x - 150f, screen.y - lineH, 300f, lineH * 3f);
+        GUI.Label(r, worldStr + "\n" + localStr + "\n" + meshStr, _labelStyle);
     }
 }

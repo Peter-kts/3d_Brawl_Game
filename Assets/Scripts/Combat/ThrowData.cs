@@ -38,6 +38,8 @@ public struct ThrowData
     [Header("Phase 2 - Throw (on success)")]
     [Tooltip("Player animation state name when grab connects (synced with enemy thrown anim).")]
     public string throwAnimationTrigger;
+    [Tooltip("Player animation for back throw. If empty, use throwAnimationTrigger for both.")]
+    public string backThrowAnimationTrigger;
     [Tooltip("Duration of the throw phase (enemy stun and both animations).")]
     public float throwPhaseDuration;
 
@@ -77,6 +79,8 @@ public struct ThrowData
     [Header("Enemy")]
     [Tooltip("Animator state name for the enemy (throw receiver) while locked for the throw duration.")]
     public string enemyThrownStateName;
+    [Tooltip("Enemy state for back throw. If empty, use enemyThrownStateName for both.")]
+    public string backEnemyThrownStateName;
 
     [Header("Cooldown")]
     [Tooltip("Seconds before another throw can be started.")]

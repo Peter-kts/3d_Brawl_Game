@@ -118,6 +118,7 @@ public class ComboSet : ScriptableObject
         attemptLockDuration = 0.5f,
         hitboxDelay = 0.25f,
         throwAnimationTrigger = "Throw",
+        backThrowAnimationTrigger = "",
         throwPhaseDuration = 1f,
         grabHitStopDuration = 0.08f,
         range = 1.4f,
@@ -130,6 +131,7 @@ public class ComboSet : ScriptableObject
         endAirborneDuration = 0.8f,
         faceVictimTowardThrowDirection = true,
         enemyThrownStateName = "Thrown",
+        backEnemyThrownStateName = "",
         throwCooldown = 0.8f
     };
 }

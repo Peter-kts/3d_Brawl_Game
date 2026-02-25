@@ -105,7 +105,7 @@ ModelImporter:
       name: Frank_FS4_Grab_01_reAct
       takeName: Take 001
       internalID: -998496362607748373
-      firstFrame: 19800
+      firstFrame: 19815
       lastFrame: 19915
       wrapMode: 0
       orientationOffsetY: 0
@@ -126,7 +126,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
+      - time: 0.7908805
         functionName: OnThrowRelease
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
