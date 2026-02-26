@@ -28,6 +28,8 @@ public partial class Combat
     private bool _reapplyThrowBakeNextFrame;
     private Vector3 _throwVictimMeshLocalPosition;
     private Quaternion _throwVictimMeshLocalRotation;
+    private Vector3 _throwVictimParentWorldPosition;
+    private Quaternion _throwVictimParentWorldRotation;
     private Vector3 _throwPlayerMeshLocalPosition;
     private Quaternion _throwPlayerMeshLocalRotation;
     #endregion
@@ -62,16 +64,12 @@ public partial class Combat
             animator.Play(t.grabAttemptAnimationTrigger, 0, 0f);
     }
 
-    /// <summary>Runs when the grab hitbox connects: find victim, parent to socket, enable root motion, hit stop, play throw anim.</summary>
-    void ExecuteThrowHitbox()
+    bool TryFindThrowVictim(ThrowData t, out EnemyHealth victim, out IDamageable victimDamageable)
     {
-        ThrowData t = comboSet.throwData;
-        if (!t.enableThrow) return;
-
+        victim = null;
+        victimDamageable = null;
         Vector3 center = CalculateThrowHitboxCenter(t);
         Collider[] hits = Physics.OverlapSphere(center, t.hitboxRadius, ~0, QueryTriggerInteraction.Ignore);
-        EnemyHealth victim = null;
-        IDamageable victimDamageable = null;
         foreach (var c in hits)
         {
             var damageable = c.GetComponentInParent<IDamageable>();
@@ -80,92 +78,126 @@ public partial class Combat
             if (eh == null) continue;
             victim = eh;
             victimDamageable = damageable;
-            break;
+            return true;
         }
-        if (victim == null) return;
+        return false;
+    }
+
+    void AttachVictimToGrabSocket(Transform victimTransform, Animator victimAnim)
+    {
+        if (grabSocket == null) return;
+        if (victimAnim != null && victimAnim.transform != victimTransform)
+        {
+            _throwVictimParentWorldPosition = victimTransform.position;
+            _throwVictimParentWorldRotation = victimTransform.rotation;
+            _throwVictimMeshLocalPosition = victimAnim.transform.localPosition;
+            _throwVictimMeshLocalRotation = victimAnim.transform.localRotation;
+        }
+        Vector3 worldScaleBefore = victimTransform.lossyScale;
+        victimTransform.SetParent(grabSocket, false);
+        victimTransform.localPosition = Vector3.zero;
+        Vector3 p = grabSocket.lossyScale;
+        if (p.x != 0f && p.y != 0f && p.z != 0f)
+            victimTransform.localScale = new Vector3(worldScaleBefore.x / p.x, worldScaleBefore.y / p.y, worldScaleBefore.z / p.z);
+
+        var victimCC = victimTransform.GetComponent<CharacterController>();
+        if (victimCC != null) victimCC.enabled = false;
+        var victimRb = victimTransform.GetComponent<Rigidbody>();
+        if (victimRb != null) victimRb.isKinematic = true;
+
+        Vector3 toPlayer = transform.position - victimTransform.position;
+        toPlayer.y = 0f;
+        if (toPlayer.sqrMagnitude > 0.001f)
+        {
+            toPlayer.Normalize();
+            victimTransform.rotation = Quaternion.LookRotation(toPlayer);
+        }
+
+        if (victimAnim != null)
+        {
+            _throwVictimRootMotionRestore = victimAnim.applyRootMotion;
+            victimAnim.applyRootMotion = true;
+            _throwVictimRootMotionChanged = true;
+        }
+    }
+
+    string GetThrownStateName(ThrowData t, EnemyHealth victim)
+    {
+        if (_currentThrowIsBack && !string.IsNullOrEmpty(t.backEnemyThrownStateName))
+            return t.backEnemyThrownStateName;
+        var victimAI = victim.GetComponent<SimpleEnemyAI>();
+        return (victimAI != null && !string.IsNullOrEmpty(victimAI.thrownStateName)) ? victimAI.thrownStateName : t.enemyThrownStateName;
+    }
+
+    void ApplyGrabHitStop(float duration, Transform victimTransform)
+    {
+        if (duration <= 0f) return;
+        hitStopEndTime = Time.time + duration;
+        if (animator != null)
+        {
+            if (!frozenAnimators.Any(f => f.animator == animator))
+                frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
+            animator.speed = 0f;
+        }
+        var targetAnim = victimTransform.GetComponentInChildren<Animator>();
+        if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
+        {
+            frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
+            targetAnim.speed = 0f;
+        }
+    }
+
+    void SpawnGrabConnectVfx(ThrowData t, Vector3 center)
+    {
+        if (t.grabConnectVfxPrefab == null) return;
+        Quaternion rot = (center - transform.position).sqrMagnitude > 0.001f ? Quaternion.LookRotation(center - transform.position) : transform.rotation;
+        var go = Instantiate(t.grabConnectVfxPrefab, center, rot);
+        PlayVfx(go);
+    }
+
+    void StartPlayerThrowAnimation(string playerThrowTrigger)
+    {
+        if (animator == null || string.IsNullOrEmpty(playerThrowTrigger)) return;
+        animator.Rebind();
+        animator.speed = 1f;
+        animator.Play(playerThrowTrigger, 0, 0f);
+        _playerThrowRootMotionRestore = animator.applyRootMotion;
+        animator.applyRootMotion = true;
+        _playerThrowRootMotionChanged = true;
+        if (animator.transform != transform)
+        {
+            _throwPlayerMeshLocalPosition = animator.transform.localPosition;
+            _throwPlayerMeshLocalRotation = animator.transform.localRotation;
+        }
+    }
+
+    /// <summary>Runs when the grab hitbox connects: find victim, parent to socket, enable root motion, hit stop, play throw anim.</summary>
+    void ExecuteThrowHitbox()
+    {
+        ThrowData t = comboSet.throwData;
+        if (!t.enableThrow) return;
+
+        if (!TryFindThrowVictim(t, out EnemyHealth victim, out IDamageable victimDamageable)) return;
 
         currentThrowVictim = victimDamageable;
         Transform victimTransform = (victimDamageable as Component).transform;
         SetThrowVictimCollisionIgnore(victimTransform, true);
 
-        if (grabSocket != null)
-        {
-            Vector3 worldScaleBefore = victimTransform.lossyScale;
-            victimTransform.SetParent(grabSocket, false);
-            victimTransform.localPosition = Vector3.zero;
-            Vector3 p = grabSocket.lossyScale;
-            if (p.x != 0f && p.y != 0f && p.z != 0f)
-                victimTransform.localScale = new Vector3(worldScaleBefore.x / p.x, worldScaleBefore.y / p.y, worldScaleBefore.z / p.z);
+        var victimAnim = victimTransform.GetComponentInChildren<Animator>();
+        AttachVictimToGrabSocket(victimTransform, victimAnim);
 
-            var victimCC = victimTransform.GetComponent<CharacterController>();
-            if (victimCC != null) victimCC.enabled = false;
-            var victimRb = victimTransform.GetComponent<Rigidbody>();
-            if (victimRb != null) victimRb.isKinematic = true;
-
-            Vector3 toPlayer = transform.position - victimTransform.position;
-            toPlayer.y = 0f;
-            if (toPlayer.sqrMagnitude > 0.001f)
-            {
-                toPlayer.Normalize();
-                victimTransform.rotation = Quaternion.LookRotation(toPlayer);
-            }
-
-            var victimAnim = victimTransform.GetComponentInChildren<Animator>();
-            if (victimAnim != null)
-            {
-                _throwVictimRootMotionRestore = victimAnim.applyRootMotion;
-                victimAnim.applyRootMotion = true;
-                _throwVictimRootMotionChanged = true;
-                if (victimAnim.transform != victimTransform)
-                {
-                    _throwVictimMeshLocalPosition = victimAnim.transform.localPosition;
-                    _throwVictimMeshLocalRotation = victimAnim.transform.localRotation;
-                }
-            }
-        }
-
-        var victimAI = victim.GetComponent<SimpleEnemyAI>();
-        string thrownState;
-        if (_currentThrowIsBack && !string.IsNullOrEmpty(t.backEnemyThrownStateName))
-            thrownState = t.backEnemyThrownStateName;
-        else
-            thrownState = (victimAI != null && !string.IsNullOrEmpty(victimAI.thrownStateName)) ? victimAI.thrownStateName : t.enemyThrownStateName;
+        string thrownState = GetThrownStateName(t, victim);
         victim.StartThrowVictim(t.throwPhaseDuration, thrownState);
 
-        if (t.grabHitStopDuration > 0f)
-        {
-            hitStopEndTime = Time.time + t.grabHitStopDuration;
-            if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
-                frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
-            animator.speed = 0f;
-            Animator targetAnim = (victimDamageable as Component)?.transform.GetComponentInChildren<Animator>();
-            if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
-            {
-                frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
-                targetAnim.speed = 0f;
-            }
-        }
-        if (t.grabConnectVfxPrefab != null)
-        {
-            Quaternion rot = (center - transform.position).sqrMagnitude > 0.001f ? Quaternion.LookRotation(center - transform.position) : transform.rotation;
-            var go = Instantiate(t.grabConnectVfxPrefab, center, rot);
-            PlayVfx(go);
-        }
+        ApplyGrabHitStop(t.grabHitStopDuration, victimTransform);
+
+        Vector3 center = CalculateThrowHitboxCenter(t);
+        SpawnGrabConnectVfx(t, center);
 
         currentAttackEndTime = Time.time + t.grabHitStopDuration + t.throwPhaseDuration;
         string playerThrowTrigger = (_currentThrowIsBack && !string.IsNullOrEmpty(t.backThrowAnimationTrigger)) ? t.backThrowAnimationTrigger : t.throwAnimationTrigger;
-        if (animator != null && !string.IsNullOrEmpty(playerThrowTrigger))
-        {
-            animator.Play(playerThrowTrigger, 0, 0f);
-            _playerThrowRootMotionRestore = animator.applyRootMotion;
-            animator.applyRootMotion = true;
-            _playerThrowRootMotionChanged = true;
-            if (animator.transform != transform)
-            {
-                _throwPlayerMeshLocalPosition = animator.transform.localPosition;
-                _throwPlayerMeshLocalRotation = animator.transform.localRotation;
-            }
-        }
+        StartPlayerThrowAnimation(playerThrowTrigger);
+
         if (threatSystem != null)
             threatSystem.RegisterInteraction((victimDamageable as Component).transform);
     }
@@ -173,15 +205,23 @@ public partial class Combat
     /// <summary>Bake player's Animator root-motion result into transform and restore applyRootMotion. Call when throw ends.</summary>
     void BakePlayerThrowRootMotionAndRestore()
     {
+        // Only run if we turned on root motion for the throw and have a valid animator
         if (!_playerThrowRootMotionChanged || animator == null) return;
+        // Snapshot where the animator root ended up in world space (root motion moved it during throw)
         Vector3 bakePosition = animator.transform.position;
+        UnityEngine.Debug.Log($"[Throw] Baking player root position: {bakePosition}");
         Quaternion bakeRotation = animator.transform.rotation;
+        // Turn root motion back off and restore whatever it was before the throw
         animator.applyRootMotion = _playerThrowRootMotionRestore;
         _playerThrowRootMotionChanged = false;
+        // Keep player feet at current ground height; only take XZ from the baked pose
         bakePosition.y = transform.position.y;
+        // Use only Yaw from baked rotation so the character stands upright (no tilt/roll)
         Quaternion standingRotation = Quaternion.Euler(0f, bakeRotation.eulerAngles.y, 0f);
+        // Apply baked pose to the Combat/controller transform (the actual player root)
         transform.position = bakePosition;
         transform.rotation = standingRotation;
+        // If the Animator lives on a child (e.g. model root), restore its local pose so the mesh doesn't drift
         if (animator.transform != transform)
         {
             animator.transform.localPosition = _throwPlayerMeshLocalPosition;
@@ -189,12 +229,11 @@ public partial class Combat
         }
     }
 
-    void ReleaseThrowVictimFromSocket()
+    /// <summary>Bake victim's Animator root-motion result into victim transform and restore applyRootMotion + mesh local. Call when releasing from throw.</summary>
+    /// <returns>Baked world position and rotation for optional reapply-next-frame.</returns>
+    (Vector3 bakePosition, Quaternion bakeRotation) BakeVictimThrowRootMotionAndRestore(Transform vt)
     {
-        if (currentThrowVictim == null) return;
-        Transform vt = (currentThrowVictim as Component)?.transform;
-        if (vt == null) return;
-
+        if (vt == null) return (Vector3.zero, Quaternion.identity);
         var victimAnim = vt.GetComponentInChildren<Animator>();
         Vector3 bakePosition = vt.position;
         Quaternion bakeRotation = vt.rotation;
@@ -202,18 +241,13 @@ public partial class Combat
         {
             bakePosition = victimAnim.rootPosition;
             bakeRotation = victimAnim.rootRotation;
-            UnityEngine.Debug.Log($"[Throw] Bake (rootPosition/rootRotation): pos={bakePosition}, rot={bakeRotation.eulerAngles}");
+            if (_throwVictimRootMotionChanged)
+            {
+                victimAnim.applyRootMotion = _throwVictimRootMotionRestore;
+                _throwVictimRootMotionChanged = false;
+            }
         }
-        UnityEngine.Debug.Log($"[Throw] Root before set: pos={vt.position}, rot={vt.rotation.eulerAngles}");
-
-        if (_throwVictimRootMotionChanged && victimAnim != null)
-        {
-            victimAnim.applyRootMotion = _throwVictimRootMotionRestore;
-            _throwVictimRootMotionChanged = false;
-        }
-
         Quaternion standingRotation = Quaternion.Euler(0f, 0f, 0f);
-
         vt.position = bakePosition;
         vt.rotation = standingRotation;
         if (victimAnim != null && victimAnim.transform != vt)
@@ -221,8 +255,20 @@ public partial class Combat
             victimAnim.transform.localPosition = _throwVictimMeshLocalPosition;
             victimAnim.transform.localRotation = _throwVictimMeshLocalRotation;
         }
+        return (bakePosition, standingRotation);
+    }
+
+    /// <summary>Bake victim throw root motion, unparent from socket, re-enable CharacterController/Rigidbody, clear knockback; schedule reapply next frame if not launching.</summary>
+    void ReleaseThrowVictimFromSocket()
+    {
+        if (currentThrowVictim == null) return;
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        if (vt == null) return;
+        UnityEngine.Debug.Log($"[Throw] Release victim: vt={vt.name}, pos={vt.position}");
+
+        (Vector3 bakePosition, Quaternion bakeRotation) = BakeVictimThrowRootMotionAndRestore(vt);
+
         vt.SetParent(null);
-        UnityEngine.Debug.Log($"[Throw] Root after unparent: pos={vt.position}, rot={vt.rotation.eulerAngles}");
 
         var cc = vt.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = true;
@@ -233,11 +279,11 @@ public partial class Combat
         if (victimHealth != null)
             victimHealth.ClearKnockback();
 
-        if (!comboSet.throwData.launchVictimOnRelease)
+        if (comboSet != null && !comboSet.throwData.launchVictimOnRelease)
         {
             _reapplyThrowBakeTransform = vt;
             _reapplyThrowBakePosition = bakePosition;
-            _reapplyThrowBakeRotation = standingRotation;
+            _reapplyThrowBakeRotation = bakeRotation;
             _reapplyThrowBakeNextFrame = true;
         }
     }

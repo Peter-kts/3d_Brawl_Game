@@ -30,7 +30,7 @@
  * ------
  * 
  * Instead of:
- *   var enemy = collider.GetComponentInParent<EnemyHealth>();
+ *   var enemy = collider.GetComponent<EnemyHealth>();
  *   if (enemy != null) enemy.TakeHit(...);
  * 
  * You can do:

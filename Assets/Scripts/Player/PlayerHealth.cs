@@ -78,8 +78,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         hp = maxHp;
         cc = GetComponent<CharacterController>();
-        if (animator == null) animator = GetComponent<Animator>();
-        if (animator == null) animator = GetComponentInChildren<Animator>();
+        if (animator == null) animator = PlayerController.FindAnimator(gameObject);
     }
 
     void Update()

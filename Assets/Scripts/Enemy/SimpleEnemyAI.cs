@@ -321,7 +321,7 @@ public class SimpleEnemyAI : MonoBehaviour
 
         // Auto-find animator on this object or children (e.g., on the visual model)
         if (animator == null) animator = GetComponent<Animator>();
-        if (animator == null) animator = GetComponentInChildren<Animator>();
+        // if (animator == null) animator = GetComponentInChildren<Animator>();
         
         // Find EnemyCombat component (optional - enemies work without it, just can't attack)
         EnemyCombat = GetComponent<EnemyCombat>();
@@ -441,7 +441,9 @@ public class SimpleEnemyAI : MonoBehaviour
                 stateToPlay = hitStateName;
             }
 
-            // Play at 1x first so we can read the state length (when not cached), then scale to match hitstun.
+            // Set stun bool first so the Stun layer doesn't immediately transition out of Stunned (UpdateAnimator sets it next frame; we need it true now).
+            if (!string.IsNullOrEmpty(stunParameter))
+                animator.SetBool(stunParameter, true);
             if (!string.IsNullOrEmpty(hitSpeedParameter))
                 animator.SetFloat(hitSpeedParameter, 1f);
             animator.Play(stateToPlay, hitAnimationLayer, 0f);
@@ -480,6 +482,8 @@ public class SimpleEnemyAI : MonoBehaviour
     public void TriggerThrownAnimation(float duration, string stateName)
     {
         if (animator == null || string.IsNullOrEmpty(stateName)) return;
+        if (!string.IsNullOrEmpty(stunParameter))
+            animator.SetBool(stunParameter, true);
         if (!string.IsNullOrEmpty(hitSpeedParameter))
             animator.SetFloat(hitSpeedParameter, 1f);
         animator.Play(stateName, hitAnimationLayer, 0f);
@@ -511,6 +515,8 @@ public class SimpleEnemyAI : MonoBehaviour
     {
         if (health == null || animator == null || string.IsNullOrEmpty(getUpStateName)) return;
         health.StartGetUp(getUpDuration);
+        if (!string.IsNullOrEmpty(stunParameter))
+            animator.SetBool(stunParameter, true);
         animator.Play(getUpStateName, getUpLayer, 0f);
         if (baseGetUpAnimDuration > 0f && getUpDuration > 0.001f && !string.IsNullOrEmpty(hitSpeedParameter))
             animator.SetFloat(hitSpeedParameter, baseGetUpAnimDuration / getUpDuration);

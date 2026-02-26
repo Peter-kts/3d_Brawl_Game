@@ -174,10 +174,8 @@ public partial class Combat : MonoBehaviour
     {
         if (playerController == null) playerController = GetComponent<PlayerController>();
         if (threatSystem == null) threatSystem = GetComponent<LockOnSystem>();
-        
-        // Auto-find animator on this object or in children (e.g., on the visual model)
-        if (animator == null) animator = GetComponent<Animator>();
-        if (animator == null) animator = GetComponentInChildren<Animator>();
+
+        if (animator == null) animator = PlayerController.FindAnimator(gameObject);
     }
 
     void LateUpdate()
@@ -185,28 +183,28 @@ public partial class Combat : MonoBehaviour
         // Re-apply baked position one frame after release (no-launch only) so enemy scripts/gravity don't overwrite it
         if (_reapplyThrowBakeNextFrame && _reapplyThrowBakeTransform != null)
         {
-            _reapplyThrowBakeTransform.position = _reapplyThrowBakePosition;
-            _reapplyThrowBakeTransform.rotation = _reapplyThrowBakeRotation;
-            _reapplyThrowBakeNextFrame = false;
-            _reapplyThrowBakeTransform = null;
+            _reapplyThrowBakeTransform.position = _reapplyThrowBakePosition;  // Restore saved world position
+            _reapplyThrowBakeTransform.rotation = _reapplyThrowBakeRotation;  // Restore saved world rotation
+            _reapplyThrowBakeNextFrame = false;   // Only re-apply once
+            _reapplyThrowBakeTransform = null;    // Clear reference
         }
         // Deferred throw damage (from OnThrowDamage animation event): apply on exact frame, then clear so release path doesn't double-apply
-        bool throwDamageAppliedThisFrame = false;
+        bool throwDamageAppliedThisFrame = false; // Track so release path can skip applying damage again
         if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
         {
-            ApplyThrowEndDamage(_deferThrowDamageProfileIndex);
-            _deferThrowDamageToLateUpdate = false;
-            _deferThrowDamageProfileIndex = -1;
-            throwDamageAppliedThisFrame = true;
+            // ApplyThrowEndDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
+            _deferThrowDamageToLateUpdate = false;              // Consume deferred flag
+            _deferThrowDamageProfileIndex = -1;                 // Reset profile index
+            throwDamageAppliedThisFrame = true;                 // Mark so CompleteThrowRelease doesn't double-apply
         }
         // Throw release was deferred (from OnThrowRelease or from Update timer) so we run after Animator has applied root motion this frame
-        if (!_deferThrowReleaseToLateUpdate || currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;
-        _deferThrowReleaseToLateUpdate = false;
-        Transform vt = (currentThrowVictim as Component)?.transform;
-        if (vt == null) { currentThrowVictim = null; return; }
-        BakePlayerThrowRootMotionAndRestore();
-        ReleaseThrowVictimFromSocket();
-        CompleteThrowRelease(vt, _deferThrowReleaseProfileIndex, throwDamageAppliedThisFrame, applyReleaseEffects: true);
+        if (!_deferThrowReleaseToLateUpdate || currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;  // Skip if not deferred or invalid
+        _deferThrowReleaseToLateUpdate = false;  // Consume deferred release flag
+        Transform vt = (currentThrowVictim as Component)?.transform;  // Get victim transform for release
+        if (vt == null) { currentThrowVictim = null; return; }  // Bail if victim destroyed
+        BakePlayerThrowRootMotionAndRestore();   // Save player root motion state and restore pre-throw pose
+        ReleaseThrowVictimFromSocket();          // Bake victim root motion, detach from socket, re-enable CC/rb, clear knockback, schedule reapply if no launch
+        CompleteThrowRelease(vt, _deferThrowReleaseProfileIndex, throwDamageAppliedThisFrame, applyReleaseEffects: true);  // Apply release forces/effects and cleanup
     }
 
     void Update()

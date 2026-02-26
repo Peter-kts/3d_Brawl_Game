@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Debug\HealthDebugVisual.cs" />
     <Compile Include="Assets\Scripts\Combat\CombatHitboxGizmos.cs" />
     <Compile Include="Assets\Scripts\Behaviors\StandoffBehavior.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerController.Dash.cs" />
     <Compile Include="Assets\Travis Game Assets\Hit Impact Effects\Demo Scene\Scripts\HitImpactEffectsPreview.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStepDebugVisual.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Assets\Scripts\Combat\MoveTemplate.cs" />
     <Compile Include="Assets\Scripts\Combat\ThrowAnimationEventForwarder.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerFacingDebugVisual.cs" />
+    <Compile Include="Assets\Scripts\Combat\Combat.Throw.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Scripts\LockOn\LockOnDebugVisuals.cs" />
     <Compile Include="Assets\Scripts\LockOn\LockOnSystem.cs" />

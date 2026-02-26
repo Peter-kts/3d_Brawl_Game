@@ -231,17 +231,16 @@ public class EnemyHealth : MonoBehaviour, IDamageable
              * If no CharacterController, fall back to direct transform movement
              */
             Vector3 movement = kbVel * Time.deltaTime;
-            
-            if (cc != null)
+            // Only move when CC is enabled (e.g. skip while thrown — throw system disables CC and moves the root)
+            if (cc != null && cc.enabled)
             {
-                // CharacterController.Move() respects collisions
                 cc.Move(movement);
             }
-            else
+            else if (cc == null)
             {
-                // Fallback: direct transform movement (no collision)
                 transform.position += movement;
             }
+            // else: CC exists but disabled — don't call Move (avoids "Move called on inactive controller")
             
             /*
              * Exponential decay for knockback:
