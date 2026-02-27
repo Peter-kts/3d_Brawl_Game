@@ -126,8 +126,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.7908805
-        functionName: OnThrowRelease
+      - time: 0.044207375
+        functionName: OnThrowUnparent
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
@@ -286,7 +286,7 @@ ModelImporter:
       name: Frank_FS4_Grab_07_reAct
       takeName: Take 001
       internalID: -6024170331808715273
-      firstFrame: 20800
+      firstFrame: 20820
       lastFrame: 20920
       wrapMode: 0
       orientationOffsetY: 0
@@ -306,7 +306,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.026958251
+        functionName: OnThrowUnparent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.8620104
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: -1
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

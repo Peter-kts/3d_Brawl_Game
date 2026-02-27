@@ -192,7 +192,7 @@ public partial class Combat : MonoBehaviour
         bool throwDamageAppliedThisFrame = false; // Track so release path can skip applying damage again
         if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
         {
-            // ApplyThrowEndDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
+            ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
             _deferThrowDamageToLateUpdate = false;              // Consume deferred flag
             _deferThrowDamageProfileIndex = -1;                 // Reset profile index
             throwDamageAppliedThisFrame = true;                 // Mark so CompleteThrowRelease doesn't double-apply
@@ -202,8 +202,8 @@ public partial class Combat : MonoBehaviour
         _deferThrowReleaseToLateUpdate = false;  // Consume deferred release flag
         Transform vt = (currentThrowVictim as Component)?.transform;  // Get victim transform for release
         if (vt == null) { currentThrowVictim = null; return; }  // Bail if victim destroyed
+        ReleaseThrowVictimFromSocket();          // Bake victim, unparent if needed, CC/rb, ClearKnockback, reapply (unparent skipped when OnThrowUnparent already ran)
         BakePlayerThrowRootMotionAndRestore();   // Save player root motion state and restore pre-throw pose
-        ReleaseThrowVictimFromSocket();          // Bake victim root motion, detach from socket, re-enable CC/rb, clear knockback, schedule reapply if no launch
         CompleteThrowRelease(vt, _deferThrowReleaseProfileIndex, throwDamageAppliedThisFrame, applyReleaseEffects: true);  // Apply release forces/effects and cleanup
     }
 
@@ -211,25 +211,11 @@ public partial class Combat : MonoBehaviour
     {
         if (isAttacking && Time.time >= currentAttackEndTime)
         {
-            // We're in a throw hold and the throw phase duration expired: defer release to LateUpdate so we read pose after Animator updates (same as OnThrowRelease)
-            if (currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
+            // Throw release (deparent from grab socket) is triggered exclusively by the OnThrowRelease animation event.
+            // We do not set _deferThrowReleaseToLateUpdate from the timer here; only the animation event does.
+            if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow)
             {
-                if (!_deferThrowReleaseToLateUpdate)
-                {
-                    _deferThrowReleaseToLateUpdate = true;
-                    _deferThrowReleaseProfileIndex = -1;  // Timer path uses default release profile
-                }
-            }
-            else
-            {
-                // Attack ended without deferring (e.g. no victim or throw disabled); release victim if any, then clean up
-                if (currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
-                {
-                    Transform vt = (currentThrowVictim as Component)?.transform;
-                    BakePlayerThrowRootMotionAndRestore();
-                    ReleaseThrowVictimFromSocket();
-                    CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: false, applyReleaseEffects: true);
-                }
+                // Deparent is exclusively from OnThrowRelease animation event (and stun path below); just clear attack state here.
                 if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator))
                     animator.speed = 1f;
                 isAttacking = false;

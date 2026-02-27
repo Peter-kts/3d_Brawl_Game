@@ -125,7 +125,28 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.1988064
+        functionName: OnThrowDamage
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: fc8841e0616069642ba0df870eb66c14, type: 3}
+        floatParameter: 0
+        intParameter: 6
+        messageOptions: 0
+      - time: 0.49721983
+        functionName: OnThrowUnparent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 1e8475dc68c78b14a83ef8a0c2ff1168, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 1e8475dc68c78b14a83ef8a0c2ff1168, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -279,7 +300,7 @@ ModelImporter:
       name: Frank_FS4_Grab_07
       takeName: Take 001
       internalID: 1702301948168947093
-      firstFrame: 20800
+      firstFrame: 20820
       lastFrame: 20920
       wrapMode: 0
       orientationOffsetY: 0
@@ -299,7 +320,28 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.16363636
+        functionName: OnThrowUnparent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 1e8475dc68c78b14a83ef8a0c2ff1168, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.7858419
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 1e8475dc68c78b14a83ef8a0c2ff1168, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.4244318
+        functionName: OnThrowDamage
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 1e8475dc68c78b14a83ef8a0c2ff1168, type: 3}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

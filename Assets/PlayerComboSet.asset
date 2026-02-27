@@ -171,10 +171,10 @@ MonoBehaviour:
     hitboxDelay: 0.25
     throwAnimationTrigger: Throw
     backThrowAnimationTrigger: BackThrow
-    throwPhaseDuration: 2
+    throwPhaseDuration: 1
     grabHitStopDuration: 0.08
     grabConnectVfxPrefab: {fileID: 3297430504707544264, guid: c166a98cbf45fe14488e05032a04cd59, type: 3}
-    throwEndVfxPrefab: {fileID: 0}
+    throwEndVfxPrefab: {fileID: 5988538361188982963, guid: 1b0831d4d161ea441bc59d675ca857c5, type: 3}
     range: 1.4
     hitboxRadius: 0.6
     hitboxOffset: {x: 0, y: 0, z: 0}
@@ -182,7 +182,7 @@ MonoBehaviour:
     endDamage: 15
     endKnockback: 20
     endKnockbackUp: 1
-    endHitstun: 0
+    endHitstun: 10
     endAirborneDuration: 0.05
     faceVictimTowardThrowDirection: 1
     releaseProfiles: []
