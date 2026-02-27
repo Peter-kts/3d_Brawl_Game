@@ -405,34 +405,34 @@ public partial class Combat
     void ApplyThrowDamage(int releaseProfileIndex = -1)
     {
         ThrowData t = comboSet.throwData;
-        if (!t.enableThrow || currentThrowVictim == null) return;
+        if (!t.enableThrow || currentThrowVictim == null) return;  // Guard: throw disabled or no victim
         Transform victimTransform = (currentThrowVictim as Component)?.transform;
-        if (victimTransform == null) return;
+        if (victimTransform == null) return;  // Victim may have been destroyed
+        // Direction from player to victim (XZ only) for knockback; used so victim is pushed away from player
         Vector3 horizontalDir = (victimTransform.position - transform.position);
         horizontalDir.y = 0f;
-        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
+        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;  // Fallback if player and victim overlap
         horizontalDir.Normalize();
         int damage;
-        float knockback, knockbackUp, hitstun, airborneDuration;
+        float knockback, knockbackUp, hitstun;
         if (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)
         {
-            var p = t.releaseProfiles[releaseProfileIndex];
+            var p = t.releaseProfiles[releaseProfileIndex];  // Use per-event profile (e.g. from OnThrowDamage(int))
             damage = p.endDamage;
             knockback = p.endKnockback;
             knockbackUp = p.endKnockbackUp;
             hitstun = p.endHitstun;
-            airborneDuration = p.endAirborneDuration;
         }
         else
         {
+            // Use default throw data when profile index is -1 or invalid
             damage = t.endDamage;
             knockback = t.endKnockback;
             knockbackUp = t.endKnockbackUp;
             hitstun = t.endHitstun;
-            airborneDuration = t.endAirborneDuration;
         }
-        Vector3 knockbackVector = (horizontalDir * knockback) + (Vector3.up * knockbackUp);
-        currentThrowVictim.TakeHit(damage, knockbackVector, hitstun, airborneDuration);
+        Vector3 knockbackVector = (horizontalDir * knockback) + (Vector3.up * knockbackUp);  // Horizontal push + vertical (e.g. launch)
+        currentThrowVictim.TakeHit(damage, knockbackVector, hitstun, airborneDuration: 0f);  // No airborne from throw
     }
 
     /// <summary>World position for the grab hitbox sphere (hitOrigin or transform + range and hitboxOffset).</summary>

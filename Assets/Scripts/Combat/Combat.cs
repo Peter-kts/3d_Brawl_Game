@@ -192,7 +192,7 @@ public partial class Combat : MonoBehaviour
         bool throwDamageAppliedThisFrame = false; // Track so release path can skip applying damage again
         if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
         {
-            ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
+            // ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
             _deferThrowDamageToLateUpdate = false;              // Consume deferred flag
             _deferThrowDamageProfileIndex = -1;                 // Reset profile index
             throwDamageAppliedThisFrame = true;                 // Mark so CompleteThrowRelease doesn't double-apply
