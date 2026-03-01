@@ -60,15 +60,15 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.4f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
-    <Compile Include="Assets\Editor\ClearDestroyedSelection.cs" />
-    <Compile Include="Assets\Editor\ComboSetEditor.cs" />
-    <Compile Include="Assets\Editor\DebugSettingsEditor.cs" />
-    <Compile Include="Assets\Editor\FoldoutHeaderEditor.cs" />
-    <Compile Include="Assets\Editor\EnemyCombatEditor.cs" />
-    <Compile Include="Assets\Editor\ScriptEditors.cs" />
-    <Compile Include="Assets\Editor\AttackDataDrawer.cs" />
-    <Compile Include="Assets\Editor\OrganizeAssets.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\EnemyCombatEditor.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\DebugSettingsEditor.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\AttackDataDrawer.cs" />
+    <Compile Include="Assets\Archive\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\OrganizeAssets.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\ComboSetEditor.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\ClearDestroyedSelection.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\FoldoutHeaderEditor.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\ScriptEditors.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\PackageCache\com.unity.collab-proxy@1ec4e416a4af\Lib\Editor\Localization\cm-help.zh-Hans.txt" />
@@ -1386,6 +1386,10 @@
       <Project>{91742A61-DAF5-06AD-0B91-CC86525AD17C}</Project>
       <Name>Unity.UnifiedRayTracing.Runtime</Name>
     </ProjectReference>
+    <ProjectReference Include="MeshyAssembly.csproj">
+      <Project>{4AE777F0-B292-CD12-563B-753896C51904}</Project>
+      <Name>MeshyAssembly</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Rider.Editor.csproj">
       <Project>{514FF7F3-73EC-7E80-0336-AD7DFD977EBD}</Project>
       <Name>Unity.Rider.Editor</Name>
@@ -1417,10 +1421,6 @@
     <ProjectReference Include="Unity.VisualStudio.Editor.csproj">
       <Project>{1A24A7A5-90F5-7C45-3D69-1F201C4532BB}</Project>
       <Name>Unity.VisualStudio.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="MeshyAssembly.csproj">
-      <Project>{4AE777F0-B292-CD12-563B-753896C51904}</Project>
-      <Name>MeshyAssembly</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Collections.csproj">
       <Project>{5CC59DEE-BD51-2C7D-671C-D580E859BDEC}</Project>
