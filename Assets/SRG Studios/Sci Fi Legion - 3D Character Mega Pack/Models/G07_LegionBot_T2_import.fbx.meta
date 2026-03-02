@@ -1,0 +1,715 @@
+fileFormatVersion: 2
+guid: f10349efba2a5734d95f2006de0d0744
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: head_jnt
+  - first:
+      1: 100002
+    second: joints
+  - first:
+      1: 100004
+    second: //RootNode
+  - first:
+      1: 100006
+    second: kabutomaton_LP
+  - first:
+      1: 100008
+    second: left_ankle_jnt
+  - first:
+      1: 100010
+    second: left_attack_jnt
+  - first:
+      1: 100012
+    second: left_hip_jnt
+  - first:
+      1: 100014
+    second: left_hip_rotation
+  - first:
+      1: 100016
+    second: left_knee_jnt
+  - first:
+      1: 100018
+    second: left_toe_inside_jnt
+  - first:
+      1: 100020
+    second: left_toe_inside_jnt_end
+  - first:
+      1: 100022
+    second: left_toe_middle_jnt
+  - first:
+      1: 100024
+    second: left_toe_middle_jnt_end
+  - first:
+      1: 100026
+    second: left_toe_outside_jnt
+  - first:
+      1: 100028
+    second: left_toe_outside_jnt_end
+  - first:
+      1: 100030
+    second: right_ankle_jnt
+  - first:
+      1: 100032
+    second: right_attack_jnt
+  - first:
+      1: 100034
+    second: right_hip_jnt
+  - first:
+      1: 100036
+    second: right_hip_rotation
+  - first:
+      1: 100038
+    second: right_knee_jnt
+  - first:
+      1: 100040
+    second: right_middle_jnt
+  - first:
+      1: 100042
+    second: right_middle_toe_jnt_end
+  - first:
+      1: 100044
+    second: right_toe_inside_jnt
+  - first:
+      1: 100046
+    second: right_toe_inside_jnt_end
+  - first:
+      1: 100048
+    second: right_toe_outside_jnt
+  - first:
+      1: 100050
+    second: right_toe_outside_jnt_end
+  - first:
+      1: 100052
+    second: root_jnt
+  - first:
+      4: 400000
+    second: head_jnt
+  - first:
+      4: 400002
+    second: joints
+  - first:
+      4: 400004
+    second: //RootNode
+  - first:
+      4: 400006
+    second: kabutomaton_LP
+  - first:
+      4: 400008
+    second: left_ankle_jnt
+  - first:
+      4: 400010
+    second: left_attack_jnt
+  - first:
+      4: 400012
+    second: left_hip_jnt
+  - first:
+      4: 400014
+    second: left_hip_rotation
+  - first:
+      4: 400016
+    second: left_knee_jnt
+  - first:
+      4: 400018
+    second: left_toe_inside_jnt
+  - first:
+      4: 400020
+    second: left_toe_inside_jnt_end
+  - first:
+      4: 400022
+    second: left_toe_middle_jnt
+  - first:
+      4: 400024
+    second: left_toe_middle_jnt_end
+  - first:
+      4: 400026
+    second: left_toe_outside_jnt
+  - first:
+      4: 400028
+    second: left_toe_outside_jnt_end
+  - first:
+      4: 400030
+    second: right_ankle_jnt
+  - first:
+      4: 400032
+    second: right_attack_jnt
+  - first:
+      4: 400034
+    second: right_hip_jnt
+  - first:
+      4: 400036
+    second: right_hip_rotation
+  - first:
+      4: 400038
+    second: right_knee_jnt
+  - first:
+      4: 400040
+    second: right_middle_jnt
+  - first:
+      4: 400042
+    second: right_middle_toe_jnt_end
+  - first:
+      4: 400044
+    second: right_toe_inside_jnt
+  - first:
+      4: 400046
+    second: right_toe_inside_jnt_end
+  - first:
+      4: 400048
+    second: right_toe_outside_jnt
+  - first:
+      4: 400050
+    second: right_toe_outside_jnt_end
+  - first:
+      4: 400052
+    second: root_jnt
+  - first:
+      43: 4300000
+    second: kabutomaton_LP
+  - first:
+      74: 7400000
+    second: Idle1
+  - first:
+      74: 7400002
+    second: ForwardSpeed
+  - first:
+      74: 7400004
+    second: Attack1
+  - first:
+      74: 7400006
+    second: Attack2
+  - first:
+      74: 7400008
+    second: Death1
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: kabutomaton_LP
+  externalObjects: {}
+  materials:
+    materialImportMode: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle1
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1
+      lastFrame: 120
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: joints
+        weight: 1
+      - path: joints/root_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt/left_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt/left_toe_middle_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt/left_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation/left_attack_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt/right_middle_toe_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt/right_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt/right_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation/right_attack_jnt
+        weight: 1
+      - path: kabutomaton_LP
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: ForwardSpeed
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 201
+      lastFrame: 241
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: joints
+        weight: 1
+      - path: joints/root_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt/left_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt/left_toe_middle_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt/left_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation/left_attack_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt/right_middle_toe_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt/right_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt/right_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation/right_attack_jnt
+        weight: 1
+      - path: kabutomaton_LP
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack1
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1600
+      lastFrame: 1690
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: joints
+        weight: 1
+      - path: joints/root_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt/left_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt/left_toe_middle_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt/left_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation/left_attack_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt/right_middle_toe_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt/right_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt/right_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation/right_attack_jnt
+        weight: 1
+      - path: kabutomaton_LP
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1800
+      lastFrame: 1890
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: joints
+        weight: 1
+      - path: joints/root_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt/left_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt/left_toe_middle_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt/left_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation/left_attack_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt/right_middle_toe_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt/right_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt/right_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation/right_attack_jnt
+        weight: 1
+      - path: kabutomaton_LP
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Death1
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1500
+      lastFrame: 1550
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: joints
+        weight: 1
+      - path: joints/root_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_inside_jnt/left_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_middle_jnt/left_toe_middle_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_jnt/left_knee_jnt/left_ankle_jnt/left_toe_outside_jnt/left_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/left_hip_rotation/left_attack_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_middle_jnt/right_middle_toe_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_inside_jnt/right_toe_inside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_jnt/right_knee_jnt/right_ankle_jnt/right_toe_outside_jnt/right_toe_outside_jnt_end
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation
+        weight: 1
+      - path: joints/root_jnt/head_jnt/right_hip_rotation/right_attack_jnt
+        weight: 1
+      - path: kabutomaton_LP
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.01
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.01
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Sci Fi Legion - 3D Character Mega Pack/Models/G07_LegionBot_T2_import.fbx
+  uploadId: 814144

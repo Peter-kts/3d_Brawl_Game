@@ -57,7 +57,7 @@ public struct ThrowData
     public Vector3 hitboxOffset;
 
     [Header("End of Throw")]
-    [Tooltip("If true, at release we apply damage + knockback + airborne (TakeHit). If false, only unparent and restore victim — let root motion animation play out entirely with no launch.")]
+    [Tooltip("If true, at release we apply damage + knockback + airborne (TakeHit). If false, only release/restore victim — let root motion animation play out entirely with no launch.")]
     public bool launchVictimOnRelease;
     [Tooltip("Damage applied to victim when throw ends (only if Launch Victim On Release is true).")]
     public int endDamage;

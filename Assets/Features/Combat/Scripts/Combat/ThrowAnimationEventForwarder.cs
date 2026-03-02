@@ -13,6 +13,24 @@ public class ThrowAnimationEventForwarder : MonoBehaviour
         if (combat != null)
             combat.OnThrowUnparent();
     }
+    public void OnThrowVictimRootMotion(int enabled)
+    {
+        var combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnThrowVictimRootMotion(enabled);
+    }
+    public void OnThrowVictimRootMotionOn()
+    {
+        var combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnThrowVictimRootMotionOn();
+    }
+    public void OnThrowVictimRootMotionOff()
+    {
+        var combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnThrowVictimRootMotionOff();
+    }
     public void OnThrowRelease()
     {
         var combat = GetComponentInParent<Combat>();

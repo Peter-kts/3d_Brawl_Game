@@ -1,0 +1,1506 @@
+fileFormatVersion: 2
+guid: 69fdb21e3ec765a41a69a11b4435f8f0
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Kabumerc_l_Leg_AnkleSHJnt
+  - first:
+      1: 100002
+    second: Kabumerc_l_Leg_BallSHJnt
+  - first:
+      1: 100004
+    second: Kabumerc_l_Leg_HipSHJnt
+  - first:
+      1: 100006
+    second: Kabumerc_l_Leg_KneeSHJnt
+  - first:
+      1: 100008
+    second: Kabumerc_l_Leg_ToeSHJnt
+  - first:
+      1: 100010
+    second: Kabumerc_l_Pistol1_AuxSHJnt
+  - first:
+      1: 100012
+    second: Kabumerc_l_Pistol2_AuxSHJnt
+  - first:
+      1: 100014
+    second: Kabumerc_l_RocketLauncher_AuxSHJnt
+  - first:
+      1: 100016
+    second: Kabumerc_LASERJnt
+  - first:
+      1: 100018
+    second: Kabumerc_MAINSHJnt
+  - first:
+      1: 100020
+    second: KabuMerc_Mesh
+  - first:
+      1: 100022
+    second: Kabumerc_r_Leg_AnkleSHJnt
+  - first:
+      1: 100024
+    second: Kabumerc_r_Leg_BallSHJnt
+  - first:
+      1: 100026
+    second: Kabumerc_r_Leg_HipSHJnt
+  - first:
+      1: 100028
+    second: Kabumerc_r_Leg_KneeSHJnt
+  - first:
+      1: 100030
+    second: Kabumerc_r_Leg_ToeSHJnt
+  - first:
+      1: 100032
+    second: Kabumerc_r_Pistol1_AuxSHJnt
+  - first:
+      1: 100034
+    second: Kabumerc_r_Pistol2_AuxSHJnt
+  - first:
+      1: 100036
+    second: Kabumerc_r_RocketLauncher_AuxSHJnt
+  - first:
+      1: 100038
+    second: Kabumerc_ROOTSHJnt
+  - first:
+      1: 100040
+    second: Kabumerc_TORLJnt
+  - first:
+      1: 100042
+    second: Kabumerc_TORRJnt
+  - first:
+      1: 100044
+    second: //RootNode
+  - first:
+      1: 100046
+    second: WeaponNull1
+  - first:
+      1: 100048
+    second: WeaponNull2
+  - first:
+      1: 100050
+    second: WeaponNull3
+  - first:
+      1: 100052
+    second: WeaponNull4
+  - first:
+      1: 100054
+    second: WeaponNull5
+  - first:
+      1: 100056
+    second: WeaponNull6
+  - first:
+      1: 100058
+    second: WeaponNull7
+  - first:
+      4: 400000
+    second: Kabumerc_l_Leg_AnkleSHJnt
+  - first:
+      4: 400002
+    second: Kabumerc_l_Leg_BallSHJnt
+  - first:
+      4: 400004
+    second: Kabumerc_l_Leg_HipSHJnt
+  - first:
+      4: 400006
+    second: Kabumerc_l_Leg_KneeSHJnt
+  - first:
+      4: 400008
+    second: Kabumerc_l_Leg_ToeSHJnt
+  - first:
+      4: 400010
+    second: Kabumerc_l_Pistol1_AuxSHJnt
+  - first:
+      4: 400012
+    second: Kabumerc_l_Pistol2_AuxSHJnt
+  - first:
+      4: 400014
+    second: Kabumerc_l_RocketLauncher_AuxSHJnt
+  - first:
+      4: 400016
+    second: Kabumerc_LASERJnt
+  - first:
+      4: 400018
+    second: Kabumerc_MAINSHJnt
+  - first:
+      4: 400020
+    second: KabuMerc_Mesh
+  - first:
+      4: 400022
+    second: Kabumerc_r_Leg_AnkleSHJnt
+  - first:
+      4: 400024
+    second: Kabumerc_r_Leg_BallSHJnt
+  - first:
+      4: 400026
+    second: Kabumerc_r_Leg_HipSHJnt
+  - first:
+      4: 400028
+    second: Kabumerc_r_Leg_KneeSHJnt
+  - first:
+      4: 400030
+    second: Kabumerc_r_Leg_ToeSHJnt
+  - first:
+      4: 400032
+    second: Kabumerc_r_Pistol1_AuxSHJnt
+  - first:
+      4: 400034
+    second: Kabumerc_r_Pistol2_AuxSHJnt
+  - first:
+      4: 400036
+    second: Kabumerc_r_RocketLauncher_AuxSHJnt
+  - first:
+      4: 400038
+    second: Kabumerc_ROOTSHJnt
+  - first:
+      4: 400040
+    second: Kabumerc_TORLJnt
+  - first:
+      4: 400042
+    second: Kabumerc_TORRJnt
+  - first:
+      4: 400044
+    second: //RootNode
+  - first:
+      4: 400046
+    second: WeaponNull1
+  - first:
+      4: 400048
+    second: WeaponNull2
+  - first:
+      4: 400050
+    second: WeaponNull3
+  - first:
+      4: 400052
+    second: WeaponNull4
+  - first:
+      4: 400054
+    second: WeaponNull5
+  - first:
+      4: 400056
+    second: WeaponNull6
+  - first:
+      4: 400058
+    second: WeaponNull7
+  - first:
+      43: 4300000
+    second: KabuMerc_Mesh
+  - first:
+      74: 7400000
+    second: Idle
+  - first:
+      74: 7400002
+    second: ForwardSpeed
+  - first:
+      74: 7400004
+    second: Attack1A
+  - first:
+      74: 7400006
+    second: Attack2A
+  - first:
+      74: 7400008
+    second: Attack2B
+  - first:
+      74: 7400010
+    second: Attack2C
+  - first:
+      74: 7400012
+    second: Attack2D
+  - first:
+      74: 7400014
+    second: Attack2E
+  - first:
+      74: 7400016
+    second: Attack2F
+  - first:
+      74: 7400018
+    second: Death
+  - first:
+      74: 7400020
+    second: Intro
+  - first:
+      74: 7400022
+    second: Attack3A
+  - first:
+      74: 7400024
+    second: Zero
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: KabuMerc_Mesh
+  externalObjects: {}
+  materials:
+    materialImportMode: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+    - Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+    - Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+    - Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+    - Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+    - Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+    - Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Idle
+      internalID: 0
+      firstFrame: 100
+      lastFrame: 160
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: ForwardSpeed
+      takeName: ForwardSpeed
+      internalID: 0
+      firstFrame: 200
+      lastFrame: 225
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack1A
+      takeName: Attack1A
+      internalID: 0
+      firstFrame: 300
+      lastFrame: 315
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2A
+      takeName: Attack2A
+      internalID: 0
+      firstFrame: 400
+      lastFrame: 414
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2B
+      takeName: Attack2B
+      internalID: 0
+      firstFrame: 450
+      lastFrame: 464
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2C
+      takeName: Attack2C
+      internalID: 0
+      firstFrame: 500
+      lastFrame: 514
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2D
+      takeName: Attack2D
+      internalID: 0
+      firstFrame: 550
+      lastFrame: 564
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2E
+      takeName: Attack2E
+      internalID: 0
+      firstFrame: 600
+      lastFrame: 614
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2F
+      takeName: Attack2F
+      internalID: 0
+      firstFrame: 650
+      lastFrame: 664
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Death
+      takeName: Death
+      internalID: 0
+      firstFrame: 700
+      lastFrame: 745
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Intro
+      takeName: Intro
+      internalID: 0
+      firstFrame: 800
+      lastFrame: 835
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack3A
+      takeName: Attack3A
+      internalID: 0
+      firstFrame: 1000
+      lastFrame: 1035
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Zero
+      takeName: Zero
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Kabumerc_MAINSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_Leg_HipSHJnt/Kabumerc_l_Leg_KneeSHJnt/Kabumerc_l_Leg_AnkleSHJnt/Kabumerc_l_Leg_BallSHJnt/Kabumerc_l_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol1_AuxSHJnt/WeaponNull4
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_l_Pistol2_AuxSHJnt/WeaponNull6
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_l_RocketLauncher_AuxSHJnt/Kabumerc_TORLJnt/WeaponNull2
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_LASERJnt/WeaponNull1
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_Leg_HipSHJnt/Kabumerc_r_Leg_KneeSHJnt/Kabumerc_r_Leg_AnkleSHJnt/Kabumerc_r_Leg_BallSHJnt/Kabumerc_r_Leg_ToeSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol1_AuxSHJnt/WeaponNull5
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_r_Pistol2_AuxSHJnt/WeaponNull7
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt
+        weight: 1
+      - path: Kabumerc_MAINSHJnt/Kabumerc_ROOTSHJnt/Kabumerc_r_RocketLauncher_AuxSHJnt/Kabumerc_TORRJnt/WeaponNull3
+        weight: 1
+      - path: KabuMerc_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.01
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.01
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Sci Fi Legion - 3D Character Mega Pack/Models/G14_MercKabuT4_import.fbx
+  uploadId: 814144

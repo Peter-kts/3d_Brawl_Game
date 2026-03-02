@@ -220,6 +220,7 @@ public partial class PlayerController : MonoBehaviour
             ApplyDashMovement();
             UpdateAnimator();
             TrackDashEnd();
+            ApplyGravity();
             return;
         }
 
@@ -228,6 +229,7 @@ public partial class PlayerController : MonoBehaviour
 
         UpdateAnimator();
         TrackDashEnd();
+        ApplyGravity();
     }
 
     /// <summary>If player is stunned (hit reaction), update animator and return true so Update skips input/movement.</summary>
@@ -236,6 +238,7 @@ public partial class PlayerController : MonoBehaviour
         if (playerHealth != null && playerHealth.IsStunned)
         {
             UpdateAnimator();
+            ApplyGravity();
             return true;
         }
         return false;

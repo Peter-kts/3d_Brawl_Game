@@ -1,0 +1,2254 @@
+fileFormatVersion: 2
+guid: 76dd428219e49d44e979012841e61981
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: BotLe_Wing_Jnt
+  - first:
+      1: 100002
+    second: BotRi_Wing_Jnt
+  - first:
+      1: 100004
+    second: head1_head
+  - first:
+      1: 100006
+    second: head1_neck
+  - first:
+      1: 100008
+    second: leftArm1_LoResClavical
+  - first:
+      1: 100010
+    second: leftArm1_LoResHand
+  - first:
+      1: 100012
+    second: leftArm1_LoResLowerArm
+  - first:
+      1: 100014
+    second: leftArm1_LoResUpperArm
+  - first:
+      1: 100016
+    second: leftFinger1_Joint1
+  - first:
+      1: 100018
+    second: leftFinger1_Joint2
+  - first:
+      1: 100020
+    second: leftFinger1_Joint3
+  - first:
+      1: 100022
+    second: leftFinger1_MetaCarpel
+  - first:
+      1: 100024
+    second: leftLeg1_LoResFoot
+  - first:
+      1: 100026
+    second: leftLeg1_LoResLowerLeg
+  - first:
+      1: 100028
+    second: leftLeg1_LoResToe
+  - first:
+      1: 100030
+    second: leftLeg1_LoResUpperLeg
+  - first:
+      1: 100032
+    second: leftThumb1_Joint1
+  - first:
+      1: 100034
+    second: leftThumb1_Joint2
+  - first:
+      1: 100036
+    second: leftThumb1_Joint3
+  - first:
+      1: 100038
+    second: MidLe_Wing_Jntl
+  - first:
+      1: 100040
+    second: MidRi_Wing_Jntl
+  - first:
+      1: 100042
+    second: ophanyl_T3
+  - first:
+      1: 100044
+    second: //RootNode
+  - first:
+      1: 100046
+    second: rightArm1_LoResClavical
+  - first:
+      1: 100048
+    second: rightArm1_LoResHand
+  - first:
+      1: 100050
+    second: rightArm1_LoResLowerArm
+  - first:
+      1: 100052
+    second: rightArm1_LoResUpperArm
+  - first:
+      1: 100054
+    second: rightFinger1_Joint1
+  - first:
+      1: 100056
+    second: rightFinger1_Joint2
+  - first:
+      1: 100058
+    second: rightFinger1_Joint3
+  - first:
+      1: 100060
+    second: rightFinger1_MetaCarpel
+  - first:
+      1: 100062
+    second: rightLeg1_LoResFoot
+  - first:
+      1: 100064
+    second: rightLeg1_LoResLowerLeg
+  - first:
+      1: 100066
+    second: rightLeg1_LoResToe
+  - first:
+      1: 100068
+    second: rightLeg1_LoResUpperLeg
+  - first:
+      1: 100070
+    second: rightThumb1_Joint1
+  - first:
+      1: 100072
+    second: rightThumb1_Joint2
+  - first:
+      1: 100074
+    second: rightThumb1_Joint3
+  - first:
+      1: 100076
+    second: spine1_loResPelvis
+  - first:
+      1: 100078
+    second: spine1_loResSpine1
+  - first:
+      1: 100080
+    second: spine1_loResSpine2
+  - first:
+      1: 100082
+    second: spine1_loResSpine3
+  - first:
+      1: 100084
+    second: tail1_Joint1
+  - first:
+      1: 100086
+    second: tail1_Joint10
+  - first:
+      1: 100088
+    second: tail1_Joint11
+  - first:
+      1: 100090
+    second: tail1_Joint12
+  - first:
+      1: 100092
+    second: tail1_Joint13
+  - first:
+      1: 100094
+    second: tail1_Joint2
+  - first:
+      1: 100096
+    second: tail1_Joint3
+  - first:
+      1: 100098
+    second: tail1_Joint4
+  - first:
+      1: 100100
+    second: tail1_Joint5
+  - first:
+      1: 100102
+    second: tail1_Joint6
+  - first:
+      1: 100104
+    second: tail1_Joint7
+  - first:
+      1: 100106
+    second: tail1_Joint8
+  - first:
+      1: 100108
+    second: tail1_Joint9
+  - first:
+      1: 100110
+    second: TopLe_Wing_Jnt
+  - first:
+      1: 100112
+    second: TopRi_Wing_Jnt
+  - first:
+      1: 100114
+    second: TSMGWorldJoint
+  - first:
+      1: 100116
+    second: WeaponNull1
+  - first:
+      1: 100118
+    second: WeaponNull2
+  - first:
+      1: 100120
+    second: Ophanyl_Rig_all_v29:BotLe_Wing_Jnt
+  - first:
+      1: 100122
+    second: Ophanyl_Rig_all_v29:BotRi_Wing_Jnt
+  - first:
+      1: 100124
+    second: Ophanyl_Rig_all_v29:head1_head
+  - first:
+      1: 100126
+    second: Ophanyl_Rig_all_v29:head1_neck
+  - first:
+      1: 100128
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResClavical
+  - first:
+      1: 100130
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResHand
+  - first:
+      1: 100132
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResLowerArm
+  - first:
+      1: 100134
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResUpperArm
+  - first:
+      1: 100136
+    second: Ophanyl_Rig_all_v29:leftFinger1_Joint1
+  - first:
+      1: 100138
+    second: Ophanyl_Rig_all_v29:leftFinger1_Joint2
+  - first:
+      1: 100140
+    second: Ophanyl_Rig_all_v29:leftFinger1_Joint3
+  - first:
+      1: 100142
+    second: Ophanyl_Rig_all_v29:leftFinger1_MetaCarpel
+  - first:
+      1: 100144
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResFoot
+  - first:
+      1: 100146
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResLowerLeg
+  - first:
+      1: 100148
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResToe
+  - first:
+      1: 100150
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResUpperLeg
+  - first:
+      1: 100152
+    second: Ophanyl_Rig_all_v29:leftThumb1_Joint1
+  - first:
+      1: 100154
+    second: Ophanyl_Rig_all_v29:leftThumb1_Joint2
+  - first:
+      1: 100156
+    second: Ophanyl_Rig_all_v29:leftThumb1_Joint3
+  - first:
+      1: 100158
+    second: Ophanyl_Rig_all_v29:MidLe_Wing_Jntl
+  - first:
+      1: 100160
+    second: Ophanyl_Rig_all_v29:MidRi_Wing_Jnt
+  - first:
+      1: 100162
+    second: Ophanyl_Rig_all_v29:Ophanyl_T3_GEO
+  - first:
+      1: 100164
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResClavical
+  - first:
+      1: 100166
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResHand
+  - first:
+      1: 100168
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResLowerArm
+  - first:
+      1: 100170
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResUpperArm
+  - first:
+      1: 100172
+    second: Ophanyl_Rig_all_v29:rightFinger1_Joint1
+  - first:
+      1: 100174
+    second: Ophanyl_Rig_all_v29:rightFinger1_Joint2
+  - first:
+      1: 100176
+    second: Ophanyl_Rig_all_v29:rightFinger1_Joint3
+  - first:
+      1: 100178
+    second: Ophanyl_Rig_all_v29:rightFinger1_MetaCarpel
+  - first:
+      1: 100180
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResFoot
+  - first:
+      1: 100182
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResLowerLeg
+  - first:
+      1: 100184
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResToe
+  - first:
+      1: 100186
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResUpperLeg
+  - first:
+      1: 100188
+    second: Ophanyl_Rig_all_v29:rightThumb1_Joint1
+  - first:
+      1: 100190
+    second: Ophanyl_Rig_all_v29:rightThumb1_Joint2
+  - first:
+      1: 100192
+    second: Ophanyl_Rig_all_v29:rightThumb1_Joint3
+  - first:
+      1: 100194
+    second: Ophanyl_Rig_all_v29:spine1_loResPelvis
+  - first:
+      1: 100196
+    second: Ophanyl_Rig_all_v29:spine1_loResSpine1
+  - first:
+      1: 100198
+    second: Ophanyl_Rig_all_v29:spine1_loResSpine2
+  - first:
+      1: 100200
+    second: Ophanyl_Rig_all_v29:spine1_loResSpine3
+  - first:
+      1: 100202
+    second: Ophanyl_Rig_all_v29:TopLe_Wing_Jnt
+  - first:
+      1: 100204
+    second: Ophanyl_Rig_all_v29:TopRi_Wing_Jnt
+  - first:
+      1: 100206
+    second: Ophanyl_Rig_all_v29:TSMGWorldJoint
+  - first:
+      1: 100208
+    second: phoenix_rig_t2t3_skin01_v19:head1_head
+  - first:
+      1: 100210
+    second: phoenix_rig_t2t3_skin01_v19:head1_neck
+  - first:
+      1: 100212
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+  - first:
+      1: 100214
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+  - first:
+      1: 100216
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+  - first:
+      1: 100218
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+  - first:
+      1: 100220
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+  - first:
+      1: 100222
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+  - first:
+      1: 100224
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+  - first:
+      1: 100226
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+  - first:
+      1: 100228
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+  - first:
+      1: 100230
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+  - first:
+      1: 100232
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+  - first:
+      1: 100234
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+  - first:
+      1: 100236
+    second: phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+  - first:
+      1: 100238
+    second: phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+  - first:
+      1: 100240
+    second: phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+  - first:
+      1: 100242
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+  - first:
+      1: 100244
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+  - first:
+      1: 100246
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+  - first:
+      1: 100248
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+  - first:
+      1: 100250
+    second: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+  - first:
+      1: 100252
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+  - first:
+      1: 100254
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+  - first:
+      1: 100256
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+  - first:
+      1: 100258
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+  - first:
+      1: 100260
+    second: phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+  - first:
+      1: 100262
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+  - first:
+      1: 100264
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+  - first:
+      1: 100266
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+  - first:
+      1: 100268
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+  - first:
+      1: 100270
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+  - first:
+      1: 100272
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+  - first:
+      1: 100274
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+  - first:
+      1: 100276
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+  - first:
+      1: 100278
+    second: phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+  - first:
+      1: 100280
+    second: phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+  - first:
+      1: 100282
+    second: phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+  - first:
+      1: 100284
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+  - first:
+      1: 100286
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+  - first:
+      1: 100288
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+  - first:
+      1: 100290
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+  - first:
+      1: 100292
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+  - first:
+      1: 100294
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+  - first:
+      1: 100296
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+  - first:
+      1: 100298
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+  - first:
+      1: 100300
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+  - first:
+      1: 100302
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+  - first:
+      1: 100304
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+  - first:
+      1: 100306
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+  - first:
+      1: 100308
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+  - first:
+      1: 100310
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+  - first:
+      1: 100312
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+  - first:
+      1: 100314
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+  - first:
+      1: 100316
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+  - first:
+      1: 100318
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+  - first:
+      1: 100320
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+  - first:
+      1: 100322
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+  - first:
+      1: 100324
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+  - first:
+      1: 100326
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+  - first:
+      1: 100328
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+  - first:
+      1: 100330
+    second: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+  - first:
+      4: 400000
+    second: BotLe_Wing_Jnt
+  - first:
+      4: 400002
+    second: BotRi_Wing_Jnt
+  - first:
+      4: 400004
+    second: head1_head
+  - first:
+      4: 400006
+    second: head1_neck
+  - first:
+      4: 400008
+    second: leftArm1_LoResClavical
+  - first:
+      4: 400010
+    second: leftArm1_LoResHand
+  - first:
+      4: 400012
+    second: leftArm1_LoResLowerArm
+  - first:
+      4: 400014
+    second: leftArm1_LoResUpperArm
+  - first:
+      4: 400016
+    second: leftFinger1_Joint1
+  - first:
+      4: 400018
+    second: leftFinger1_Joint2
+  - first:
+      4: 400020
+    second: leftFinger1_Joint3
+  - first:
+      4: 400022
+    second: leftFinger1_MetaCarpel
+  - first:
+      4: 400024
+    second: leftLeg1_LoResFoot
+  - first:
+      4: 400026
+    second: leftLeg1_LoResLowerLeg
+  - first:
+      4: 400028
+    second: leftLeg1_LoResToe
+  - first:
+      4: 400030
+    second: leftLeg1_LoResUpperLeg
+  - first:
+      4: 400032
+    second: leftThumb1_Joint1
+  - first:
+      4: 400034
+    second: leftThumb1_Joint2
+  - first:
+      4: 400036
+    second: leftThumb1_Joint3
+  - first:
+      4: 400038
+    second: MidLe_Wing_Jntl
+  - first:
+      4: 400040
+    second: MidRi_Wing_Jntl
+  - first:
+      4: 400042
+    second: ophanyl_T3
+  - first:
+      4: 400044
+    second: //RootNode
+  - first:
+      4: 400046
+    second: rightArm1_LoResClavical
+  - first:
+      4: 400048
+    second: rightArm1_LoResHand
+  - first:
+      4: 400050
+    second: rightArm1_LoResLowerArm
+  - first:
+      4: 400052
+    second: rightArm1_LoResUpperArm
+  - first:
+      4: 400054
+    second: rightFinger1_Joint1
+  - first:
+      4: 400056
+    second: rightFinger1_Joint2
+  - first:
+      4: 400058
+    second: rightFinger1_Joint3
+  - first:
+      4: 400060
+    second: rightFinger1_MetaCarpel
+  - first:
+      4: 400062
+    second: rightLeg1_LoResFoot
+  - first:
+      4: 400064
+    second: rightLeg1_LoResLowerLeg
+  - first:
+      4: 400066
+    second: rightLeg1_LoResToe
+  - first:
+      4: 400068
+    second: rightLeg1_LoResUpperLeg
+  - first:
+      4: 400070
+    second: rightThumb1_Joint1
+  - first:
+      4: 400072
+    second: rightThumb1_Joint2
+  - first:
+      4: 400074
+    second: rightThumb1_Joint3
+  - first:
+      4: 400076
+    second: spine1_loResPelvis
+  - first:
+      4: 400078
+    second: spine1_loResSpine1
+  - first:
+      4: 400080
+    second: spine1_loResSpine2
+  - first:
+      4: 400082
+    second: spine1_loResSpine3
+  - first:
+      4: 400084
+    second: tail1_Joint1
+  - first:
+      4: 400086
+    second: tail1_Joint10
+  - first:
+      4: 400088
+    second: tail1_Joint11
+  - first:
+      4: 400090
+    second: tail1_Joint12
+  - first:
+      4: 400092
+    second: tail1_Joint13
+  - first:
+      4: 400094
+    second: tail1_Joint2
+  - first:
+      4: 400096
+    second: tail1_Joint3
+  - first:
+      4: 400098
+    second: tail1_Joint4
+  - first:
+      4: 400100
+    second: tail1_Joint5
+  - first:
+      4: 400102
+    second: tail1_Joint6
+  - first:
+      4: 400104
+    second: tail1_Joint7
+  - first:
+      4: 400106
+    second: tail1_Joint8
+  - first:
+      4: 400108
+    second: tail1_Joint9
+  - first:
+      4: 400110
+    second: TopLe_Wing_Jnt
+  - first:
+      4: 400112
+    second: TopRi_Wing_Jnt
+  - first:
+      4: 400114
+    second: TSMGWorldJoint
+  - first:
+      4: 400116
+    second: WeaponNull1
+  - first:
+      4: 400118
+    second: WeaponNull2
+  - first:
+      4: 400120
+    second: Ophanyl_Rig_all_v29:BotLe_Wing_Jnt
+  - first:
+      4: 400122
+    second: Ophanyl_Rig_all_v29:BotRi_Wing_Jnt
+  - first:
+      4: 400124
+    second: Ophanyl_Rig_all_v29:head1_head
+  - first:
+      4: 400126
+    second: Ophanyl_Rig_all_v29:head1_neck
+  - first:
+      4: 400128
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResClavical
+  - first:
+      4: 400130
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResHand
+  - first:
+      4: 400132
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResLowerArm
+  - first:
+      4: 400134
+    second: Ophanyl_Rig_all_v29:leftArm1_LoResUpperArm
+  - first:
+      4: 400136
+    second: Ophanyl_Rig_all_v29:leftFinger1_Joint1
+  - first:
+      4: 400138
+    second: Ophanyl_Rig_all_v29:leftFinger1_Joint2
+  - first:
+      4: 400140
+    second: Ophanyl_Rig_all_v29:leftFinger1_Joint3
+  - first:
+      4: 400142
+    second: Ophanyl_Rig_all_v29:leftFinger1_MetaCarpel
+  - first:
+      4: 400144
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResFoot
+  - first:
+      4: 400146
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResLowerLeg
+  - first:
+      4: 400148
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResToe
+  - first:
+      4: 400150
+    second: Ophanyl_Rig_all_v29:leftLeg1_LoResUpperLeg
+  - first:
+      4: 400152
+    second: Ophanyl_Rig_all_v29:leftThumb1_Joint1
+  - first:
+      4: 400154
+    second: Ophanyl_Rig_all_v29:leftThumb1_Joint2
+  - first:
+      4: 400156
+    second: Ophanyl_Rig_all_v29:leftThumb1_Joint3
+  - first:
+      4: 400158
+    second: Ophanyl_Rig_all_v29:MidLe_Wing_Jntl
+  - first:
+      4: 400160
+    second: Ophanyl_Rig_all_v29:MidRi_Wing_Jnt
+  - first:
+      4: 400162
+    second: Ophanyl_Rig_all_v29:Ophanyl_T3_GEO
+  - first:
+      4: 400164
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResClavical
+  - first:
+      4: 400166
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResHand
+  - first:
+      4: 400168
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResLowerArm
+  - first:
+      4: 400170
+    second: Ophanyl_Rig_all_v29:rightArm1_LoResUpperArm
+  - first:
+      4: 400172
+    second: Ophanyl_Rig_all_v29:rightFinger1_Joint1
+  - first:
+      4: 400174
+    second: Ophanyl_Rig_all_v29:rightFinger1_Joint2
+  - first:
+      4: 400176
+    second: Ophanyl_Rig_all_v29:rightFinger1_Joint3
+  - first:
+      4: 400178
+    second: Ophanyl_Rig_all_v29:rightFinger1_MetaCarpel
+  - first:
+      4: 400180
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResFoot
+  - first:
+      4: 400182
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResLowerLeg
+  - first:
+      4: 400184
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResToe
+  - first:
+      4: 400186
+    second: Ophanyl_Rig_all_v29:rightLeg1_LoResUpperLeg
+  - first:
+      4: 400188
+    second: Ophanyl_Rig_all_v29:rightThumb1_Joint1
+  - first:
+      4: 400190
+    second: Ophanyl_Rig_all_v29:rightThumb1_Joint2
+  - first:
+      4: 400192
+    second: Ophanyl_Rig_all_v29:rightThumb1_Joint3
+  - first:
+      4: 400194
+    second: Ophanyl_Rig_all_v29:spine1_loResPelvis
+  - first:
+      4: 400196
+    second: Ophanyl_Rig_all_v29:spine1_loResSpine1
+  - first:
+      4: 400198
+    second: Ophanyl_Rig_all_v29:spine1_loResSpine2
+  - first:
+      4: 400200
+    second: Ophanyl_Rig_all_v29:spine1_loResSpine3
+  - first:
+      4: 400202
+    second: Ophanyl_Rig_all_v29:TopLe_Wing_Jnt
+  - first:
+      4: 400204
+    second: Ophanyl_Rig_all_v29:TopRi_Wing_Jnt
+  - first:
+      4: 400206
+    second: Ophanyl_Rig_all_v29:TSMGWorldJoint
+  - first:
+      4: 400208
+    second: phoenix_rig_t2t3_skin01_v19:head1_head
+  - first:
+      4: 400210
+    second: phoenix_rig_t2t3_skin01_v19:head1_neck
+  - first:
+      4: 400212
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+  - first:
+      4: 400214
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+  - first:
+      4: 400216
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+  - first:
+      4: 400218
+    second: phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+  - first:
+      4: 400220
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+  - first:
+      4: 400222
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+  - first:
+      4: 400224
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+  - first:
+      4: 400226
+    second: phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+  - first:
+      4: 400228
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+  - first:
+      4: 400230
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+  - first:
+      4: 400232
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+  - first:
+      4: 400234
+    second: phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+  - first:
+      4: 400236
+    second: phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+  - first:
+      4: 400238
+    second: phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+  - first:
+      4: 400240
+    second: phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+  - first:
+      4: 400242
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+  - first:
+      4: 400244
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+  - first:
+      4: 400246
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+  - first:
+      4: 400248
+    second: phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+  - first:
+      4: 400250
+    second: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+  - first:
+      4: 400252
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+  - first:
+      4: 400254
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+  - first:
+      4: 400256
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+  - first:
+      4: 400258
+    second: phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+  - first:
+      4: 400260
+    second: phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+  - first:
+      4: 400262
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+  - first:
+      4: 400264
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+  - first:
+      4: 400266
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+  - first:
+      4: 400268
+    second: phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+  - first:
+      4: 400270
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+  - first:
+      4: 400272
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+  - first:
+      4: 400274
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+  - first:
+      4: 400276
+    second: phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+  - first:
+      4: 400278
+    second: phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+  - first:
+      4: 400280
+    second: phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+  - first:
+      4: 400282
+    second: phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+  - first:
+      4: 400284
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+  - first:
+      4: 400286
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+  - first:
+      4: 400288
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+  - first:
+      4: 400290
+    second: phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+  - first:
+      4: 400292
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+  - first:
+      4: 400294
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+  - first:
+      4: 400296
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+  - first:
+      4: 400298
+    second: phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+  - first:
+      4: 400300
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+  - first:
+      4: 400302
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+  - first:
+      4: 400304
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+  - first:
+      4: 400306
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+  - first:
+      4: 400308
+    second: phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+  - first:
+      4: 400310
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+  - first:
+      4: 400312
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+  - first:
+      4: 400314
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+  - first:
+      4: 400316
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+  - first:
+      4: 400318
+    second: phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+  - first:
+      4: 400320
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+  - first:
+      4: 400322
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+  - first:
+      4: 400324
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+  - first:
+      4: 400326
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+  - first:
+      4: 400328
+    second: phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+  - first:
+      4: 400330
+    second: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+  - first:
+      43: 4300000
+    second: ophanyl_T3
+  - first:
+      43: 4300002
+    second: Ophanyl_Rig_all_v29:Ophanyl_T3_GEO
+  - first:
+      43: 4300004
+    second: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+  - first:
+      74: 7400000
+    second: Idle
+  - first:
+      74: 7400002
+    second: 'ForwardSpeed '
+  - first:
+      74: 7400004
+    second: Attack1A
+  - first:
+      74: 7400006
+    second: Attack2A
+  - first:
+      74: 7400008
+    second: Attack2B
+  - first:
+      74: 7400010
+    second: Death
+  - first:
+      74: 7400012
+    second: IdleSelection
+  - first:
+      74: 7400014
+    second: FowardSpeed
+  - first:
+      74: 7400016
+    second: IdleBoard
+  - first:
+      74: 7400018
+    second: Attack2A
+  - first:
+      74: 7400020
+    second: Attack1A
+  - first:
+      74: 7400022
+    second: Attack3A
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: ophanyl_T3
+  - first:
+      137: 13700002
+    second: Ophanyl_Rig_all_v29:Ophanyl_T3_GEO
+  - first:
+      137: 13700004
+    second: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+  externalObjects: {}
+  materials:
+    materialImportMode: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 0
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+    - phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: IdleSelection
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 101
+      lastFrame: 589
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4/phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4/phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4/phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: FowardSpeed
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 701
+      lastFrame: 745
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4/phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4/phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4/phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Death
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 801
+      lastFrame: 845
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4/phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4/phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4/phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: IdleBoard
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1001
+      lastFrame: 1061
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4/phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4/phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4/phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2A
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1300
+      lastFrame: 1344
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4/phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4/phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4/phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack1A
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1500
+      lastFrame: 1544
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4/phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4/phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4/phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack3A
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1600
+      lastFrame: 1658
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:phoenix_t3_skin01_geo
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:leftLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResPelvis/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResUpperLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResLowerLeg/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResFoot/phoenix_rig_t2t3_skin01_v19:rightLeg1_LoResToe
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail1_Joint1/phoenix_rig_t2t3_skin01_v19:tail1_Joint2/phoenix_rig_t2t3_skin01_v19:tail1_Joint3/phoenix_rig_t2t3_skin01_v19:tail1_Joint4/phoenix_rig_t2t3_skin01_v19:tail1_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail2_Joint1/phoenix_rig_t2t3_skin01_v19:tail2_Joint2/phoenix_rig_t2t3_skin01_v19:tail2_Joint3/phoenix_rig_t2t3_skin01_v19:tail2_Joint4/phoenix_rig_t2t3_skin01_v19:tail2_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:head1_neck/phoenix_rig_t2t3_skin01_v19:head1_head/phoenix_rig_t2t3_skin01_v19:tail3_Joint1/phoenix_rig_t2t3_skin01_v19:tail3_Joint2/phoenix_rig_t2t3_skin01_v19:tail3_Joint3/phoenix_rig_t2t3_skin01_v19:tail3_Joint4/phoenix_rig_t2t3_skin01_v19:tail3_Joint5
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:leftFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:leftArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:leftThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:leftWingT3_top_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightFinger1_MetaCarpel/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint1/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint2/phoenix_rig_t2t3_skin01_v19:rightFinger1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResHand/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint1/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint2/phoenix_rig_t2t3_skin01_v19:rightThumb1_Joint3
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResClavical/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResUpperArm/phoenix_rig_t2t3_skin01_v19:rightArm1_LoResLowerArm/phoenix_rig_t2t3_skin01_v19:rightArm_Weapon_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_bottom_joint
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint1
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_mid_joint2
+        weight: 1
+      - path: phoenix_rig_t2t3_skin01_v19:TSMGWorldJoint/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine1/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine2/phoenix_rig_t2t3_skin01_v19:spine1_loResSpine3/phoenix_rig_t2t3_skin01_v19:rightWingT3_top_joint
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.01
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.01
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Sci Fi Legion - 3D Character Mega Pack/Models/G11_Cyberwing_import.fbx
+  uploadId: 814144

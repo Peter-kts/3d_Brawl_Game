@@ -271,7 +271,15 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public int CurrentHp => hp;
     public int MaxHp => maxHp;
 
-    public void TakeHit(int damage, Vector3 knockback, float hitstun, float airborneDuration, float hitStopDuration = 0f)
+    public void TakeHit(
+        int damage,
+        Vector3 knockback,
+        float hitstun,
+        float airborneDuration,
+        float hitStopDuration = 0f,
+        AttackHeaviness heaviness = AttackHeaviness.Medium,
+        AttackHeight height = AttackHeight.Mid
+    )
     {
         if (isDead) return;
 

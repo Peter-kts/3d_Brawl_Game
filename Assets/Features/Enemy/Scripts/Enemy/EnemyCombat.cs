@@ -112,6 +112,10 @@ public class EnemyCombat : MonoBehaviour
     [Tooltip("Optional. Spawned at hitbox center when the attack connects with a target.")]
     public GameObject hitConnectVfxPrefab;
 
+    [Header("SFX (optional)")]
+    [Tooltip("Audio source used for attack sounds. Auto-finds on this object/children if not assigned.")]
+    public AudioSource sfxSource;
+
     // ========================================================================
     // PRIVATE STATE
     // ========================================================================
@@ -168,6 +172,8 @@ public class EnemyCombat : MonoBehaviour
         animator = GetComponent<Animator>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
+        if (sfxSource == null) sfxSource = GetComponent<AudioSource>();
+        if (sfxSource == null) sfxSource = GetComponentInChildren<AudioSource>();
     }
 
     void Update()
@@ -230,6 +236,8 @@ public class EnemyCombat : MonoBehaviour
         if (animator != null && !string.IsNullOrEmpty(attack.animationTrigger))
             animator.Play(attack.animationTrigger, 0, 0f);
 
+        PlayAttackCues(attack, AttackSfxTriggerType.OnAttackStart, 0, useLegacyFallback: true);
+
         if (attackStartVfxPrefab != null)
         {
             Vector3 pos = transform.position + attack.attackStartVfxPositionOffset;
@@ -258,6 +266,52 @@ public class EnemyCombat : MonoBehaviour
         if (instance == null) return;
         foreach (var ps in instance.GetComponentsInChildren<ParticleSystem>(true))
             ps.Play();
+    }
+
+    void PlayAttackSfxClip(AudioClip clip, float volumeScale = 1f)
+    {
+        if (clip == null || sfxSource == null) return;
+        sfxSource.PlayOneShot(clip, Mathf.Max(0f, volumeScale));
+    }
+
+    void PlayAttackCues(AttackData attack, AttackSfxTriggerType trigger, int eventId, bool useLegacyFallback)
+    {
+        if (attack == null) return;
+
+        bool hasCueList = attack.sfxCues != null && attack.sfxCues.Count > 0;
+        if (hasCueList)
+        {
+            for (int i = 0; i < attack.sfxCues.Count; i++)
+            {
+                AttackSfxCue cue = attack.sfxCues[i];
+                if (cue == null || cue.trigger != trigger) continue;
+                if (trigger == AttackSfxTriggerType.OnAnimEvent && cue.eventId != eventId) continue;
+
+                AudioClip chosenClip = null;
+                if (cue.clips != null && cue.clips.Length > 0)
+                    chosenClip = cue.clips[Random.Range(0, cue.clips.Length)];
+                if (chosenClip == null) continue;
+
+                PlayAttackSfxClip(chosenClip, cue.volume);
+            }
+            return;
+        }
+
+        if (!useLegacyFallback) return;
+        if (trigger == AttackSfxTriggerType.OnAttackStart)
+            PlayAttackSfxClip(attack.attackStartSfx);
+        else if (trigger == AttackSfxTriggerType.OnHitConfirm)
+            PlayAttackSfxClip(attack.hitConnectSfx);
+    }
+
+    public void OnAttackSfxEvent(int eventId)
+    {
+        PlayAttackCues(currentAttack, AttackSfxTriggerType.OnAnimEvent, eventId, useLegacyFallback: false);
+    }
+
+    public void OnAttackSfxEvent()
+    {
+        OnAttackSfxEvent(0);
     }
     
     /// <summary>
@@ -319,7 +373,15 @@ public class EnemyCombat : MonoBehaviour
                                     + (Vector3.up * a.knockbackUp);
 
             float airborne = a.makesAirborne ? a.airborneDuration : 0f;
-            damageable.TakeHit(a.damage, knockbackVector, a.hitstun, airborne, a.hitStopDuration);
+            damageable.TakeHit(
+                a.damage,
+                knockbackVector,
+                a.hitstun,
+                airborne,
+                a.hitStopDuration,
+                a.heaviness,
+                a.height
+            );
 
             // Freeze target's animator for hit stop
             if (a.hitStopDuration > 0f)
@@ -344,6 +406,9 @@ public class EnemyCombat : MonoBehaviour
             var go = Object.Instantiate(hitConnectVfxPrefab, center + a.hitConnectVfxPositionOffset, rot);
             PlayVfx(go);
         }
+
+        if (didHit)
+            PlayAttackCues(a, AttackSfxTriggerType.OnHitConfirm, 0, useLegacyFallback: true);
         
         // Apply hit stop to attacker if we hit something
         if (didHit && a.hitStopDuration > 0f)

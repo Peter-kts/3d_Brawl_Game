@@ -414,17 +414,23 @@ public class SimpleEnemyAI : MonoBehaviour
 
     /// <summary>
     /// Triggers the hit reaction animation. Called by EnemyHealth when taking damage.
-    /// Plays the chosen state (hitStateName or random from hitStateNames) and scales speed to match hitstun.
+    /// Prefers height-specific states (Hit_High / Hit_Mid / Hit_Low), then falls back to hitStateName or random hitStateNames.
     /// The Stun layer must NOT have an Any State transition for the stun bool, or that transition would override this and always show one state.
     /// </summary>
     /// <param name="hitstun">Duration of the hitstun; animation is scaled to match.</param>
-    public void TriggerHitAnimation(float hitstun)
+    public void TriggerHitAnimation(float hitstun, AttackHeight height)
     {
         if (animator != null)
         {
-            // Pick state: single hitStateName or random from hitStateNames (no repeat when >= 2)
+            // Prefer height-only state first (Hit_High / Hit_Mid / Hit_Low); fallback to existing random/single setup.
             string stateToPlay;
-            if (hitStateNames != null && hitStateNames.Length > 0)
+            string typedState = $"Hit_{height}";
+            if (AnimatorHasStateOnLayer(animator, hitAnimationLayer, typedState))
+            {
+                stateToPlay = typedState;
+                lastHitStateIndex = -1;
+            }
+            else if (hitStateNames != null && hitStateNames.Length > 0)
             {
                 int chosenIndex;
                 do
@@ -474,6 +480,19 @@ public class SimpleEnemyAI : MonoBehaviour
             else if (!string.IsNullOrEmpty(hitSpeedParameter))
                 animator.SetFloat(hitSpeedParameter, 1f);
         }
+    }
+
+    bool AnimatorHasStateOnLayer(Animator targetAnimator, int layerIndex, string stateName)
+    {
+        if (targetAnimator == null || string.IsNullOrEmpty(stateName)) return false;
+        if (layerIndex < 0 || layerIndex >= targetAnimator.layerCount) return false;
+
+        int shortNameHash = Animator.StringToHash(stateName);
+        if (targetAnimator.HasState(layerIndex, shortNameHash)) return true;
+
+        string fullPath = targetAnimator.GetLayerName(layerIndex) + "." + stateName;
+        int fullPathHash = Animator.StringToHash(fullPath);
+        return targetAnimator.HasState(layerIndex, fullPathHash);
     }
 
     /// <summary>

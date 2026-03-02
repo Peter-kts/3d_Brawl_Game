@@ -1,4 +1,43 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum AttackHeaviness
+{
+    Light = 0,
+    Medium = 1,
+    Heavy = 2
+}
+
+public enum AttackHeight
+{
+    Low = 0,
+    Mid = 1,
+    High = 2
+}
+
+public enum AttackSfxTriggerType
+{
+    OnAttackStart = 0,
+    OnHitConfirm = 1,
+    OnAnimEvent = 2
+}
+
+[System.Serializable]
+public class AttackSfxCue
+{
+    [Tooltip("When this cue should be triggered.")]
+    public AttackSfxTriggerType trigger = AttackSfxTriggerType.OnAttackStart;
+
+    [Tooltip("Only used when trigger is OnAnimEvent.")]
+    public int eventId = 0;
+
+    [Tooltip("One or more clips for this cue. One will be picked randomly.")]
+    public AudioClip[] clips;
+
+    [Tooltip("Volume scale applied when this cue plays.")]
+    [Range(0f, 2f)]
+    public float volume = 1f;
+}
 
 /// <summary>
 /// Holds all configurable properties for an attack.
@@ -13,6 +52,13 @@ public class AttackData
     
     [Tooltip("Damage dealt on hit")]
     public int damage = 10;
+
+    [Header("Attack Type")]
+    [Tooltip("Weight class of the move. Used for typed hit reactions.")]
+    public AttackHeaviness heaviness = AttackHeaviness.Medium;
+
+    [Tooltip("Target height of the move. Used for typed hit reactions.")]
+    public AttackHeight height = AttackHeight.Mid;
     
     [Tooltip("Radius of the attack hitbox")]
     public float hitboxRadius = 0.6f;
@@ -104,6 +150,8 @@ public class AttackData
     public AudioClip attackStartSfx;
     [Tooltip("Sound played once when this attack successfully connects.")]
     public AudioClip hitConnectSfx;
+    [Tooltip("Flexible per-move SFX cues (start, hit confirm, and animation-event keyed).")]
+    public List<AttackSfxCue> sfxCues = new List<AttackSfxCue>();
 
     [Header("VFX Offsets (optional)")]
     [Tooltip("World-space position offset for attack-start VFX (e.g. swing trail). Applied per move in ComboSet.")]

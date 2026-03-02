@@ -1,0 +1,378 @@
+fileFormatVersion: 2
+guid: d4898328a06a0eb43ab22f0a7aa90f6a
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: KD_KunaiDroneT1_Skin01_Mesh
+  - first:
+      1: 100002
+    second: KD_L_backwing_jnt
+  - first:
+      1: 100004
+    second: KD_L_wing_jnt
+  - first:
+      1: 100006
+    second: KD_propeller_jnt
+  - first:
+      1: 100008
+    second: KD_R_backwing_jnt
+  - first:
+      1: 100010
+    second: KD_R_wing_jnt
+  - first:
+      1: 100012
+    second: KD_RootJnt
+  - first:
+      1: 100014
+    second: KD_Ship_jnt
+  - first:
+      1: 100016
+    second: //RootNode
+  - first:
+      4: 400000
+    second: KD_KunaiDroneT1_Skin01_Mesh
+  - first:
+      4: 400002
+    second: KD_L_backwing_jnt
+  - first:
+      4: 400004
+    second: KD_L_wing_jnt
+  - first:
+      4: 400006
+    second: KD_propeller_jnt
+  - first:
+      4: 400008
+    second: KD_R_backwing_jnt
+  - first:
+      4: 400010
+    second: KD_R_wing_jnt
+  - first:
+      4: 400012
+    second: KD_RootJnt
+  - first:
+      4: 400014
+    second: KD_Ship_jnt
+  - first:
+      4: 400016
+    second: //RootNode
+  - first:
+      43: 4300000
+    second: KD_KunaiDroneT1_Skin01_Mesh
+  - first:
+      74: 7400000
+    second: Idle
+  - first:
+      74: 7400002
+    second: ForwardSpeed
+  - first:
+      74: 7400004
+    second: Attack1A
+  - first:
+      74: 7400006
+    second: Death
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: KD_KunaiDroneT1_Skin01_Mesh
+  externalObjects: {}
+  materials:
+    materialImportMode: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 0
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - KD_RootJnt/KD_Ship_jnt
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 101
+      lastFrame: 429
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: KD_RootJnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_propeller_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_wing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_wing_jnt
+        weight: 1
+      - path: KD_KunaiDroneT1_Skin01_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: ForwardSpeed
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 501
+      lastFrame: 541
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: KD_RootJnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_propeller_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_wing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_wing_jnt
+        weight: 1
+      - path: KD_KunaiDroneT1_Skin01_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack1A
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 601
+      lastFrame: 631
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: KD_RootJnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_propeller_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_wing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_wing_jnt
+        weight: 1
+      - path: KD_KunaiDroneT1_Skin01_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Death
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 801
+      lastFrame: 860
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: KD_RootJnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_propeller_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_L_wing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_backwing_jnt
+        weight: 1
+      - path: KD_RootJnt/KD_Ship_jnt/KD_R_wing_jnt
+        weight: 1
+      - path: KD_KunaiDroneT1_Skin01_Mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.01
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.01
+    rootMotionBoneName: KD_RootJnt
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Sci Fi Legion - 3D Character Mega Pack/Models/G02_Drone_T1_import.fbx
+  uploadId: 814144

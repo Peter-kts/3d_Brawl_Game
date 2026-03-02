@@ -69,7 +69,15 @@ public interface IDamageable
      *   - How to handle airborne state (suspend gravity, enable juggling, etc.)
      *   - What happens on death
      */
-    void TakeHit(int damage, Vector3 knockback, float hitstun, float airborneDuration, float hitStopDuration = 0f);
+    void TakeHit(
+        int damage,
+        Vector3 knockback,
+        float hitstun,
+        float airborneDuration,
+        float hitStopDuration = 0f,
+        AttackHeaviness heaviness = AttackHeaviness.Medium,
+        AttackHeight height = AttackHeight.Mid
+    );
     
     /*
      * IsStunned: Check if entity is currently in hitstun

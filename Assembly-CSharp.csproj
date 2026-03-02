@@ -89,6 +89,7 @@
     <Compile Include="Assets\Features\Camera\Scripts\Camera\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\Combat.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\AttackAnimationEventForwarder.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\ChaseBehavior.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerFacingDebugVisual.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\CombatHitboxDebugVisual.cs" />
@@ -101,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library[Standard](1)\Universal Animation Library[Standard]\License.txt" />
+    <None Include="Assets\SandalStudio\Impact Pack\Shaders\Impart transparency.shader" />
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\License.txt" />
     <None Include="Assets\Features\Combat\AnimationPacks\Frank_Fighting_Set4\Documentation\Frank FS4 Motion list.files\filelist.xml" />
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\Female Mannequin\README.txt" />

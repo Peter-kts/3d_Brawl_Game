@@ -1,0 +1,186 @@
+fileFormatVersion: 2
+guid: 0d58d340c09e34948b3c492d62180061
+timeCreated: 1502827266
+licenseType: Store
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: head1_hair01
+    100004: head1_hair02
+    100006: head1_hair03
+    100008: head1_hair04
+    100010: head1_hair05
+    100012: head1_head
+    100014: head1_neck
+    100016: leftArm1_LoResClavical
+    100018: leftArm1_LoResHand
+    100020: leftArm1_LoResLowerArm
+    100022: leftArm1_LoResUpperArm
+    100024: leftFinger1_Joint1
+    100026: leftFinger1_Joint2
+    100028: leftFinger1_Joint3
+    100030: leftFinger1_MetaCarpel
+    100032: leftLeg1_LoResFoot
+    100034: leftLeg1_LoResLowerLeg
+    100036: leftLeg1_LoResToe
+    100038: leftLeg1_LoResUpperLeg
+    100040: leftThumb1_Joint1
+    100042: leftThumb1_Joint2
+    100044: leftThumb1_Joint3
+    100046: PC_Female_Mesh
+    100048: Rifle_JJ
+    100050: rightArm1_LoResClavical
+    100052: rightArm1_LoResHand
+    100054: rightArm1_LoResLowerArm
+    100056: rightArm1_LoResUpperArm
+    100058: rightFinger1_Joint1
+    100060: rightFinger1_Joint2
+    100062: rightFinger1_Joint3
+    100064: rightFinger1_MetaCarpel
+    100066: rightLeg1_LoResFoot
+    100068: rightLeg1_LoResLowerLeg
+    100070: rightLeg1_LoResToe
+    100072: rightLeg1_LoResUpperLeg
+    100074: rightThumb1_Joint1
+    100076: rightThumb1_Joint2
+    100078: rightThumb1_Joint3
+    100080: spine1_loResPelvis
+    100082: spine1_loResSpine1
+    100084: spine1_loResSpine2
+    100086: spine1_loResSpine3
+    100088: TSMGWorldJoint
+    400000: //RootNode
+    400002: head1_hair01
+    400004: head1_hair02
+    400006: head1_hair03
+    400008: head1_hair04
+    400010: head1_hair05
+    400012: head1_head
+    400014: head1_neck
+    400016: leftArm1_LoResClavical
+    400018: leftArm1_LoResHand
+    400020: leftArm1_LoResLowerArm
+    400022: leftArm1_LoResUpperArm
+    400024: leftFinger1_Joint1
+    400026: leftFinger1_Joint2
+    400028: leftFinger1_Joint3
+    400030: leftFinger1_MetaCarpel
+    400032: leftLeg1_LoResFoot
+    400034: leftLeg1_LoResLowerLeg
+    400036: leftLeg1_LoResToe
+    400038: leftLeg1_LoResUpperLeg
+    400040: leftThumb1_Joint1
+    400042: leftThumb1_Joint2
+    400044: leftThumb1_Joint3
+    400046: PC_Female_Mesh
+    400048: Rifle_JJ
+    400050: rightArm1_LoResClavical
+    400052: rightArm1_LoResHand
+    400054: rightArm1_LoResLowerArm
+    400056: rightArm1_LoResUpperArm
+    400058: rightFinger1_Joint1
+    400060: rightFinger1_Joint2
+    400062: rightFinger1_Joint3
+    400064: rightFinger1_MetaCarpel
+    400066: rightLeg1_LoResFoot
+    400068: rightLeg1_LoResLowerLeg
+    400070: rightLeg1_LoResToe
+    400072: rightLeg1_LoResUpperLeg
+    400074: rightThumb1_Joint1
+    400076: rightThumb1_Joint2
+    400078: rightThumb1_Joint3
+    400080: spine1_loResPelvis
+    400082: spine1_loResSpine1
+    400084: spine1_loResSpine2
+    400086: spine1_loResSpine3
+    400088: TSMGWorldJoint
+    4300000: PC_Female_Mesh
+    9500000: //RootNode
+    13700000: PC_Female_Mesh
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - TSMGWorldJoint
+    - TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/rightArm1_LoResClavical/rightArm1_LoResUpperArm/rightArm1_LoResLowerArm/rightArm1_LoResHand/rightFinger1_MetaCarpel
+    - TSMGWorldJoint/spine1_loResSpine1/spine1_loResPelvis/leftLeg1_LoResUpperLeg/leftLeg1_LoResLowerLeg/leftLeg1_LoResFoot/leftLeg1_LoResToe
+    - TSMGWorldJoint/spine1_loResSpine1/spine1_loResPelvis/rightLeg1_LoResUpperLeg/rightLeg1_LoResLowerLeg/rightLeg1_LoResFoot/rightLeg1_LoResToe
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: TSMGWorldJoint
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Sci Fi Legion - 3D Character Mega Pack/Models/AssaultHunter_Import.fbx
+  uploadId: 814144

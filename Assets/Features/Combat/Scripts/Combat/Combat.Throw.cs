@@ -3,7 +3,7 @@
  * Lives in a partial of Combat so it shares comboSet, animator, grabSocket, threatSystem, etc.
  *
  * Flow: DoThrow() starts attempt -> Update checks throwHitboxTriggerTime -> ExecuteThrowHitbox() on connect
- *       -> victim parented to grabSocket, root motion on -> animation events OnThrowUnparent / OnThrowDamage / OnThrowRelease
+ *       -> victim pseudo-parent follows grabSocket position -> animation events OnThrowUnparent / OnThrowDamage / OnThrowRelease
  *       -> LateUpdate runs deferred release: ReleaseThrowVictimFromSocket, BakePlayer, CompleteThrowRelease.
  */
 
@@ -32,8 +32,6 @@ public partial class Combat
     private bool _deferThrowReleaseToLateUpdate;
     // Which release profile (damage/knockback) to use when we run the deferred release; -1 = default.
     private int _deferThrowReleaseProfileIndex;
-    // True if OnThrowUnparent already ran this throw (so ReleaseThrowVictimFromSocket skips SetParent(null)).
-    private bool _throwVictimAlreadyUnparented;
     // True when the throw was committed with stick back (back throw); used for back vs neutral anim/state names.
     private bool _currentThrowIsBack;
     // Set by OnThrowDamage animation event; consumed in LateUpdate to apply throw damage on the exact frame.
@@ -47,9 +45,10 @@ public partial class Combat
     // Victim mesh (animator transform) local pose before we parented; restored when we bake and release.
     private Vector3 _throwVictimMeshLocalPosition;
     private Quaternion _throwVictimMeshLocalRotation;
-    // Victim root world pose before we parented (when victim root != mesh); used if we need to restore hierarchy.
-    private Vector3 _throwVictimParentWorldPosition;
-    private Quaternion _throwVictimParentWorldRotation;
+    // Position-only pseudo-parent state while throw hold is active.
+    private Transform _throwVictimPseudoParentTarget;
+    private bool _throwVictimPseudoParentActive;
+    private Vector3 _throwVictimPseudoParentOffset;
     // Player mesh local pose before throw root motion; restored in BakePlayerThrowRootMotionAndRestore.
     private Vector3 _throwPlayerMeshLocalPosition;
     private Quaternion _throwPlayerMeshLocalRotation;
@@ -106,46 +105,27 @@ public partial class Combat
         return false;
     }
 
-    /// <summary>Parents victim to grabSocket, zeros local position, fixes scale; disables CC/kinematic RB; stores mesh pose for later restore; enables victim root motion.</summary>
-    void AttachVictimToGrabSocket(Transform victimTransform, Animator victimAnim)
+    /// <summary>Starts position-only pseudo-parent follow to grabSocket (no real parenting, no scale inheritance).</summary>
+    void AttachVictimToGrabSocket(Transform victimTransform) // Snap the grabbed enemy to our hold socket.
     {
-        if (grabSocket == null) return;
-        // If victim has a separate mesh (animator on child), store world pose of root and local pose of mesh for restore on release
-        if (victimAnim != null && victimAnim.transform != victimTransform)
-        {
-            _throwVictimParentWorldPosition = victimTransform.position;
-            _throwVictimParentWorldRotation = victimTransform.rotation;
-            _throwVictimMeshLocalPosition = victimAnim.transform.localPosition;
-            _throwVictimMeshLocalRotation = victimAnim.transform.localRotation;
-        }
-        Vector3 worldScaleBefore = victimTransform.lossyScale;
-        victimTransform.SetParent(grabSocket, false);
-        victimTransform.localPosition = Vector3.zero;
-        // Compensate for grabSocket scale so victim doesn't shrink/grow when parented
-        Vector3 p = grabSocket.lossyScale;
-        if (p.x != 0f && p.y != 0f && p.z != 0f)
-            victimTransform.localScale = new Vector3(worldScaleBefore.x / p.x, worldScaleBefore.y / p.y, worldScaleBefore.z / p.z);
+        if (grabSocket == null) return; // If no socket is assigned, we cannot attach.
+        _throwVictimPseudoParentTarget = victimTransform;
+        _throwVictimPseudoParentOffset = Vector3.zero;
+        _throwVictimPseudoParentActive = true;
+        victimTransform.position = grabSocket.position; // Start snapped to socket; follow updates in LateUpdate.
+    }
 
-        var victimCC = victimTransform.GetComponent<CharacterController>();
-        if (victimCC != null) victimCC.enabled = false;  // So player movement doesn't fight victim
-        var victimRb = victimTransform.GetComponent<Rigidbody>();
-        if (victimRb != null) victimRb.isKinematic = true;
+    void UpdateThrowVictimPseudoParent()
+    {
+        if (!_throwVictimPseudoParentActive || _throwVictimPseudoParentTarget == null || grabSocket == null) return;
+        _throwVictimPseudoParentTarget.position = grabSocket.position + _throwVictimPseudoParentOffset;
+    }
 
-        // Face victim toward player
-        Vector3 toPlayer = transform.position - victimTransform.position;
-        toPlayer.y = 0f;
-        if (toPlayer.sqrMagnitude > 0.001f)
-        {
-            toPlayer.Normalize();
-            victimTransform.rotation = Quaternion.LookRotation(toPlayer);
-        }
-
-        if (victimAnim != null)
-        {
-            _throwVictimRootMotionRestore = victimAnim.applyRootMotion;
-            victimAnim.applyRootMotion = true;  // So thrown anim drives victim position during hold
-            _throwVictimRootMotionChanged = true;
-        }
+    void StopThrowVictimPseudoParent()
+    {
+        _throwVictimPseudoParentActive = false;
+        _throwVictimPseudoParentTarget = null;
+        _throwVictimPseudoParentOffset = Vector3.zero;
     }
 
     /// <summary>Returns animator state name for victim (back throw vs default, or per-AI thrownStateName).</summary>
@@ -202,7 +182,7 @@ public partial class Combat
         }
     }
 
-    /// <summary>Runs when the grab hitbox connects: find victim, parent to socket, start victim thrown state, hit stop, VFX, play player throw anim and set end time.</summary>
+    /// <summary>Runs when the grab hitbox connects: find victim, start pseudo-parent hold, start victim thrown state, hit stop, VFX, play player throw anim and set end time.</summary>
     void ExecuteThrowHitbox()
     {
         ThrowData t = comboSet.throwData;
@@ -211,17 +191,15 @@ public partial class Combat
         if (!TryFindThrowVictim(t, out EnemyHealth victim, out IDamageable victimDamageable)) return;
 
         currentThrowVictim = victimDamageable;
-        _throwVictimAlreadyUnparented = false;  // OnThrowUnparent may set this later; clear so release can unparent if event not used
         Transform victimTransform = (victimDamageable as Component).transform;
         SetThrowVictimCollisionIgnore(victimTransform, true);  // Prevent player and victim colliders from fighting during throw
 
-        var victimAnim = victimTransform.GetComponentInChildren<Animator>();
-        AttachVictimToGrabSocket(victimTransform, victimAnim);
+        AttachVictimToGrabSocket(victimTransform);
 
         string thrownState = GetThrownStateName(t, victim);
         victim.StartThrowVictim(t.throwPhaseDuration, thrownState);  // Enemy enters thrown state and plays thrown anim
 
-        ApplyGrabHitStop(t.grabHitStopDuration, victimTransform);
+        // ApplyGrabHitStop(t.grabHitStopDuration, victimTransform);
 
         Vector3 center = CalculateThrowHitboxCenter(t);
         SpawnGrabConnectVfx(t, center);
@@ -283,18 +261,16 @@ public partial class Combat
         return (bakePosition, standingRotation);
     }
 
-    /// <summary>Bake victim root motion, unparent from socket (unless OnThrowUnparent already did), re-enable CC/Rigidbody, clear knockback; if not launching, schedule reapply of baked pose next frame.</summary>
+    /// <summary>Bake victim root motion, stop pseudo-parent follow, re-enable CC/Rigidbody, clear knockback; if not launching, schedule reapply of baked pose next frame.</summary>
     void ReleaseThrowVictimFromSocket()
     {
         if (currentThrowVictim == null) return;
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
+        StopThrowVictimPseudoParent();
         UnityEngine.Debug.Log($"[Throw] Release victim: vt={vt.name}, pos={vt.position}");
 
         (Vector3 bakePosition, Quaternion bakeRotation) = BakeVictimThrowRootMotionAndRestore(vt);
-
-        if (!_throwVictimAlreadyUnparented)
-            vt.SetParent(null);
 
         var cc = vt.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = true;
@@ -331,11 +307,11 @@ public partial class Combat
         ClearThrowState();
     }
 
-    /// <summary>Clears throw-related state: victim ref, unparent flag, isAttacking, hitbox pending, restores animator speeds and clears hit stop.</summary>
+    /// <summary>Clears throw-related state: victim ref, pseudo-parent follow, isAttacking, hitbox pending, restores animator speeds and clears hit stop.</summary>
     void ClearThrowState()
     {
+        StopThrowVictimPseudoParent();
         currentThrowVictim = null;
-        _throwVictimAlreadyUnparented = false;
         isAttacking = false;
         hitboxPending = false;
         pendingThrowHitbox = false;
@@ -350,14 +326,47 @@ public partial class Combat
         hitStopEndTime = 0f;
     }
 
-    /// <summary>Animation event: only unparents the victim from the grab socket. Bake/CC/ClearKnockback/get-up run when OnThrowRelease fires. Set _throwVictimAlreadyUnparented = true if you want ReleaseThrowVictimFromSocket to skip unparent.</summary>
+    /// <summary>Animation event compatibility hook: stops pseudo-parent follow early. Full release still runs on OnThrowRelease.</summary>
     public void OnThrowUnparent()
     {
-        if (currentThrowVictim == null) return;
+        StopThrowVictimPseudoParent();
+    }
+
+    /// <summary>Animation event: toggle victim root motion (0 = off/restore, non-zero = on).</summary>
+    public void OnThrowVictimRootMotion(int enabled)
+    {
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
-        vt.SetParent(null);
-        // _throwVictimAlreadyUnparented = true;  // Uncomment so ReleaseThrowVictimFromSocket skips SetParent(null)
+        var victimAnim = vt.GetComponentInChildren<Animator>();
+        if (victimAnim == null) return;
+
+        bool enable = enabled != 0;
+        if (enable)
+        {
+            if (!_throwVictimRootMotionChanged)
+                _throwVictimRootMotionRestore = victimAnim.applyRootMotion;
+            victimAnim.applyRootMotion = true;
+            _throwVictimRootMotionChanged = true;
+            return;
+        }
+
+        if (_throwVictimRootMotionChanged)
+        {
+            victimAnim.applyRootMotion = _throwVictimRootMotionRestore;
+            _throwVictimRootMotionChanged = false;
+        }
+    }
+
+    /// <summary>Animation event convenience method: turns victim root motion on.</summary>
+    public void OnThrowVictimRootMotionOn()
+    {
+        OnThrowVictimRootMotion(1);
+    }
+
+    /// <summary>Animation event convenience method: turns victim root motion off/restores original value.</summary>
+    public void OnThrowVictimRootMotionOff()
+    {
+        OnThrowVictimRootMotion(0);
     }
 
     /// <summary>Animation event (no arg): defers full release to LateUpdate with default profile index -1.</summary>

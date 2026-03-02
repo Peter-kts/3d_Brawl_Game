@@ -356,7 +356,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
      *   - Heavy attacks: Long stun, launches enemy into air
      *   - Launcher attacks: Can juggle enemies for combos
      */
-    public void TakeHit(int damage, Vector3 knockback, float hitstun, float airborneDuration, float hitStopDuration = 0f)
+    public void TakeHit(
+        int damage,
+        Vector3 knockback,
+        float hitstun,
+        float airborneDuration,
+        float hitStopDuration = 0f,
+        AttackHeaviness heaviness = AttackHeaviness.Medium,
+        AttackHeight height = AttackHeight.Mid
+    )
     {
         // #region agent log
         try { var tn = (gameObject?.name ?? "").Replace("\\", "\\\\").Replace("\"", "\\\""); System.IO.File.AppendAllText(@"c:\Users\peter\3dbrawlerlearn\3dbrawlerlearn\.cursor\debug.log", "{\"location\":\"EnemyHealth.cs:TakeHit\",\"message\":\"TakeHit\",\"data\":{\"target\":\"" + tn + "\"},\"timestamp\":" + (long)(UnityEngine.Time.realtimeSinceStartup * 1000) + ",\"hypothesisId\":\"H1\"}\n"); } catch { }
@@ -446,7 +454,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
          */
         if (enemyAI != null)
         {
-            enemyAI.TriggerHitAnimation(hitstun);
+            enemyAI.TriggerHitAnimation(hitstun, height);
         }
         
         // --------------------------------------------------------------------

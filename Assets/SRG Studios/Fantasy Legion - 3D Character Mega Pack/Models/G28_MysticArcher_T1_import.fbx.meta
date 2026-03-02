@@ -1,0 +1,898 @@
+fileFormatVersion: 2
+guid: 2e87e5e56127b664c8d1598f3644d178
+timeCreated: 1492117706
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: swiftbowTierTree_rig_v02:BOW_Main_jj
+    100004: swiftbowTierTree_rig_v02:BOW_string_jj
+    100006: swiftbowTierTree_rig_v02:head1_head
+    100008: swiftbowTierTree_rig_v02:head1_neck
+    100010: swiftbowTierTree_rig_v02:leftArm1_LoResClavical
+    100012: swiftbowTierTree_rig_v02:leftArm1_LoResHand
+    100014: swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm
+    100016: swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm
+    100018: swiftbowTierTree_rig_v02:leftFinger1_Joint1
+    100020: swiftbowTierTree_rig_v02:leftFinger1_Joint2
+    100022: swiftbowTierTree_rig_v02:leftFinger1_Joint3
+    100024: swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel
+    100026: swiftbowTierTree_rig_v02:leftLeg1_LoResFoot
+    100028: swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg
+    100030: swiftbowTierTree_rig_v02:leftLeg1_LoResToe
+    100032: swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg
+    100034: swiftbowTierTree_rig_v02:leftThumb1_Joint1
+    100036: swiftbowTierTree_rig_v02:leftThumb1_Joint2
+    100038: swiftbowTierTree_rig_v02:leftThumb1_Joint3
+    100040: swiftbowTierTree_rig_v02:rightArm1_LoResClavical
+    100042: swiftbowTierTree_rig_v02:rightArm1_LoResHand
+    100044: swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm
+    100046: swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm
+    100048: swiftbowTierTree_rig_v02:rightFinger1_Joint1
+    100050: swiftbowTierTree_rig_v02:rightFinger1_Joint2
+    100052: swiftbowTierTree_rig_v02:rightFinger1_Joint3
+    100054: swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel
+    100056: swiftbowTierTree_rig_v02:rightLeg1_LoResFoot
+    100058: swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg
+    100060: swiftbowTierTree_rig_v02:rightLeg1_LoResToe
+    100062: swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg
+    100064: swiftbowTierTree_rig_v02:rightThumb1_Joint1
+    100066: swiftbowTierTree_rig_v02:rightThumb1_Joint2
+    100068: swiftbowTierTree_rig_v02:rightThumb1_Joint3
+    100070: swiftbowTierTree_rig_v02:spine1_loResPelvis
+    100072: swiftbowTierTree_rig_v02:spine1_loResSpine1
+    100074: swiftbowTierTree_rig_v02:spine1_loResSpine2
+    100076: swiftbowTierTree_rig_v02:spine1_loResSpine3
+    100078: swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+    100080: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+    100082: swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+    100084: swiftbowTierTree_rig_v02:tail1_Joint1
+    100086: swiftbowTierTree_rig_v02:tail1_Joint2
+    100088: swiftbowTierTree_rig_v02:tail1_Joint3
+    100090: swiftbowTierTree_rig_v02:tail1_Joint4
+    100092: swiftbowTierTree_rig_v02:tail1_Joint5
+    100094: swiftbowTierTree_rig_v02:tail1_Joint6
+    100096: swiftbowTierTree_rig_v02:tail1_Joint7
+    100098: swiftbowTierTree_rig_v02:tail2_Joint1
+    100100: swiftbowTierTree_rig_v02:tail2_Joint2
+    100102: swiftbowTierTree_rig_v02:tail2_Joint3
+    100104: swiftbowTierTree_rig_v02:tail2_Joint4
+    100106: swiftbowTierTree_rig_v02:TSMGWorldJoint
+    100108: swiftbowTierTree_rig_v02:Weapons
+    400000: //RootNode
+    400002: swiftbowTierTree_rig_v02:BOW_Main_jj
+    400004: swiftbowTierTree_rig_v02:BOW_string_jj
+    400006: swiftbowTierTree_rig_v02:head1_head
+    400008: swiftbowTierTree_rig_v02:head1_neck
+    400010: swiftbowTierTree_rig_v02:leftArm1_LoResClavical
+    400012: swiftbowTierTree_rig_v02:leftArm1_LoResHand
+    400014: swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm
+    400016: swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm
+    400018: swiftbowTierTree_rig_v02:leftFinger1_Joint1
+    400020: swiftbowTierTree_rig_v02:leftFinger1_Joint2
+    400022: swiftbowTierTree_rig_v02:leftFinger1_Joint3
+    400024: swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel
+    400026: swiftbowTierTree_rig_v02:leftLeg1_LoResFoot
+    400028: swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg
+    400030: swiftbowTierTree_rig_v02:leftLeg1_LoResToe
+    400032: swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg
+    400034: swiftbowTierTree_rig_v02:leftThumb1_Joint1
+    400036: swiftbowTierTree_rig_v02:leftThumb1_Joint2
+    400038: swiftbowTierTree_rig_v02:leftThumb1_Joint3
+    400040: swiftbowTierTree_rig_v02:rightArm1_LoResClavical
+    400042: swiftbowTierTree_rig_v02:rightArm1_LoResHand
+    400044: swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm
+    400046: swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm
+    400048: swiftbowTierTree_rig_v02:rightFinger1_Joint1
+    400050: swiftbowTierTree_rig_v02:rightFinger1_Joint2
+    400052: swiftbowTierTree_rig_v02:rightFinger1_Joint3
+    400054: swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel
+    400056: swiftbowTierTree_rig_v02:rightLeg1_LoResFoot
+    400058: swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg
+    400060: swiftbowTierTree_rig_v02:rightLeg1_LoResToe
+    400062: swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg
+    400064: swiftbowTierTree_rig_v02:rightThumb1_Joint1
+    400066: swiftbowTierTree_rig_v02:rightThumb1_Joint2
+    400068: swiftbowTierTree_rig_v02:rightThumb1_Joint3
+    400070: swiftbowTierTree_rig_v02:spine1_loResPelvis
+    400072: swiftbowTierTree_rig_v02:spine1_loResSpine1
+    400074: swiftbowTierTree_rig_v02:spine1_loResSpine2
+    400076: swiftbowTierTree_rig_v02:spine1_loResSpine3
+    400078: swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+    400080: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+    400082: swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+    400084: swiftbowTierTree_rig_v02:tail1_Joint1
+    400086: swiftbowTierTree_rig_v02:tail1_Joint2
+    400088: swiftbowTierTree_rig_v02:tail1_Joint3
+    400090: swiftbowTierTree_rig_v02:tail1_Joint4
+    400092: swiftbowTierTree_rig_v02:tail1_Joint5
+    400094: swiftbowTierTree_rig_v02:tail1_Joint6
+    400096: swiftbowTierTree_rig_v02:tail1_Joint7
+    400098: swiftbowTierTree_rig_v02:tail2_Joint1
+    400100: swiftbowTierTree_rig_v02:tail2_Joint2
+    400102: swiftbowTierTree_rig_v02:tail2_Joint3
+    400104: swiftbowTierTree_rig_v02:tail2_Joint4
+    400106: swiftbowTierTree_rig_v02:TSMGWorldJoint
+    400108: swiftbowTierTree_rig_v02:Weapons
+    2300000: swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+    3300000: swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+    4300000: swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+    4300002: swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+    4300004: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+    7400000: Idle
+    7400002: ForwardSpeed
+    7400004: Attack1A
+    7400006: Attack1B
+    7400008: Death1
+    9500000: //RootNode
+    13700000: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+    13700002: swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Take 001
+      firstFrame: 130
+      lastFrame: 180
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj/swiftbowTierTree_rig_v02:BOW_string_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot/swiftbowTierTree_rig_v02:leftLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot/swiftbowTierTree_rig_v02:rightLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6/swiftbowTierTree_rig_v02:tail1_Joint7
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck/swiftbowTierTree_rig_v02:head1_head
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2/swiftbowTierTree_rig_v02:leftFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2/swiftbowTierTree_rig_v02:leftThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2/swiftbowTierTree_rig_v02:rightFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2/swiftbowTierTree_rig_v02:rightThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3/swiftbowTierTree_rig_v02:tail2_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: ForwardSpeed
+      takeName: Take 001
+      firstFrame: 901
+      lastFrame: 919
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj/swiftbowTierTree_rig_v02:BOW_string_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot/swiftbowTierTree_rig_v02:leftLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot/swiftbowTierTree_rig_v02:rightLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6/swiftbowTierTree_rig_v02:tail1_Joint7
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck/swiftbowTierTree_rig_v02:head1_head
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2/swiftbowTierTree_rig_v02:leftFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2/swiftbowTierTree_rig_v02:leftThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2/swiftbowTierTree_rig_v02:rightFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2/swiftbowTierTree_rig_v02:rightThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3/swiftbowTierTree_rig_v02:tail2_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack1A
+      takeName: Take 001
+      firstFrame: 1112
+      lastFrame: 1130
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj/swiftbowTierTree_rig_v02:BOW_string_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot/swiftbowTierTree_rig_v02:leftLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot/swiftbowTierTree_rig_v02:rightLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6/swiftbowTierTree_rig_v02:tail1_Joint7
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck/swiftbowTierTree_rig_v02:head1_head
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2/swiftbowTierTree_rig_v02:leftFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2/swiftbowTierTree_rig_v02:leftThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2/swiftbowTierTree_rig_v02:rightFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2/swiftbowTierTree_rig_v02:rightThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3/swiftbowTierTree_rig_v02:tail2_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack1B
+      takeName: Take 001
+      firstFrame: 1195
+      lastFrame: 1250
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj/swiftbowTierTree_rig_v02:BOW_string_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot/swiftbowTierTree_rig_v02:leftLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot/swiftbowTierTree_rig_v02:rightLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6/swiftbowTierTree_rig_v02:tail1_Joint7
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck/swiftbowTierTree_rig_v02:head1_head
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2/swiftbowTierTree_rig_v02:leftFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2/swiftbowTierTree_rig_v02:leftThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2/swiftbowTierTree_rig_v02:rightFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2/swiftbowTierTree_rig_v02:rightThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3/swiftbowTierTree_rig_v02:tail2_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Death1
+      takeName: Take 001
+      firstFrame: 1605
+      lastFrame: 1630
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Swiftbow_T1_character
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:BOW_Main_jj/swiftbowTierTree_rig_v02:BOW_string_jj
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:leftLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:leftLeg1_LoResFoot/swiftbowTierTree_rig_v02:leftLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:rightLeg1_LoResUpperLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResLowerLeg/swiftbowTierTree_rig_v02:rightLeg1_LoResFoot/swiftbowTierTree_rig_v02:rightLeg1_LoResToe
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResPelvis/swiftbowTierTree_rig_v02:tail1_Joint1/swiftbowTierTree_rig_v02:tail1_Joint2/swiftbowTierTree_rig_v02:tail1_Joint3/swiftbowTierTree_rig_v02:tail1_Joint4/swiftbowTierTree_rig_v02:tail1_Joint5/swiftbowTierTree_rig_v02:tail1_Joint6/swiftbowTierTree_rig_v02:tail1_Joint7
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:head1_neck/swiftbowTierTree_rig_v02:head1_head
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftFinger1_MetaCarpel/swiftbowTierTree_rig_v02:leftFinger1_Joint1/swiftbowTierTree_rig_v02:leftFinger1_Joint2/swiftbowTierTree_rig_v02:leftFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:leftArm1_LoResClavical/swiftbowTierTree_rig_v02:leftArm1_LoResUpperArm/swiftbowTierTree_rig_v02:leftArm1_LoResLowerArm/swiftbowTierTree_rig_v02:leftArm1_LoResHand/swiftbowTierTree_rig_v02:leftThumb1_Joint1/swiftbowTierTree_rig_v02:leftThumb1_Joint2/swiftbowTierTree_rig_v02:leftThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightFinger1_MetaCarpel/swiftbowTierTree_rig_v02:rightFinger1_Joint1/swiftbowTierTree_rig_v02:rightFinger1_Joint2/swiftbowTierTree_rig_v02:rightFinger1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:rightArm1_LoResClavical/swiftbowTierTree_rig_v02:rightArm1_LoResUpperArm/swiftbowTierTree_rig_v02:rightArm1_LoResLowerArm/swiftbowTierTree_rig_v02:rightArm1_LoResHand/swiftbowTierTree_rig_v02:rightThumb1_Joint1/swiftbowTierTree_rig_v02:rightThumb1_Joint2/swiftbowTierTree_rig_v02:rightThumb1_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:TSMGWorldJoint/swiftbowTierTree_rig_v02:spine1_loResSpine1/swiftbowTierTree_rig_v02:spine1_loResSpine2/swiftbowTierTree_rig_v02:spine1_loResSpine3/swiftbowTierTree_rig_v02:tail2_Joint1/swiftbowTierTree_rig_v02:tail2_Joint2/swiftbowTierTree_rig_v02:tail2_Joint3/swiftbowTierTree_rig_v02:tail2_Joint4
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_arrow
+        weight: 1
+      - path: swiftbowTierTree_rig_v02:Weapons/swiftbowTierTree_rig_v02:Swiftbow_T1_weapon
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: swiftbowTierTree_rig_v02:TSMGWorldJoint
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Fantasy Legion - 3D Character Mega Pack/Models/G28_MysticArcher_T1_import.fbx
+  uploadId: 814144

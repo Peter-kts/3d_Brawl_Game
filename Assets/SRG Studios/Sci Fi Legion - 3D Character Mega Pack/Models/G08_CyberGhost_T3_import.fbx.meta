@@ -1,0 +1,883 @@
+fileFormatVersion: 2
+guid: 22d0228048793654caa9f915ebac7e61
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: clothBL_joint01
+  - first:
+      1: 100002
+    second: clothBL_joint02
+  - first:
+      1: 100004
+    second: clothBL_joint03
+  - first:
+      1: 100006
+    second: clothBL_joint04
+  - first:
+      1: 100008
+    second: clothBR_joint01
+  - first:
+      1: 100010
+    second: clothBR_joint02
+  - first:
+      1: 100012
+    second: clothBR_joint03
+  - first:
+      1: 100014
+    second: clothBR_joint04
+  - first:
+      1: 100016
+    second: clothFL_joint01
+  - first:
+      1: 100018
+    second: clothFL_joint02
+  - first:
+      1: 100020
+    second: clothFL_joint03
+  - first:
+      1: 100022
+    second: clothFL_joint04
+  - first:
+      1: 100024
+    second: clothFL_joint05
+  - first:
+      1: 100026
+    second: clothFR_joint01
+  - first:
+      1: 100028
+    second: clothFR_joint02
+  - first:
+      1: 100030
+    second: clothFR_joint03
+  - first:
+      1: 100032
+    second: clothFR_joint04
+  - first:
+      1: 100034
+    second: clothFR_joint05
+  - first:
+      1: 100036
+    second: head1_head
+  - first:
+      1: 100038
+    second: head1_neck
+  - first:
+      1: 100040
+    second: Orbit_joint1
+  - first:
+      1: 100042
+    second: Orbit_joint2
+  - first:
+      1: 100044
+    second: Orbit_joint3
+  - first:
+      1: 100046
+    second: //RootNode
+  - first:
+      1: 100048
+    second: ProphetT3_skin01_mesh
+  - first:
+      1: 100050
+    second: spine1_loResSpine1
+  - first:
+      1: 100052
+    second: spine1_loResSpine2
+  - first:
+      1: 100054
+    second: spine1_loResSpine3
+  - first:
+      1: 100056
+    second: TSMGWorldJoint
+  - first:
+      1: 100058
+    second: Weapon_null1
+  - first:
+      1: 100060
+    second: ProphetT1_mesh
+  - first:
+      1: 100062
+    second: ProphetT3_mesh
+  - first:
+      4: 400000
+    second: clothBL_joint01
+  - first:
+      4: 400002
+    second: clothBL_joint02
+  - first:
+      4: 400004
+    second: clothBL_joint03
+  - first:
+      4: 400006
+    second: clothBL_joint04
+  - first:
+      4: 400008
+    second: clothBR_joint01
+  - first:
+      4: 400010
+    second: clothBR_joint02
+  - first:
+      4: 400012
+    second: clothBR_joint03
+  - first:
+      4: 400014
+    second: clothBR_joint04
+  - first:
+      4: 400016
+    second: clothFL_joint01
+  - first:
+      4: 400018
+    second: clothFL_joint02
+  - first:
+      4: 400020
+    second: clothFL_joint03
+  - first:
+      4: 400022
+    second: clothFL_joint04
+  - first:
+      4: 400024
+    second: clothFL_joint05
+  - first:
+      4: 400026
+    second: clothFR_joint01
+  - first:
+      4: 400028
+    second: clothFR_joint02
+  - first:
+      4: 400030
+    second: clothFR_joint03
+  - first:
+      4: 400032
+    second: clothFR_joint04
+  - first:
+      4: 400034
+    second: clothFR_joint05
+  - first:
+      4: 400036
+    second: head1_head
+  - first:
+      4: 400038
+    second: head1_neck
+  - first:
+      4: 400040
+    second: Orbit_joint1
+  - first:
+      4: 400042
+    second: Orbit_joint2
+  - first:
+      4: 400044
+    second: Orbit_joint3
+  - first:
+      4: 400046
+    second: //RootNode
+  - first:
+      4: 400048
+    second: ProphetT3_skin01_mesh
+  - first:
+      4: 400050
+    second: spine1_loResSpine1
+  - first:
+      4: 400052
+    second: spine1_loResSpine2
+  - first:
+      4: 400054
+    second: spine1_loResSpine3
+  - first:
+      4: 400056
+    second: TSMGWorldJoint
+  - first:
+      4: 400058
+    second: Weapon_null1
+  - first:
+      4: 400060
+    second: ProphetT1_mesh
+  - first:
+      4: 400062
+    second: ProphetT3_mesh
+  - first:
+      43: 4300000
+    second: ProphetT3_skin01_mesh
+  - first:
+      43: 4300002
+    second: ProphetT1_mesh
+  - first:
+      43: 4300004
+    second: ProphetT3_mesh
+  - first:
+      74: 7400000
+    second: IdleBoard
+  - first:
+      74: 7400002
+    second: IdleSelScreen
+  - first:
+      74: 7400004
+    second: ForwardSpeed
+  - first:
+      74: 7400006
+    second: Attack1A
+  - first:
+      74: 7400008
+    second: Attack2A
+  - first:
+      74: 7400010
+    second: Death
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: ProphetT3_skin01_mesh
+  - first:
+      137: 13700002
+    second: ProphetT1_mesh
+  - first:
+      137: 13700004
+    second: ProphetT3_mesh
+  externalObjects: {}
+  materials:
+    materialImportMode: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths:
+    - TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/Weapon_null1
+    - TSMGWorldJoint/spine1_loResSpine1/Orbit_joint1
+    - TSMGWorldJoint/spine1_loResSpine1/Orbit_joint2
+    - TSMGWorldJoint/spine1_loResSpine1/Orbit_joint3
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: IdleBoard
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 100
+      lastFrame: 275
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ProphetT3_mesh
+        weight: 1
+      - path: TSMGWorldJoint
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck/head1_head
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04/clothFL_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04/clothFR_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03/clothBR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03/clothBL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/Weapon_null1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint3
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: IdleSelScreen
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 1000
+      lastFrame: 1275
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ProphetT3_mesh
+        weight: 1
+      - path: TSMGWorldJoint
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck/head1_head
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04/clothFL_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04/clothFR_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03/clothBR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03/clothBL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/Weapon_null1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint3
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: ForwardSpeed
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 900
+      lastFrame: 980
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ProphetT3_mesh
+        weight: 1
+      - path: TSMGWorldJoint
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck/head1_head
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04/clothFL_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04/clothFR_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03/clothBR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03/clothBL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/Weapon_null1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint3
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack1A
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 400
+      lastFrame: 460
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ProphetT3_mesh
+        weight: 1
+      - path: TSMGWorldJoint
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck/head1_head
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04/clothFL_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04/clothFR_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03/clothBR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03/clothBL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/Weapon_null1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint3
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack2A
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 500
+      lastFrame: 590
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ProphetT3_mesh
+        weight: 1
+      - path: TSMGWorldJoint
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck/head1_head
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04/clothFL_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04/clothFR_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03/clothBR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03/clothBL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/Weapon_null1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint3
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Death
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 700
+      lastFrame: 800
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: ProphetT3_mesh
+        weight: 1
+      - path: TSMGWorldJoint
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/head1_neck/head1_head
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFL_joint01/clothFL_joint02/clothFL_joint03/clothFL_joint04/clothFL_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothFR_joint01/clothFR_joint02/clothFR_joint03/clothFR_joint04/clothFR_joint05
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBR_joint01/clothBR_joint02/clothBR_joint03/clothBR_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/clothBL_joint01/clothBL_joint02/clothBL_joint03/clothBL_joint04
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/Weapon_null1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint1
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint2
+        weight: 1
+      - path: TSMGWorldJoint/spine1_loResSpine1/Orbit_joint3
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Sci Fi Legion - 3D Character Mega Pack/Models/G08_CyberGhost_T3_import.fbx
+  uploadId: 814144

@@ -1,0 +1,172 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: AssaultMech_Avatar_Mask
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt/Mech_l_Leg_BallSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt/Mech_l_Leg_BallSHJnt/Mech_l_Leg_ToeSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt/Mech_l_Leg_BallSHJnt/Mech_l_Leg_ToeSHJnt/Mech_l_Toe_01_01SHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt/Mech_l_Leg_BallSHJnt/Mech_l_Leg_ToeSHJnt/Mech_l_Toe_01_01SHJnt/L_Toe
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt/Mech_l_Leg_BallSHJnt/Mech_l_BackToe_AuxSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt/Mech_l_Leg_BallSHJnt/Mech_l_BackToe_AuxSHJnt/L_HindToe
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/Mech_l_Leg_AnkleSHJnt/Mech_l_Leg_BallSHJnt/L_Foot
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/Mech_l_Leg_KneeSHJnt/L_Knee
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_l_Leg_HipSHJnt/L_Thigh
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt/Mech_r_Leg_BallSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt/Mech_r_Leg_BallSHJnt/Mech_r_Leg_ToeSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt/Mech_r_Leg_BallSHJnt/Mech_r_Leg_ToeSHJnt/Mech_r_Toe_01_01SHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt/Mech_r_Leg_BallSHJnt/Mech_r_Leg_ToeSHJnt/Mech_r_Toe_01_01SHJnt/R_Toe
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt/Mech_r_Leg_BallSHJnt/Mech_r_BackToe_AuxSHJnt
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt/Mech_r_Leg_BallSHJnt/Mech_r_BackToe_AuxSHJnt/R_HindToe
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/Mech_r_Leg_AnkleSHJnt/Mech_r_Leg_BallSHJnt/R_Foot
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/Mech_r_Leg_KneeSHJnt/R_Knee
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_r_Leg_HipSHJnt/R_Thigh
+    m_Weight: 0
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor1_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor1_AuxSHJnt/L_MissLnchDoor1
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor2_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor2_AuxSHJnt/L_MissLnchDoor2
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor3_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor3_AuxSHJnt/L_MissLnchDoor3
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor4_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor4_AuxSHJnt/L_MissLnchDoor4
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor5_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor5_AuxSHJnt/L_MissLnchDoor5
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor6_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor6_AuxSHJnt/L_MissLnchDoor6
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor7_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor7_AuxSHJnt/L_MissLnchDoor7
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor8_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MissLauncherDoor8_AuxSHJnt/L_MissLnchDoor8
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MachGun_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MachGun_AuxSHJnt/Mech_l_MachGun_Muzzle_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MachGun_AuxSHJnt/Mech_l_MachGun_Muzzle_AuxSHJnt/L_MachineGunMuzzle
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_MachGun_AuxSHJnt/L_MachineGun
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_FlameGun_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/Mech_l_FlameGun_AuxSHJnt/L_FlameGun
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_l_MissLauncher_AuxSHJnt/L_MissileLauncher
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor1_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor1_AuxSHJnt/R_MissLnchDoor1
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor2_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor2_AuxSHJnt/R_MissLnchDoor2
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor3_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor3_AuxSHJnt/R_MissLnchDoor3
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor4_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor4_AuxSHJnt/R_MissLnchDoor4
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor5_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor5_AuxSHJnt/R_MissLnchDoor5
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor6_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor6_AuxSHJnt/R_MissLnchDoor6
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor7_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor7_AuxSHJnt/R_MissLnchDoor7
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor8_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MissLauncherDoor8_AuxSHJnt/R_MissLnchDoor8
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MachGun_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MachGun_AuxSHJnt/Mech_r_MachGun_Muzzle_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MachGun_AuxSHJnt/Mech_r_MachGun_Muzzle_AuxSHJnt/R_MachineGunMuzzle
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_MachGun_AuxSHJnt/R_MachineGun
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_FlameGun_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/Mech_r_FlameGun_AuxSHJnt/R_FlameGun
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_r_MissLauncher_AuxSHJnt/R_MissileLauncher
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_FrontGun_AuxSHJnt
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/Mech_FrontGun_AuxSHJnt/LaserGun
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/Mech_Body_AuxSHJnt/BodyHead
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/BodyHips
+    m_Weight: 1
+  - m_Path: Mech_MAINSHJnt/Mech_ROOTSHJnt/BodyAbdomen
+    m_Weight: 1

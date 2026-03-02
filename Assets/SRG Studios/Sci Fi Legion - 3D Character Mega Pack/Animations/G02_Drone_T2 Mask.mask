@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &101100000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: G02_Drone_T2 Mask
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: back
+    m_Weight: 0
+  - m_Path: root_jnt
+    m_Weight: 0
+  - m_Path: root_jnt/head_jnt
+    m_Weight: 0
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05/center_tail_jnt06
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05/center_tail_jnt06/center_tail_jnt07
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05/center_tail_jnt06/center_tail_jnt07/center_tail_jnt08
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05/center_tail_jnt06/center_tail_jnt07/center_tail_jnt08/center_tail_jnt09
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05/center_tail_jnt06/center_tail_jnt07/center_tail_jnt08/center_tail_jnt09/center_tail_jnt10
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05/center_tail_jnt06/center_tail_jnt07/center_tail_jnt08/center_tail_jnt09/center_tail_jnt10/center_tail_jnt11
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/center_tail_jnt01/center_tail_jnt02/center_tail_jnt03/center_tail_jnt04/center_tail_jnt05/center_tail_jnt06/center_tail_jnt07/center_tail_jnt08/center_tail_jnt09/center_tail_jnt10/center_tail_jnt11/center_tail_jntEnd
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05/left_tail_jnt06
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05/left_tail_jnt06/left_tail_jnt07
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05/left_tail_jnt06/left_tail_jnt07/left_tail_jnt08
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05/left_tail_jnt06/left_tail_jnt07/left_tail_jnt08/left_tail_jnt09
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05/left_tail_jnt06/left_tail_jnt07/left_tail_jnt08/left_tail_jnt09/left_tail_jnt10
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05/left_tail_jnt06/left_tail_jnt07/left_tail_jnt08/left_tail_jnt09/left_tail_jnt10/left_tail_jnt11
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_tail_jnt01/left_tail_jnt02/left_tail_jnt03/left_tail_jnt04/left_tail_jnt05/left_tail_jnt06/left_tail_jnt07/left_tail_jnt08/left_tail_jnt09/left_tail_jnt10/left_tail_jnt11/left_tail_jntEnd
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/left_wing_jnt
+    m_Weight: 0
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05/right_tail_jnt06
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05/right_tail_jnt06/right_tail_jnt07
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05/right_tail_jnt06/right_tail_jnt07/right_tail_jnt08
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05/right_tail_jnt06/right_tail_jnt07/right_tail_jnt08/right_tail_jnt09
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05/right_tail_jnt06/right_tail_jnt07/right_tail_jnt08/right_tail_jnt09/right_tail_jnt10
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05/right_tail_jnt06/right_tail_jnt07/right_tail_jnt08/right_tail_jnt09/right_tail_jnt10/right_tail_jnt11
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_tail_jnt01/right_tail_jnt02/right_tail_jnt03/right_tail_jnt04/right_tail_jnt05/right_tail_jnt06/right_tail_jnt07/right_tail_jnt08/right_tail_jnt09/right_tail_jnt10/right_tail_jnt11/right_tail_jntEnd
+    m_Weight: 1
+  - m_Path: root_jnt/head_jnt/right_wing_jnt
+    m_Weight: 0
+  - m_Path: root_jnt/head_jnt/WeaponNull1
+    m_Weight: 0
+  - m_Path: shurikenDrone_LP
+    m_Weight: 0
