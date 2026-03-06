@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d727d6dfe6ed4e10bc6ffb30c9743394
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200709
+  packageName: Stylized Newbie Weapons Pack
+  packageVersion: 1.4.2
+  assetPath: Assets/StylizedCharacter/ground.physicMaterial
+  uploadId: 783623

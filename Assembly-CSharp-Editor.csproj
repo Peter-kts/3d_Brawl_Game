@@ -60,15 +60,28 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.4f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHCharacterControllerEditor.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\GUIUtils.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\EnemyCombatEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\DebugSettingsEditor.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHItemEditor.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Extensions\InitializationHelper.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\AttackDataDrawer.cs" />
     <Compile Include="Assets\Archive\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\OrganizeAssets.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\StyleStateBuilder.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHAvatarEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\ComboSetEditor.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\StyleBuilder.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Extensions\MaterialMapperExtension.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\ClearDestroyedSelection.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\TabComponent.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Extensions\NHItemExtension.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Windows\SelectorWindow.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHCameraEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\FoldoutHeaderEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\ScriptEditors.cs" />
+    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Windows\SelectionWindowAbstract.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\PackageCache\com.unity.collab-proxy@1ec4e416a4af\Lib\Editor\Localization\cm-help.zh-Hans.txt" />

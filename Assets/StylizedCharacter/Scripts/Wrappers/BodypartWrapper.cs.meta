@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 009d80b3ea9e4aa29f9b0fa2bca74a74
+timeCreated: 1634579579
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200709
+  packageName: Stylized Newbie Weapons Pack
+  packageVersion: 1.4.2
+  assetPath: Assets/StylizedCharacter/Scripts/Wrappers/BodypartWrapper.cs
+  uploadId: 783623

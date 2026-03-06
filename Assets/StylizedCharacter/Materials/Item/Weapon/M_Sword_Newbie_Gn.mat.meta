@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5526e72b4f5543648e98aaef2c671dda
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200709
+  packageName: Stylized Newbie Weapons Pack
+  packageVersion: 1.4.2
+  assetPath: Assets/StylizedCharacter/Materials/Item/Weapon/M_Sword_Newbie_Gn.mat
+  uploadId: 783623

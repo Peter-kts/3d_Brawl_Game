@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -50,6 +51,10 @@ public struct ThrowData
     public GameObject grabConnectVfxPrefab;
     [Tooltip("VFX spawned when throw ends (when damage/knockback applied). Optional.")]
     public GameObject throwEndVfxPrefab;
+
+    [Header("SFX (optional)")]
+    [Tooltip("Flexible throw SFX cues (start, grab connect, and animation-event keyed).")]
+    public List<AttackSfxCue> sfxCues;
 
     [Header("Hitbox")]
     public float range;

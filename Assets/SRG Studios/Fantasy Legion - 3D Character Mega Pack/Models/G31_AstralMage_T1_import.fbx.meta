@@ -1,142 +1,394 @@
 fileFormatVersion: 2
 guid: 4889d4043ac996e488da0a50b35cfa2d
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334404
+  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
+  packageVersion: 1.0
+  assetPath: Assets/SRG Studios/Fantasy Legion - 3D Character Mega Pack/Models/G31_AstralMage_T1_import.fbx
+  uploadId: 814144
 ModelImporter:
-  serializedVersion: 19
-  fileIDToRecycleName:
-    100000: head1_head
-    100002: head1_neck
-    100004: leftArm1_LoResClavical
-    100006: leftArm1_LoResHand
-    100008: leftArm1_LoResLowerArm
-    100010: leftArm1_LoResUpperArm
-    100012: leftFinger1_Joint1
-    100014: leftFinger1_Joint2
-    100016: leftFinger1_Joint3
-    100018: leftFinger1_MetaCarpel
-    100020: leftThumb1_Joint1
-    100022: leftThumb1_Joint2
-    100024: leftThumb1_Joint3
-    100026: rangeVoid_t1_mesh
-    100028: rightArm1_LoResClavical
-    100030: rightArm1_LoResHand
-    100032: rightArm1_LoResLowerArm
-    100034: rightArm1_LoResUpperArm
-    100036: rightFinger1_Joint1
-    100038: rightFinger1_Joint2
-    100040: rightFinger1_Joint3
-    100042: rightFinger1_MetaCarpel
-    100044: rightThumb1_Joint1
-    100046: rightThumb1_Joint2
-    100048: rightThumb1_Joint3
-    100050: spine1_loResPelvis
-    100052: spine1_loResSpine1
-    100054: spine1_loResSpine2
-    100056: spine1_loResSpine3
-    100058: tail1_Joint1
-    100060: tail1_Joint2
-    100062: tail1_Joint3
-    100064: tail1_Joint4
-    100066: tail1_Joint5
-    100068: tail2_Joint1
-    100070: tail2_Joint2
-    100072: tail2_Joint3
-    100074: tail2_Joint4
-    100076: tail2_Joint5
-    100078: tail2_Joint6
-    100080: tail2_Joint7
-    100082: tail3_Joint1
-    100084: tail3_Joint2
-    100086: tail3_Joint3
-    100088: tail3_Joint4
-    100090: tail3_Joint5
-    100092: tail4_Joint1
-    100094: tail4_Joint2
-    100096: tail4_Joint3
-    100098: tail4_Joint4
-    100100: tail4_Joint5
-    100102: TSMGWorldJoint
-    100104: //RootNode
-    100106: WeaponNull1
-    100108: WeaponNull2
-    400000: head1_head
-    400002: head1_neck
-    400004: leftArm1_LoResClavical
-    400006: leftArm1_LoResHand
-    400008: leftArm1_LoResLowerArm
-    400010: leftArm1_LoResUpperArm
-    400012: leftFinger1_Joint1
-    400014: leftFinger1_Joint2
-    400016: leftFinger1_Joint3
-    400018: leftFinger1_MetaCarpel
-    400020: leftThumb1_Joint1
-    400022: leftThumb1_Joint2
-    400024: leftThumb1_Joint3
-    400026: rangeVoid_t1_mesh
-    400028: rightArm1_LoResClavical
-    400030: rightArm1_LoResHand
-    400032: rightArm1_LoResLowerArm
-    400034: rightArm1_LoResUpperArm
-    400036: rightFinger1_Joint1
-    400038: rightFinger1_Joint2
-    400040: rightFinger1_Joint3
-    400042: rightFinger1_MetaCarpel
-    400044: rightThumb1_Joint1
-    400046: rightThumb1_Joint2
-    400048: rightThumb1_Joint3
-    400050: spine1_loResPelvis
-    400052: spine1_loResSpine1
-    400054: spine1_loResSpine2
-    400056: spine1_loResSpine3
-    400058: tail1_Joint1
-    400060: tail1_Joint2
-    400062: tail1_Joint3
-    400064: tail1_Joint4
-    400066: tail1_Joint5
-    400068: tail2_Joint1
-    400070: tail2_Joint2
-    400072: tail2_Joint3
-    400074: tail2_Joint4
-    400076: tail2_Joint5
-    400078: tail2_Joint6
-    400080: tail2_Joint7
-    400082: tail3_Joint1
-    400084: tail3_Joint2
-    400086: tail3_Joint3
-    400088: tail3_Joint4
-    400090: tail3_Joint5
-    400092: tail4_Joint1
-    400094: tail4_Joint2
-    400096: tail4_Joint3
-    400098: tail4_Joint4
-    400100: tail4_Joint5
-    400102: TSMGWorldJoint
-    400104: //RootNode
-    400106: WeaponNull1
-    400108: WeaponNull2
-    4300000: rangeVoid_t1_mesh
-    7400000: Idle
-    7400002: ForwardSpeed
-    7400004: Attack1A
-    7400006: Attack1B
-    7400008: Attack2A
-    7400010: Attack2B
-    7400012: Death
-    9500000: //RootNode
-    13700000: rangeVoid_t1_mesh
+  serializedVersion: 24200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: head1_head
+  - first:
+      1: 100002
+    second: head1_neck
+  - first:
+      1: 100004
+    second: leftArm1_LoResClavical
+  - first:
+      1: 100006
+    second: leftArm1_LoResHand
+  - first:
+      1: 100008
+    second: leftArm1_LoResLowerArm
+  - first:
+      1: 100010
+    second: leftArm1_LoResUpperArm
+  - first:
+      1: 100012
+    second: leftFinger1_Joint1
+  - first:
+      1: 100014
+    second: leftFinger1_Joint2
+  - first:
+      1: 100016
+    second: leftFinger1_Joint3
+  - first:
+      1: 100018
+    second: leftFinger1_MetaCarpel
+  - first:
+      1: 100020
+    second: leftThumb1_Joint1
+  - first:
+      1: 100022
+    second: leftThumb1_Joint2
+  - first:
+      1: 100024
+    second: leftThumb1_Joint3
+  - first:
+      1: 100026
+    second: rangeVoid_t1_mesh
+  - first:
+      1: 100028
+    second: rightArm1_LoResClavical
+  - first:
+      1: 100030
+    second: rightArm1_LoResHand
+  - first:
+      1: 100032
+    second: rightArm1_LoResLowerArm
+  - first:
+      1: 100034
+    second: rightArm1_LoResUpperArm
+  - first:
+      1: 100036
+    second: rightFinger1_Joint1
+  - first:
+      1: 100038
+    second: rightFinger1_Joint2
+  - first:
+      1: 100040
+    second: rightFinger1_Joint3
+  - first:
+      1: 100042
+    second: rightFinger1_MetaCarpel
+  - first:
+      1: 100044
+    second: rightThumb1_Joint1
+  - first:
+      1: 100046
+    second: rightThumb1_Joint2
+  - first:
+      1: 100048
+    second: rightThumb1_Joint3
+  - first:
+      1: 100050
+    second: spine1_loResPelvis
+  - first:
+      1: 100052
+    second: spine1_loResSpine1
+  - first:
+      1: 100054
+    second: spine1_loResSpine2
+  - first:
+      1: 100056
+    second: spine1_loResSpine3
+  - first:
+      1: 100058
+    second: tail1_Joint1
+  - first:
+      1: 100060
+    second: tail1_Joint2
+  - first:
+      1: 100062
+    second: tail1_Joint3
+  - first:
+      1: 100064
+    second: tail1_Joint4
+  - first:
+      1: 100066
+    second: tail1_Joint5
+  - first:
+      1: 100068
+    second: tail2_Joint1
+  - first:
+      1: 100070
+    second: tail2_Joint2
+  - first:
+      1: 100072
+    second: tail2_Joint3
+  - first:
+      1: 100074
+    second: tail2_Joint4
+  - first:
+      1: 100076
+    second: tail2_Joint5
+  - first:
+      1: 100078
+    second: tail2_Joint6
+  - first:
+      1: 100080
+    second: tail2_Joint7
+  - first:
+      1: 100082
+    second: tail3_Joint1
+  - first:
+      1: 100084
+    second: tail3_Joint2
+  - first:
+      1: 100086
+    second: tail3_Joint3
+  - first:
+      1: 100088
+    second: tail3_Joint4
+  - first:
+      1: 100090
+    second: tail3_Joint5
+  - first:
+      1: 100092
+    second: tail4_Joint1
+  - first:
+      1: 100094
+    second: tail4_Joint2
+  - first:
+      1: 100096
+    second: tail4_Joint3
+  - first:
+      1: 100098
+    second: tail4_Joint4
+  - first:
+      1: 100100
+    second: tail4_Joint5
+  - first:
+      1: 100102
+    second: TSMGWorldJoint
+  - first:
+      1: 100104
+    second: //RootNode
+  - first:
+      1: 100106
+    second: WeaponNull1
+  - first:
+      1: 100108
+    second: WeaponNull2
+  - first:
+      4: 400000
+    second: head1_head
+  - first:
+      4: 400002
+    second: head1_neck
+  - first:
+      4: 400004
+    second: leftArm1_LoResClavical
+  - first:
+      4: 400006
+    second: leftArm1_LoResHand
+  - first:
+      4: 400008
+    second: leftArm1_LoResLowerArm
+  - first:
+      4: 400010
+    second: leftArm1_LoResUpperArm
+  - first:
+      4: 400012
+    second: leftFinger1_Joint1
+  - first:
+      4: 400014
+    second: leftFinger1_Joint2
+  - first:
+      4: 400016
+    second: leftFinger1_Joint3
+  - first:
+      4: 400018
+    second: leftFinger1_MetaCarpel
+  - first:
+      4: 400020
+    second: leftThumb1_Joint1
+  - first:
+      4: 400022
+    second: leftThumb1_Joint2
+  - first:
+      4: 400024
+    second: leftThumb1_Joint3
+  - first:
+      4: 400026
+    second: rangeVoid_t1_mesh
+  - first:
+      4: 400028
+    second: rightArm1_LoResClavical
+  - first:
+      4: 400030
+    second: rightArm1_LoResHand
+  - first:
+      4: 400032
+    second: rightArm1_LoResLowerArm
+  - first:
+      4: 400034
+    second: rightArm1_LoResUpperArm
+  - first:
+      4: 400036
+    second: rightFinger1_Joint1
+  - first:
+      4: 400038
+    second: rightFinger1_Joint2
+  - first:
+      4: 400040
+    second: rightFinger1_Joint3
+  - first:
+      4: 400042
+    second: rightFinger1_MetaCarpel
+  - first:
+      4: 400044
+    second: rightThumb1_Joint1
+  - first:
+      4: 400046
+    second: rightThumb1_Joint2
+  - first:
+      4: 400048
+    second: rightThumb1_Joint3
+  - first:
+      4: 400050
+    second: spine1_loResPelvis
+  - first:
+      4: 400052
+    second: spine1_loResSpine1
+  - first:
+      4: 400054
+    second: spine1_loResSpine2
+  - first:
+      4: 400056
+    second: spine1_loResSpine3
+  - first:
+      4: 400058
+    second: tail1_Joint1
+  - first:
+      4: 400060
+    second: tail1_Joint2
+  - first:
+      4: 400062
+    second: tail1_Joint3
+  - first:
+      4: 400064
+    second: tail1_Joint4
+  - first:
+      4: 400066
+    second: tail1_Joint5
+  - first:
+      4: 400068
+    second: tail2_Joint1
+  - first:
+      4: 400070
+    second: tail2_Joint2
+  - first:
+      4: 400072
+    second: tail2_Joint3
+  - first:
+      4: 400074
+    second: tail2_Joint4
+  - first:
+      4: 400076
+    second: tail2_Joint5
+  - first:
+      4: 400078
+    second: tail2_Joint6
+  - first:
+      4: 400080
+    second: tail2_Joint7
+  - first:
+      4: 400082
+    second: tail3_Joint1
+  - first:
+      4: 400084
+    second: tail3_Joint2
+  - first:
+      4: 400086
+    second: tail3_Joint3
+  - first:
+      4: 400088
+    second: tail3_Joint4
+  - first:
+      4: 400090
+    second: tail3_Joint5
+  - first:
+      4: 400092
+    second: tail4_Joint1
+  - first:
+      4: 400094
+    second: tail4_Joint2
+  - first:
+      4: 400096
+    second: tail4_Joint3
+  - first:
+      4: 400098
+    second: tail4_Joint4
+  - first:
+      4: 400100
+    second: tail4_Joint5
+  - first:
+      4: 400102
+    second: TSMGWorldJoint
+  - first:
+      4: 400104
+    second: //RootNode
+  - first:
+      4: 400106
+    second: WeaponNull1
+  - first:
+      4: 400108
+    second: WeaponNull2
+  - first:
+      43: 4300000
+    second: rangeVoid_t1_mesh
+  - first:
+      74: 7400000
+    second: Idle
+  - first:
+      74: 7400002
+    second: ForwardSpeed
+  - first:
+      74: 7400004
+    second: Attack1A
+  - first:
+      74: 7400006
+    second: Attack1B
+  - first:
+      74: 7400008
+    second: Attack2A
+  - first:
+      74: 7400010
+    second: Attack2B
+  - first:
+      74: 7400012
+    second: Death
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: rangeVoid_t1_mesh
+  externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 1
+    removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -145,10 +397,12 @@ ModelImporter:
     extraExposedTransformPaths:
     - TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/leftArm1_LoResClavical/leftArm1_LoResUpperArm/leftArm1_LoResLowerArm/leftArm1_LoResHand/WeaponNull1
     - TSMGWorldJoint/spine1_loResSpine1/spine1_loResSpine2/spine1_loResSpine3/rightArm1_LoResClavical/rightArm1_LoResUpperArm/rightArm1_LoResLowerArm/rightArm1_LoResHand/WeaponNull2
+    extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
       name: Idle
       takeName: Take 001
+      internalID: 0
       firstFrame: 100
       lastFrame: 175
       wrapMode: 0
@@ -287,6 +541,7 @@ ModelImporter:
     - serializedVersion: 16
       name: ForwardSpeed
       takeName: Take 001
+      internalID: 0
       firstFrame: 900
       lastFrame: 960
       wrapMode: 0
@@ -425,6 +680,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Attack1A
       takeName: Take 001
+      internalID: 0
       firstFrame: 300
       lastFrame: 356
       wrapMode: 0
@@ -563,6 +819,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Attack1B
       takeName: Take 001
+      internalID: 0
       firstFrame: 700
       lastFrame: 749
       wrapMode: 0
@@ -701,6 +958,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Attack2A
       takeName: Take 001
+      internalID: 0
       firstFrame: 500
       lastFrame: 560
       wrapMode: 0
@@ -839,6 +1097,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Attack2B
       takeName: Take 001
+      internalID: 0
       firstFrame: 1300
       lastFrame: 1360
       wrapMode: 0
@@ -977,6 +1236,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Death
       takeName: Take 001
+      internalID: 0
       firstFrame: 1100
       lastFrame: 1150
       wrapMode: 0
@@ -1118,26 +1378,52 @@ ModelImporter:
     globalScale: 0.01
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 0
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -1147,22 +1433,20 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 0.01
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 334404
-  packageName: Ultra Legion - Sci Fi & Fantasy 3D Character Mega Pack
-  packageVersion: 1.0
-  assetPath: Assets/SRG Studios/Fantasy Legion - 3D Character Mega Pack/Models/G31_AstralMage_T1_import.fbx
-  uploadId: 814144

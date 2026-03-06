@@ -84,6 +84,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private SimpleEnemyAI enemyAI;        // Reference to AI for triggering hit animations
     private bool isDying;                 // True once death animation starts (prevents further hits)
     private float getUpUntil;             // Time.time when get-up stun ends (0 = not getting up)
+    private float throwVictimUntil;       // Time.time while enemy is in throw-victim phase
     private bool crashHitAlreadyUsed;    // True after taking the one allowed hit while in crash
     private float airborneSpeedMultiplier = 1f;  // 1.4f during crash-relaunch airborne so animation and timers match
 
@@ -335,6 +336,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public void StartThrowVictim(float durationSeconds, string thrownStateName)
     {
         if (isDying) return;
+        throwVictimUntil = Mathf.Max(throwVictimUntil, Time.time + durationSeconds);
         stunUntil = Mathf.Max(stunUntil, Time.time + durationSeconds);
         if (enemyAI != null)
             enemyAI.TriggerThrownAnimation(durationSeconds, thrownStateName);
@@ -452,7 +454,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
          * 
          * We pass hitstun so the animation speed can be scaled to match.
          */
-        if (enemyAI != null)
+        bool isBeingThrown = Time.time < throwVictimUntil;
+        if (enemyAI != null && !isBeingThrown)
         {
             enemyAI.TriggerHitAnimation(hitstun, height);
         }

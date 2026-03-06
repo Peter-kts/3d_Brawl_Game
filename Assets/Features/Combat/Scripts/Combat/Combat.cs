@@ -86,6 +86,12 @@ public partial class Combat : MonoBehaviour
     [Header("SFX (optional)")]
     [Tooltip("Audio source used for attack sounds. Auto-finds on this object/children if not assigned.")]
     public AudioSource sfxSource;
+    [Tooltip("Lowest random pitch used for attack SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float sfxPitchMin = 0.96f;
+    [Tooltip("Highest random pitch used for attack SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float sfxPitchMax = 1.04f;
     
     // ========================================================================
     // ATTACK DIRECTION SETTINGS
@@ -188,66 +194,41 @@ public partial class Combat : MonoBehaviour
     void LateUpdate()
     {
         UpdateThrowVictimPseudoParent();
-        // // Re-apply baked position one frame after release (no-launch only) so enemy scripts/gravity don't overwrite it
-        // if (_reapplyThrowBakeNextFrame && _reapplyThrowBakeTransform != null)
-        // {
-        //     _reapplyThrowBakeTransform.position = _reapplyThrowBakePosition;  // Restore saved world position
-        //     _reapplyThrowBakeTransform.rotation = _reapplyThrowBakeRotation;  // Restore saved world rotation
-        //     _reapplyThrowBakeNextFrame = false;   // Only re-apply once
-        //     _reapplyThrowBakeTransform = null;    // Clear reference
-        // }
-        // // Deferred throw damage (from OnThrowDamage animation event): apply on exact frame, then clear so release path doesn't double-apply
-        // bool throwDamageAppliedThisFrame = false; // Track so release path can skip applying damage again
-        // if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
-        // {
-        //     ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
-        //     _deferThrowDamageToLateUpdate = false;              // Consume deferred flag
-        //     _deferThrowDamageProfileIndex = -1;                 // Reset profile index
-        //     throwDamageAppliedThisFrame = true;                 // Mark so CompleteThrowRelease doesn't double-apply
-        // }
-        // // Throw release was deferred (from OnThrowRelease or from Update timer) so we run after Animator has applied root motion this frame
-        // if (!_deferThrowReleaseToLateUpdate || currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;  // Skip if not deferred or invalid
-        // _deferThrowReleaseToLateUpdate = false;  // Consume deferred release flag
-        // Transform vt = (currentThrowVictim as Component)?.transform;  // Get victim transform for release
-        // if (vt == null) { currentThrowVictim = null; return; }  // Bail if victim destroyed
-        // ReleaseThrowVictimFromSocket();          // Bake victim, stop pseudo-parent follow, CC/rb, ClearKnockback, reapply
-        // BakePlayerThrowRootMotionAndRestore();   // Save player root motion state and restore pre-throw pose
-        // CompleteThrowRelease(vt, _deferThrowReleaseProfileIndex, throwDamageAppliedThisFrame, applyReleaseEffects: true);  // Apply release forces/effects and cleanup
+        // Re-apply baked position one frame after release (no-launch only) so enemy scripts/gravity don't overwrite it
+        if (_reapplyThrowBakeNextFrame && _reapplyThrowBakeTransform != null)
+        {
+            _reapplyThrowBakeTransform.position = _reapplyThrowBakePosition;  // Restore saved world position
+            _reapplyThrowBakeTransform.rotation = _reapplyThrowBakeRotation;  // Restore saved world rotation
+            _reapplyThrowBakeNextFrame = false;   // Only re-apply once
+            _reapplyThrowBakeTransform = null;    // Clear reference
+        }
+        // Deferred throw damage (from OnThrowDamage animation event): apply on exact frame, then clear so release path doesn't double-apply
+        bool throwDamageAppliedThisFrame = false; // Track so release path can skip applying damage again
+        if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
+        {
+            ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
+            _deferThrowDamageToLateUpdate = false;              // Consume deferred flag
+            _deferThrowDamageProfileIndex = -1;                 // Reset profile index
+            throwDamageAppliedThisFrame = true;                 // Mark so CompleteThrowRelease doesn't double-apply
+        }
+        // Throw release was deferred (from OnThrowRelease or from Update timer) so we run after Animator has applied root motion this frame
+        if (!_deferThrowReleaseToLateUpdate || currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;  // Skip if not deferred or invalid
+        _deferThrowReleaseToLateUpdate = false;  // Consume deferred release flag
+        Transform vt = (currentThrowVictim as Component)?.transform;  // Get victim transform for release
+        if (vt == null) { currentThrowVictim = null; return; }  // Bail if victim destroyed
+        ReleaseThrowVictimFromSocket();          // Bake victim, stop pseudo-parent follow, CC/rb, ClearKnockback, reapply
+        BakePlayerThrowRootMotionAndRestore();   // Save player root motion state and restore pre-throw pose
+        CompleteThrowRelease(vt, _deferThrowReleaseProfileIndex, throwDamageAppliedThisFrame, applyReleaseEffects: true);  // Apply release forces/effects and cleanup
     }
 
     void Update()
     {
-        if (isAttacking && Time.time >= currentAttackEndTime)
-        {
-            // Throw release is triggered exclusively by the OnThrowRelease animation event.
-            // We do not set _deferThrowReleaseToLateUpdate from the timer here; only the animation event does.
-            if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow)
-            {
-                // Release is exclusively from OnThrowRelease animation event (and stun path below); just clear attack state here.
-                if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator))
-                    animator.speed = 1f;
-                isAttacking = false;
-                hitboxPending = false;
-                pendingThrowHitbox = false;
-                currentAttackData = null;
-            }
-        }
-        var damageableForStun = GetComponentInParent<IDamageable>();
-        if (damageableForStun != null && damageableForStun.IsStunned && (isAttacking || hitboxPending))
-        {
-            // Player stunned (e.g. hit during throw): release victim without damage/get-up, then clear state
-            if (currentThrowVictim != null)
-            {
-                Transform vt = (currentThrowVictim as Component)?.transform;
-                BakePlayerThrowRootMotionAndRestore();
-                ReleaseThrowVictimFromSocket();
-                CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: false);
-            }
-            else
-                ClearThrowState();
-            hasAppliedTorsoRotation = false;
-            currentAttackData = null;
-        }
+        // 1) End active attack lock when its timer expires (throws can stay active until their animation events resolve).
+        HandleAttackLockExpiry();
+        // 2) Hard interrupt path: if the player gets stunned during an attack, unwind safely this frame.
+        HandleStunInterruptDuringAttack();
+
+        // 3) Per-frame combat subsystems (timers and delayed actions) run before processing fresh inputs.
         UpdateComboState();
         UpdateAttackTracking();
         UpdateAttackLunge();
@@ -256,7 +237,7 @@ public partial class Combat : MonoBehaviour
         UpdateAttackStartUpSpeed();
         
         // Revert torso rotation after attack window
-        if (hasAppliedTorsoRotation && Time.time >= currentAttackEndTime)
+        if (hasAppliedTorsoRotation && Time.time >= currentAttackEndTime) // Remove temporary attack-facing adjustment once the attack window ends.
         {
             hasAppliedTorsoRotation = false;
         }
@@ -276,22 +257,22 @@ public partial class Combat : MonoBehaviour
             (Gamepad.current != null && Gamepad.current.buttonWest.wasPressedThisFrame);
         
         // Ninja Gaiden style: attacks allowed anytime (soft lock only; no combat-mode gate)
-        bool canAttack = playerController != null;
+        bool canAttack = playerController != null; // Need controller reference so combat input/context is valid.
         var damageable = GetComponentInParent<IDamageable>();
-        if (damageable != null && damageable.IsStunned)
+        if (damageable != null && damageable.IsStunned) // Stunned actors cannot start new attacks.
             canAttack = false;
         
-        if (!canAttack)
+        if (!canAttack) // Early-out from all input handling when attacking is currently disallowed.
         {
-            lightComboCount = 0;
+            lightComboCount = 0; // Drop combo progression when input is blocked (prevents stale combo state on re-enable).
             return;
         }
         
-        if (comboSet == null) return;
+        if (comboSet == null) return; // Cannot execute any move without a configured moveset.
         
         // Throw: dedicated input (G / X button); requires lock-on; blocked if already attacking or on cooldown
         bool canThrow = threatSystem != null && threatSystem.HasSoftTarget;
-        if (throwInput && canThrow && !isAttacking && Time.time >= nextThrowTime && comboSet.throwData.enableThrow)
+        if (throwInput && canThrow && !isAttacking && Time.time >= nextThrowTime && comboSet.throwData.enableThrow) // Throw requires input, lock-on target, idle state, cooldown ready, and throw enabled.
         {
             DoThrow();
             return;
@@ -303,20 +284,64 @@ public partial class Combat : MonoBehaviour
                               (Time.time <= comboWindowEnd);
         
         // Block attacks if in cooldown (UNLESS we're in the cancel window)
-        if (Time.time < nextAttackTime && !inCancelWindow) return;
+        if (Time.time < nextAttackTime && !inCancelWindow) return; // Enforce attack cooldown unless we're inside the jab cancel window.
         
-        DebugSettings debug = DebugSettings.Instance;
+        DebugSettings debug = DebugSettings.Instance; // Color/debug config used by DoLightAttack/DoAttack visual logging.
         
-        if (lightAttackInput)
+        // 4) Input priority: light is evaluated first; heavy is a fallback if light was not pressed this frame.
+        if (lightAttackInput) // Light input commits the light/combo branch for this frame.
         {
             DoLightAttack(debug.lightAttackColor, inCancelWindow);
         }
-        else if (heavyAttackInput)
+        else if (heavyAttackInput) // Heavy only fires when light did not consume this frame's input.
         {
             // Heavy attack resets combo
             lightComboCount = 0;
             DoAttack(comboSet.heavyAttack, debug.heavyAttackColor);
         }
+    }
+
+    /// <summary>
+    /// Ends non-throw attack state when lock duration expires. Throws with an attached victim are released by animation events.
+    /// </summary>
+    void HandleAttackLockExpiry()
+    {
+        if (!isAttacking || Time.time < currentAttackEndTime) return; // Attack lock timer expired; resolve/clear active attack state.
+
+        // Throw release is triggered exclusively by the OnThrowRelease animation event.
+        // We do not set _deferThrowReleaseToLateUpdate from the timer here; only the animation event does.
+        if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) // Only auto-exit when no valid throw hold needs an animation-event release.
+        {
+            // Release is exclusively from OnThrowRelease animation event (and stun path below); just clear attack state here.
+            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator)) // Restore normal animator speed if startup/recovery speed scaling was in use.
+                animator.speed = 1f;
+            isAttacking = false;
+            hitboxPending = false;      // Cancel any delayed normal-attack hitbox.
+            pendingThrowHitbox = false; // Cancel any delayed throw grab hitbox.
+            currentAttackData = null;   // Clear current move context (used by SFX/events/debug).
+        }
+    }
+
+    /// <summary>
+    /// If this character is stunned while attacking, abort the current attack/throw flow and clean up safely.
+    /// </summary>
+    void HandleStunInterruptDuringAttack()
+    {
+        var damageableForStun = GetComponentInParent<IDamageable>();
+        if (damageableForStun == null || !damageableForStun.IsStunned || (!isAttacking && !hitboxPending)) return; // Interrupt combat flow only if stunned mid-attack.
+
+        // Player stunned (e.g. hit during throw): release victim without damage/get-up, then clear state
+        if (currentThrowVictim != null) // If a throw victim is attached, release safely without applying throw end effects.
+        {
+            Transform vt = (currentThrowVictim as Component)?.transform;
+            BakePlayerThrowRootMotionAndRestore();
+            ReleaseThrowVictimFromSocket();
+            CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: false);
+        }
+        else
+            ClearThrowState();
+        hasAppliedTorsoRotation = false;
+        currentAttackData = null;
     }
     
     // ========================================================================
@@ -634,6 +659,9 @@ public partial class Combat : MonoBehaviour
     void PlayAttackSfxClip(AudioClip clip, float volumeScale = 1f)
     {
         if (clip == null || sfxSource == null) return;
+        float minPitch = Mathf.Min(sfxPitchMin, sfxPitchMax);
+        float maxPitch = Mathf.Max(sfxPitchMin, sfxPitchMax);
+        sfxSource.pitch = Random.Range(minPitch, maxPitch);
         sfxSource.PlayOneShot(clip, Mathf.Max(0f, volumeScale));
     }
 

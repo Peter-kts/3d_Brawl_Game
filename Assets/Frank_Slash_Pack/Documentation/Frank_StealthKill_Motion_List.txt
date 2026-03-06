@@ -1,0 +1,120 @@
+Stealth_Kill_Behind	
+
+Frank_Stealth_Kill_Behind_01	3000-3140
+Frank_Stealth_Kill_Behind_02	3340-3540
+Frank_Stealth_Kill_Behind_03	3730-3980
+Frank_Stealth_Kill_Behind_04	4190-4385
+Frank_Stealth_Kill_Behind_05	4480-4570
+Frank_Stealth_Kill_Behind_06	4650-4840
+Frank_Stealth_Kill_Behind_07	5000-5190
+Frank_Stealth_Kill_Behind_08	5300-5440
+	
+	
+Stealth_Kill_Front	
+	
+Frank_Stealth_Kill_Front_01	5500-5680
+Frank_Stealth_Kill_Front_02	5750-5920
+Frank_Stealth_Kill_Front_03	6050-6210
+Frank_Stealth_Kill_Front_04	6300-6450
+Frank_Stealth_Kill_Front_05	2300-
+	
+	
+Stealth_Kill_Top	
+	
+Frank_Stealth_Kill_Top_01	6500-6630
+Frank_Stealth_Kill_AirLoop	6750-6780
+Frank_Stealth_Kill_Top_02	6830-6933
+Frank_Stealth_Kill_Top_03	7000-7130
+	
+Stealth_Kill_Ledge	
+	
+Frank_Stealth_Kill_Ledge_01		7220-7350
+Frank_Stealth_Kill_Ledge_02		7450-7610
+Frank_Stealth_Kill_Ledge_Climb	7670-7785
+	
+	
+	
+	
+	
+Sneak_8way_Move_InPlace	
+	
+Frank_Stealth_Kill_Sneak_Walk_F_InPlace	7900-7950
+Frank_Stealth_Kill_Sneak_Walk_B_InPlace	8000-8050
+Frank_Stealth_Kill_Sneak_Walk_L_InPlace	8100-8140
+Frank_Stealth_Kill_Sneak_Walk_R_InPlace	8200-8240
+Frank_Stealth_Kill_Sneak_Walk_FL_InPlace	8300-8350
+Frank_Stealth_Kill_Sneak_Walk_FR_InPlace	8400-8450
+Frank_Stealth_Kill_Sneak_Walk_BL_InPlace	8500-8550
+Frank_Stealth_Kill_Sneak_Walk_BR_InPlace	8600-8650
+	
+	
+	
+Sneak_8way_Run_InPlace	
+	
+Frank_Stealth_Kill_Sneak_Run_F_InPlace	8800-8834
+Frank_Stealth_Kill_Sneak_Run_B_InPlace	8860-8894
+Frank_Stealth_Kill_Sneak_Run_L_InPlace	8920-8950
+Frank_Stealth_Kill_Sneak_Run_R_InPlace	8980-9010
+Frank_Stealth_Kill_Sneak_Run_FL_InPlace	9040-9074
+Frank_Stealth_Kill_Sneak_Run_FR_InPlace	9100-9134
+Frank_Stealth_Kill_Sneak_Run_BL_InPlace	9170-9204
+Frank_Stealth_Kill_Sneak_Run_BR_InPlace	9240-9274
+		
+
+Sneak_8way_Walk_RootMotion	
+	
+Frank_Stealth_Kill_Sneak_Walk_F_RootMotion	100-150
+Frank_Stealth_Kill_Sneak_Walk_B_RootMotion	200-250
+Frank_Stealth_Kill_Sneak_Walk_L_RootMotion	300-340
+Frank_Stealth_Kill_Sneak_Walk_R_RootMotion	400-440
+Frank_Stealth_Kill_Sneak_Walk_FL_RootMotion	500-550
+Frank_Stealth_Kill_Sneak_Walk_FR_RootMotion	600-650
+Frank_Stealth_Kill_Sneak_Walk_BL_RootMotion	700-750
+Frank_Stealth_Kill_Sneak_Walk_BR_RootMotion	800-850
+	
+	
+	
+Sneak_8way_Run_RootMotion	
+	
+Frank_Stealth_Kill_Sneak_Run_F_RootMotion	1000-1034
+Frank_Stealth_Kill_Sneak_Run_B_RootMotion	1060-1094
+Frank_Stealth_Kill_Sneak_Run_L_RootMotion	1120-1150
+Frank_Stealth_Kill_Sneak_Run_R_RootMotion	1180-1210
+Frank_Stealth_Kill_Sneak_Run_FL_RootMotion	1240-1274
+Frank_Stealth_Kill_Sneak_Run_FR_RootMotion	1300-1334
+Frank_Stealth_Kill_Sneak_Run_BL_RootMotion	1370-1404
+Frank_Stealth_Kill_Sneak_Run_BR_RootMotion	1440-1474
+													
+	
+Hit_Reaction	
+
+Stealth_Kill_Hit_Behind	
+Frank_Stealth_Kill_Hit_Behind_01	3000-3140
+Frank_Stealth_Kill_Hit_Behind_02	3340-3540
+Frank_Stealth_Kill_Hit_Behind_03	3730-3980
+Frank_Stealth_Kill_Hit_Behind_04	4190-4385
+Frank_Stealth_Kill_Hit_Behind_05	4480-4570
+Frank_Stealth_Kill_Hit_Behind_06	4650-4840
+Frank_Stealth_Kill_Hit_Behind_07	5000-5190
+Frank_Stealth_Kill_Hit_Behind_08	5300-5440
+	
+	
+Stealth_Kill_Hit_Front	
+	
+Frank_Stealth_Kill_Hit_Front_01	5500-5680
+Frank_Stealth_Kill_Hit_Front_02	5750-5920
+Frank_Stealth_Kill_Hit_Front_03	6050-6210
+Frank_Stealth_Kill_Hit_Front_04	6300-6450
+	
+	
+	
+Stealth_Kill_Hit_Top	
+	
+Frank_Stealth_Kill_Hit_Top_01		6500-6630
+Frank_Stealth_Kill_Hit_Top_02		6830-6933
+Frank_Stealth_Kill_Hit_Top_03		7000-7130
+	
+Stealth_Kill_Hit_Ledge	
+	
+Frank_Stealth_Kill_Hit_Ledge_01	7220-7350
+Frank_Stealth_Kill_Hit_Ledge_02	7450-7610

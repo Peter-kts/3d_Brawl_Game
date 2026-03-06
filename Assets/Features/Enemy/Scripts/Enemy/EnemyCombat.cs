@@ -115,6 +115,12 @@ public class EnemyCombat : MonoBehaviour
     [Header("SFX (optional)")]
     [Tooltip("Audio source used for attack sounds. Auto-finds on this object/children if not assigned.")]
     public AudioSource sfxSource;
+    [Tooltip("Lowest random pitch used for attack SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float sfxPitchMin = 0.96f;
+    [Tooltip("Highest random pitch used for attack SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float sfxPitchMax = 1.04f;
 
     // ========================================================================
     // PRIVATE STATE
@@ -271,6 +277,9 @@ public class EnemyCombat : MonoBehaviour
     void PlayAttackSfxClip(AudioClip clip, float volumeScale = 1f)
     {
         if (clip == null || sfxSource == null) return;
+        float minPitch = Mathf.Min(sfxPitchMin, sfxPitchMax);
+        float maxPitch = Mathf.Max(sfxPitchMin, sfxPitchMax);
+        sfxSource.pitch = Random.Range(minPitch, maxPitch);
         sfxSource.PlayOneShot(clip, Mathf.Max(0f, volumeScale));
     }
 

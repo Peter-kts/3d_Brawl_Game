@@ -70,9 +70,9 @@ public partial class Combat
     {
         ThrowData t = comboSet.throwData;
         if (!t.enableThrow) return;
-        _currentThrowIsBack = IsBackThrowStickInput();
+        _currentThrowIsBack = IsBackThrowStickInput(); // could use improvement, for other types of throws using different input methods
         currentAttackStartTime = Time.time;
-        nextThrowTime = Time.time + t.throwCooldown;           // Cooldown so we can't immediately throw again
+        nextThrowTime = Time.time + t.throwCooldown;           // Cooldown so we can't immediately throw again (could use improvement, for other types of throws using different cooldown methods)
         currentAttackEndTime = Time.time + t.attemptLockDuration; // Fallback end time; real end set when hitbox connects
         currentAttackStateName = t.grabAttemptAnimationTrigger;
         currentThrowVictim = null;                              // No victim until hitbox connects
@@ -83,6 +83,7 @@ public partial class Combat
         throwHitboxTriggerTime = Time.time + t.hitboxDelay;
         if (animator != null && !string.IsNullOrEmpty(t.grabAttemptAnimationTrigger))
             animator.Play(t.grabAttemptAnimationTrigger, 0, 0f);
+        PlayThrowCues(AttackSfxTriggerType.OnAttackStart, 0);
     }
 
     /// <summary>OverlapSphere at throw hitbox center; returns first IDamageable with EnemyHealth (excluding self).</summary>
@@ -113,6 +114,12 @@ public partial class Combat
         _throwVictimPseudoParentOffset = Vector3.zero;
         _throwVictimPseudoParentActive = true;
         victimTransform.position = grabSocket.position; // Start snapped to socket; follow updates in LateUpdate.
+        Vector3 toPlayer = transform.position - victimTransform.position; // One-time facing snap at throw start.
+        toPlayer.y = 0f;
+        if (toPlayer.sqrMagnitude > 0.0001f)
+            victimTransform.rotation = Quaternion.LookRotation(toPlayer);
+        else
+            victimTransform.rotation = Quaternion.LookRotation(-transform.forward);
     }
 
     void UpdateThrowVictimPseudoParent()
@@ -199,7 +206,7 @@ public partial class Combat
         string thrownState = GetThrownStateName(t, victim);
         victim.StartThrowVictim(t.throwPhaseDuration, thrownState);  // Enemy enters thrown state and plays thrown anim
 
-        // ApplyGrabHitStop(t.grabHitStopDuration, victimTransform);
+        ApplyGrabHitStop(t.grabHitStopDuration, victimTransform);
 
         Vector3 center = CalculateThrowHitboxCenter(t);
         SpawnGrabConnectVfx(t, center);
@@ -207,9 +214,30 @@ public partial class Combat
         currentAttackEndTime = Time.time + t.grabHitStopDuration + t.throwPhaseDuration;
         string playerThrowTrigger = (_currentThrowIsBack && !string.IsNullOrEmpty(t.backThrowAnimationTrigger)) ? t.backThrowAnimationTrigger : t.throwAnimationTrigger;
         StartPlayerThrowAnimation(playerThrowTrigger);
+        PlayThrowCues(AttackSfxTriggerType.OnHitConfirm, 0);
 
         if (threatSystem != null)
             threatSystem.RegisterInteraction((victimDamageable as Component).transform);
+    }
+
+    void PlayThrowCues(AttackSfxTriggerType trigger, int eventId)
+    {
+        if (comboSet == null) return;
+        ThrowData t = comboSet.throwData;
+        if (!t.enableThrow || t.sfxCues == null || t.sfxCues.Count == 0) return;
+        for (int i = 0; i < t.sfxCues.Count; i++)
+        {
+            AttackSfxCue cue = t.sfxCues[i];
+            if (cue == null || cue.trigger != trigger) continue;
+            if (trigger == AttackSfxTriggerType.OnAnimEvent && cue.eventId != eventId) continue;
+
+            AudioClip chosenClip = null;
+            if (cue.clips != null && cue.clips.Length > 0)
+                chosenClip = cue.clips[Random.Range(0, cue.clips.Length)];
+            if (chosenClip == null) continue;
+
+            PlayAttackSfxClip(chosenClip, cue.volume);
+        }
     }
 
     /// <summary>Bake player's Animator root-motion result into transform and restore applyRootMotion. Call when throw ends (from LateUpdate after deferred release).</summary>
@@ -369,6 +397,40 @@ public partial class Combat
         OnThrowVictimRootMotion(0);
     }
 
+    /// <summary>Animation event: toggle player throw root motion (0 = off/restore, non-zero = on).</summary>
+    public void OnThrowPlayerRootMotion(int enabled)
+    {
+        if (animator == null) return;
+
+        bool enable = enabled != 0;
+        if (enable)
+        {
+            if (!_playerThrowRootMotionChanged)
+                _playerThrowRootMotionRestore = animator.applyRootMotion;
+            animator.applyRootMotion = true;
+            _playerThrowRootMotionChanged = true;
+            return;
+        }
+
+        if (_playerThrowRootMotionChanged)
+        {
+            animator.applyRootMotion = _playerThrowRootMotionRestore;
+            _playerThrowRootMotionChanged = false;
+        }
+    }
+
+    /// <summary>Animation event convenience method: turns player throw root motion on.</summary>
+    public void OnThrowPlayerRootMotionOn()
+    {
+        OnThrowPlayerRootMotion(1);
+    }
+
+    /// <summary>Animation event convenience method: turns player throw root motion off/restores original value.</summary>
+    public void OnThrowPlayerRootMotionOff()
+    {
+        OnThrowPlayerRootMotion(0);
+    }
+
     /// <summary>Animation event (no arg): defers full release to LateUpdate with default profile index -1.</summary>
     public void OnThrowRelease()
     {
@@ -391,6 +453,32 @@ public partial class Combat
         if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;
         _deferThrowDamageToLateUpdate = true;
         _deferThrowDamageProfileIndex = profileIndex;
+    }
+
+    /// <summary>Animation event: spawns throw-end VFX at current victim position (or in front of player if victim is missing).</summary>
+    public void OnThrowEndVfxEvent()
+    {
+        if (comboSet == null || !comboSet.throwData.enableThrow) return;
+        ThrowData t = comboSet.throwData;
+        if (t.throwEndVfxPrefab == null) return;
+
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        Vector3 pos = vt != null ? vt.position : (transform.position + transform.forward);
+        Vector3 dir = vt != null ? (vt.position - transform.position) : transform.forward;
+        dir.y = 0f;
+        Quaternion rot = dir.sqrMagnitude > 0.001f ? Quaternion.LookRotation(dir) : transform.rotation;
+        var go = Instantiate(t.throwEndVfxPrefab, pos, rot);
+        PlayVfx(go);
+    }
+
+    public void OnThrowSfxEvent(int eventId)
+    {
+        PlayThrowCues(AttackSfxTriggerType.OnAnimEvent, eventId);
+    }
+
+    public void OnThrowSfxEvent()
+    {
+        OnThrowSfxEvent(0);
     }
 
     /// <summary>Ignore or re-enable collisions between all player colliders and all victim colliders (avoids overlap during throw).</summary>

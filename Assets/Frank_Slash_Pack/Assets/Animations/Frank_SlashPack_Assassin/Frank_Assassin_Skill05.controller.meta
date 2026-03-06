@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c714aef59209bd046a38b9a04881ff01
+timeCreated: 1551612676
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_Assassin/Frank_Assassin_Skill05.controller
+  uploadId: 850118

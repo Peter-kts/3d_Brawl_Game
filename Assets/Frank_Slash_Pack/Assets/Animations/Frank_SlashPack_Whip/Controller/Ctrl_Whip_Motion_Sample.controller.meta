@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a719e47c01630814f87956e234d73b16
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_Whip/Controller/Ctrl_Whip_Motion_Sample.controller
+  uploadId: 850118
