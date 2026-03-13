@@ -71,3 +71,12 @@ InitTestScene*.unity*
 # macOS resource forks (can break sync on other OS)
 ._*
 .DS_Store
+
+# Large 3rd-party asset packs (not fully used)
+/Assets/SRG Studios/
+/Assets/SandalStudio/
+/Assets/Best Of Sound FX 2025/
+/Assets/The_Sound_Guild_FREE_PACK_Footsteps_Volume_02/
+/Assets/bosliderv2/
+/Assets/bsoldiershield/
+/Assets/bsoldierswordf/
