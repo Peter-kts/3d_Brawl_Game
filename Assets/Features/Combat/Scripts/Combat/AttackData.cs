@@ -22,6 +22,12 @@ public enum AttackSfxTriggerType
     OnAnimEvent = 2
 }
 
+public enum AttackHitboxType
+{
+    Unarmed = 0,
+    WeaponStrike = 1
+}
+
 [System.Serializable]
 public class AttackSfxCue
 {
@@ -62,6 +68,9 @@ public class AttackData
     
     [Tooltip("Radius of the attack hitbox")]
     public float hitboxRadius = 0.6f;
+
+    [Tooltip("Choose whether this move uses Combat's unarmed overlap hitbox or WeaponCombat/WeaponTipHitbox.")]
+    public AttackHitboxType hitboxType = AttackHitboxType.Unarmed;
     
     [Header("Timing")]
     [Tooltip("How long the player is locked in place (can't move or turn)")]
@@ -152,6 +161,20 @@ public class AttackData
     public AudioClip hitConnectSfx;
     [Tooltip("Flexible per-move SFX cues (start, hit confirm, and animation-event keyed).")]
     public List<AttackSfxCue> sfxCues = new List<AttackSfxCue>();
+    [Tooltip("Optional dedicated looping charge SFX for this move. If null, Combat-level charge loop settings are used.")]
+    public AudioClip chargeLoopSfx;
+    [Tooltip("Volume scale for this move's charge loop SFX.")]
+    [Range(0f, 1f)]
+    public float chargeLoopSfxVolume = 0.7f;
+    [Tooltip("Pitch for this move's charge loop SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float chargeLoopSfxPitch = 1f;
+
+    [Header("VFX (optional)")]
+    [Tooltip("Optional per-move attack-start VFX. If null, Combat.attackStartVfxPrefab is used.")]
+    public GameObject attackStartVfxPrefab;
+    [Tooltip("Optional per-move hit-connect VFX. If null, Combat.hitConnectVfxPrefab is used.")]
+    public GameObject hitConnectVfxPrefab;
 
     [Header("VFX Offsets (optional)")]
     [Tooltip("World-space position offset for attack-start VFX (e.g. swing trail). Applied per move in ComboSet.")]

@@ -101,6 +101,7 @@
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyHealth.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsProperties.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Containers\ItemWrapper.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\WeaponCombat.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\PlayerState.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Attributes\ItemTypeDescriptorAttribute.cs" />
     <Compile Include="Assets\Archive\TutorialInfo\Scripts\Readme.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Equipment.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCamera.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\WeaponTrail.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsAssets.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\BodypartWrapper.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\Combat.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Assets\StylizedCharacter\Scripts\NHItem.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\OrderType.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\BoneType.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\SwordGrip.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyCombat.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\CharacterStateEnum.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\WeaponTipHitbox.cs" />
@@ -146,6 +149,7 @@
   <ItemGroup>
     <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Whip_Motion_List.txt" />
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library[Standard](1)\Universal Animation Library[Standard]\License.txt" />
+    <None Include="Assets\Features\Combat\Shaders\SwordGlow.shader" />
     <None Include="Assets\SandalStudio\Impact Pack\Shaders\Impart transparency.shader" />
     <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Sword2_Motion_List.txt" />
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\License.txt" />
@@ -1075,6 +1079,10 @@
     <ProjectReference Include="Unity.RenderPipelines.Universal.Runtime.Player.csproj">
       <Project>{444CBE03-735B-B62E-C7EA-4C3E63166BD3}</Project>
       <Name>Unity.RenderPipelines.Universal.Runtime.Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.ProBuilder.Player.csproj">
+      <Project>{FC4A0F81-47FF-F851-9544-F779AB17D698}</Project>
+      <Name>Unity.ProBuilder.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.State.Player.csproj">
       <Project>{7CA2000A-D09A-0880-6A7A-7DDE82F64763}</Project>

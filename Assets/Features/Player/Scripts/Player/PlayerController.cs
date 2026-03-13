@@ -91,6 +91,9 @@ public partial class PlayerController : MonoBehaviour
     [Tooltip("Speed multiplier for diagonal movement (less stable)")]
     [Range(0.5f, 1f)]
     public float diagonalPenalty = 0.7f;
+    [Tooltip("Movement speed multiplier while blocking.")]
+    [Range(0f, 1f)]
+    public float blockMoveMultiplier = 0.3f;
     
     [Header("Combat Mode - Facing")]
     [Tooltip("How fast character rotates toward focus target")]
@@ -118,6 +121,8 @@ public partial class PlayerController : MonoBehaviour
     
     [Tooltip("Reference to combat system")]
     public Combat combat;
+    [Tooltip("Optional explicit weapon combat reference. If assigned, this is used for attack lock checks.")]
+    public WeaponCombat weaponCombat;
     
     [Tooltip("Animator for locomotion animations. Auto-finds on this object or children if not set.")]
     public Animator animator;
@@ -135,9 +140,18 @@ public partial class PlayerController : MonoBehaviour
 
     [Tooltip("Animator parameter name for active blocking pose (bool).")]
     public string blockParameter = "IsBlocking";
+
+    [Tooltip("Animator parameter for local lateral movement (-1 left, +1 right)")]
+    public string moveXParameter = "MoveX";
+
+    [Tooltip("Animator parameter for local forward/back movement (-1 back, +1 forward)")]
+    public string moveZParameter = "MoveZ";
     
     [Tooltip("How quickly the animation speed blends (higher = snappier)")]
     public float animationDamping = 10f;
+
+    [Tooltip("How quickly movement magnitude ramps to full speed (units/sec). Lower = longer walk-to-run startup.")]
+    public float movementRampSpeed = 3f;
 
     // ========================================================================
     // PUBLIC STATE (readable by other systems)
@@ -170,6 +184,7 @@ public partial class PlayerController : MonoBehaviour
 
     private CharacterController cc;
     private PlayerHealth playerHealth;
+    private Camera mainCamera;
     private Vector3 verticalVelocity;           // For ApplyGravity (currently not called from Update)
     private float currentFreeRoamTurnSpeed;    // Ramps up when you start turning (free roam)
     private bool wasInCombatMode;
@@ -179,10 +194,17 @@ public partial class PlayerController : MonoBehaviour
     // Animation: targetAnimSpeed set by movement handlers each frame; currentAnimSpeed smoothed toward it.
     private float currentAnimSpeed;
     private float targetAnimSpeed;
+    private float targetMoveX;
+    private float targetMoveZ;
+    private float currentMoveX;
+    private float currentMoveZ;
+    private float currentMoveMagnitude;
     private bool hasBlockParameter;
+    private bool blockJustPressedThisFrame;
 
     // Step sync: walk cycle timer for stepPushMultiplier / stepSlowMultiplier (free roam and combat).
     private float stepCycleTimer = 0f;
+    private Combat ActiveCombat => weaponCombat != null ? weaponCombat : combat;
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -198,36 +220,59 @@ public partial class PlayerController : MonoBehaviour
     {
         cc = GetComponent<CharacterController>();
         playerHealth = GetComponent<PlayerHealth>();
+        mainCamera = Camera.main;
         if (threatSystem == null) threatSystem = GetComponentInChildren<LockOnSystem>(true);
-        if (combat == null) combat = GetComponent<Combat>();
+        if (weaponCombat == null) weaponCombat = GetComponent<WeaponCombat>();
+        if (combat == null) combat = weaponCombat != null ? weaponCombat : GetComponent<Combat>();
         if (animator == null) animator = FindAnimator(gameObject);
         hasBlockParameter = HasBoolParameter(animator, blockParameter);
     }
 
     void Update()
     {
-        targetAnimSpeed = 0f;  // Movement handlers set it when moving; otherwise stay idle
+        // Reset per-frame targets to idle defaults. Movement handlers below will
+        // override these if the player is actually moving this frame.
+        targetAnimSpeed = 0f;
+        targetMoveX = 0f;
+        targetMoveZ = 0f;
+
+        // Block pose checked every frame regardless of state (Q / Left Shoulder).
         UpdateBlockState();
 
-        if (TryHandleStunnedState()) return;  // Stunned: only update animator, no input/movement
+        // Stunned players skip all input and movement; just keep animator/gravity ticking.
+        if (TryHandleStunnedState()) return;
 
-        UpdateCombatModeState();  // Hold LT/RMB/Shift = IsInCombatMode (strafe + face soft target)
-        HandleLockOnInput();      // R3/Tab = clear lock; LT/RMB = lock on or cycle target
-        TryStartDashFromInput(); // B = dash if off cooldown and not in attack lock
+        // Read held inputs to determine combat mode and lock-on state this frame.
+        UpdateCombatModeState();  // Hold LT/RMB/Shift toggles IsInCombatMode
+        HandleLockOnInput();      // R3/Tab clears lock; LT/RMB sets or cycles soft target
+        TryStartDashFromInput();  // B starts a dash if off cooldown and not attack-locked
 
+        // Dashing overrides normal movement entirely; still ramp magnitude down
+        // so the character decelerates smoothly out of the dash.
         if (IsDashing)
         {
             ApplyDashMovement();
+            UpdateMoveMagnitude();
             UpdateAnimator();
             TrackDashEnd();
             ApplyGravity();
             return;
         }
 
+        // Normal movement: dispatches to HandleFreeRoamMovement or HandleCombatMovement
+        // based on IsInCombatMode. These set targetAnimSpeed, targetMoveX/Z, and call
+        // cc.Move() using the previous frame's currentMoveMagnitude for physical speed.
         if (Time.time >= nextDashTime)
-            HandleMovementByMode();  // Combat strafe or free roam based on IsInCombatMode
+            HandleMovementByMode();
 
+        // Ramp currentMoveMagnitude toward targetAnimSpeed (now set by movement handler).
+        // This drives both the physical cc.Move() speed next frame and the BlendTree
+        // magnitude this frame, keeping animation and movement in sync.
+        UpdateMoveMagnitude();
+
+        // Push smoothed Speed, MoveX, MoveZ, InCombatMode, IsBlocking to the animator.
         UpdateAnimator();
+
         TrackDashEnd();
         ApplyGravity();
     }
@@ -253,7 +298,8 @@ public partial class PlayerController : MonoBehaviour
             threatSystem.ReleaseFocus();
 
         bool ltPressed = (Gamepad.current != null && Gamepad.current.leftTrigger.wasPressedThisFrame) ||
-                         (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame);
+                         (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame) ||
+                         (Keyboard.current != null && Keyboard.current.leftShiftKey.wasPressedThisFrame);
         if (ltPressed && threatSystem != null)
         {
             if (threatSystem.HasSoftTarget)
@@ -271,9 +317,13 @@ public partial class PlayerController : MonoBehaviour
     void UpdateBlockState()
     {
         bool blockHeld = false;
+        bool blockPressedThisFrame = false;
         if (Keyboard.current != null) blockHeld |= Keyboard.current.qKey.isPressed;
+        if (Keyboard.current != null) blockPressedThisFrame |= Keyboard.current.qKey.wasPressedThisFrame;
         if (Gamepad.current != null) blockHeld |= Gamepad.current.buttonSouth.isPressed;
+        if (Gamepad.current != null) blockPressedThisFrame |= Gamepad.current.buttonSouth.wasPressedThisFrame;
         IsBlocking = blockHeld;
+        blockJustPressedThisFrame = blockPressedThisFrame;
     }
 
     /// <summary>Sets IsInCombatMode from LT/RMB/Shift hold. Uses minCombatHoldTime so releasing doesn't exit instantly.</summary>
@@ -299,7 +349,7 @@ public partial class PlayerController : MonoBehaviour
     /// <summary>Instantly face camera forward (XZ). Used when entering combat or similar; not called from Update by default.</summary>
     void SnapFacingToCamera()
     {
-        Camera cam = Camera.main;
+        Camera cam = mainCamera;
         if (cam == null) return;
         Vector3 forward = cam.transform.forward;
         forward.y = 0f;
@@ -324,9 +374,10 @@ public partial class PlayerController : MonoBehaviour
     /// <summary>Camera-relative move; turn to face move direction with ramping turn speed. Blocked during attacks.</summary>
     void HandleFreeRoamMovement()
     {
-        if (combat != null && combat.IsAttacking)
+        if (ActiveCombat != null && ActiveCombat.IsAttacking)
         {
             targetAnimSpeed = 0f;
+            CombatStickInput = Vector2.zero;
             GetStepSyncMultiplier(false);
             return;
         }
@@ -344,7 +395,7 @@ public partial class PlayerController : MonoBehaviour
             return;
         }
 
-        Camera cam = Camera.main;
+        Camera cam = mainCamera;
         if (cam == null) return;
 
         Vector3 camForward = cam.transform.forward;
@@ -370,9 +421,12 @@ public partial class PlayerController : MonoBehaviour
         );
 
         float stepMultiplier = GetStepSyncMultiplier(true);
-        cc.Move(moveDir * freeRoamSpeed * stepMultiplier * input.magnitude * Time.deltaTime);
+        float blockMultiplier = IsBlocking ? blockMoveMultiplier : 1f;
+        cc.Move(moveDir * freeRoamSpeed * stepMultiplier * blockMultiplier * currentMoveMagnitude * Time.deltaTime);
         CombatStickInput = stickInput;
         targetAnimSpeed = input.magnitude;
+        targetMoveX = 0f;
+        targetMoveZ = 1f;
     }
 
     // ========================================================================
@@ -382,15 +436,17 @@ public partial class PlayerController : MonoBehaviour
     /// <summary>With soft target: face target, move camera-relative (strafe) with advance/backstep/sidestep speeds. No target: free roam style.</summary>
     void HandleCombatMovement()
     {
-        if (combat != null && combat.IsAttacking)
+        if (ActiveCombat != null && ActiveCombat.IsAttacking)
         {
             targetAnimSpeed = 0f;
+            CombatStickInput = Vector2.zero;
             GetStepSyncMultiplier(false);
             return;
         }
 
         Vector2 stickInput = GetStickInput();
         CombatStickInput = stickInput;
+        float blockMultiplier = IsBlocking ? blockMoveMultiplier : 1f;
         Vector3 input = new Vector3(stickInput.x, 0f, stickInput.y);
         input = Vector3.ClampMagnitude(input, 1f);
         bool hasTarget = threatSystem != null && threatSystem.HasSoftTarget;
@@ -404,7 +460,7 @@ public partial class PlayerController : MonoBehaviour
             return;
         }
 
-        Camera cam = Camera.main;
+        Camera cam = mainCamera;
         if (cam == null) return;
 
         Vector3 camForward = cam.transform.forward;
@@ -428,6 +484,8 @@ public partial class PlayerController : MonoBehaviour
 
                 // Move in world direction but speed depends on local direction: forward = advance, back = backstep, lateral = sidestep
                 Vector3 localMove = transform.InverseTransformDirection(moveDir);
+                targetMoveX = localMove.x;
+                targetMoveZ = localMove.z;
                 float forward = localMove.z;
                 float lateral = Mathf.Abs(localMove.x);
                 bool isDiagonal = Mathf.Abs(forward) > 0.2f && lateral > 0.2f;
@@ -444,12 +502,12 @@ public partial class PlayerController : MonoBehaviour
                     speed = forward >= 0f ? advanceSpeed : backstepSpeed;
 
                 float stepMultiplier = GetStepSyncMultiplier(true);
-                cc.Move(moveDir * speed * stepMultiplier * input.magnitude * Time.deltaTime);
+                cc.Move(moveDir * speed * stepMultiplier * blockMultiplier * currentMoveMagnitude * Time.deltaTime);
             }
             else
             {
                 float stepMultiplier = GetStepSyncMultiplier(true);
-                cc.Move(moveDir * sidestepSpeed * stepMultiplier * input.magnitude * Time.deltaTime);
+                cc.Move(moveDir * sidestepSpeed * stepMultiplier * blockMultiplier * currentMoveMagnitude * Time.deltaTime);
             }
         }
         else
@@ -462,7 +520,9 @@ public partial class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(
                 transform.rotation, targetRot, currentFreeRoamTurnSpeed * Time.deltaTime);
             float stepMultiplier = GetStepSyncMultiplier(true);
-            cc.Move(moveDir * freeRoamSpeed * stepMultiplier * input.magnitude * Time.deltaTime);
+            cc.Move(moveDir * freeRoamSpeed * stepMultiplier * blockMultiplier * currentMoveMagnitude * Time.deltaTime);
+            targetMoveX = 0f;
+            targetMoveZ = 1f;
         }
 
         targetAnimSpeed = input.magnitude;
@@ -471,7 +531,7 @@ public partial class PlayerController : MonoBehaviour
     /// <summary>When idle in combat with a soft target: softly rotate toward threat if it's in focus cone (camera forward). Capped by autoFaceAngleLimit.</summary>
     void HandleCombatFacing()
     {
-        if (combat != null && combat.IsAttacking) return;
+        if (ActiveCombat != null && ActiveCombat.IsAttacking) return;
         if (threatSystem == null || !threatSystem.HasSoftTarget) return;
 
         float coneAngle = threatSystem.focusConeAngle;
@@ -482,7 +542,7 @@ public partial class PlayerController : MonoBehaviour
         toThreat.Normalize();
 
         Vector3 forward = transform.forward;
-        Camera cam = Camera.main;
+        Camera cam = mainCamera;
         if (cam != null) forward = cam.transform.forward;
         forward.y = 0f;
         if (forward.sqrMagnitude < 0.001f) return;
@@ -554,6 +614,17 @@ public partial class PlayerController : MonoBehaviour
     }
 
     // ========================================================================
+    // MOVEMENT MAGNITUDE RAMP
+    // ========================================================================
+
+    /// <summary>Ramps currentMoveMagnitude toward targetAnimSpeed at movementRampSpeed. Called before movement so both cc.Move() and animator use the same frame-accurate value.</summary>
+    void UpdateMoveMagnitude()
+    {
+        currentMoveMagnitude = Mathf.MoveTowards(
+            currentMoveMagnitude, targetAnimSpeed, movementRampSpeed * Time.deltaTime);
+    }
+
+    // ========================================================================
     // ANIMATION
     // ========================================================================
 
@@ -561,14 +632,16 @@ public partial class PlayerController : MonoBehaviour
     void UpdateAnimator()
     {
         if (animator == null) return;
-        currentAnimSpeed = Mathf.Lerp(
-            currentAnimSpeed,
-            targetAnimSpeed,
-            1f - Mathf.Exp(-animationDamping * Time.deltaTime)
-        );
+        float blendAlpha = 1f - Mathf.Exp(-animationDamping * Time.deltaTime);
+        currentAnimSpeed = Mathf.Lerp(currentAnimSpeed, targetAnimSpeed, blendAlpha);
         if (currentAnimSpeed < 0.001f && targetAnimSpeed == 0f)
             currentAnimSpeed = 0f;
-        animator.SetFloat(speedParameter, currentAnimSpeed);
+        currentMoveX = Mathf.Lerp(currentMoveX, targetMoveX, blendAlpha);
+        currentMoveZ = Mathf.Lerp(currentMoveZ, targetMoveZ, blendAlpha);
+        bool forceBlockEntryFrame = IsBlocking && blockJustPressedThisFrame;
+        animator.SetFloat(speedParameter, forceBlockEntryFrame ? 0f : currentAnimSpeed);
+        animator.SetFloat(moveXParameter, forceBlockEntryFrame ? 0f : (currentMoveX * currentMoveMagnitude));
+        animator.SetFloat(moveZParameter, forceBlockEntryFrame ? 0f : (currentMoveZ * currentMoveMagnitude));
         animator.SetBool(combatModeParameter, IsInCombatMode);
         if (hasBlockParameter)
             animator.SetBool(blockParameter, IsBlocking);

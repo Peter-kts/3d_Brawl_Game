@@ -7,7 +7,26 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ComboSet", menuName = "Combat/Combo Set", order = 0)]
 public class ComboSet : ScriptableObject
 {
-    [Header("Forward Jab 1 (Hold Forward + Attack)")]
+    [Header("Forward Jab 1 (Normal / Tap)")]
+    public AttackData forwardJabNormal = new AttackData
+    {
+        range = 1.6f,
+        damage = 8,
+        hitboxRadius = 0.6f,
+        lockDuration = 0.3f,
+        cooldown = 0.15f,
+        knockback = 3f,
+        knockbackUp = 0f,
+        hitstun = 0.12f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "Punch",
+        lungeFrame = 0.2f,
+        lungeDistance = 0.35f,
+        lungeDuration = 0.08f
+    };
+
+    [Header("Forward Jab 1 (Charged / Hold)")]
     public AttackData forwardJab = new AttackData
     {
         range = 1.6f,
@@ -26,7 +45,26 @@ public class ComboSet : ScriptableObject
         lungeDuration = 0.1f
     };
 
-    [Header("Forward Jab 2 (Combo)")]
+    [Header("Forward Jab 2 (Normal / Tap)")]
+    public AttackData forwardJab2Normal = new AttackData
+    {
+        range = 1.6f,
+        damage = 10,
+        hitboxRadius = 0.6f,
+        lockDuration = 0.4f,
+        cooldown = 0.3f,
+        knockback = 4f,
+        knockbackUp = 0f,
+        hitstun = 0.16f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "Punch",
+        lungeFrame = 0.2f,
+        lungeDistance = 0.35f,
+        lungeDuration = 0.08f
+    };
+
+    [Header("Forward Jab 2 (Charged / Hold)")]
     public AttackData forwardJab2 = new AttackData
     {
         range = 1.6f,
@@ -45,7 +83,26 @@ public class ComboSet : ScriptableObject
         lungeDuration = 0.1f
     };
 
-    [Header("Neutral Jab 1 (No Direction + Attack)")]
+    [Header("Neutral Jab 1 (Normal / Tap)")]
+    public AttackData neutralJabNormal = new AttackData
+    {
+        range = 1.6f,
+        damage = 7,
+        hitboxRadius = 0.6f,
+        lockDuration = 0.28f,
+        cooldown = 0.12f,
+        knockback = 2.5f,
+        knockbackUp = 0f,
+        hitstun = 0.1f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "Punch",
+        lungeFrame = 0f,
+        lungeDistance = 0f,
+        lungeDuration = 0f
+    };
+
+    [Header("Neutral Jab 1 (Charged / Hold)")]
     public AttackData neutralJab = new AttackData
     {
         range = 1.6f,
@@ -64,7 +121,26 @@ public class ComboSet : ScriptableObject
         lungeDuration = 0f
     };
 
-    [Header("Neutral Jab 2 (Combo)")]
+    [Header("Neutral Jab 2 (Normal / Tap)")]
+    public AttackData neutralJab2Normal = new AttackData
+    {
+        range = 1.6f,
+        damage = 9,
+        hitboxRadius = 0.6f,
+        lockDuration = 0.36f,
+        cooldown = 0.24f,
+        knockback = 4f,
+        knockbackUp = 0f,
+        hitstun = 0.14f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "Punch",
+        lungeFrame = 0f,
+        lungeDistance = 0f,
+        lungeDuration = 0f
+    };
+
+    [Header("Neutral Jab 2 (Charged / Hold)")]
     public AttackData neutralJab2 = new AttackData
     {
         range = 1.6f,
@@ -100,6 +176,25 @@ public class ComboSet : ScriptableObject
         lungeFrame = 0.15f,
         lungeDistance = 0.8f,
         lungeDuration = 0.15f
+    };
+
+    [Header("RB + X Attack")]
+    public AttackData rbXAttack = new AttackData
+    {
+        range = 1.9f,
+        damage = 18,
+        hitboxRadius = 0.6f,
+        lockDuration = 0.65f,
+        cooldown = 0.55f,
+        knockback = 8f,
+        knockbackUp = 1f,
+        hitstun = 0.3f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "HeavyPunch",
+        lungeFrame = 0.15f,
+        lungeDistance = 0.7f,
+        lungeDuration = 0.12f
     };
 
     [Header("Combo Settings")]

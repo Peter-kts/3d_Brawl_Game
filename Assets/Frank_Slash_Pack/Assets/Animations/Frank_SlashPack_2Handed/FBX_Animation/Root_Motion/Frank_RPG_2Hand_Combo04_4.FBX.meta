@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: 508dd127bc6067840a4f47046ef4bd88
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_2Handed/FBX_Animation/Root_Motion/Frank_RPG_2Hand_Combo04_4.FBX
+  uploadId: 850118
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24200
   internalIDToNameTable:
   - first:
       1: 100000
@@ -566,17 +573,73 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: OnAttackSfxEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 0.041013267
+        functionName: OnChargeWindowStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.18344353
+        functionName: OnChargeWindowEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.19194828
+        functionName: SetGrip
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: cabc44865b740412e8d24893f1658a6c, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.19727725
+        functionName: OnAttackSfxEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
+      - time: 0.28810096
+        functionName: BeginWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.61005604
+        functionName: EndWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.84401906
+        functionName: SetGrip
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: cabc44865b740412e8d24893f1658a6c, type: 3}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -607,6 +670,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -1381,8 +1447,7 @@ ModelImporter:
     - name: Bone012
       parentName: Bone011
       position: {x: -0.28616843, y: -0.0000009155273, z: 0.000000019073486}
-      rotation: {x: -2.3283067e-10, y: -0.0000000063027983, z: -0.0000000018626451,
-        w: 1}
+      rotation: {x: -2.3283067e-10, y: -0.0000000063027983, z: -0.0000000018626451, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Bone001
       parentName: spine_03
@@ -1486,8 +1551,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 15e3ec89c42b1f04f8544df9d308efe3,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: d5a8a00f19b083d4eb97a219dedb6042, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
@@ -1499,10 +1563,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 141184
-  packageName: Frank Slash Pack - 10 Assets
-  packageVersion: 3.8
-  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_2Handed/FBX_Animation/Root_Motion/Frank_RPG_2Hand_Combo04_4.FBX
-  uploadId: 850118

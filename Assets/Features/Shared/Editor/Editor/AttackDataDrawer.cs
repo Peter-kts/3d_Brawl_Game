@@ -89,6 +89,7 @@ public class AttackDataDrawer : PropertyDrawer
                     // Ungrouped fields
                     foreach (string path in group.relativePaths)
                     {
+                        if (ShouldHideField(property, path)) continue;
                         SerializedProperty child = property.serializedObject.FindProperty(path);
                         if (child != null)
                             EditorGUILayout.PropertyField(child, true);
@@ -96,6 +97,9 @@ public class AttackDataDrawer : PropertyDrawer
                 }
                 else
                 {
+                    if (!GroupHasVisibleChildren(property, group))
+                        continue;
+
                     string stateKey = property.propertyPath + "_" + group.header;
                     if (!foldoutStates.ContainsKey(stateKey))
                         foldoutStates[stateKey] = true;
@@ -147,10 +151,39 @@ public class AttackDataDrawer : PropertyDrawer
     {
         foreach (string path in group.relativePaths)
         {
+            if (ShouldHideField(property, path)) continue;
             SerializedProperty child = property.serializedObject.FindProperty(path);
             if (child != null)
                 EditorGUILayout.PropertyField(child, true);
         }
+    }
+
+    private bool GroupHasVisibleChildren(SerializedProperty property, ChildGroup group)
+    {
+        for (int i = 0; i < group.relativePaths.Count; i++)
+        {
+            if (!ShouldHideField(property, group.relativePaths[i]))
+                return true;
+        }
+        return false;
+    }
+
+    private bool ShouldHideField(SerializedProperty attackDataProperty, string absolutePath)
+    {
+        SerializedProperty hitboxTypeProp = attackDataProperty.FindPropertyRelative("hitboxType");
+        if (hitboxTypeProp == null) return false;
+        if (hitboxTypeProp.enumValueIndex != (int)AttackHitboxType.WeaponStrike) return false;
+
+        string fieldName = absolutePath;
+        int dot = absolutePath.LastIndexOf('.');
+        if (dot >= 0 && dot < absolutePath.Length - 1)
+            fieldName = absolutePath.Substring(dot + 1);
+
+        // Hidden when move type is WeaponStrike (unarmed, timed overlap-sphere hitbox fields).
+        return fieldName == "range"
+            || fieldName == "hitboxRadius"
+            || fieldName == "hitboxOffset"
+            || fieldName == "hitboxDelay";
     }
 
     // ------------------------------------------------------------------

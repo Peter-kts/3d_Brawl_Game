@@ -68,6 +68,36 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [Range(0f, 1f)]
     public float crashRelaunchKnockbackYScale = 0.25f;
 
+    [Header("Hurt SFX (optional)")]
+    [Tooltip("Audio source used for hurt sounds. Auto-finds on this object/children if not assigned.")]
+    public AudioSource hurtSfxSource;
+    [Tooltip("Hurt voice clips. If multiple are assigned, one is chosen at random (never the same twice in a row).")]
+    public AudioClip[] hurtSfxClips;
+    [Tooltip("Lowest random pitch used for hurt SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float hurtSfxPitchMin = 0.96f;
+    [Tooltip("Highest random pitch used for hurt SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float hurtSfxPitchMax = 1.04f;
+    [Tooltip("Volume scale for hurt SFX.")]
+    [Range(0f, 1f)]
+    public float hurtSfxVolume = 1f;
+
+    [Header("Death SFX (optional)")]
+    [Tooltip("Audio source used for death sounds. Auto-finds on this object/children if not assigned.")]
+    public AudioSource deathSfxSource;
+    [Tooltip("Death voice clips. If multiple are assigned, one is chosen at random (never the same twice in a row).")]
+    public AudioClip[] deathSfxClips;
+    [Tooltip("Lowest random pitch used for death SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float deathSfxPitchMin = 0.96f;
+    [Tooltip("Highest random pitch used for death SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float deathSfxPitchMax = 1.04f;
+    [Tooltip("Volume scale for death SFX.")]
+    [Range(0f, 1f)]
+    public float deathSfxVolume = 1f;
+
     // ========================================================================
     // PRIVATE STATE
     // ========================================================================
@@ -87,6 +117,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private float throwVictimUntil;       // Time.time while enemy is in throw-victim phase
     private bool crashHitAlreadyUsed;    // True after taking the one allowed hit while in crash
     private float airborneSpeedMultiplier = 1f;  // 1.4f during crash-relaunch airborne so animation and timers match
+    private int lastHurtSfxIndex = -1;   // So we don't play the same hurt clip twice in a row
+    private int lastDeathSfxIndex = -1;  // So we don't play the same death clip twice in a row
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -106,6 +138,11 @@ public class EnemyHealth : MonoBehaviour, IDamageable
          */
         cc = GetComponent<CharacterController>();
         enemyAI = GetComponent<SimpleEnemyAI>();
+        if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>();
+        if (hurtSfxSource == null) hurtSfxSource = GetComponentInChildren<AudioSource>();
+        if (deathSfxSource == null) deathSfxSource = hurtSfxSource;
+        if (deathSfxSource == null) deathSfxSource = GetComponent<AudioSource>();
+        if (deathSfxSource == null) deathSfxSource = GetComponentInChildren<AudioSource>();
     }
 
     void Update()
@@ -262,6 +299,48 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
     }
 
+    void PlayHurtSfx()
+    {
+        if (hurtSfxSource == null || hurtSfxClips == null || hurtSfxClips.Length == 0) return;
+
+        int chosenIndex = 0;
+        if (hurtSfxClips.Length >= 2)
+        {
+            do { chosenIndex = Random.Range(0, hurtSfxClips.Length); }
+            while (chosenIndex == lastHurtSfxIndex);
+        }
+        lastHurtSfxIndex = chosenIndex;
+
+        AudioClip clip = hurtSfxClips[chosenIndex];
+        if (clip == null) return;
+
+        float minPitch = Mathf.Min(hurtSfxPitchMin, hurtSfxPitchMax);
+        float maxPitch = Mathf.Max(hurtSfxPitchMin, hurtSfxPitchMax);
+        hurtSfxSource.pitch = Random.Range(minPitch, maxPitch);
+        hurtSfxSource.PlayOneShot(clip, Mathf.Max(0f, hurtSfxVolume));
+    }
+
+    void PlayDeathSfx()
+    {
+        if (deathSfxSource == null || deathSfxClips == null || deathSfxClips.Length == 0) return;
+
+        int chosenIndex = 0;
+        if (deathSfxClips.Length >= 2)
+        {
+            do { chosenIndex = Random.Range(0, deathSfxClips.Length); }
+            while (chosenIndex == lastDeathSfxIndex);
+        }
+        lastDeathSfxIndex = chosenIndex;
+
+        AudioClip clip = deathSfxClips[chosenIndex];
+        if (clip == null) return;
+
+        float minPitch = Mathf.Min(deathSfxPitchMin, deathSfxPitchMax);
+        float maxPitch = Mathf.Max(deathSfxPitchMin, deathSfxPitchMax);
+        deathSfxSource.pitch = Random.Range(minPitch, maxPitch);
+        deathSfxSource.PlayOneShot(clip, Mathf.Max(0f, deathSfxVolume));
+    }
+
     // ========================================================================
     // PUBLIC INTERFACE
     // ========================================================================
@@ -368,9 +447,6 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         AttackHeight height = AttackHeight.Mid
     )
     {
-        // #region agent log
-        try { var tn = (gameObject?.name ?? "").Replace("\\", "\\\\").Replace("\"", "\\\""); System.IO.File.AppendAllText(@"c:\Users\peter\3dbrawlerlearn\3dbrawlerlearn\.cursor\debug.log", "{\"location\":\"EnemyHealth.cs:TakeHit\",\"message\":\"TakeHit\",\"data\":{\"target\":\"" + tn + "\"},\"timestamp\":" + (long)(UnityEngine.Time.realtimeSinceStartup * 1000) + ",\"hypothesisId\":\"H1\"}\n"); } catch { }
-        // #endregion
         // Ignore hits if already dying (death animation playing)
         if (isDying) return;
 
@@ -392,8 +468,11 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         // --------------------------------------------------------------------
         // STEP 1: Apply damage
         // --------------------------------------------------------------------
+        int hpBeforeDamage = hp;
         hp -= damage;
         ScreenShake.RequestShake();
+        if (hp < hpBeforeDamage)
+            PlayHurtSfx();
 
         // When grounded (on floor after crash): take damage only — no knockback, airborne, hitstop, stun, or hit animation
         if (inGrounded)
@@ -401,6 +480,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             if (hp <= 0)
             {
                 isDying = true;
+                PlayDeathSfx();
                 if (enemyAI != null)
                     enemyAI.TriggerDeathAnimation();
                 else
@@ -471,6 +551,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (hp <= 0)
         {
             isDying = true;
+            PlayDeathSfx();
             /*
              * If killed by an airborne attack, the airborne animation (liftoff/loop/crash)
              * is used as the death — don't play a separate death animation. SimpleEnemyAI

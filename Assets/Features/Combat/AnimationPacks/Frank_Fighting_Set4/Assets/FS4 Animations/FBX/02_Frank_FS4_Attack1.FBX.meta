@@ -83,7 +83,7 @@ ModelImporter:
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+      additiveReferencePoseFrame: 2300
     - serializedVersion: 16
       name: Frank_FS4_Attack_Punch_L_01
       takeName: Take 001
@@ -282,7 +282,28 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: BeginWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.19202898
+        functionName: BeginWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.43209273
+        functionName: EndWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -959,7 +980,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.24546641
+        functionName: BeginHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
+      - time: 0.35714552
+        functionName: EndHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -1017,7 +1052,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.2607275
+        functionName: BeginHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
+      - time: 0.6601485
+        functionName: EndHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

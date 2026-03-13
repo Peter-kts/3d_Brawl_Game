@@ -1,0 +1,560 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0b68b0d588693940977e42760e9263c, type: 3}
+  m_Name: Player2handComboSet
+  m_EditorClassIdentifier: Assembly-CSharp::ComboSet
+  forwardJabNormal:
+    range: 1.6
+    damage: 8
+    heaviness: 1
+    height: 1
+    hitboxRadius: 0.6
+    hitboxType: 1
+    lockDuration: 0.7
+    cooldown: 0.8
+    comboWindowDelay: 0.7
+    comboWindowDuration: 0.6
+    knockback: 3
+    knockbackUp: 0
+    hitstun: 0.5
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: light f 1
+    startUpLength: 0.05
+    startUpSpeed: 0.2
+    recoveryLength: 0.1
+    recoverySpeed: 0.4
+    lungeFrame: 0.2
+    lungeDistance: 0.35
+    lungeDuration: 0.08
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 1
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: 317636aa8abbd32409039ccb5e45c4fe, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: af16b118870f1034285193208a073cd7, type: 3}
+    sfxCues: []
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  forwardJab:
+    range: 1.6
+    damage: 50
+    heaviness: 2
+    height: 2
+    hitboxRadius: 0.5
+    hitboxType: 1
+    lockDuration: 1.5
+    cooldown: 1.5
+    comboWindowDelay: 1.5
+    comboWindowDuration: 0.5
+    knockback: 120
+    knockbackUp: 50
+    hitstun: 0.3
+    makesAirborne: 1
+    airborneDuration: 0.2
+    animationTrigger: Punch-F1
+    startUpLength: 0
+    startUpSpeed: 1
+    recoveryLength: 0.3
+    recoverySpeed: 0.3
+    lungeFrame: 0.19
+    lungeDistance: 2
+    lungeDuration: 2
+    hitboxOffset: {x: 0, y: 1.6, z: -0.2}
+    hitboxDelay: 0.2
+    hitStopDuration: 0.12
+    trackingDuration: 1
+    trackingSpeed: 720
+    attackStartSfx: {fileID: 8300000, guid: a50e57fbf47efd442b3fb83cc9ed2b4d, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: 2ee71cfc2c8d7334abb8ad72203c0068, type: 3}
+    sfxCues:
+    - trigger: 2
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 7c281791d060b4f47bea3d13dcb63f49, type: 3}
+      volume: 1.385
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 5221624446088252456, guid: c5bc3324b9ff3364c9484f45a4dcf49f, type: 3}
+    hitConnectVfxPrefab: {fileID: 3894621978031112059, guid: 594dbf2e6d47af1448c23c5bc4b3df45, type: 3}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  forwardJab2Normal:
+    range: 1.6
+    damage: 10
+    heaviness: 1
+    height: 1
+    hitboxRadius: 0.6
+    hitboxType: 1
+    lockDuration: 1
+    cooldown: 1
+    comboWindowDelay: 1
+    comboWindowDuration: 0.5
+    knockback: 4
+    knockbackUp: 0
+    hitstun: 1
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: light f 2
+    startUpLength: 0.15
+    startUpSpeed: 0.4
+    recoveryLength: 0.1
+    recoverySpeed: 1
+    lungeFrame: 0.3
+    lungeDistance: 4
+    lungeDuration: 0.08
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 1
+    trackingSpeed: 800
+    attackStartSfx: {fileID: 0}
+    hitConnectSfx: {fileID: 0}
+    sfxCues: []
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  forwardJab2:
+    range: 1.9
+    damage: 100
+    heaviness: 2
+    height: 1
+    hitboxRadius: 0.61
+    hitboxType: 1
+    lockDuration: 1.5
+    cooldown: 1.5
+    comboWindowDelay: 0.8
+    comboWindowDuration: 0.2
+    knockback: 0
+    knockbackUp: 100
+    hitstun: 1
+    makesAirborne: 1
+    airborneDuration: 1
+    animationTrigger: Punch-F2
+    startUpLength: 0
+    startUpSpeed: 1
+    recoveryLength: 0
+    recoverySpeed: 1
+    lungeFrame: 0
+    lungeDistance: 0
+    lungeDuration: 0
+    hitboxOffset: {x: 0, y: 1, z: 0.25}
+    hitboxDelay: 0.25
+    hitStopDuration: 0.13
+    trackingDuration: 1
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: 9bc4752809a964c638a57e39ccd0bf87, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: 7a38ed17a6e534de08ca8e099cd5a20e, type: 3}
+    sfxCues:
+    - trigger: 2
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 9bc4752809a964c638a57e39ccd0bf87, type: 3}
+      volume: 1.017
+    - trigger: 0
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 1313e422a90c65548ab3b02f9a3d5bb0, type: 3}
+      volume: 1.362
+    - trigger: 1
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 0b9e0ebd0ef9e41e792ce60a9b1543a5, type: 3}
+      volume: 1.017
+    - trigger: 2
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: b8e8c15d333c04274ae72dfe79bd5165, type: 3}
+      volume: 1.017
+    - trigger: 2
+      eventId: 3
+      clips:
+      - {fileID: 8300000, guid: 3fe936ab1a02ed345913175dccc54886, type: 3}
+      volume: 1.017
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 2809687766860551836, guid: d632561de57d9f24194eff48e0dc8687, type: 3}
+    hitConnectVfxPrefab: {fileID: 5529381066828500132, guid: d5154ec4507152843b0af4bb32531e61, type: 3}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.7, y: 0, z: -0.5}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  neutralJabNormal:
+    range: 1.6
+    damage: 1
+    heaviness: 1
+    height: 1
+    hitboxRadius: 0.6
+    hitboxType: 1
+    lockDuration: 0.28
+    cooldown: 0.25
+    comboWindowDelay: 0.2
+    comboWindowDuration: 0.2
+    knockback: 2.5
+    knockbackUp: 0
+    hitstun: 0.5
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-F1a
+    startUpLength: 0.05
+    startUpSpeed: 0.2
+    recoveryLength: 0.1
+    recoverySpeed: 0.2
+    lungeFrame: 0
+    lungeDistance: 0
+    lungeDuration: 0
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 1
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: 317636aa8abbd32409039ccb5e45c4fe, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: a0ac722d1ccc58546afbfd0be4feedad, type: 3}
+    sfxCues: []
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  neutralJab:
+    range: 1.2
+    damage: 1
+    heaviness: 2
+    height: 2
+    hitboxRadius: 0.5
+    hitboxType: 1
+    lockDuration: 2
+    cooldown: 2
+    comboWindowDelay: 1
+    comboWindowDuration: 1
+    knockback: 2
+    knockbackUp: 0
+    hitstun: 1.5
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-N1
+    startUpLength: 0.1
+    startUpSpeed: 0.6
+    recoveryLength: 0.5
+    recoverySpeed: 0.4
+    lungeFrame: 0
+    lungeDistance: 0
+    lungeDuration: 0
+    hitboxOffset: {x: 0, y: 1.6, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0.12
+    trackingDuration: 0.5
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: ccaaa7f731ce6f2458218cd91a4878b3, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+    sfxCues:
+    - trigger: 2
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 31fa302b5536e994db68a846119a2608, type: 3}
+      volume: 1.05
+    - trigger: 1
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+      volume: 1.05
+    - trigger: 2
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: ccaaa7f731ce6f2458218cd91a4878b3, type: 3}
+      volume: 1.05
+    chargeLoopSfx: {fileID: 8300000, guid: 2ea32cc16f03dd14a9394fcaeda79b54, type: 3}
+    chargeLoopSfxVolume: 1
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 5112054213284246415, guid: 5de378093d01f1748a644c9832d30c89, type: 3}
+    hitConnectVfxPrefab: {fileID: 8334927371036216463, guid: 2a86ceee278190842bf04b086ec332ba, type: 3}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.2, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  neutralJab2Normal:
+    range: 1.6
+    damage: 9
+    heaviness: 1
+    height: 1
+    hitboxRadius: 0.6
+    hitboxType: 0
+    lockDuration: 0.36
+    cooldown: 0.24
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 4
+    knockbackUp: 0
+    hitstun: 0.14
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch
+    startUpLength: 0
+    startUpSpeed: 1
+    recoveryLength: 0
+    recoverySpeed: 1
+    lungeFrame: 0
+    lungeDistance: 0
+    lungeDuration: 0
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 0
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 0}
+    hitConnectSfx: {fileID: 0}
+    sfxCues: []
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  neutralJab2:
+    range: 1.55
+    damage: 2
+    heaviness: 2
+    height: 2
+    hitboxRadius: 0.7
+    hitboxType: 1
+    lockDuration: 1.4
+    cooldown: 1.4
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 25
+    knockbackUp: 0
+    hitstun: 0.8
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-N2
+    startUpLength: 0.04
+    startUpSpeed: 0.4
+    recoveryLength: 0.5
+    recoverySpeed: 0.5
+    lungeFrame: 0.2
+    lungeDistance: 0
+    lungeDuration: 0
+    hitboxOffset: {x: 0, y: -0.1, z: 0}
+    hitboxDelay: 0.01
+    hitStopDuration: 0.25
+    trackingDuration: 1
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: 31fa302b5536e994db68a846119a2608, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+    sfxCues:
+    - trigger: 2
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: d8277303efbd0b748b11713a737fefdb, type: 3}
+      volume: 1.07
+    - trigger: 2
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: a662ca1fe7aad5e4f912f48ba2604837, type: 3}
+      volume: 1.07
+    - trigger: 1
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+      - {fileID: 8300000, guid: 90af736081ce501468a39a417cdce156, type: 3}
+      volume: 1.07
+    chargeLoopSfx: {fileID: 8300000, guid: 2ea32cc16f03dd14a9394fcaeda79b54, type: 3}
+    chargeLoopSfxVolume: 1
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.25, y: -0.1, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
+  heavyAttack:
+    range: 1
+    damage: 22
+    heaviness: 2
+    height: 2
+    hitboxRadius: 0.7
+    hitboxType: 1
+    lockDuration: 1.7
+    cooldown: 1.7
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 100
+    knockbackUp: 20
+    hitstun: 1
+    makesAirborne: 1
+    airborneDuration: 0.3
+    animationTrigger: HeavyPunch
+    startUpLength: 0.26
+    startUpSpeed: 0.5
+    recoveryLength: 0.5
+    recoverySpeed: 0.4
+    lungeFrame: 0
+    lungeDistance: 1
+    lungeDuration: 1
+    hitboxOffset: {x: 0, y: 1.5, z: 0.35}
+    hitboxDelay: 0.66
+    hitStopDuration: 0.2
+    trackingDuration: 0.5
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: ad055803fd70e8347bda3853470991cb, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: 8c3322c07898a4e52a65c9df8865ad2b, type: 3}
+    sfxCues:
+    - trigger: 0
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 1f184c663fa88634eb079e7f8f85915f, type: 3}
+      volume: 0.59
+    - trigger: 1
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 6e14d039cc2ba204daca02cfa82f0d43, type: 3}
+      volume: 1.043
+    - trigger: 2
+      eventId: 3
+      clips:
+      - {fileID: 8300000, guid: aeea261616911a846bc7531466cd7585, type: 3}
+      volume: 0.8
+    - trigger: 2
+      eventId: 2
+      clips:
+      - {fileID: 8300000, guid: 2c02ce4b2b178ad44929891f8f32e0c2, type: 3}
+      - {fileID: 8300000, guid: cd1483bcc9d53d04584535b060f64c10, type: 3}
+      volume: 2
+    - trigger: 2
+      eventId: 4
+      clips: []
+      volume: 1.022
+    chargeLoopSfx: {fileID: 8300000, guid: 2ea32cc16f03dd14a9394fcaeda79b54, type: 3}
+    chargeLoopSfxVolume: 1
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 5221624446088252456, guid: c5bc3324b9ff3364c9484f45a4dcf49f, type: 3}
+    hitConnectVfxPrefab: {fileID: 1460392947683876891, guid: 068c15477f50ef44fb758bbb7d08b9c1, type: 3}
+    attackStartVfxPositionOffset: {x: 0, y: -1.2, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  rbXAttack:
+    range: 1.9
+    damage: 18
+    heaviness: 2
+    height: 1
+    hitboxRadius: 0.6
+    hitboxType: 1
+    lockDuration: 0.65
+    cooldown: 0.55
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 8
+    knockbackUp: 1
+    hitstun: 0.3
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Rb+x
+    startUpLength: 0
+    startUpSpeed: 1
+    recoveryLength: 0
+    recoverySpeed: 1
+    lungeFrame: 0.15
+    lungeDistance: 0.7
+    lungeDuration: 0.12
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    hitboxDelay: 0
+    hitStopDuration: 0
+    trackingDuration: 0
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 0}
+    hitConnectSfx: {fileID: 0}
+    sfxCues: []
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+  comboWindowDelay: 0.8
+  comboWindowDuration: 0.25
+  throwData:
+    enableThrow: 1
+    grabAttemptAnimationTrigger: GrabAttempt
+    attemptLockDuration: 0.5
+    hitboxDelay: 0.25
+    throwAnimationTrigger: Throw
+    backThrowAnimationTrigger: BackThrow
+    throwPhaseDuration: 1.5
+    grabHitStopDuration: 0.08
+    grabConnectVfxPrefab: {fileID: 3407604102439438468, guid: 38874cea95e81344f8628e064bbef63e, type: 3}
+    throwEndVfxPrefab: {fileID: 5862328161722201066, guid: 02db14ef4756afb4a8455f8e1a67d7f3, type: 3}
+    sfxCues:
+    - trigger: 1
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 2b019c6187fca1e48b47e28c891dc66c, type: 3}
+      - {fileID: 8300000, guid: b883c27c88428884fb3a10dcc42b8b47, type: 3}
+      volume: 1.006
+    - trigger: 0
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 7c281791d060b4f47bea3d13dcb63f49, type: 3}
+      volume: 1.006
+    - trigger: 2
+      eventId: 2
+      clips:
+      - {fileID: 8300000, guid: 6cd50ce8f81dc45eea0af7410bcfaf7c, type: 3}
+      volume: 1.073
+    - trigger: 2
+      eventId: 3
+      clips:
+      - {fileID: 8300000, guid: 2258aa655233344f89c7c7ab8df97d10, type: 3}
+      volume: 0.681
+    range: 1.4
+    hitboxRadius: 0.7
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    launchVictimOnRelease: 1
+    endDamage: 15
+    endKnockback: 20
+    endKnockbackUp: 1
+    endHitstun: 0
+    endAirborneDuration: 0.05
+    faceVictimTowardThrowDirection: 1
+    releaseProfiles: []
+    enemyThrownStateName: Thrown
+    backEnemyThrownStateName: BackThrown
+    throwCooldown: 0.8

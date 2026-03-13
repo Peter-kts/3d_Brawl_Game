@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: e8bfaf04fb47a104bb8cb556447675b7
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_2Handed/FBX_Animation/Root_Motion/Frank_RPG_2Hand_Combo05_2.FBX
+  uploadId: 850118
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24200
   internalIDToNameTable:
   - first:
       1: 100000
@@ -565,13 +572,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -606,6 +613,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -1380,8 +1390,7 @@ ModelImporter:
     - name: Bone012
       parentName: Bone011
       position: {x: -0.28616843, y: -0.0000009155273, z: 0.000000019073486}
-      rotation: {x: -2.3283067e-10, y: -0.0000000063027983, z: -0.0000000018626451,
-        w: 1}
+      rotation: {x: -2.3283067e-10, y: -0.0000000063027983, z: -0.0000000018626451, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Bone001
       parentName: spine_03
@@ -1485,8 +1494,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 15e3ec89c42b1f04f8544df9d308efe3,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 15e3ec89c42b1f04f8544df9d308efe3, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
@@ -1498,10 +1506,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 141184
-  packageName: Frank Slash Pack - 10 Assets
-  packageVersion: 3.8
-  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_2Handed/FBX_Animation/Root_Motion/Frank_RPG_2Hand_Combo05_2.FBX
-  uploadId: 850118

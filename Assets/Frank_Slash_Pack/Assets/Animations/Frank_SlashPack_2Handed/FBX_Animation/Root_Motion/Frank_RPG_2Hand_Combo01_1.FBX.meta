@@ -566,7 +566,7 @@ ModelImporter:
       firstFrame: 0
       lastFrame: 80
       wrapMode: 0
-      orientationOffsetY: 0
+      orientationOffsetY: -45
       level: 0
       cycleOffset: 0
       loop: 0
@@ -575,15 +575,78 @@ ModelImporter:
       loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
-      loopBlendPositionXZ: 1
+      loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.003488369
+        functionName: OnAttackSfxEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.038359072
+        functionName: SetGrip
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: cabc44865b740412e8d24893f1658a6c, type: 3}
+        floatParameter: 1
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.19258109
+        functionName: OnChargeWindowStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.2867651
+        functionName: OnChargeWindowEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.29404065
+        functionName: OnAttackSfxEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.33663362
+        functionName: BeginWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.7361153
+        functionName: SetGrip
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: cabc44865b740412e8d24893f1658a6c, type: 3}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 0.99845093
+        functionName: EndWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: EndWeaponTipActiveFrames
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

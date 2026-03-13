@@ -419,8 +419,8 @@
     <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Data\Nodes\Utility\Logic\NotNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Data\Nodes\Math\Round\TruncateNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Data\Nodes\Input\Geometry\VertexColorNode.cs" />
-    <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Drawing\ViewModels\ShaderInputViewModel.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Generation\Targets\Fullscreen\FullscreenSubTarget.cs" />
+    <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Drawing\ViewModels\ShaderInputViewModel.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Drawing\Views\Slots\GradientSlotControlView.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Data\Nodes\Math\Range\RandomRangeNode.cs" />
     <Compile Include="Library\PackageCache\com.unity.shadergraph@3686fafd4720\Editor\Generation\IHasMetaData.cs" />

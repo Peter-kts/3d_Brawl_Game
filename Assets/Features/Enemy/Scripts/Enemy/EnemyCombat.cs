@@ -34,7 +34,6 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public class EnemyCombat : MonoBehaviour
 {
@@ -130,6 +129,7 @@ public class EnemyCombat : MonoBehaviour
     private AttackData currentAttack;      // Which attack is active (for hitbox/lunge)
     private Animator animator;
     private CharacterController cc;
+    private EnemyHealth enemyHealth;
 
     // Lunge state (forward movement during attack)
     private bool lungePending;
@@ -178,15 +178,17 @@ public class EnemyCombat : MonoBehaviour
         animator = GetComponent<Animator>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
+        enemyHealth = GetComponent<EnemyHealth>();
         if (sfxSource == null) sfxSource = GetComponent<AudioSource>();
         if (sfxSource == null) sfxSource = GetComponentInChildren<AudioSource>();
     }
 
     void Update()
     {
-        var h = GetComponent<EnemyHealth>();
+        var h = enemyHealth;
         if (h != null && h.IsStunned)
         {
+            RestoreAnimatorSpeedStateAfterDamageOrStun();
             attackEndTime = 0f;
             hitboxPending = false;
             lungePending = false;
@@ -196,6 +198,20 @@ public class EnemyCombat : MonoBehaviour
         UpdatePendingHitbox();
         UpdateHitStop();
         UpdateAttackStartUpSpeed();
+    }
+
+    void RestoreAnimatorSpeedStateAfterDamageOrStun()
+    {
+        for (int i = 0; i < frozenAnimators.Count; i++)
+        {
+            Animator a = frozenAnimators[i].animator;
+            if (a != null)
+                a.speed = frozenAnimators[i].originalSpeed;
+        }
+        frozenAnimators.Clear();
+        hitStopEndTime = 0f;
+        if (animator != null)
+            animator.speed = 1f;
     }
 
     // ========================================================================
@@ -322,6 +338,29 @@ public class EnemyCombat : MonoBehaviour
     {
         OnAttackSfxEvent(0);
     }
+
+    // AnimationEvent can pass float/string depending on clip setup; normalize to int id.
+    public void OnAttackSfxEvent(float eventId)
+    {
+        OnAttackSfxEvent(Mathf.RoundToInt(eventId));
+    }
+
+    public void OnAttackSfxEvent(string eventId)
+    {
+        int parsed;
+        OnAttackSfxEvent(int.TryParse(eventId, out parsed) ? parsed : 0);
+    }
+
+    // Alias for naming variants often typed in clips.
+    public void OnAttackSFXEvent()
+    {
+        OnAttackSfxEvent(0);
+    }
+
+    public void OnAttackSFXEvent(int eventId)
+    {
+        OnAttackSfxEvent(eventId);
+    }
     
     /// <summary>
     /// Calculate the hitbox center using range + local-space offset for the current attack.
@@ -396,7 +435,7 @@ public class EnemyCombat : MonoBehaviour
             if (a.hitStopDuration > 0f)
             {
                 Animator targetAnim = targetTransform.GetComponentInChildren<Animator>();
-                if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
+                if (targetAnim != null && !IsFrozen(targetAnim))
                 {
                     frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
                     targetAnim.speed = 0f;
@@ -424,7 +463,7 @@ public class EnemyCombat : MonoBehaviour
         {
             hitStopEndTime = Time.time + a.hitStopDuration;
             
-            if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
+            if (animator != null && !IsFrozen(animator))
             {
                 frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
                 animator.speed = 0f;
@@ -445,7 +484,14 @@ public class EnemyCombat : MonoBehaviour
     // ========================================================================
     // HIT STOP
     // ========================================================================
-    
+
+    bool IsFrozen(Animator anim)
+    {
+        for (int i = 0; i < frozenAnimators.Count; i++)
+            if (frozenAnimators[i].animator == anim) return true;
+        return false;
+    }
+
     void UpdateHitStop()
     {
         if (frozenAnimators.Count > 0 && Time.time >= hitStopEndTime)
@@ -466,11 +512,11 @@ public class EnemyCombat : MonoBehaviour
         if (animator == null) return;
         if (Time.time >= attackEndTime)
         {
-            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && !frozenAnimators.Any(f => f.animator == animator))
+            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && !IsFrozen(animator))
                 animator.speed = 1f;
             return;
         }
-        if (frozenAnimators.Any(f => f.animator == animator)) return;
+        if (IsFrozen(animator)) return;
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
         if (!string.IsNullOrEmpty(currentAttackStateName) && !state.IsName(currentAttackStateName))
         {

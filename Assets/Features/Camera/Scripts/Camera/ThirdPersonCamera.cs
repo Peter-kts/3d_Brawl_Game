@@ -118,6 +118,7 @@ public class ThirdPersonCamera : MonoBehaviour
     // UNITY LIFECYCLE
     // ========================================================================
     
+    // Main camera loop: follow target position, compute look point, and smooth rotation.
     void LateUpdate()
     {
         // Ensure we have something to follow
@@ -128,10 +129,12 @@ public class ThirdPersonCamera : MonoBehaviour
         // STEP 1: Calculate and move to desired position
         // --------------------------------------------------------------------
         
+        // Base desired camera position from target + configured offset.
         Vector3 desiredPos = target.position + (useLocalOffset ? target.TransformDirection(offset) : offset);
 
         if (useOrbitControls)
         {
+            // Orbit mode overrides base offset with yaw/pitch driven offset around target.
             InitializeOrbitIfNeeded();
             UpdateOrbitAngles();
             Quaternion orbitRot = Quaternion.Euler(pitch, yaw, 0f);
@@ -168,6 +171,7 @@ public class ThirdPersonCamera : MonoBehaviour
         // STEP 2: Calculate look point (above the player)
         // --------------------------------------------------------------------
         
+        // Default look point is a point above the target (chest/head framing).
         Vector3 lookPoint = target.position + Vector3.up * lookHeight;
 
         // Optional: soft target look bias (subtle, not a lock)
@@ -183,6 +187,7 @@ public class ThirdPersonCamera : MonoBehaviour
                 Transform softTarget = threatSystem.SoftTarget;
                 if (softTarget != null)
                 {
+                    // Compute soft target relevance in the horizontal plane.
                     Vector3 toTarget = softTarget.position - target.position;
                     toTarget.y = 0f;
                     float dist = toTarget.magnitude;
@@ -197,6 +202,7 @@ public class ThirdPersonCamera : MonoBehaviour
                         float angle = Vector3.Angle(forward, toTarget);
                         if (angle <= softTargetMaxAngle && dist <= softTargetMaxDistance)
                         {
+                            // Blend bias by how centered and close the soft target is.
                             float angleFactor = 1f - (angle / softTargetMaxAngle);
                             float distFactor = 1f - (dist / softTargetMaxDistance);
                             float blend = softTargetLookWeight * Mathf.Clamp01(angleFactor * distFactor);
@@ -237,6 +243,7 @@ public class ThirdPersonCamera : MonoBehaviour
         );
     }
 
+    // Assign target when missing (tag first, then PlayerController fallback).
     void EnsureTarget()
     {
         if (target != null || !autoFindTarget) return;
@@ -260,6 +267,7 @@ public class ThirdPersonCamera : MonoBehaviour
         }
     }
 
+    // Seed yaw/pitch from current camera placement so orbit starts from current view.
     void InitializeOrbitIfNeeded()
     {
         if (orbitInitialized || target == null) return;
@@ -277,6 +285,7 @@ public class ThirdPersonCamera : MonoBehaviour
         orbitInitialized = true;
     }
     
+    // Read right stick/mouse input and update yaw/pitch with clamped vertical angle.
     void UpdateOrbitAngles()
     {
         Vector2 lookDelta = Vector2.zero;

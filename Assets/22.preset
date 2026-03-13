@@ -1,0 +1,284 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 22
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: cabc44865b740412e8d24893f1658a6c, type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: Assembly-CSharp::SwordGrip
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: weaponTransform
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.size
+    value: 5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].id
+    value: 99
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].label
+    value: Default
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localPosition.x
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localPosition.y
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localPosition.z
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localRotation.x
+    value: 43.4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localRotation.y
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localRotation.z
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].applyScale
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localScale.x
+    value: 63.9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localScale.y
+    value: 72.43
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[0].localScale.z
+    value: 97
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].id
+    value: 99
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].label
+    value: JumpAttack
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localPosition.x
+    value: -0.18
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localPosition.y
+    value: 0.23
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localPosition.z
+    value: 0.07
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localRotation.x
+    value: 43.4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localRotation.y
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localRotation.z
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].applyScale
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localScale.x
+    value: 63.9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localScale.y
+    value: 72.43
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[1].localScale.z
+    value: 97
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].id
+    value: 99
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].label
+    value: HeavyAoe
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localPosition.x
+    value: -0.18
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localPosition.y
+    value: 0.23
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localPosition.z
+    value: 0.07
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localRotation.x
+    value: 43.4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localRotation.y
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localRotation.z
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].applyScale
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localScale.x
+    value: 63.9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localScale.y
+    value: 72.43
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[2].localScale.z
+    value: 97
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].id
+    value: 3
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].label
+    value: Idle
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localPosition.x
+    value: -0.09
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localPosition.y
+    value: 0.22
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localPosition.z
+    value: 0.043
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localRotation.x
+    value: 43.4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localRotation.y
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localRotation.z
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].applyScale
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localScale.x
+    value: 63.9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localScale.y
+    value: 41
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[3].localScale.z
+    value: 76.5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].id
+    value: 99
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].label
+    value: Block
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localPosition.x
+    value: -0.18
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localPosition.y
+    value: 0.23
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localPosition.z
+    value: 0.07
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localRotation.x
+    value: 43.4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localRotation.y
+    value: 100
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localRotation.z
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].applyScale
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localScale.x
+    value: 63.9
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localScale.y
+    value: 72.43
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: grips.Array.data[4].localScale.z
+    value: 97
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: transitionSpeed
+    value: 0.944
+    objectReference: {fileID: 0}
+  m_ExcludedProperties: []
+  m_CoupledType:
+    m_NativeTypeID: 0
+    m_ManagedTypePPtr: {fileID: 0}
+    m_ManagedTypeFallback: 
+  m_CoupledProperties: []

@@ -343,6 +343,7 @@ public partial class Combat
         isAttacking = false;
         hitboxPending = false;
         pendingThrowHitbox = false;
+        ResetChargeState();
         if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
             animator.speed = 1f;
         foreach (var frozen in frozenAnimators)

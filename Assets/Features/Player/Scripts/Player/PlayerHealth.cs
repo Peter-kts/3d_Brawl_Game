@@ -53,6 +53,51 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Tooltip("Multiplier applied to knockback, hitstun, and hitstop on blocked hits.")]
     [Range(0f, 1f)]
     public float blockedHitEffectMultiplier = 0.5f;
+
+    [Header("Hurt SFX (optional)")]
+    [Tooltip("Audio source used for hurt sounds. Auto-finds on this object/children if not assigned.")]
+    public AudioSource hurtSfxSource;
+    [Tooltip("Hurt voice clips. If multiple are assigned, one is chosen at random (never the same twice in a row).")]
+    public AudioClip[] hurtSfxClips;
+    [Tooltip("Lowest random pitch used for hurt SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float hurtSfxPitchMin = 0.96f;
+    [Tooltip("Highest random pitch used for hurt SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float hurtSfxPitchMax = 1.04f;
+    [Tooltip("Volume scale for hurt SFX.")]
+    [Range(0f, 1f)]
+    public float hurtSfxVolume = 1f;
+
+    [Header("Death SFX (optional)")]
+    [Tooltip("Audio source used for death sounds. Auto-finds on this object/children if not assigned.")]
+    public AudioSource deathSfxSource;
+    [Tooltip("Death voice clips. If multiple are assigned, one is chosen at random (never the same twice in a row).")]
+    public AudioClip[] deathSfxClips;
+    [Tooltip("Lowest random pitch used for death SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float deathSfxPitchMin = 0.96f;
+    [Tooltip("Highest random pitch used for death SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float deathSfxPitchMax = 1.04f;
+    [Tooltip("Volume scale for death SFX.")]
+    [Range(0f, 1f)]
+    public float deathSfxVolume = 1f;
+
+    [Header("Block SFX (optional)")]
+    [Tooltip("Audio source used for block sounds. Auto-finds on this object/children if not assigned.")]
+    public AudioSource blockSfxSource;
+    [Tooltip("Block clips played when a hit is blocked. If multiple are assigned, one is chosen at random (never the same twice in a row).")]
+    public AudioClip[] blockSfxClips;
+    [Tooltip("Lowest random pitch used for block SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float blockSfxPitchMin = 0.96f;
+    [Tooltip("Highest random pitch used for block SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float blockSfxPitchMax = 1.04f;
+    [Tooltip("Volume scale for block SFX.")]
+    [Range(0f, 1f)]
+    public float blockSfxVolume = 1f;
     
     [Header("Airborne Animation (Liftoff / Loop / Crash)")]
     [Tooltip("Settings for splitting a single airborne animation into liftoff, loop, and crash phases. Leave airborneStateName empty to disable.")]
@@ -79,6 +124,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private AirbornePhase airbornePhase = AirbornePhase.None;
     private bool wasAirborne;              // Previous frame airborne state (for rising/falling edge)
     private int lastHitStateIndex = -1;     // So we don't play the same random hit state twice in a row
+    private int lastHurtSfxIndex = -1;      // So we don't play the same hurt clip twice in a row
+    private int lastDeathSfxIndex = -1;     // So we don't play the same death clip twice in a row
+    private int lastBlockSfxIndex = -1;     // So we don't play the same block clip twice in a row
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -90,6 +138,14 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         cc = GetComponent<CharacterController>();
         playerController = GetComponent<PlayerController>();
         if (animator == null) animator = PlayerController.FindAnimator(gameObject);
+        if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>();
+        if (hurtSfxSource == null) hurtSfxSource = GetComponentInChildren<AudioSource>();
+        if (deathSfxSource == null) deathSfxSource = hurtSfxSource;
+        if (deathSfxSource == null) deathSfxSource = GetComponent<AudioSource>();
+        if (deathSfxSource == null) deathSfxSource = GetComponentInChildren<AudioSource>();
+        if (blockSfxSource == null) blockSfxSource = hurtSfxSource;
+        if (blockSfxSource == null) blockSfxSource = GetComponent<AudioSource>();
+        if (blockSfxSource == null) blockSfxSource = GetComponentInChildren<AudioSource>();
     }
 
     void Update()
@@ -262,6 +318,69 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         animator.Update(0f);
     }
 
+    void PlayHurtSfx()
+    {
+        if (hurtSfxSource == null || hurtSfxClips == null || hurtSfxClips.Length == 0) return;
+
+        int chosenIndex = 0;
+        if (hurtSfxClips.Length >= 2)
+        {
+            do { chosenIndex = Random.Range(0, hurtSfxClips.Length); }
+            while (chosenIndex == lastHurtSfxIndex);
+        }
+        lastHurtSfxIndex = chosenIndex;
+
+        AudioClip clip = hurtSfxClips[chosenIndex];
+        if (clip == null) return;
+
+        float minPitch = Mathf.Min(hurtSfxPitchMin, hurtSfxPitchMax);
+        float maxPitch = Mathf.Max(hurtSfxPitchMin, hurtSfxPitchMax);
+        hurtSfxSource.pitch = Random.Range(minPitch, maxPitch);
+        hurtSfxSource.PlayOneShot(clip, Mathf.Max(0f, hurtSfxVolume));
+    }
+
+    void PlayDeathSfx()
+    {
+        if (deathSfxSource == null || deathSfxClips == null || deathSfxClips.Length == 0) return;
+
+        int chosenIndex = 0;
+        if (deathSfxClips.Length >= 2)
+        {
+            do { chosenIndex = Random.Range(0, deathSfxClips.Length); }
+            while (chosenIndex == lastDeathSfxIndex);
+        }
+        lastDeathSfxIndex = chosenIndex;
+
+        AudioClip clip = deathSfxClips[chosenIndex];
+        if (clip == null) return;
+
+        float minPitch = Mathf.Min(deathSfxPitchMin, deathSfxPitchMax);
+        float maxPitch = Mathf.Max(deathSfxPitchMin, deathSfxPitchMax);
+        deathSfxSource.pitch = Random.Range(minPitch, maxPitch);
+        deathSfxSource.PlayOneShot(clip, Mathf.Max(0f, deathSfxVolume));
+    }
+
+    void PlayBlockSfx()
+    {
+        if (blockSfxSource == null || blockSfxClips == null || blockSfxClips.Length == 0) return;
+
+        int chosenIndex = 0;
+        if (blockSfxClips.Length >= 2)
+        {
+            do { chosenIndex = Random.Range(0, blockSfxClips.Length); }
+            while (chosenIndex == lastBlockSfxIndex);
+        }
+        lastBlockSfxIndex = chosenIndex;
+
+        AudioClip clip = blockSfxClips[chosenIndex];
+        if (clip == null) return;
+
+        float minPitch = Mathf.Min(blockSfxPitchMin, blockSfxPitchMax);
+        float maxPitch = Mathf.Max(blockSfxPitchMin, blockSfxPitchMax);
+        blockSfxSource.pitch = Random.Range(minPitch, maxPitch);
+        blockSfxSource.PlayOneShot(clip, Mathf.Max(0f, blockSfxVolume));
+    }
+
     // ========================================================================
     // IDAMAGEABLE
     // ========================================================================
@@ -283,6 +402,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         if (isDead) return;
 
+        Combat combat = GetComponent<Combat>();
         bool isBlocking = playerController != null && playerController.IsBlocking;
         if (isBlocking)
         {
@@ -291,10 +411,20 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             knockback *= multiplier;
             hitstun *= multiplier;
             hitStopDuration *= multiplier;
+            PlayBlockSfx();
         }
 
         hp -= damage;
         ScreenShake.RequestShake();
+        if (damage > 0)
+        {
+            // Safety reset: if Combat slowed animator speed (startup/recovery/charge),
+            // restore baseline speed immediately when real damage is taken.
+            if (animator != null)
+                animator.speed = 1f;
+            PlayHurtSfx();
+        }
+        bool forceChargeInterruptToStun = damage > 0 && !isBlocking && combat != null && combat.IsChargingAttack;
         if (airborneDuration > 0f)
         {
             pendingKnockback = knockback;
@@ -309,27 +439,33 @@ public class PlayerHealth : MonoBehaviour, IDamageable
                 StartCoroutine(RumbleForSeconds(hitStopDuration));
         }
 
-        // Don't shorten an existing longer stun; launcher: apply knockback when stun ends
-        stunUntil = Mathf.Max(stunUntil, Time.time + hitstun);
+        // Don't shorten an existing longer stun; launcher: apply knockback when stun ends.
+        // If damage landed during charge, ensure at least a tiny stun so interrupt always takes over.
+        float effectiveHitstun = forceChargeInterruptToStun ? Mathf.Max(hitstun, 0.1f) : hitstun;
+        stunUntil = Mathf.Max(stunUntil, Time.time + effectiveHitstun);
         if (airborneDuration > 0f)
             pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;  // launch when hit stop ends
 
         if (animator != null)
         {
             if (isBlocking) TriggerBlockHitAnimation();
-            else TriggerHitAnimation(hitstun);
+            else TriggerHitAnimation(effectiveHitstun);
         }
+
+        if (forceChargeInterruptToStun)
+            combat.InterruptAttackAndChargeForStun();
 
         // Airborne for launch attacks is applied when hitstun ends (in ApplyKnockback)
 
         if (hp <= 0)
         {
             isDead = true;
+            PlayDeathSfx();
             // Disable input by disabling components; game-over flow can be added later
             var controller = GetComponent<PlayerController>();
             if (controller != null) controller.enabled = false;
-            var combat = GetComponent<Combat>();
-            if (combat != null) combat.enabled = false;
+            var combatComponent = GetComponent<Combat>();
+            if (combatComponent != null) combatComponent.enabled = false;
         }
     }
     

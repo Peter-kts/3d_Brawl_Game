@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// Trigger-based weapon tip hitbox. Enable only during active attack frames.
@@ -7,6 +8,8 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Collider))]
 public class WeaponTipHitbox : MonoBehaviour
 {
+    public event Action<AttackData, Transform, Vector3> HitConfirmed;
+
     private Collider tipCollider;
     private Transform attackerRoot;
     private AttackData currentAttack;
@@ -71,5 +74,8 @@ public class WeaponTipHitbox : MonoBehaviour
             currentAttack.heaviness,
             currentAttack.height
         );
+
+        Vector3 hitPoint = other.ClosestPoint(transform.position);
+        HitConfirmed?.Invoke(currentAttack, target.transform, hitPoint);
     }
 }

@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: 843a192087b55db40942029a16e513d3
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_GreatSword/FBX_Animation/Frank_RPG@GreatSword_Equip_Idle.FBX
+  uploadId: 850118
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24200
   internalIDToNameTable:
   - first:
       1: 100000
@@ -613,13 +620,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -848,6 +855,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -1352,8 +1362,7 @@ ModelImporter:
     - name: ik_hand_r
       parentName: ik_hand_gun
       position: {x: -0, y: 0, z: -0.000000019073486}
-      rotation: {x: 0.0000000149011585, y: -0.000000022351745, z: 0.00000002980233,
-        w: 1}
+      rotation: {x: 0.0000000149011585, y: -0.000000022351745, z: 0.00000002980233, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: pelvis
       parentName: root
@@ -1523,8 +1532,7 @@ ModelImporter:
     - name: GreatSword_Root
       parentName: R_Hand_Weapon
       position: {x: -0.00000022888183, y: -0.000000038146972, z: -0.000000114440915}
-      rotation: {x: -0.000000074505834, y: -0.00000011920935, z: 0.00000020861633,
-        w: 1}
+      rotation: {x: -0.000000074505834, y: -0.00000011920935, z: 0.00000020861633, w: 1}
       scale: {x: 1, y: 0.999999, z: 1}
     - name: R_Slash_FX_Bone
       parentName: GreatSword_Root
@@ -1629,8 +1637,7 @@ ModelImporter:
     - name: lowerarm_twist_01_l
       parentName: lowerarm_l
       position: {x: -0.14000027, y: 0.000000019073486, z: 0.00000022888183}
-      rotation: {x: 0.000000029802322, y: 0.000000029802315, z: 0.000000022351736,
-        w: 1}
+      rotation: {x: 0.000000029802322, y: 0.000000029802315, z: 0.000000022351736, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: hand_l
       parentName: lowerarm_l
@@ -1789,8 +1796,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: c5126f94ac3e9934ebe714cfb53f07be,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: c5126f94ac3e9934ebe714cfb53f07be, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
@@ -1802,10 +1808,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 141184
-  packageName: Frank Slash Pack - 10 Assets
-  packageVersion: 3.8
-  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_GreatSword/FBX_Animation/Frank_RPG@GreatSword_Equip_Idle.FBX
-  uploadId: 850118

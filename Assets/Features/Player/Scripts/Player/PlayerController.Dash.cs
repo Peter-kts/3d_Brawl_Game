@@ -69,7 +69,7 @@ public partial class PlayerController
     {
         bool dashPressed = (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
                           (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame);
-        if (dashPressed && Time.time >= nextDashTime && Time.time >= dashEndTime && (combat == null || !combat.IsInAttackLock))
+        if (dashPressed && Time.time >= nextDashTime && Time.time >= dashEndTime && (ActiveCombat == null || !ActiveCombat.IsInAttackLock))
             StartDash();
     }
 
