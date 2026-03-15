@@ -12,8 +12,8 @@ public struct ThrowReleaseProfile
     public int endDamage;
     public float endKnockback;
     public float endKnockbackUp;
-    public float endHitstun;
-    public float endAirborneDuration;
+    [Tooltip("Override how long the enemy lies prone after landing from this throw (seconds). 0 = use the enemy's default groundedDuration.")]
+    public float proneDuration;
 }
 
 /// <summary>
@@ -39,8 +39,6 @@ public struct ThrowData
     [Header("Phase 2 - Throw (on success)")]
     [Tooltip("Player animation state name when grab connects (synced with enemy thrown anim).")]
     public string throwAnimationTrigger;
-    [Tooltip("Player animation for back throw. If empty, use throwAnimationTrigger for both.")]
-    public string backThrowAnimationTrigger;
     [Tooltip("Duration of the throw phase (enemy stun and both animations).")]
     public float throwPhaseDuration;
 
@@ -62,18 +60,16 @@ public struct ThrowData
     public Vector3 hitboxOffset;
 
     [Header("End of Throw")]
-    [Tooltip("If true, at release we apply damage + knockback + airborne (TakeHit). If false, only release/restore victim — let root motion animation play out entirely with no launch.")]
-    public bool launchVictimOnRelease;
-    [Tooltip("Damage applied to victim when throw ends (only if Launch Victim On Release is true).")]
+    [Tooltip("Damage applied to victim when throw ends.")]
     public int endDamage;
     [Tooltip("Knockback force applied when throw ends (direction = away from player).")]
     public float endKnockback;
     [Tooltip("Vertical component of knockback at throw end.")]
     public float endKnockbackUp;
-    [Tooltip("Hitstun duration after throw end.")]
-    public float endHitstun;
-    [Tooltip("Airborne duration when launched at release (~0.8 = short arc). Enemy plays airborne/fall anim.")]
-    public float endAirborneDuration;
+    [Tooltip("Override how long the enemy lies prone after landing from this throw (seconds). 0 = use the enemy's default groundedDuration.")]
+    public float proneDuration;
+    [Tooltip("If enabled, rotate victim prone facing by 180 degrees for this throw type.")]
+    public bool invertProneRotation;
     [Tooltip("If true, victim is rotated to face the throw direction at release. Turn off for throws where they stay facing you.")]
     public bool faceVictimTowardThrowDirection;
 
@@ -84,8 +80,6 @@ public struct ThrowData
     [Header("Enemy")]
     [Tooltip("Animator state name for the enemy (throw receiver) while locked for the throw duration.")]
     public string enemyThrownStateName;
-    [Tooltip("Enemy state for back throw. If empty, use enemyThrownStateName for both.")]
-    public string backEnemyThrownStateName;
 
     [Header("Cooldown")]
     [Tooltip("Seconds before another throw can be started.")]

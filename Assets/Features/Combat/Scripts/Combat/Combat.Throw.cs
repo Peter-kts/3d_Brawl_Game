@@ -34,6 +34,9 @@ public partial class Combat
     private int _deferThrowReleaseProfileIndex;
     // True when the throw was committed with stick back (back throw); used for back vs neutral anim/state names.
     private bool _currentThrowIsBack;
+    // Active throw config selected at throw start (forward vs back), used for the full throw lifecycle.
+    private ThrowData _activeThrowData;
+    private bool _hasActiveThrowData;
     // Set by OnThrowDamage animation event; consumed in LateUpdate to apply throw damage on the exact frame.
     private bool _deferThrowDamageToLateUpdate;
     private int _deferThrowDamageProfileIndex;
@@ -60,17 +63,71 @@ public partial class Combat
     /// <summary>True when stick is clearly backward (camera-relative). Used at throw commit for back vs neutral.</summary>
     bool IsBackThrowStickInput()
     {
-        Vector2 stick = playerController != null ? playerController.CombatStickInput : GetRawStickInput();
+        // Use raw input here because CombatStickInput can be stale during attack lock.
+        Vector2 stick = GetRawStickInput();
         return stick.y < -BackThrowStickThreshold;
+    }
+
+    bool IsAnyThrowEnabled()
+    {
+        return comboSet != null && (comboSet.throwData.enableThrow || comboSet.backThrowData.enableThrow);
+    }
+
+    ThrowData GetThrowAttemptData()
+    {
+        if (comboSet == null) return default;
+        if (comboSet.throwData.enableThrow)
+            return comboSet.throwData;
+        if (comboSet.backThrowData.enableThrow)
+            return comboSet.backThrowData;
+        return comboSet.throwData;
+    }
+
+    ThrowData GetThrowDataForInput(bool backThrowRequested)
+    {
+        if (comboSet == null) return default;
+        if (backThrowRequested && comboSet.backThrowData.enableThrow)
+            return comboSet.backThrowData;
+        if (comboSet.throwData.enableThrow)
+            return comboSet.throwData;
+        if (comboSet.backThrowData.enableThrow)
+            return comboSet.backThrowData;
+        return comboSet.throwData;
+    }
+
+    bool IsThrowInProgress()
+    {
+        return pendingThrowHitbox
+            || currentThrowVictim != null
+            || _throwVictimPseudoParentActive
+            || _deferThrowReleaseToLateUpdate;
+    }
+
+    void ForceThrowReleaseFallback(bool applyReleaseEffects)
+    {
+        if (currentThrowVictim == null) return;
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        if (vt == null)
+        {
+            currentThrowVictim = null;
+            return;
+        }
+
+        // Mirror the standard release order so victim/player transforms and controller state stay consistent.
+        BakePlayerThrowRootMotionAndRestore();
+        ReleaseThrowVictimFromSocket();
+        CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: applyReleaseEffects);
     }
 
     #region Throw (attempted grab -> hitbox -> hold -> release)
     /// <summary>Starts a throw attempt: sets attack state, schedules the grab hitbox after hitboxDelay, plays grab-attempt anim.</summary>
     void DoThrow()
     {
-        ThrowData t = comboSet.throwData;
+        _currentThrowIsBack = false; // Throw direction now resolves on grab connect (not at throw begin).
+        ThrowData t = GetThrowAttemptData();
         if (!t.enableThrow) return;
-        _currentThrowIsBack = IsBackThrowStickInput(); // could use improvement, for other types of throws using different input methods
+        _activeThrowData = t; // Keep attempt data active for start cues/timing until connect resolves profile.
+        _hasActiveThrowData = true;
         currentAttackStartTime = Time.time;
         nextThrowTime = Time.time + t.throwCooldown;           // Cooldown so we can't immediately throw again (could use improvement, for other types of throws using different cooldown methods)
         currentAttackEndTime = Time.time + t.attemptLockDuration; // Fallback end time; real end set when hitbox connects
@@ -135,13 +192,15 @@ public partial class Combat
         _throwVictimPseudoParentOffset = Vector3.zero;
     }
 
-    /// <summary>Returns animator state name for victim (back throw vs default, or per-AI thrownStateName).</summary>
+    /// <summary>Returns animator state name for victim (active throw profile first, then per-AI fallback).</summary>
     string GetThrownStateName(ThrowData t, EnemyHealth victim)
     {
-        if (_currentThrowIsBack && !string.IsNullOrEmpty(t.backEnemyThrownStateName))
-            return t.backEnemyThrownStateName;
+        if (!string.IsNullOrEmpty(t.enemyThrownStateName))
+            return t.enemyThrownStateName;
+
         var victimAI = victim.GetComponent<SimpleEnemyAI>();
-        return (victimAI != null && !string.IsNullOrEmpty(victimAI.thrownStateName)) ? victimAI.thrownStateName : t.enemyThrownStateName;
+        string perEnemyState = (victimAI != null && victimAI.animationConfig != null) ? victimAI.animationConfig.thrownStateName : null;
+        return perEnemyState;
     }
 
     /// <summary>Freezes player and victim animators for duration (hit stop); they're unfrozen in ClearThrowState / hit stop logic.</summary>
@@ -192,10 +251,20 @@ public partial class Combat
     /// <summary>Runs when the grab hitbox connects: find victim, start pseudo-parent hold, start victim thrown state, hit stop, VFX, play player throw anim and set end time.</summary>
     void ExecuteThrowHitbox()
     {
-        ThrowData t = comboSet.throwData;
-        if (!t.enableThrow) return;
+        ThrowData attemptData = GetThrowAttemptData();
+        if (!attemptData.enableThrow) return;
 
-        if (!TryFindThrowVictim(t, out EnemyHealth victim, out IDamageable victimDamageable)) return;
+        if (!TryFindThrowVictim(attemptData, out EnemyHealth victim, out IDamageable victimDamageable)) return;
+
+        // Resolve forward/back throw at connect time using current stick input.
+        _currentThrowIsBack = IsBackThrowStickInput();
+        ThrowData connectData = GetThrowDataForInput(_currentThrowIsBack);
+        if (connectData.enableThrow)
+        {
+            _activeThrowData = connectData;
+            _hasActiveThrowData = true;
+        }
+        ThrowData t = _activeThrowData;
 
         currentThrowVictim = victimDamageable;
         Transform victimTransform = (victimDamageable as Component).transform;
@@ -211,9 +280,9 @@ public partial class Combat
         Vector3 center = CalculateThrowHitboxCenter(t);
         SpawnGrabConnectVfx(t, center);
 
+        nextThrowTime = Time.time + t.throwCooldown; // Use the connected throw profile's cooldown.
         currentAttackEndTime = Time.time + t.grabHitStopDuration + t.throwPhaseDuration;
-        string playerThrowTrigger = (_currentThrowIsBack && !string.IsNullOrEmpty(t.backThrowAnimationTrigger)) ? t.backThrowAnimationTrigger : t.throwAnimationTrigger;
-        StartPlayerThrowAnimation(playerThrowTrigger);
+        StartPlayerThrowAnimation(t.throwAnimationTrigger);
         PlayThrowCues(AttackSfxTriggerType.OnHitConfirm, 0);
 
         if (threatSystem != null)
@@ -222,8 +291,8 @@ public partial class Combat
 
     void PlayThrowCues(AttackSfxTriggerType trigger, int eventId)
     {
-        if (comboSet == null) return;
-        ThrowData t = comboSet.throwData;
+        if (!_hasActiveThrowData) return;
+        ThrowData t = _activeThrowData;
         if (!t.enableThrow || t.sfxCues == null || t.sfxCues.Count == 0) return;
         for (int i = 0; i < t.sfxCues.Count; i++)
         {
@@ -278,7 +347,7 @@ public partial class Combat
                 _throwVictimRootMotionChanged = false;
             }
         }
-        Quaternion standingRotation = Quaternion.Euler(0f, 0f, 0f);
+        Quaternion standingRotation = Quaternion.Euler(0f, bakeRotation.eulerAngles.y, 0f);
         vt.position = bakePosition;
         vt.rotation = standingRotation;
         if (victimAnim != null && victimAnim.transform != vt)
@@ -309,27 +378,18 @@ public partial class Combat
         if (victimHealth != null)
             victimHealth.ClearKnockback();
 
-        if (comboSet != null && !comboSet.throwData.launchVictimOnRelease)
-        {
-            _reapplyThrowBakeTransform = vt;
-            _reapplyThrowBakePosition = bakePosition;
-            _reapplyThrowBakeRotation = bakeRotation;
-            _reapplyThrowBakeNextFrame = true;
-        }
+        _reapplyThrowBakeTransform = vt;
+        _reapplyThrowBakePosition = bakePosition;
+        _reapplyThrowBakeRotation = bakeRotation;
+        _reapplyThrowBakeNextFrame = true;
     }
 
-    /// <summary>Apply release outcome: if launchVictimOnRelease and damage not yet applied, call ApplyThrowDamage; else trigger victim get-up. Then clear collision ignore and ClearThrowState.</summary>
+    /// <summary>Apply release outcome: enter prone, then clear collision ignore and throw state. Damage is applied only by OnThrowDamage events.</summary>
     void CompleteThrowRelease(Transform victimTransform, int releaseProfileIndex, bool damageAlreadyAppliedThisFrame, bool applyReleaseEffects = true)
     {
-        if (applyReleaseEffects && comboSet != null && comboSet.throwData.enableThrow)
+        if (applyReleaseEffects && _hasActiveThrowData && _activeThrowData.enableThrow)
         {
-            if (comboSet.throwData.launchVictimOnRelease && !damageAlreadyAppliedThisFrame)
-                ApplyThrowDamage(releaseProfileIndex);  // Launch path: damage/knockback from release profile
-            else
-            {
-                var victimAI = victimTransform.GetComponent<SimpleEnemyAI>();
-                if (victimAI != null) victimAI.TriggerGetUpFromThrow();  // Non-launch: just get up
-            }
+            EnterThrowProne(victimTransform, releaseProfileIndex);
         }
         SetThrowVictimCollisionIgnore(victimTransform, false);
         ClearThrowState();
@@ -343,6 +403,7 @@ public partial class Combat
         isAttacking = false;
         hitboxPending = false;
         pendingThrowHitbox = false;
+        _hasActiveThrowData = false;
         ResetChargeState();
         if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
             animator.speed = 1f;
@@ -441,7 +502,7 @@ public partial class Combat
     /// <summary>Animation event (with profile index): defers full release to LateUpdate so bake/release/CompleteThrowRelease run after root motion this frame.</summary>
     public void OnThrowRelease(int releaseProfileIndex)
     {
-        if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;
+        if (currentThrowVictim == null || !_hasActiveThrowData || !_activeThrowData.enableThrow) return;
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
         _deferThrowReleaseToLateUpdate = true;
@@ -451,7 +512,7 @@ public partial class Combat
     /// <summary>Animation event: defers throw damage to LateUpdate so it applies on the exact frame; profileIndex selects release profile or -1 for default.</summary>
     public void OnThrowDamage(int profileIndex)
     {
-        if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;
+        if (currentThrowVictim == null || !_hasActiveThrowData || !_activeThrowData.enableThrow) return;
         _deferThrowDamageToLateUpdate = true;
         _deferThrowDamageProfileIndex = profileIndex;
     }
@@ -459,8 +520,8 @@ public partial class Combat
     /// <summary>Animation event: spawns throw-end VFX at current victim position (or in front of player if victim is missing).</summary>
     public void OnThrowEndVfxEvent()
     {
-        if (comboSet == null || !comboSet.throwData.enableThrow) return;
-        ThrowData t = comboSet.throwData;
+        if (!_hasActiveThrowData || !_activeThrowData.enableThrow) return;
+        ThrowData t = _activeThrowData;
         if (t.throwEndVfxPrefab == null) return;
 
         Transform vt = (currentThrowVictim as Component)?.transform;
@@ -499,38 +560,51 @@ public partial class Combat
         }
     }
 
-    /// <summary>Apply throw damage/knockback to currentThrowVictim using releaseProfileIndex (or default throw data if -1). No facing, VFX, or threat.</summary>
+    /// <summary>Apply throw damage and knockback to currentThrowVictim. Prone is entered separately via EnterThrowProne at release.</summary>
     void ApplyThrowDamage(int releaseProfileIndex = -1)
     {
-        ThrowData t = comboSet.throwData;
-        if (!t.enableThrow || currentThrowVictim == null) return;  // Guard: throw disabled or no victim
+        ThrowData t = _activeThrowData;
+        if (!t.enableThrow || currentThrowVictim == null) return;
         Transform victimTransform = (currentThrowVictim as Component)?.transform;
-        if (victimTransform == null) return;  // Victim may have been destroyed
-        // Direction from player to victim (XZ only) for knockback; used so victim is pushed away from player
+        if (victimTransform == null) return;
         Vector3 horizontalDir = (victimTransform.position - transform.position);
         horizontalDir.y = 0f;
-        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;  // Fallback if player and victim overlap
+        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
         horizontalDir.Normalize();
         int damage;
-        float knockback, knockbackUp, hitstun;
+        float knockback, knockbackUp;
         if (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)
         {
-            var p = t.releaseProfiles[releaseProfileIndex];  // Use per-event profile (e.g. from OnThrowDamage(int))
+            var p = t.releaseProfiles[releaseProfileIndex];
             damage = p.endDamage;
             knockback = p.endKnockback;
             knockbackUp = p.endKnockbackUp;
-            hitstun = p.endHitstun;
         }
         else
         {
-            // Use default throw data when profile index is -1 or invalid
             damage = t.endDamage;
             knockback = t.endKnockback;
             knockbackUp = t.endKnockbackUp;
-            hitstun = t.endHitstun;
         }
-        Vector3 knockbackVector = (horizontalDir * knockback) + (Vector3.up * knockbackUp);  // Horizontal push + vertical (e.g. launch)
-        currentThrowVictim.TakeHit(damage, knockbackVector, hitstun, airborneDuration: 0f);  // No airborne from throw
+        Vector3 knockbackVector = (horizontalDir * knockback) + (Vector3.up * knockbackUp);
+        currentThrowVictim.TakeHit(damage, knockbackVector, 0f, 0f);
+    }
+
+    /// <summary>Enter prone on the throw victim. Called at release (OnThrowRelease) regardless of whether damage was already applied mid-throw.</summary>
+    void EnterThrowProne(Transform victimTransform, int releaseProfileIndex = -1)
+    {
+        if (!_hasActiveThrowData || victimTransform == null) return;
+        ThrowData t = _activeThrowData;
+        float proneDuration = (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)
+            ? t.releaseProfiles[releaseProfileIndex].proneDuration
+            : t.proneDuration;
+        var victimAI = victimTransform.GetComponentInParent<SimpleEnemyAI>();
+        float dur = proneDuration > 0f ? proneDuration : (victimAI != null ? victimAI.groundedDuration : 1f);
+        victimAI?.ProneSystem?.Enter(dur, t.invertProneRotation);
+
+        // Keep deferred one-frame bake reapply aligned with the final prone-facing rotation.
+        if (_reapplyThrowBakeTransform == victimTransform)
+            _reapplyThrowBakeRotation = victimTransform.rotation;
     }
 
     /// <summary>World position for the grab hitbox sphere (hitOrigin or transform + range and hitboxOffset).</summary>

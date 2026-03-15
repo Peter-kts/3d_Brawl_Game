@@ -51,7 +51,7 @@ public class WeaponCombat : Combat
 
         hitbox.HitConfirmed -= OnWeaponTipHitConfirmed;
         hitbox.HitConfirmed += OnWeaponTipHitConfirmed;
-        hitbox.BeginActiveFrames(transform, attack);
+        hitbox.BeginActiveFrames(transform, attack, ChargeReleaseDamageScale, ChargeReleaseKnockbackScale);
     }
 
     // Animation Event hook: call at last active frame for the provided hitbox ID.

@@ -208,7 +208,7 @@ MonoBehaviour:
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJabNormal:
     range: 1.6
-    damage: 1
+    damage: 10
     heaviness: 1
     height: 1
     hitboxRadius: 0.6
@@ -249,7 +249,7 @@ MonoBehaviour:
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab:
     range: 1.2
-    damage: 1
+    damage: 20
     heaviness: 2
     height: 2
     hitboxRadius: 0.5
@@ -306,7 +306,7 @@ MonoBehaviour:
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab2Normal:
     range: 1.6
-    damage: 9
+    damage: 10
     heaviness: 1
     height: 1
     hitboxRadius: 0.6
@@ -347,7 +347,7 @@ MonoBehaviour:
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab2:
     range: 1.55
-    damage: 2
+    damage: 20
     heaviness: 2
     height: 2
     hitboxRadius: 0.7
@@ -404,7 +404,7 @@ MonoBehaviour:
     hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
   heavyAttack:
     range: 1
-    damage: 22
+    damage: 1
     heaviness: 2
     height: 2
     hitboxRadius: 0.7
@@ -413,7 +413,7 @@ MonoBehaviour:
     cooldown: 1.7
     comboWindowDelay: -1
     comboWindowDuration: -1
-    knockback: 100
+    knockback: 20
     knockbackUp: 20
     hitstun: 1
     makesAirborne: 1
@@ -442,7 +442,7 @@ MonoBehaviour:
     - trigger: 1
       eventId: 0
       clips:
-      - {fileID: 8300000, guid: 6e14d039cc2ba204daca02cfa82f0d43, type: 3}
+      - {fileID: 8300000, guid: 1af8a500bedfac748b38fdef21c29c0e, type: 3}
       volume: 1.043
     - trigger: 2
       eventId: 3
@@ -517,8 +517,7 @@ MonoBehaviour:
     attemptLockDuration: 0.5
     hitboxDelay: 0.25
     throwAnimationTrigger: Throw
-    backThrowAnimationTrigger: BackThrow
-    throwPhaseDuration: 1.5
+    throwPhaseDuration: 3
     grabHitStopDuration: 0.08
     grabConnectVfxPrefab: {fileID: 3407604102439438468, guid: 38874cea95e81344f8628e064bbef63e, type: 3}
     throwEndVfxPrefab: {fileID: 5862328161722201066, guid: 02db14ef4756afb4a8455f8e1a67d7f3, type: 3}
@@ -547,14 +546,54 @@ MonoBehaviour:
     range: 1.4
     hitboxRadius: 0.7
     hitboxOffset: {x: 0, y: 0, z: 0}
-    launchVictimOnRelease: 1
     endDamage: 15
     endKnockback: 20
     endKnockbackUp: 1
-    endHitstun: 0
-    endAirborneDuration: 0.05
+    proneDuration: 3
     faceVictimTowardThrowDirection: 1
     releaseProfiles: []
     enemyThrownStateName: Thrown
-    backEnemyThrownStateName: BackThrown
+    throwCooldown: 0.8
+  backThrowData:
+    enableThrow: 1
+    grabAttemptAnimationTrigger: GrabAttempt
+    attemptLockDuration: 0.5
+    hitboxDelay: 0.25
+    throwAnimationTrigger: BackThrow
+    throwPhaseDuration: 3
+    grabHitStopDuration: 0.08
+    grabConnectVfxPrefab: {fileID: 3407604102439438468, guid: 38874cea95e81344f8628e064bbef63e, type: 3}
+    throwEndVfxPrefab: {fileID: 5862328161722201066, guid: 02db14ef4756afb4a8455f8e1a67d7f3, type: 3}
+    sfxCues:
+    - trigger: 1
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 2b019c6187fca1e48b47e28c891dc66c, type: 3}
+      - {fileID: 8300000, guid: b883c27c88428884fb3a10dcc42b8b47, type: 3}
+      volume: 1.006
+    - trigger: 0
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 7c281791d060b4f47bea3d13dcb63f49, type: 3}
+      volume: 1.006
+    - trigger: 2
+      eventId: 2
+      clips:
+      - {fileID: 8300000, guid: 6cd50ce8f81dc45eea0af7410bcfaf7c, type: 3}
+      volume: 1.073
+    - trigger: 2
+      eventId: 3
+      clips:
+      - {fileID: 8300000, guid: 2258aa655233344f89c7c7ab8df97d10, type: 3}
+      volume: 0.681
+    range: 1.4
+    hitboxRadius: 0.7
+    hitboxOffset: {x: 0, y: 0, z: 0}
+    endDamage: 15
+    endKnockback: 20
+    endKnockbackUp: 1
+    proneDuration: 3
+    faceVictimTowardThrowDirection: 1
+    releaseProfiles: []
+    enemyThrownStateName: BackThrown
     throwCooldown: 0.8

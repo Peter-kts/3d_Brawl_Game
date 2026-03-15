@@ -5,6 +5,10 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Visual authoring window for Unity AnimationEvents used by combat/throw clips.
+/// Supports timeline marker editing, clip preview, function picking, and save/append workflows.
+/// </summary>
 public class AnimationEventAuthoringWindow : EditorWindow
 {
     [Serializable]
@@ -103,6 +107,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
     private double lastEditorTime;
     private MethodPickerMode methodPickerMode = MethodPickerMode.Curated;
     private Vector2 eventListScroll;
+    private bool showSelectedEventQuickEditor = true;
     private bool previewEnabled = true;
     private bool lockRootPositionDuringPreview = true;
     private bool lockRootRotationDuringPreview = true;
@@ -111,11 +116,14 @@ public class AnimationEventAuthoringWindow : EditorWindow
     private SfxHelperSource sfxHelperSource = SfxHelperSource.AttackMove;
     private int sfxMoveIndex = -1;
     private int sfxCueIdSelectionIndex;
+    private readonly List<AnimationClip> animatorClipOptions = new List<AnimationClip>();
+    private int animatorClipPopupIndex;
 
     private readonly List<EventMarker> markers = new List<EventMarker>();
     private readonly List<AnimationEventMethodCatalog.MethodOption> methodOptions = new List<AnimationEventMethodCatalog.MethodOption>();
     private readonly List<int> sfxAnimEventIds = new List<int>();
     private readonly Dictionary<string, FunctionDescriptorEntry> functionDescriptorMap = new Dictionary<string, FunctionDescriptorEntry>();
+    private readonly HashSet<string> importedClipWriteConfirmedPaths = new HashSet<string>();
     private int selectedMarkerIndex = -1;
     private int draggingMarkerIndex = -1;
     private DateTime functionDescriptorLastWriteUtc = DateTime.MinValue;
@@ -123,6 +131,9 @@ public class AnimationEventAuthoringWindow : EditorWindow
     private const string FunctionDescriptorDocPath = "Assets/Features/Combat/AnimationEventFunctions.md";
     private const string FunctionDescriptorStartMarker = "<!-- EVENT_PARAM_DESCRIPTORS_START -->";
     private const string FunctionDescriptorEndMarker = "<!-- EVENT_PARAM_DESCRIPTORS_END -->";
+    private static readonly Color SectionHeaderColor = new Color(0.20f, 0.20f, 0.20f, 1f);
+    private static readonly Color SectionBorderColor = new Color(0.30f, 0.30f, 0.30f, 1f);
+    private readonly Dictionary<string, bool> sectionExpanded = new Dictionary<string, bool>();
 
     [MenuItem("Tools/Combat/Animation Event Authoring")]
     public static void ShowWindow()
@@ -147,6 +158,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
 
     private void OnEditorUpdate()
     {
+        // Keep descriptor metadata fresh without reparsing every frame unless file timestamp changes.
         ReloadFunctionDescriptors(force: false);
         if (!previewEnabled) return;
         if (!isPlaying || targetClip == null) return;
@@ -165,30 +177,87 @@ public class AnimationEventAuthoringWindow : EditorWindow
 
     private void OnGUI()
     {
+        // UI is organized into collapsible sections so long event lists stay manageable.
         EditorGUILayout.Space(4f);
-        DrawSelectionControls();
+        if (BeginSection("Selection & Mode"))
+        {
+            DrawSelectionControls();
+            EndSection();
+        }
 
         using (new EditorGUI.DisabledScope(targetAnimator == null || targetClip == null))
         {
-            EditorGUILayout.Space(4f);
-            DrawPlaybackControls();
-            DrawTimeline();
-            EditorGUILayout.Space(6f);
-            DrawMarkerActions();
-            EditorGUILayout.Space(6f);
-            DrawSfxMoveHelper();
-            EditorGUILayout.Space(4f);
-            DrawEventList();
-            EditorGUILayout.Space(8f);
-            DrawSaveActions();
+            if (BeginSection("Preview"))
+            {
+                DrawPlaybackControls();
+                DrawTimeline();
+                EndSection();
+            }
+
+            if (BeginSection("Marker Actions"))
+            {
+                DrawMarkerActions();
+                EndSection();
+            }
+
+            if (BeginSection("Move SFX Helper"))
+            {
+                DrawSfxMoveHelper();
+                EndSection();
+            }
+
+            if (BeginSection("Selected Event"))
+            {
+                DrawSelectedEventQuickEditor();
+                EndSection();
+            }
+
+            if (BeginSection("Event List"))
+            {
+                DrawEventList();
+                EndSection();
+            }
+
+            if (BeginSection("Save"))
+            {
+                DrawSaveActions();
+                EndSection();
+            }
         }
+    }
+
+    private bool BeginSection(string title)
+    {
+        EditorGUILayout.Space(6f);
+        Rect header = EditorGUILayout.GetControlRect(false, 22f);
+        EditorGUI.DrawRect(header, SectionHeaderColor);
+        if (!sectionExpanded.ContainsKey(title))
+            sectionExpanded[title] = true;
+
+        Rect foldoutRect = new Rect(header.x + 8f, header.y + 2f, header.width - 16f, header.height - 4f);
+        sectionExpanded[title] = EditorGUI.Foldout(foldoutRect, sectionExpanded[title], title, true);
+        Rect border = new Rect(header.x, header.yMax - 1f, header.width, 1f);
+        EditorGUI.DrawRect(border, SectionBorderColor);
+        if (!sectionExpanded[title]) return false;
+        EditorGUILayout.BeginVertical("box");
+        return true;
+    }
+
+    private void EndSection()
+    {
+        EditorGUILayout.EndVertical();
     }
 
     private void DrawSelectionControls()
     {
         EditorGUI.BeginChangeCheck();
-        targetAnimator = (Animator)EditorGUILayout.ObjectField("Target Animator", targetAnimator, typeof(Animator), true);
-        targetClip = (AnimationClip)EditorGUILayout.ObjectField("Target Clip", targetClip, typeof(AnimationClip), false);
+        Animator nextAnimator = (Animator)EditorGUILayout.ObjectField("Target Animator", targetAnimator, typeof(Animator), true);
+        bool animatorChanged = nextAnimator != targetAnimator;
+        targetAnimator = nextAnimator;
+        if (animatorChanged)
+            RefreshAnimatorClipOptions();
+
+        DrawTargetClipSelectorFromAnimator();
         methodPickerMode = (MethodPickerMode)EditorGUILayout.EnumPopup("Function List", methodPickerMode);
         bool nextPreviewEnabled = EditorGUILayout.Toggle("Enable Preview", previewEnabled);
         lockRootPositionDuringPreview = EditorGUILayout.Toggle("Lock Root Position", lockRootPositionDuringPreview);
@@ -224,10 +293,63 @@ public class AnimationEventAuthoringWindow : EditorWindow
 
         if (IsClipReadOnly(targetClip))
         {
-            EditorGUILayout.HelpBox("This clip appears to come from a model import (.fbx). Create a duplicate .anim clip to edit events safely.", MessageType.Warning);
+            EditorGUILayout.HelpBox("This clip appears to come from a model import (.fbx). Direct save is allowed; Unity will store events on importer clip settings.", MessageType.Warning);
             if (GUILayout.Button("Duplicate Clip For Editing..."))
                 DuplicateClipForEditing();
         }
+    }
+
+    private void DrawTargetClipSelectorFromAnimator()
+    {
+        if (targetAnimator == null)
+        {
+            targetClip = (AnimationClip)EditorGUILayout.ObjectField("Target Clip", targetClip, typeof(AnimationClip), false);
+            return;
+        }
+
+        if (animatorClipOptions.Count == 0)
+            RefreshAnimatorClipOptions();
+
+        string[] clipNames = new string[animatorClipOptions.Count + 1];
+        clipNames[0] = "<None>";
+        int foundIndex = 0;
+        for (int i = 0; i < animatorClipOptions.Count; i++)
+        {
+            AnimationClip clip = animatorClipOptions[i];
+            clipNames[i + 1] = clip != null ? clip.name : "<Missing>";
+            if (clip == targetClip)
+                foundIndex = i + 1;
+        }
+
+        // If clip isn't in this animator's controller, force clear selection.
+        if (targetClip != null && foundIndex == 0)
+            targetClip = null;
+
+        animatorClipPopupIndex = EditorGUILayout.Popup("Target Clip", foundIndex, clipNames);
+        targetClip = animatorClipPopupIndex <= 0
+            ? null
+            : animatorClipOptions[Mathf.Clamp(animatorClipPopupIndex - 1, 0, animatorClipOptions.Count - 1)];
+    }
+
+    private void RefreshAnimatorClipOptions()
+    {
+        animatorClipOptions.Clear();
+        animatorClipPopupIndex = 0;
+        if (targetAnimator == null) return;
+        RuntimeAnimatorController controller = targetAnimator.runtimeAnimatorController;
+        if (controller == null) return;
+
+        HashSet<AnimationClip> unique = new HashSet<AnimationClip>();
+        AnimationClip[] clips = controller.animationClips;
+        for (int i = 0; i < clips.Length; i++)
+        {
+            AnimationClip clip = clips[i];
+            if (clip == null) continue;
+            if (!unique.Add(clip)) continue;
+            animatorClipOptions.Add(clip);
+        }
+
+        animatorClipOptions.Sort((a, b) => string.Compare(a.name, b.name, StringComparison.Ordinal));
     }
 
     private void DrawPlaybackControls()
@@ -271,7 +393,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         EditorGUI.DrawRect(timelineRect, new Color(0.16f, 0.16f, 0.16f, 1f));
         EditorGUI.DrawRect(new Rect(timelineRect.x, timelineRect.yMax - 1f, timelineRect.width, 1f), new Color(0.32f, 0.32f, 0.32f, 1f));
 
-        // Current preview playhead.
+        // Cyan line = current preview time used for sampling + add-marker operations.
         float playheadX = timelineRect.x + timelineRect.width * normalizedTime;
         EditorGUI.DrawRect(new Rect(playheadX - 1f, timelineRect.y, 2f, timelineRect.height), new Color(0.2f, 0.9f, 1f, 0.9f));
 
@@ -335,9 +457,51 @@ public class AnimationEventAuthoringWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
+    private void DrawSelectedEventQuickEditor()
+    {
+        showSelectedEventQuickEditor = EditorGUILayout.Foldout(
+            showSelectedEventQuickEditor,
+            "Selected Event Quick Editor",
+            true);
+        if (!showSelectedEventQuickEditor) return;
+
+        EditorGUILayout.BeginVertical("box");
+        if (selectedMarkerIndex < 0 || selectedMarkerIndex >= markers.Count)
+        {
+            EditorGUILayout.HelpBox("Select an event marker to edit it here.", MessageType.None);
+            EditorGUILayout.EndVertical();
+            return;
+        }
+
+        // Mirrors the selected list item so users can edit without scrolling.
+        EventMarker marker = markers[selectedMarkerIndex];
+        EditorGUILayout.LabelField("Selected: Event " + selectedMarkerIndex, EditorStyles.boldLabel);
+        marker.normalizedTime = Mathf.Clamp01(EditorGUILayout.Slider("t", marker.normalizedTime, 0f, 1f));
+        DrawMethodAndParameterFields(marker);
+        float seconds = targetClip != null ? marker.normalizedTime * targetClip.length : 0f;
+        EditorGUILayout.LabelField("Time: " + seconds.ToString("0.000") + "s");
+
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Snap Preview To This Event"))
+        {
+            normalizedTime = marker.normalizedTime;
+            SampleCurrentPose();
+        }
+        if (GUILayout.Button("Snap Event To Preview Time"))
+        {
+            marker.normalizedTime = Mathf.Clamp01(normalizedTime);
+        }
+        if (GUILayout.Button("Delete Selected Event"))
+        {
+            markers.RemoveAt(selectedMarkerIndex);
+            selectedMarkerIndex = Mathf.Clamp(selectedMarkerIndex - 1, -1, markers.Count - 1);
+        }
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+    }
+
     private void DrawEventList()
     {
-        EditorGUILayout.LabelField("Event Markers", EditorStyles.boldLabel);
         eventListScroll = EditorGUILayout.BeginScrollView(eventListScroll, GUILayout.MinHeight(160f));
 
         if (markers.Count == 0)
@@ -378,7 +542,6 @@ public class AnimationEventAuthoringWindow : EditorWindow
 
     private void DrawSfxMoveHelper()
     {
-        EditorGUILayout.LabelField("Move SFX Helper", EditorStyles.boldLabel);
         EditorGUI.BeginChangeCheck();
         sfxComboSet = (ComboSet)EditorGUILayout.ObjectField("Combo Set", sfxComboSet, typeof(ComboSet), false);
         sfxHelperSource = (SfxHelperSource)EditorGUILayout.EnumPopup("Source", sfxHelperSource);
@@ -446,6 +609,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
             EditorGUILayout.HelpBox("Ambiguous overload: " + reason, MessageType.Warning);
         }
 
+        // "Current (clip)" is what was loaded; "Assign Function" is what will be written next save.
         string loadedLabel = string.IsNullOrWhiteSpace(marker.loadedFunctionName)
             ? "(none)"
             : marker.loadedFunctionName + AnimationEventMethodCatalog.SignatureFromKind(marker.loadedParameterKind);
@@ -616,7 +780,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
             return;
         }
 
-        // Allow fenced code block syntax inside docs.
+        // Allow JSON to live inside fenced markdown blocks.
         if (jsonRaw.StartsWith("```", StringComparison.Ordinal))
         {
             int firstNewline = jsonRaw.IndexOf('\n');
@@ -718,9 +882,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
 
     private void DrawSaveActions()
     {
-        bool canWrite = targetClip != null && !IsClipReadOnly(targetClip);
-
-        using (new EditorGUI.DisabledScope(!canWrite))
+        using (new EditorGUI.DisabledScope(targetClip == null))
         {
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Overwrite Clip Events"))
@@ -730,21 +892,44 @@ public class AnimationEventAuthoringWindow : EditorWindow
                     "Overwrite",
                     "Cancel"))
                 {
-                    SaveMarkersToClip(overwrite: true);
+                    if (CanWriteToCurrentClip())
+                        SaveMarkersToClip(overwrite: true);
                 }
             }
 
             if (GUILayout.Button("Append To Clip Events"))
-                SaveMarkersToClip(overwrite: false);
+            {
+                if (CanWriteToCurrentClip())
+                    SaveMarkersToClip(overwrite: false);
+            }
 
             if (GUILayout.Button("Remove Selected From Clip"))
-                RemoveSelectedFromClip();
+            {
+                if (CanWriteToCurrentClip())
+                    RemoveSelectedFromClip();
+            }
 
             EditorGUILayout.EndHorizontal();
         }
+    }
 
-        if (!canWrite && targetClip != null)
-            EditorGUILayout.HelpBox("Clip is read-only in place. Duplicate to a .anim clip to save events.", MessageType.Info);
+    private bool CanWriteToCurrentClip()
+    {
+        if (targetClip == null) return false;
+        if (!IsClipReadOnly(targetClip)) return true;
+
+        string clipPath = AssetDatabase.GetAssetPath(targetClip);
+        if (string.IsNullOrWhiteSpace(clipPath)) return true;
+        if (importedClipWriteConfirmedPaths.Contains(clipPath)) return true;
+
+        bool proceed = EditorUtility.DisplayDialog(
+            "Write Events To Imported Clip?",
+            "This clip comes from a model import. Unity will save events on importer clip settings for this asset.\n\nContinue?",
+            "Continue",
+            "Cancel");
+        if (proceed)
+            importedClipWriteConfirmedPaths.Add(clipPath);
+        return proceed;
     }
 
     private void HandleTargetOrClipChanged()
@@ -773,6 +958,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         GameObject root = targetAnimator != null ? targetAnimator.gameObject : null;
         if (root == null) return;
 
+        // Curated = known combat-safe functions; Advanced = reflection over compatible root methods.
         if (methodPickerMode == MethodPickerMode.Curated || methodPickerMode == MethodPickerMode.Both)
             methodOptions.AddRange(AnimationEventMethodCatalog.GetCuratedOptions(root));
         if (methodPickerMode == MethodPickerMode.Advanced || methodPickerMode == MethodPickerMode.Both)
@@ -859,6 +1045,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         EnsureAnimationMode();
         float sampleTime = Mathf.Clamp01(normalizedTime) * targetClip.length;
         AnimationMode.SampleAnimationClip(targetAnimator.gameObject, targetClip, sampleTime);
+        // Optional root locks avoid drifting scene objects while previewing root-motion clips.
         RestoreRootTransformForPreview();
         SceneView.RepaintAll();
     }
@@ -924,6 +1111,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
             marker.floatParameter = ev.floatParameter;
             marker.stringParameter = ev.stringParameter;
             marker.objectParameter = ev.objectReferenceParameter;
+            // Unity event data does not always encode overload intent; infer + resolve best match.
             marker.parameterKind = GuessParameterKind(ev);
             marker.parameterKind = ResolveParameterKindFromAnimator(marker.functionName, marker.parameterKind, out marker.hasAmbiguousOverload, out marker.ambiguityReason);
             marker.loadedFunctionName = marker.functionName;
@@ -937,6 +1125,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         if (targetClip == null) return;
         if (!ValidateMarkers()) return;
 
+        // Overwrite replaces all clip events; append preserves existing clip events first.
         List<AnimationEvent> output = new List<AnimationEvent>();
         if (!overwrite)
             output.AddRange(AnimationUtility.GetAnimationEvents(targetClip));
@@ -945,11 +1134,97 @@ public class AnimationEventAuthoringWindow : EditorWindow
             output.Add(BuildAnimationEvent(markers[i]));
 
         output.Sort((a, b) => a.time.CompareTo(b.time));
-        AnimationUtility.SetAnimationEvents(targetClip, output.ToArray());
-        EditorUtility.SetDirty(targetClip);
-        AssetDatabase.SaveAssets();
+        if (IsClipReadOnly(targetClip))
+        {
+            if (!TrySaveEventsToImportedClip(output.ToArray()))
+                return;
+        }
+        else
+        {
+            AnimationUtility.SetAnimationEvents(targetClip, output.ToArray());
+            EditorUtility.SetDirty(targetClip);
+            AssetDatabase.SaveAssets();
+        }
         AssetDatabase.Refresh();
         LoadMarkersFromClip();
+    }
+
+    private bool TrySaveEventsToImportedClip(AnimationEvent[] eventsToWrite)
+    {
+        if (targetClip == null) return false;
+        string clipPath = AssetDatabase.GetAssetPath(targetClip);
+        if (string.IsNullOrWhiteSpace(clipPath)) return false;
+
+        ModelImporter importer = AssetImporter.GetAtPath(clipPath) as ModelImporter;
+        if (importer == null) return false;
+
+        ModelImporterClipAnimation[] clips = importer.clipAnimations;
+        if (clips == null || clips.Length == 0)
+            clips = importer.defaultClipAnimations;
+        if (clips == null || clips.Length == 0)
+        {
+            EditorUtility.DisplayDialog("Unable To Save Events",
+                "No import clip settings were found for this model asset.",
+                "OK");
+            return false;
+        }
+
+        int clipIndex = FindImportedClipIndex(clips, targetClip.name);
+        if (clipIndex < 0)
+        {
+            EditorUtility.DisplayDialog("Unable To Save Events",
+                "Could not match the selected clip in model import settings. Try duplicating the clip for editing, or verify clip names are unique.",
+                "OK");
+            return false;
+        }
+
+        ModelImporterClipAnimation clip = clips[clipIndex];
+        clip.events = eventsToWrite;
+        clips[clipIndex] = clip;
+
+        importer.clipAnimations = clips;
+        EditorUtility.SetDirty(importer);
+        importer.SaveAndReimport();
+
+        // Reimport recreates clip sub-assets; reacquire selected clip by name.
+        AnimationClip resolved = LoadImportedClipByName(clipPath, targetClip.name);
+        if (resolved != null)
+        {
+            targetClip = resolved;
+            previousClip = targetClip;
+        }
+
+        return true;
+    }
+
+    private static int FindImportedClipIndex(ModelImporterClipAnimation[] clips, string clipName)
+    {
+        if (clips == null || clips.Length == 0) return -1;
+        for (int i = 0; i < clips.Length; i++)
+        {
+            if (string.Equals(clips[i].name, clipName, StringComparison.Ordinal))
+                return i;
+        }
+
+        // Fallback for single-clip imports where naming can differ by take naming.
+        return clips.Length == 1 ? 0 : -1;
+    }
+
+    private static AnimationClip LoadImportedClipByName(string clipPath, string clipName)
+    {
+        if (string.IsNullOrWhiteSpace(clipPath) || string.IsNullOrWhiteSpace(clipName))
+            return null;
+
+        UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(clipPath);
+        for (int i = 0; i < assets.Length; i++)
+        {
+            AnimationClip clip = assets[i] as AnimationClip;
+            if (clip == null) continue;
+            if (!string.Equals(clip.name, clipName, StringComparison.Ordinal)) continue;
+            return clip;
+        }
+
+        return null;
     }
 
     private void RemoveSelectedFromClip()

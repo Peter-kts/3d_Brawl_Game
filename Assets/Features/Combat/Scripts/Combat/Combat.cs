@@ -249,6 +249,13 @@ public partial class Combat : MonoBehaviour
     [Tooltip("Rumble ramp curve. Higher = slower start, stronger finish.")]
     [Range(1f, 4f)]
     public float chargeRumbleCurveExponent = 2.2f;
+    [Header("Charge Damage & Knockback Scaling")]
+    [Tooltip("Damage multiplier at full charge. 1 = no bonus, 2 = double damage at max charge.")]
+    [Min(1f)]
+    public float chargeDamageMultiplier = 1.5f;
+    [Tooltip("Knockback multiplier at full charge. 1 = no bonus, 2 = double knockback at max charge.")]
+    [Min(1f)]
+    public float chargeKnockbackMultiplier = 1.5f;
     private bool chargeWindowOpen;
     private bool isChargingAttack;
     public bool IsChargingAttack => isChargingAttack;
@@ -257,6 +264,10 @@ public partial class Combat : MonoBehaviour
     private float chargeReleaseBoostEndTime;
     private float chargeReleaseBoostSpeed = 1f;
     private bool chargeRumbleActive;
+    private float chargeReleaseDamageScale = 1f;
+    private float chargeReleaseKnockbackScale = 1f;
+    public float ChargeReleaseDamageScale => chargeReleaseDamageScale;
+    public float ChargeReleaseKnockbackScale => chargeReleaseKnockbackScale;
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -307,15 +318,15 @@ public partial class Combat : MonoBehaviour
         }
         // Deferred throw damage (from OnThrowDamage animation event): apply on exact frame, then clear so release path doesn't double-apply
         bool throwDamageAppliedThisFrame = false; // Track so release path can skip applying damage again
-        if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && comboSet != null && comboSet.throwData.enableThrow)
+        if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && IsAnyThrowEnabled())
         {
-            ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Apply damage using deferred profile index
+            ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Mid-throw damage only — prone handled by OnThrowRelease
             _deferThrowDamageToLateUpdate = false;              // Consume deferred flag
             _deferThrowDamageProfileIndex = -1;                 // Reset profile index
             throwDamageAppliedThisFrame = true;                 // Mark so CompleteThrowRelease doesn't double-apply
         }
         // Throw release was deferred (from OnThrowRelease or from Update timer) so we run after Animator has applied root motion this frame
-        if (!_deferThrowReleaseToLateUpdate || currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) return;  // Skip if not deferred or invalid
+        if (!_deferThrowReleaseToLateUpdate || currentThrowVictim == null || !IsAnyThrowEnabled()) return;  // Skip if not deferred or invalid
         _deferThrowReleaseToLateUpdate = false;  // Consume deferred release flag
         Transform vt = (currentThrowVictim as Component)?.transform;  // Get victim transform for release
         if (vt == null) { currentThrowVictim = null; return; }  // Bail if victim destroyed
@@ -355,7 +366,7 @@ public partial class Combat : MonoBehaviour
 
         // Throw release is triggered exclusively by the OnThrowRelease animation event.
         // We do not set _deferThrowReleaseToLateUpdate from the timer here; only the animation event does.
-        if (currentThrowVictim == null || comboSet == null || !comboSet.throwData.enableThrow) // Only auto-exit when no valid throw hold needs an animation-event release.
+        if (currentThrowVictim == null || !IsAnyThrowEnabled()) // Only auto-exit when no valid throw hold needs an animation-event release.
         {
             // Release is exclusively from OnThrowRelease animation event (and stun path below); just clear attack state here.
             if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator)) // Restore normal animator speed if startup/recovery speed scaling was in use.
@@ -365,6 +376,12 @@ public partial class Combat : MonoBehaviour
             pendingThrowHitbox = false; // Cancel any delayed throw grab hitbox.
             currentAttackData = null;   // Clear current move context (used by SFX/events/debug).
             ResetChargeState();
+        }
+        else if (!_deferThrowReleaseToLateUpdate)
+        {
+            // Safety: if throw lock expired but release event never arrived (or throw anim was interrupted),
+            // force a release with standard release effects to avoid stuck throw state.
+            ForceThrowReleaseFallback(applyReleaseEffects: true);
         }
     }
 
@@ -378,12 +395,7 @@ public partial class Combat : MonoBehaviour
 
         // Player stunned (e.g. hit during throw): release victim without damage/get-up, then clear state
         if (currentThrowVictim != null) // If a throw victim is attached, release safely without applying throw end effects.
-        {
-            Transform vt = (currentThrowVictim as Component)?.transform;
-            BakePlayerThrowRootMotionAndRestore();
-            ReleaseThrowVictimFromSocket();
-            CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: false);
-        }
+            ForceThrowReleaseFallback(applyReleaseEffects: false);
         else
             ClearThrowState();
 
@@ -408,6 +420,8 @@ public partial class Combat : MonoBehaviour
     public void InterruptAttackAndChargeForStun()
     {
         if (!isAttacking && !hitboxPending && !isChargingAttack) return;
+        if (currentThrowVictim != null)
+            ForceThrowReleaseFallback(applyReleaseEffects: false);
         RestoreAnimatorSpeedStateAfterDamageOrStun();
         isAttacking = false;
         hitboxPending = false;
@@ -546,6 +560,15 @@ public partial class Combat : MonoBehaviour
         }
 
         if (comboSet == null) return;
+        if (IsThrowInProgress())
+        {
+            // Block all normal attack inputs while throw flow is active.
+            lightPressArmed = false;
+            rbXPressArmed = false;
+            forceChargeForNextAttack = false;
+            forceChargeForCurrentAttack = false;
+            return;
+        }
 
         if (rbXAttackInput && !isAttacking && Time.time >= nextAttackTime)
         {
@@ -558,7 +581,7 @@ public partial class Combat : MonoBehaviour
         }
 
         bool canThrow = threatSystem != null && threatSystem.HasSoftTarget;
-        if (throwInput && canThrow && !isAttacking && Time.time >= nextThrowTime && comboSet.throwData.enableThrow)
+        if (throwInput && canThrow && !isAttacking && Time.time >= nextThrowTime && IsAnyThrowEnabled())
         {
             DoThrow();
             return;
@@ -1335,12 +1358,12 @@ public partial class Combat : MonoBehaviour
             if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
             horizontalDir.Normalize();
             
-            Vector3 knockbackVector = (horizontalDir * attack.knockback) + (Vector3.up * attack.knockbackUp);
-            
+            Vector3 knockbackVector = ((horizontalDir * attack.knockback) + (Vector3.up * attack.knockbackUp)) * chargeReleaseKnockbackScale;
+
             // Apply damage
             float airborne = attack.makesAirborne ? attack.airborneDuration : 0f;
             damageable.TakeHit(
-                attack.damage,
+                Mathf.RoundToInt(attack.damage * chargeReleaseDamageScale),
                 knockbackVector,
                 attack.hitstun,
                 airborne,
@@ -1493,6 +1516,8 @@ public partial class Combat : MonoBehaviour
         currentChargeDuration = 0f;
         chargeReleaseBoostEndTime = 0f;
         chargeReleaseBoostSpeed = 1f;
+        chargeReleaseDamageScale = 1f;
+        chargeReleaseKnockbackScale = 1f;
         forceChargeForCurrentAttack = false;
         if (resetInputOrigin)
         {
@@ -1562,7 +1587,8 @@ public partial class Combat : MonoBehaviour
             chargeReleaseBoostSpeed = 1f;
             chargeReleaseBoostEndTime = 0f;
         }
-        // TODO: Use currentChargeDuration / maxChargeTime to increase damage on charged release.
+        chargeReleaseDamageScale = Mathf.Lerp(1f, chargeDamageMultiplier, normalizedCharge);
+        chargeReleaseKnockbackScale = Mathf.Lerp(1f, chargeKnockbackMultiplier, normalizedCharge);
         // TODO: Use currentChargeDuration / maxChargeTime to increase sword size while charging/releasing.
     }
 

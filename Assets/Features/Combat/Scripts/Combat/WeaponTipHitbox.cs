@@ -14,6 +14,8 @@ public class WeaponTipHitbox : MonoBehaviour
     private Transform attackerRoot;
     private AttackData currentAttack;
     private bool active;
+    private float damageMultiplier = 1f;
+    private float knockbackMultiplier = 1f;
     private readonly HashSet<Component> alreadyHit = new HashSet<Component>();
 
     void Awake()
@@ -26,10 +28,12 @@ public class WeaponTipHitbox : MonoBehaviour
         }
     }
 
-    public void BeginActiveFrames(Transform attacker, AttackData attack)
+    public void BeginActiveFrames(Transform attacker, AttackData attack, float damageScale = 1f, float knockbackScale = 1f)
     {
         attackerRoot = attacker;
         currentAttack = attack;
+        damageMultiplier = damageScale;
+        knockbackMultiplier = knockbackScale;
         alreadyHit.Clear();
         active = (tipCollider != null && attack != null);
         if (tipCollider != null) tipCollider.enabled = active;
@@ -62,11 +66,11 @@ public class WeaponTipHitbox : MonoBehaviour
             dir = attackerRoot != null ? attackerRoot.forward : transform.forward;
         dir.Normalize();
 
-        Vector3 knockbackVector = (dir * currentAttack.knockback) + (Vector3.up * currentAttack.knockbackUp);
+        Vector3 knockbackVector = ((dir * currentAttack.knockback) + (Vector3.up * currentAttack.knockbackUp)) * knockbackMultiplier;
         float airborne = currentAttack.makesAirborne ? currentAttack.airborneDuration : 0f;
 
         damageable.TakeHit(
-            currentAttack.damage,
+            Mathf.RoundToInt(currentAttack.damage * damageMultiplier),
             knockbackVector,
             currentAttack.hitstun,
             airborne,

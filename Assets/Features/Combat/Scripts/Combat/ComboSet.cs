@@ -213,20 +213,36 @@ public class ComboSet : ScriptableObject
         attemptLockDuration = 0.5f,
         hitboxDelay = 0.25f,
         throwAnimationTrigger = "Throw",
-        backThrowAnimationTrigger = "",
         throwPhaseDuration = 1f,
         grabHitStopDuration = 0.08f,
         range = 1.4f,
         hitboxRadius = 0.6f,
-        launchVictimOnRelease = true,
         endDamage = 15,
         endKnockback = 6f,
         endKnockbackUp = 0f,
-        endHitstun = 0.2f,
-        endAirborneDuration = 0.8f,
         faceVictimTowardThrowDirection = true,
         enemyThrownStateName = "Thrown",
-        backEnemyThrownStateName = "",
+        throwCooldown = 0.8f
+    };
+
+    [Header("Back Throw")]
+    [Tooltip("Back throw move config (same pipeline as Throw, selected when stick is pulled back at throw commit).")]
+    public ThrowData backThrowData = new ThrowData
+    {
+        enableThrow = true,
+        grabAttemptAnimationTrigger = "GrabAttempt",
+        attemptLockDuration = 0.5f,
+        hitboxDelay = 0.25f,
+        throwAnimationTrigger = "BackThrow",
+        throwPhaseDuration = 1f,
+        grabHitStopDuration = 0.08f,
+        range = 1.4f,
+        hitboxRadius = 0.6f,
+        endDamage = 15,
+        endKnockback = 6f,
+        endKnockbackUp = 0f,
+        faceVictimTowardThrowDirection = true,
+        enemyThrownStateName = "BackThrown",
         throwCooldown = 0.8f
     };
 }

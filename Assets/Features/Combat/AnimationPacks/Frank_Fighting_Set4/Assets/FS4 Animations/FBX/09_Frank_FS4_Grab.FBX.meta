@@ -109,21 +109,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.01031185
-        functionName: OnThrowVictimRootMotion
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
-        floatParameter: 0
-        intParameter: 1
-        messageOptions: 0
-      - time: 0.01031185
+      - time: 0
         functionName: OnThrowPlayerRootMotion
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.06787878
+      - time: 0.01039501
+        functionName: OnThrowVictimRootMotion
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.040851757
         functionName: StopThrowVictimPseudoParent
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
@@ -151,6 +151,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.7486839
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.97726095
         functionName: OnThrowPlayerRootMotion
         data: 
@@ -158,15 +165,8 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.99326855
+      - time: 0.98079455
         functionName: OnThrowVictimRootMotion
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 1
-        functionName: ClearThrowState
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
@@ -353,26 +353,26 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.009708739
+      - time: 0.002079002
         functionName: OnThrowVictimRootMotion
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.021069493
-        functionName: OnThrowVictimRootMotion
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
-        floatParameter: 0
-        intParameter: 1
-        messageOptions: 0
-      - time: 0.02773845
+      - time: 0.013185434
         functionName: OnThrowSfxEvent
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
         intParameter: 3
+        messageOptions: 0
+      - time: 0.032601986
+        functionName: StopThrowVictimPseudoParent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
         messageOptions: 0
       - time: 0.1758267
         functionName: OnThrowSfxEvent
@@ -388,29 +388,22 @@ ModelImporter:
         floatParameter: 0
         intParameter: 10
         messageOptions: 0
-      - time: 0.2446602
-        functionName: StopThrowVictimPseudoParent
+      - time: 0.7397661
+        functionName: OnThrowRelease
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.91491497
-        functionName: OnThrowPlayerRootMotionOff
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.9246435
+      - time: 0.9537496
         functionName: OnThrowVictimRootMotion
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.95030296
-        functionName: ClearThrowState
+      - time: 0.96896905
+        functionName: OnThrowPlayerRootMotionOff
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0

@@ -32,23 +32,63 @@ public static class AnimationEventMethodCatalog
 
     private static readonly CuratedEntry[] CuratedEntries =
     {
+        // ── WeaponCombat ──────────────────────────────────────────────────────
         new CuratedEntry { componentType = typeof(WeaponCombat), functionName = "BeginHitbox", parameterKind = AnimationEventParameterKind.Int, label = "WeaponCombat.BeginHitbox(int)" },
         new CuratedEntry { componentType = typeof(WeaponCombat), functionName = "EndHitbox", parameterKind = AnimationEventParameterKind.Int, label = "WeaponCombat.EndHitbox(int)" },
         new CuratedEntry { componentType = typeof(WeaponCombat), functionName = "BeginWeaponTipActiveFrames", parameterKind = AnimationEventParameterKind.None, label = "WeaponCombat.BeginWeaponTipActiveFrames()" },
         new CuratedEntry { componentType = typeof(WeaponCombat), functionName = "EndWeaponTipActiveFrames", parameterKind = AnimationEventParameterKind.None, label = "WeaponCombat.EndWeaponTipActiveFrames()" },
         new CuratedEntry { componentType = typeof(WeaponCombat), functionName = "EndAllHitboxes", parameterKind = AnimationEventParameterKind.None, label = "WeaponCombat.EndAllHitboxes()" },
-        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnBeginHitbox", parameterKind = AnimationEventParameterKind.Int, label = "AttackAnimationEventForwarder.OnBeginHitbox(int)" },
-        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnEndHitbox", parameterKind = AnimationEventParameterKind.Int, label = "AttackAnimationEventForwarder.OnEndHitbox(int)" },
+
+        // ── AttackAnimationEventForwarder ─────────────────────────────────────
         new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnBeginHitbox", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnBeginHitbox()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnBeginHitbox", parameterKind = AnimationEventParameterKind.Int, label = "AttackAnimationEventForwarder.OnBeginHitbox(int)" },
         new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnEndHitbox", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnEndHitbox()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnEndHitbox", parameterKind = AnimationEventParameterKind.Int, label = "AttackAnimationEventForwarder.OnEndHitbox(int)" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnChargeWindowStart", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnChargeWindowStart()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnChargeWindowEnd", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnChargeWindowEnd()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackChargeWindowStart", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnAttackChargeWindowStart()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackChargeWindowEnd", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnAttackChargeWindowEnd()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackSfxEvent", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnAttackSfxEvent()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackSfxEvent", parameterKind = AnimationEventParameterKind.Int, label = "AttackAnimationEventForwarder.OnAttackSfxEvent(int)" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackSfxEvent", parameterKind = AnimationEventParameterKind.Float, label = "AttackAnimationEventForwarder.OnAttackSfxEvent(float)" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackSfxEvent", parameterKind = AnimationEventParameterKind.String, label = "AttackAnimationEventForwarder.OnAttackSfxEvent(string)" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackSFXEvent", parameterKind = AnimationEventParameterKind.None, label = "AttackAnimationEventForwarder.OnAttackSFXEvent()" },
+        new CuratedEntry { componentType = typeof(AttackAnimationEventForwarder), functionName = "OnAttackSFXEvent", parameterKind = AnimationEventParameterKind.Int, label = "AttackAnimationEventForwarder.OnAttackSFXEvent(int)" },
+
+        // ── Combat (attack events) ────────────────────────────────────────────
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnChargeWindowStart", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnChargeWindowStart()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnChargeWindowEnd", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnChargeWindowEnd()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnAttackChargeWindowStart", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnAttackChargeWindowStart()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnAttackChargeWindowEnd", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnAttackChargeWindowEnd()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnAttackSfxEvent", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnAttackSfxEvent()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnAttackSfxEvent", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnAttackSfxEvent(int)" },
+
+        // ── Combat (throw events) ─────────────────────────────────────────────
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowUnparent", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowUnparent()" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowVictimRootMotion", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowVictimRootMotion(int)  [0=off 1=on]" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowVictimRootMotionOn", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowVictimRootMotionOn()" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowVictimRootMotionOff", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowVictimRootMotionOff()" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowPlayerRootMotion", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowPlayerRootMotion(int)  [0=off 1=on]" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowPlayerRootMotionOn", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowPlayerRootMotionOn()" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowPlayerRootMotionOff", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowPlayerRootMotionOff()" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowRelease", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowRelease()" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowRelease", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowRelease(int profileIndex)" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowDamage", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowDamage(int profileIndex)" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowEndVfxEvent", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowEndVfxEvent()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowSfxEvent", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowSfxEvent()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowSfxEvent", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowSfxEvent(int)" },
+
+        // ── ThrowAnimationEventForwarder (enemy-side throw clips) ─────────────
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowUnparent", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowUnparent()" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowVictimRootMotion", parameterKind = AnimationEventParameterKind.Int, label = "ThrowAnimationEventForwarder.OnThrowVictimRootMotion(int)  [0=off 1=on]" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowVictimRootMotionOn", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowVictimRootMotionOn()" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowVictimRootMotionOff", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowVictimRootMotionOff()" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowPlayerRootMotion", parameterKind = AnimationEventParameterKind.Int, label = "ThrowAnimationEventForwarder.OnThrowPlayerRootMotion(int)  [0=off 1=on]" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowPlayerRootMotionOn", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowPlayerRootMotionOn()" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowPlayerRootMotionOff", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowPlayerRootMotionOff()" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowRelease", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowRelease()" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowRelease", parameterKind = AnimationEventParameterKind.Int, label = "ThrowAnimationEventForwarder.OnThrowRelease(int profileIndex)" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowDamage", parameterKind = AnimationEventParameterKind.Int, label = "ThrowAnimationEventForwarder.OnThrowDamage(int profileIndex)" },
     };
 
     public static List<MethodOption> GetCuratedOptions(GameObject root)

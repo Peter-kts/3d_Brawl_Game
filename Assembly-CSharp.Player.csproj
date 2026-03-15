@@ -66,6 +66,7 @@
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\TextureType.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\SimpleEnemyAI.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\ThrowData.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyAnimationConfig.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Containers\BoneTarget.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\AttackData.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\MoveTemplate.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Equipment.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCamera.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyProneSystem.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\WeaponTrail.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsAssets.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\BodypartWrapper.cs" />

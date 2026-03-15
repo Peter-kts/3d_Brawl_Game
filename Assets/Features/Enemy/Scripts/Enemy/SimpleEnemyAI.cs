@@ -39,7 +39,7 @@
  *
  * STATE PRIORITY (CurrentState / CanAct):
  * --------------------------------------
- * Dying > Airborne > Crashed > Stunned > GettingUp > Normal.
+ * Dying > Airborne > Crashed > Prone > Stunned > GettingUp > Normal.
  * Only Normal allows CanAct (chase/standoff/attack). All others block HandleMovement.
  *
  * UPDATE ORDER (each frame):
@@ -122,44 +122,19 @@ public class SimpleEnemyAI : MonoBehaviour
     [Tooltip("Gravity applied to the enemy (should match player's gravity)")]
     public float gravity = -20f;
     
-    // --- Animation: Animator ref and parameter names (must match Animator Controller) ---
+    // --- Animation: Animator ref, shared config asset, and per-enemy tuning values ---
     [Header("Animation")]
     [Tooltip("Animator for locomotion. Auto-finds on this object or children if not set.")]
     public Animator animator;
-    
-    [Tooltip("Animator parameter name for movement speed (0 = idle, 1 = full speed)")]
-    public string speedParameter = "Speed";
-    
+
+    [Tooltip("ScriptableObject with all animator parameter/state names. Shared across all enemies using the same controller. Create via Assets > Create > Enemy > Animation Config.")]
+    public EnemyAnimationConfig animationConfig;
+
     [Tooltip("How quickly the animation speed blends (higher = snappier)")]
     public float animationDamping = 10f;
-    
-    [Tooltip("Animator state name for the hit reaction animation (used with animator.Play to force-snap pose before hit stop)")]
-    public string hitStateName = "Stunned";
-    
-    [Tooltip("Animator layer index for the hit reaction animation (0 = Base Layer, 1 = Stun layer, etc.)")]
-    public int hitAnimationLayer = 1;
-    
-    [Tooltip("Animator parameter name for hit animation speed multiplier")]
-    public string hitSpeedParameter = "HitSpeed";
-    
+
     [Tooltip("Fallback base duration (seconds) when auto-detect fails. Hit state length is auto-fetched from the Animator and cached; use this if a state has no motion or to override.")]
     public float baseHitAnimDuration = 0.4f;
-    
-    [Tooltip("Optional: multiple hit reaction state names. If set, one is chosen at random (never the same twice in a row). Leave empty to use hitStateName only.")]
-    public string[] hitStateNames;
-    
-    [Header("Throw (as victim)")]
-    [Tooltip("Animator state name when this enemy is thrown by the player. Same layer as hit reaction. If empty, uses the throw's default from the player's ThrowData.")]
-    public string thrownStateName = "Thrown";
-    
-    [Tooltip("Animator trigger name for death animation")]
-    public string deathTriggerParameter = "Death";
-    
-    [Tooltip("Animator parameter name for airborne state (bool)")]
-    public string airborneParameter = "IsAirborne";
-
-    [Tooltip("Animator bool for stun (hitstun or get-up). Drive Stunned state entry/exit from this in the controller, not Speed. Must match parameter name in Animator (e.g. 'IsStunned 0' in enemy.controller).")]
-    public string stunParameter = "IsStunned 0";
 
     /*
      * LIFTOFF / LOOP / CRASH SYSTEM:
@@ -192,15 +167,15 @@ public class SimpleEnemyAI : MonoBehaviour
      * the enemy plays a get-up animation. The enemy stays stunned for
      * getUpDuration so they can't act while getting off the ground.
      */
-    [Header("Get Up (after airborne crash)")]
-    [Tooltip("Seconds the enemy lies on the floor after crash before get-up starts. 0 = get-up starts immediately.")]
+    [Header("Prone (after crash landing)")]
+    [Tooltip("Seconds the enemy lies prone on the floor after crash before get-up starts. 0 = get-up starts immediately.")]
     public float groundedDuration = 1f;
+    [Tooltip("Seconds to blend into the prone animation (0 = snap immediately).")]
+    public float proneTransitionDuration = 0.08f;
+
+    [Header("Get Up (after prone)")]
     [Tooltip("Duration the enemy is stunned while getting up (and length the get-up animation is scaled to).")]
     public float getUpDuration = 1.5f;
-    [Tooltip("Animator state name for get-up animation (stunned while getting up). Leave empty to skip get-up animation.")]
-    public string getUpStateName = "GetUp";
-    [Tooltip("Animator layer index for get-up state (e.g. 1 = Stun layer).")]
-    public int getUpLayer = 1;
     [Tooltip("Base duration of get-up clip (seconds). Speed is scaled so animation matches getUpDuration. Ignored if 0.")]
     public float baseGetUpAnimDuration = 1.2f;
 
@@ -219,7 +194,8 @@ public class SimpleEnemyAI : MonoBehaviour
     private float targetAnimSpeed;
     private int lastHitStateIndex = -1;  // When using hitStateNames[], avoid playing same state twice in a row
     private Dictionary<string, float> cachedHitStateDurations;  // Clip length per hit state name; avoids GetCurrentAnimatorStateInfo every hit
-    private AirborneSequence airborneSequence;  // Liftoff → Loop → Crash and get-up; created in Awake from airborneAnimation
+    private AirborneSequence airborneSequence;  // Liftoff → Loop → Crash; fires onCrashLanded when crash ends; created in Awake
+    private EnemyProneSystem proneSystem;       // Prone timer and animation; created in Awake; entered via AirborneSequence.onCrashLanded
 
     // --- Behavior state machine: one active behavior, transition by distance (and not mid-attack) ---
     private EnemyBehavior currentBehavior;
@@ -239,11 +215,14 @@ public class SimpleEnemyAI : MonoBehaviour
     /// <summary>Enemy health component (for stun/airborne checks).</summary>
     public EnemyHealth Health => health;
 
-    /// <summary>Airborne sequence (Liftoff/Loop/Crash and crash-finished). Use AirborneSequence.NotifyCrashFinished(isDying) when crash completes (e.g. PATH A).</summary>
+    /// <summary>Airborne sequence (Liftoff/Loop/Crash). Use AirborneSequence.NotifyCrashFinished(isDying) when crash completes externally (e.g. PATH A).</summary>
     public AirborneSequence AirborneSequence => airborneSequence;
 
+    /// <summary>Prone system (lying on ground after crash). Call ProneSystem.OverrideNextProneDuration() before a throw to set the prone length.</summary>
+    public EnemyProneSystem ProneSystem => proneSystem;
+
     /// <summary>
-    /// Current logical state (Dying &gt; Airborne &gt; Crashed &gt; Stunned &gt; GettingUp &gt; Normal).
+    /// Current logical state (Dying &gt; Airborne &gt; Crashed &gt; Prone &gt; Stunned &gt; GettingUp &gt; Normal).
     /// Single source of truth so callers don't duplicate the priority order. Combines EnemyHealth timers and airborne phase.
     /// </summary>
     public EnemyState CurrentState
@@ -258,8 +237,8 @@ public class SimpleEnemyAI : MonoBehaviour
                 return EnemyState.Airborne;
             // Slammed to ground, crash anim playing
             if (airborneSequence != null && airborneSequence.InCrash) return EnemyState.Crashed;
-            // Lying on floor after crash, waiting for groundedDuration before get-up
-            if (airborneSequence != null && airborneSequence.InGrounded) return EnemyState.Grounded;
+            // Lying prone after crash, playing prone animation until get-up starts
+            if (proneSystem != null && proneSystem.IsInProne) return EnemyState.Prone;
             // Hitstun (non-airborne)
             if (health.IsStunned) return EnemyState.Stunned;
             // Get-up after crash
@@ -332,8 +311,18 @@ public class SimpleEnemyAI : MonoBehaviour
         currentBehavior = chaseBehavior;
         currentBehavior.Enter();  // Let Chase initialize if it has entry logic
 
-        // Handles liftoff/loop/crash, grounded (lying), and get-up; gets notified when crash ends (from EnemyHealth or internal)
-        airborneSequence = new AirborneSequence(animator, airborneAnimation, hitSpeedParameter, health, getUpDuration, getUpStateName, getUpLayer, groundedDuration);
+        if (animationConfig == null)
+            Debug.LogError($"SimpleEnemyAI on '{name}': animationConfig is not assigned. Create an EnemyAnimationConfig asset (Assets > Create > Enemy > Animation Config) and assign it.", this);
+
+        // Prone system: owns the prone timer/animation; fires TriggerGetUpSequence when timer expires.
+        // Created before airborneSequence so the lambda below can close over it.
+        string proneState    = animationConfig != null ? animationConfig.proneStateName : "";
+        int    proneLayerIdx = animationConfig != null ? animationConfig.proneLayer     : 1;
+        proneSystem = new EnemyProneSystem(transform, animator, proneState, proneLayerIdx, proneTransitionDuration, health, TriggerGetUpSequence);
+
+        // Airborne sequence: Liftoff → Loop → Crash; when crash ends fires onCrashLanded → proneSystem.Enter(dur).
+        string hitSpeedParam = animationConfig != null ? animationConfig.hitSpeedParameter : "";
+        airborneSequence = new AirborneSequence(animator, airborneAnimation, hitSpeedParam, health, groundedDuration, (dur) => proneSystem.Enter(dur));
     }
 
     /*
@@ -345,6 +334,7 @@ public class SimpleEnemyAI : MonoBehaviour
     {
         ApplyGravity();
         if (airborneSequence != null) airborneSequence.Update(health);
+        if (proneSystem != null) proneSystem.Update();
         UpdateAnimator();
         // While dying (including airborne-as-death): skip movement/behavior
         if (health != null && health.IsDying) return;
@@ -384,31 +374,31 @@ public class SimpleEnemyAI : MonoBehaviour
         if (currentAnimSpeed < 0.001f && targetAnimSpeed == 0f)
             currentAnimSpeed = 0f;
 
-        // Send to Animator. During grounded freeze locomotion; during airborne (liftoff/loop/crash) use 1 so the spin isn't slowed.
-        bool inAirbornePhase = airborneSequence != null && airborneSequence.CurrentPhase != AirborneSequence.Phase.None;
-        bool inGrounded = airborneSequence != null && airborneSequence.InGrounded;
-        float speedToApply = inGrounded ? 0f : (inAirbornePhase ? 1f : currentAnimSpeed);
-        animator.SetFloat(speedParameter, speedToApply);
+        if (animationConfig == null) return;
 
-        // Grounded: freeze animator on crash pose. Airborne + crash: play at 1x (or 1.4x during crash relaunch).
-        if (CurrentState == EnemyState.Grounded)
-            animator.speed = 0f;
-        else if (CurrentState == EnemyState.Airborne || CurrentState == EnemyState.Crashed)
+        // Send to Animator. During prone/airborne, zero locomotion speed so enemy doesn't walk.
+        bool inAirbornePhase = airborneSequence != null && airborneSequence.CurrentPhase != AirborneSequence.Phase.None;
+        bool inProne = proneSystem != null && proneSystem.IsInProne;
+        float speedToApply = (inProne || inAirbornePhase) ? 0f : currentAnimSpeed;
+        animator.SetFloat(animationConfig.speedParameter, speedToApply);
+
+        // Airborne + crash: play at 1x (or speed-multiplied during crash relaunch). Prone plays at 1x via its own state.
+        if (CurrentState == EnemyState.Airborne || CurrentState == EnemyState.Crashed)
             animator.speed = 1f * (health != null ? health.GetAirborneSpeedMultiplier() : 1f);
 
         // Drive Animator booleans and reset hit speed when not in special states
         if (health != null)
         {
             // IsAirborne: from AirborneSequence when configured, else from Health
-            animator.SetBool(airborneParameter, airborneSequence != null ? airborneSequence.GetAirborneForAnimator(health) : health.IsAirborne);
+            animator.SetBool(animationConfig.airborneParameter, airborneSequence != null ? airborneSequence.GetAirborneForAnimator(health) : health.IsAirborne);
 
-            // IsStunned: hitstun (and not airborne), grounded, or get-up; Stun layer uses this for transitions
-            if (!string.IsNullOrEmpty(stunParameter))
-                animator.SetBool(stunParameter, (!inAirbornePhase && !health.IsAirborne && health.IsStunned) || inGrounded || health.IsGettingUp);
+            // StunLayerActive: hitstun (and not airborne), prone, or get-up all activate the Stun animator layer
+            if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
+                animator.SetBool(animationConfig.stunLayerParameter, (!inAirbornePhase && !health.IsAirborne && health.IsStunned) || inProne || health.IsGettingUp);
 
-            // When not in stun/airborne/grounded/get-up, ensure hit layer plays at 1x (TriggerHitAnimation sets it when hit)
-            if (!inAirbornePhase && !health.IsStunned && !inGrounded && !health.IsGettingUp && !string.IsNullOrEmpty(hitSpeedParameter))
-                animator.SetFloat(hitSpeedParameter, 1f);
+            // When not in stun/airborne/prone/get-up, ensure hit layer plays at 1x (TriggerHitAnimation sets it when hit)
+            if (!inAirbornePhase && !health.IsStunned && !inProne && !health.IsGettingUp && !string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+                animator.SetFloat(animationConfig.hitSpeedParameter, 1f);
         }
     }
 
@@ -420,66 +410,75 @@ public class SimpleEnemyAI : MonoBehaviour
     /// <param name="hitstun">Duration of the hitstun; animation is scaled to match.</param>
     public void TriggerHitAnimation(float hitstun, AttackHeight height)
     {
-        if (animator != null)
+        if (animator == null || animationConfig == null) return;
+
+        // If the enemy is prone, use the prone-specific hit state (if configured and exists in the controller).
+        bool currentlyProne = proneSystem != null && proneSystem.IsInProne;
+        if (currentlyProne
+            && !string.IsNullOrEmpty(animationConfig.proneHitStateName)
+            && AnimatorHasStateOnLayer(animator, animationConfig.hitAnimationLayer, animationConfig.proneHitStateName))
         {
-            // Prefer height-only state first (Hit_High / Hit_Mid / Hit_Low); fallback to existing random/single setup.
-            string stateToPlay;
-            string typedState = $"Hit_{height}";
-            if (AnimatorHasStateOnLayer(animator, hitAnimationLayer, typedState))
-            {
-                stateToPlay = typedState;
-                lastHitStateIndex = -1;
-            }
-            else if (hitStateNames != null && hitStateNames.Length > 0)
-            {
-                int chosenIndex;
-                do
-                {
-                    chosenIndex = Random.Range(0, hitStateNames.Length);
-                }
-                while (hitStateNames.Length >= 2 && chosenIndex == lastHitStateIndex);
-                lastHitStateIndex = chosenIndex;
-                stateToPlay = hitStateNames[chosenIndex];
-            }
-            else
-            {
-                lastHitStateIndex = -1;
-                stateToPlay = hitStateName;
-            }
-
-            // Set stun bool first so the Stun layer doesn't immediately transition out of Stunned (UpdateAnimator sets it next frame; we need it true now).
-            if (!string.IsNullOrEmpty(stunParameter))
-                animator.SetBool(stunParameter, true);
-            if (!string.IsNullOrEmpty(hitSpeedParameter))
-                animator.SetFloat(hitSpeedParameter, 1f);
-            animator.Play(stateToPlay, hitAnimationLayer, 0f);
-            animator.Update(0f);  // One frame so GetCurrentAnimatorStateInfo below returns this state
-
-            // Use cached duration when available to avoid GetCurrentAnimatorStateInfo every hit.
-            float baseDuration = baseHitAnimDuration;
-            if (cachedHitStateDurations != null && cachedHitStateDurations.TryGetValue(stateToPlay, out float cached))
-                baseDuration = cached;
-            else
-            {
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(hitAnimationLayer);
-                if (stateInfo.IsName(stateToPlay) && stateInfo.length > 0f)
-                {
-                    if (cachedHitStateDurations == null)
-                        cachedHitStateDurations = new Dictionary<string, float>();
-                    cachedHitStateDurations[stateToPlay] = stateInfo.length;
-                    baseDuration = stateInfo.length;
-                }
-            }
-
-            // Scale hit layer speed so clip finishes in hitstun seconds: speed = baseDuration / hitstun
-            if (!string.IsNullOrEmpty(hitSpeedParameter) && baseDuration > 0f)
-            {
-                float speed = (hitstun > 0.001f) ? (baseDuration / hitstun) : 1f;
-                animator.SetFloat(hitSpeedParameter, speed);
-            }
-            else if (!string.IsNullOrEmpty(hitSpeedParameter))
-                animator.SetFloat(hitSpeedParameter, 1f);
+            animator.Play(animationConfig.proneHitStateName, animationConfig.hitAnimationLayer, 0f);
+            return;
         }
+
+        // Prefer height-only state first (Hit_High / Hit_Mid / Hit_Low); fallback to existing random/single setup.
+        string stateToPlay;
+        string typedState = $"Hit_{height}";
+        if (AnimatorHasStateOnLayer(animator, animationConfig.hitAnimationLayer, typedState))
+        {
+            stateToPlay = typedState;
+            lastHitStateIndex = -1;
+        }
+        else if (animationConfig.hitStateNames != null && animationConfig.hitStateNames.Length > 0)
+        {
+            int chosenIndex;
+            do
+            {
+                chosenIndex = Random.Range(0, animationConfig.hitStateNames.Length);
+            }
+            while (animationConfig.hitStateNames.Length >= 2 && chosenIndex == lastHitStateIndex);
+            lastHitStateIndex = chosenIndex;
+            stateToPlay = animationConfig.hitStateNames[chosenIndex];
+        }
+        else
+        {
+            lastHitStateIndex = -1;
+            stateToPlay = animationConfig.hitStateName;
+        }
+
+        // Set stun bool first so the Stun layer doesn't immediately transition out of Stunned (UpdateAnimator sets it next frame; we need it true now).
+        if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
+            animator.SetBool(animationConfig.stunLayerParameter, true);
+        if (!string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+            animator.SetFloat(animationConfig.hitSpeedParameter, 1f);
+        animator.Play(stateToPlay, animationConfig.hitAnimationLayer, 0f);
+        animator.Update(0f);  // One frame so GetCurrentAnimatorStateInfo below returns this state
+
+        // Use cached duration when available to avoid GetCurrentAnimatorStateInfo every hit.
+        float baseDuration = baseHitAnimDuration;
+        if (cachedHitStateDurations != null && cachedHitStateDurations.TryGetValue(stateToPlay, out float cached))
+            baseDuration = cached;
+        else
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(animationConfig.hitAnimationLayer);
+            if (stateInfo.IsName(stateToPlay) && stateInfo.length > 0f)
+            {
+                if (cachedHitStateDurations == null)
+                    cachedHitStateDurations = new Dictionary<string, float>();
+                cachedHitStateDurations[stateToPlay] = stateInfo.length;
+                baseDuration = stateInfo.length;
+            }
+        }
+
+        // Scale hit layer speed so clip finishes in hitstun seconds: speed = baseDuration / hitstun
+        if (!string.IsNullOrEmpty(animationConfig.hitSpeedParameter) && baseDuration > 0f)
+        {
+            float speed = (hitstun > 0.001f) ? (baseDuration / hitstun) : 1f;
+            animator.SetFloat(animationConfig.hitSpeedParameter, speed);
+        }
+        else if (!string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+            animator.SetFloat(animationConfig.hitSpeedParameter, 1f);
     }
 
     bool AnimatorHasStateOnLayer(Animator targetAnimator, int layerIndex, string stateName)
@@ -500,22 +499,22 @@ public class SimpleEnemyAI : MonoBehaviour
     /// </summary>
     public void TriggerThrownAnimation(float duration, string stateName)
     {
-        if (animator == null || string.IsNullOrEmpty(stateName)) return;
+        if (animator == null || animationConfig == null || string.IsNullOrEmpty(stateName)) return;
         animator.speed = 1.2f;
         animator.Rebind();
         animator.Update(0f);
-        if (!string.IsNullOrEmpty(stunParameter))
-            animator.SetBool(stunParameter, true);
-        if (!string.IsNullOrEmpty(hitSpeedParameter))
-            animator.SetFloat(hitSpeedParameter, 1f);
-        animator.Play(stateName, hitAnimationLayer, 0f);
+        if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
+            animator.SetBool(animationConfig.stunLayerParameter, true);
+        if (!string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+            animator.SetFloat(animationConfig.hitSpeedParameter, 1f);
+        animator.Play(stateName, animationConfig.hitAnimationLayer, 0f);
         animator.Update(0f);
         float baseDuration = baseHitAnimDuration;
         if (cachedHitStateDurations != null && cachedHitStateDurations.TryGetValue(stateName, out float cached))
             baseDuration = cached;
         else
         {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(hitAnimationLayer);
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(animationConfig.hitAnimationLayer);
             if (stateInfo.IsName(stateName) && stateInfo.length > 0f)
             {
                 if (cachedHitStateDurations == null)
@@ -524,10 +523,35 @@ public class SimpleEnemyAI : MonoBehaviour
                 baseDuration = stateInfo.length;
             }
         }
-        if (!string.IsNullOrEmpty(hitSpeedParameter) && baseDuration > 0f && duration > 0.001f)
-            animator.SetFloat(hitSpeedParameter, baseDuration / duration);
-        else if (!string.IsNullOrEmpty(hitSpeedParameter))
-            animator.SetFloat(hitSpeedParameter, 1f);
+        if (!string.IsNullOrEmpty(animationConfig.hitSpeedParameter) && baseDuration > 0f && duration > 0.001f)
+            animator.SetFloat(animationConfig.hitSpeedParameter, baseDuration / duration);
+        else if (!string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+            animator.SetFloat(animationConfig.hitSpeedParameter, 1f);
+    }
+
+    /// <summary>
+    /// Called by EnemyProneSystem when the prone timer expires. Plays the get-up animation and starts the get-up stun.
+    /// Also resets the airborne speed multiplier (OnAirborneSequenceEnded).
+    /// </summary>
+    void TriggerGetUpSequence()
+    {
+        if (health == null || animator == null || animationConfig == null) return;
+        health.StartGetUp(getUpDuration);
+        health.OnAirborneSequenceEnded();
+        if (!string.IsNullOrEmpty(animationConfig.getUpStateName))
+        {
+            animator.speed = 1f;
+            if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
+                animator.SetBool(animationConfig.stunLayerParameter, true);
+            if (!string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+            {
+                float speed = (baseGetUpAnimDuration > 0f && getUpDuration > 0.001f)
+                    ? baseGetUpAnimDuration / getUpDuration
+                    : 1f;
+                animator.SetFloat(animationConfig.hitSpeedParameter, speed);
+            }
+            animator.Play(animationConfig.getUpStateName, animationConfig.getUpLayer, 0f);
+        }
     }
 
     /// <summary>
@@ -535,13 +559,13 @@ public class SimpleEnemyAI : MonoBehaviour
     /// </summary>
     public void TriggerGetUpFromThrow()
     {
-        if (health == null || animator == null || string.IsNullOrEmpty(getUpStateName)) return;
+        if (health == null || animator == null || animationConfig == null || string.IsNullOrEmpty(animationConfig.getUpStateName)) return;
         health.StartGetUp(getUpDuration);
-        if (!string.IsNullOrEmpty(stunParameter))
-            animator.SetBool(stunParameter, true);
-        animator.Play(getUpStateName, getUpLayer, 0f);
-        if (baseGetUpAnimDuration > 0f && getUpDuration > 0.001f && !string.IsNullOrEmpty(hitSpeedParameter))
-            animator.SetFloat(hitSpeedParameter, baseGetUpAnimDuration / getUpDuration);
+        if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
+            animator.SetBool(animationConfig.stunLayerParameter, true);
+        animator.Play(animationConfig.getUpStateName, animationConfig.getUpLayer, 0f);
+        if (baseGetUpAnimDuration > 0f && getUpDuration > 0.001f && !string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+            animator.SetFloat(animationConfig.hitSpeedParameter, baseGetUpAnimDuration / getUpDuration);
     }
     
     /// <summary>
@@ -550,10 +574,8 @@ public class SimpleEnemyAI : MonoBehaviour
     /// </summary>
     public void TriggerDeathAnimation()
     {
-        if (animator != null)
-        {
-            animator.SetTrigger(deathTriggerParameter);
-        }
+        if (animator != null && animationConfig != null)
+            animator.SetTrigger(animationConfig.deathTriggerParameter);
     }
     
     /// <summary>

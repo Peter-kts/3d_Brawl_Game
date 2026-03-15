@@ -68,8 +68,8 @@ public class EnemyStateDebugVisual : MonoBehaviour
                 targetColor = crashedColor;
                 pulseSpeed = 6f;
                 break;
-            case EnemyState.Grounded:
-                currentStateText = "Grounded";
+            case EnemyState.Prone:
+                currentStateText = "Prone";
                 targetColor = crashedColor;
                 pulseSpeed = 6f;
                 break;

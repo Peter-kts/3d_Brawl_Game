@@ -21,8 +21,8 @@ public enum EnemyState
     /// <summary>Landed from airborne; playing crash/land animation, cannot act.</summary>
     Crashed,
 
-    /// <summary>Crash finished; lying on floor (grounded) before get-up, cannot act.</summary>
-    Grounded,
+    /// <summary>Crash finished; lying prone on floor before get-up, cannot act.</summary>
+    Prone,
 
     /// <summary>Crash finished; playing get-up (or holding crash pose), cannot act.</summary>
     GettingUp,

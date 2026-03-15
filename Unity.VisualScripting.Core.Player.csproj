@@ -204,8 +204,8 @@
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Unity\MacroScriptableObject.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Reflection\Operators\LessThanOrEqualHandler.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Listeners\MonoBehaviour\UnityOnCollisionStayMessageListener.cs" />
-    <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Cloning\Cloners\ArrayCloner.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Reflection\Operators\MultiplicationHandler.cs" />
+    <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Cloning\Cloners\ArrayCloner.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Reflection\Operators\ExclusiveOrHandler.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Input\MouseButton.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Core\Reflection\Optimization\Func_5.cs" />

@@ -452,7 +452,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         // Crash mode: allow one hit; that hit gets 1.5x knockback, re-launch, and 1.4x airborne animation/timers
         bool inCrash = enemyAI != null && enemyAI.AirborneSequence != null && enemyAI.AirborneSequence.InCrash;
-        bool inGrounded = enemyAI != null && enemyAI.AirborneSequence != null && enemyAI.AirborneSequence.InGrounded;
+        bool inGrounded = enemyAI != null && enemyAI.ProneSystem != null && enemyAI.ProneSystem.IsInProne;
         if (inCrash && crashHitAlreadyUsed)
             return;
         if (inCrash && !crashHitAlreadyUsed)
@@ -474,7 +474,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (hp < hpBeforeDamage)
             PlayHurtSfx();
 
-        // When grounded (on floor after crash): take damage only — no knockback, airborne, hitstop, stun, or hit animation
+        // When prone (on floor after crash): take damage and play prone hit animation only — no knockback, airborne, hitstop, stun, or normal hit animation
         if (inGrounded)
         {
             if (hp <= 0)
@@ -485,6 +485,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
                     enemyAI.TriggerDeathAnimation();
                 else
                     CompleteDeath();
+            }
+            else if (enemyAI != null)
+            {
+                enemyAI.TriggerHitAnimation(hitstun, height);
             }
             return;
         }

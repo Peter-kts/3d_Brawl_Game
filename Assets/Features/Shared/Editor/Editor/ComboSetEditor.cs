@@ -17,7 +17,8 @@ public class ComboSetEditor : Editor
         "Neutral Jab 2 (Charged / Hold)",
         "Heavy Attack",
         "RB + X Attack",
-        "Throw"
+        "Throw",
+        "Back Throw"
     };
     private static readonly string[] PropertyNames =
     {
@@ -31,7 +32,8 @@ public class ComboSetEditor : Editor
         "neutralJab2",
         "heavyAttack",
         "rbXAttack",
-        "throwData"
+        "throwData",
+        "backThrowData"
     };
 
     public override void OnInspectorGUI()
@@ -59,13 +61,13 @@ public class ComboSetEditor : Editor
         selectedIndex = EditorGUILayout.Popup("Edit move:", selectedIndex, MoveNames);
         EditorPrefs.SetInt(prefsKey, selectedIndex);
 
-        // Selected move: AttackData for attacks 0..9, ThrowData for Throw (10)
+        // Selected move: AttackData for attacks 0..9, ThrowData for Throw/Back Throw (10/11)
         EditorGUILayout.Space(4);
         SerializedProperty moveProp = serializedObject.FindProperty(PropertyNames[selectedIndex]);
         if (moveProp != null)
             EditorGUILayout.PropertyField(moveProp, new GUIContent(MoveNames[selectedIndex]), true);
 
-        // Move template: only for attack moves (not Throw)
+        // Move template: only for attack moves (not Throw entries)
         if (selectedIndex < 10)
         {
             EditorGUILayout.Space(8);
