@@ -197,10 +197,9 @@ public class SimpleEnemyAI : MonoBehaviour
     private AirborneSequence airborneSequence;  // Liftoff → Loop → Crash; fires onCrashLanded when crash ends; created in Awake
     private EnemyProneSystem proneSystem;       // Prone timer and animation; created in Awake; entered via AirborneSequence.onCrashLanded
 
-    // --- Behavior state machine: one active behavior, transition by distance (and not mid-attack) ---
-    private EnemyBehavior currentBehavior;
-    private ChaseBehavior chaseBehavior;
-    private StandoffBehavior standoffBehavior;
+    private EnemyBehavior currentBehavior;      // Active behavior — Execute() called every frame; switched by distance (chase↔standoff)
+    private ChaseBehavior chaseBehavior;        // Pre-allocated; reused every time the enemy enters the chase state
+    private StandoffBehavior standoffBehavior;  // Pre-allocated; reused every time the enemy enters the standoff state
     
     // ========================================================================
     // PUBLIC PROPERTIES (accessed by behaviors and debug visuals)

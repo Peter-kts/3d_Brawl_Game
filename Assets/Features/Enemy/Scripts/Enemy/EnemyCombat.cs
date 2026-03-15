@@ -125,39 +125,35 @@ public class EnemyCombat : MonoBehaviour
     // PRIVATE STATE
     // ========================================================================
 
-    private float attackEndTime;           // When the current attack lock expires
-    private AttackData currentAttack;      // Which attack is active (for hitbox/lunge)
-    private Animator animator;
-    private CharacterController cc;
-    private EnemyHealth enemyHealth;
+    private float attackEndTime;           // Time.time when the current attack lock expires; IsAttacking is true while before this
+    private AttackData currentAttack;      // The attack currently executing (for hitbox, lunge, and SFX lookups)
+    private Animator animator;             // Cached for triggering attack animations and controlling playback speed
+    private CharacterController cc;        // Cached for lunge movement; may be null
+    private EnemyHealth enemyHealth;       // Cached to check IsStunned — interrupts active attacks when hit
 
-    // Lunge state (forward movement during attack)
-    private bool lungePending;
-    private float lungeTriggerTime;
-    private float lungeEndTime;
-    private float currentLungeDistance;
-    private float currentLungeDuration;
-    private Vector3 lungeDirection;
-    
-    // Delayed hitbox state
-    private bool hitboxPending;
-    private float hitboxTriggerTime;
-    
-    // Hit stop state
-    private struct FrozenAnimator
+    private bool lungePending;             // True while a lunge hasn't started yet; cleared when lunge window begins or attack ends
+    private float lungeTriggerTime;        // Time.time when the lunge starts (set relative to lockDuration * lungeFrame)
+    private float lungeEndTime;            // Time.time when the lunge stops; enemy moves forward between lungeTriggerTime and lungeEndTime
+    private float currentLungeDistance;   // Total forward distance for this lunge (from attack data)
+    private float currentLungeDuration;   // Time span of the lunge (from attack data); used to compute per-frame speed
+    private Vector3 lungeDirection;        // World-space forward at the moment the attack started; locked so lunge doesn't steer mid-animation
+
+    private bool hitboxPending;            // True when attack has hitboxDelay > 0 and the hitbox hasn't fired yet
+    private float hitboxTriggerTime;       // Time.time when the delayed hitbox should fire
+
+    private struct FrozenAnimator          // Holds an animator and its pre-freeze speed so it can be restored after hit-stop ends
     {
         public Animator animator;
-        public float originalSpeed;
+        public float originalSpeed;        // Speed value before we set it to 0 (e.g. 1.0 or a scaled value)
     }
-    private float hitStopEndTime;
-    private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>();
-    
-    // Start-up and recovery (play first/last portion of attack animation slower)
-    private float currentStartUpLength;
-    private float currentStartUpSpeed;
-    private float currentRecoveryLength;
-    private float currentRecoverySpeed;
-    private string currentAttackStateName;
+    private float hitStopEndTime;                                       // Time.time when hit-stop expires; animators are unfrozen at this point
+    private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>(); // All animators frozen for the current hit-stop (attacker + victim)
+
+    private float currentStartUpLength;    // Normalized time fraction during which start-up speed is applied (0 = no start-up)
+    private float currentStartUpSpeed;     // Animator speed multiplier during start-up (< 1 = slow for telegraph)
+    private float currentRecoveryLength;   // Normalized time fraction at end of clip during which recovery speed is applied
+    private float currentRecoverySpeed;    // Animator speed multiplier during recovery (< 1 = slow for vulnerability window)
+    private string currentAttackStateName; // Animator state name for the active attack; used to detect early interruption
 
     // ========================================================================
     // PUBLIC PROPERTIES

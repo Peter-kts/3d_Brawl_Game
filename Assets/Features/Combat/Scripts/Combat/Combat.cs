@@ -108,12 +108,12 @@ public partial class Combat : MonoBehaviour
     [Tooltip("Fade-out time when dedicated charge loop stops.")]
     [Min(0f)]
     public float chargeLoopSfxFadeOutDuration = 0.12f;
-    private AudioSource attackStartSfxSource;
-    private Coroutine attackStartSfxFadeCoroutine;
-    private float attackStartSfxTargetVolume = 1f;
-    private AudioSource chargeLoopSfxSource;
-    private Coroutine chargeLoopSfxFadeCoroutine;
-    private float chargeLoopSfxTargetVolume = 1f;
+    private AudioSource attackStartSfxSource;          // Dedicated AudioSource for attack-start SFX; cloned from sfxSource so it can fade independently
+    private Coroutine attackStartSfxFadeCoroutine;     // Active fade coroutine (if any); cancelled before starting a new fade to avoid overlap
+    private float attackStartSfxTargetVolume = 1f;     // Volume to restore after fade; mirrors the source's max volume
+    private AudioSource chargeLoopSfxSource;           // Dedicated AudioSource for the charge-hold loop SFX; looping, separate from hit SFX
+    private Coroutine chargeLoopSfxFadeCoroutine;      // Active fade coroutine for the charge loop; cancelled on new fade
+    private float chargeLoopSfxTargetVolume = 1f;      // Volume to restore after fade ends
     
     // ========================================================================
     // ATTACK DIRECTION SETTINGS
@@ -138,19 +138,18 @@ public partial class Combat : MonoBehaviour
     // PRIVATE STATE
     // ========================================================================
     
-    private float nextAttackTime;
-    private float currentAttackEndTime;
-    private float currentAttackRange;
-    private float currentAttackRadius;
-    private Color currentAttackColor;
-    private bool isAttacking;
+    private float nextAttackTime;              // Earliest Time.time a new attack can start (set to Time.time + attack.cooldown after each commit)
+    private float currentAttackEndTime;        // Time.time when the attack lock expires; IsAttacking stays true until this passes
+    private float currentAttackRange;          // Range of the active attack; used by the hitbox debug visualizer
+    private float currentAttackRadius;         // Hitbox sphere radius; used by the hitbox debug visualizer
+    private Color currentAttackColor;          // Debug color for the hitbox gizmo
+    private bool isAttacking;                  // True from attack commit until currentAttackEndTime; blocks new attacks and dashes
     public bool IsAttacking => isAttacking;
     /// <summary>True while the current attack lock is active (player cannot dash until this is false).</summary>
     public bool IsInAttackLock => isAttacking && Time.time < currentAttackEndTime;
-    
-    // Store the rotation applied during attack (to revert torso rotation)
-    private Quaternion preAttackRotation;
-    private bool hasAppliedTorsoRotation;
+
+    private Quaternion preAttackRotation;      // Player rotation before torso rotation was applied; used to revert after attack ends
+    private bool hasAppliedTorsoRotation;      // True if torso rotation was applied this attack; gates the revert logic
     
     // Combo state
     private int lightComboCount = 0;        // 0 = ready, 1 = in first jab (can cancel), 2 = in second jab (must wait)
@@ -160,60 +159,50 @@ public partial class Combat : MonoBehaviour
     [Tooltip("How long light input must be held before release uses charged light move.")]
     [Min(0f)]
     public float lightHoldChargeThreshold = 0.1f;
-    private bool lightPressArmed;
-    private float lightPressStartTime;
-    private bool resolvedLightAttackUseCharged;
-    private bool rbXPressArmed;
-    private bool forceChargeForNextAttack;
-    private bool forceChargeForCurrentAttack;
+    private bool lightPressArmed;                  // True from the frame RT/Y is pressed until release; allows hold-duration check
+    private float lightPressStartTime;             // Time.time the light button was pressed; compared against lightHoldChargeThreshold on release
+    private bool resolvedLightAttackUseCharged;    // Set on release: true if held long enough to be a charged light, false if a tap
+    private bool rbXPressArmed;                    // True while RB/X is held; used to detect new RB press each frame
+    private bool forceChargeForNextAttack;         // When true, the next attack commit will start in charge mode (set by anim events)
+    private bool forceChargeForCurrentAttack;      // Latched from forceChargeForNextAttack at commit time; cleared when attack ends
     
-    // Attack lunge state (shared by all attacks)
-    private bool lungePending = false;
-    private float lungeTriggerTime = 0f;
-    private float lungeEndTime = 0f;
-    private float currentLungeDistance = 0f;
-    private float currentLungeDuration = 0f;
-    private Vector3 lungeDirection;
-    
-    // Tracking state (rotate toward soft target for trackingDuration after attack start)
-    private float trackingEndTime = 0f;
-    private float currentTrackingSpeed = 0f;
-    
-    // Delayed hitbox state (fires after hitboxDelay, similar to lunge scheduling)
-    private bool hitboxPending;
-    private float hitboxTriggerTime;
-    private AttackData pendingAttackData;
-    private bool hitboxHasFired;         // True once the hitbox has been checked this attack
-    // Interrupt fallback: when true, ignore any late animation-event hitbox activations
-    // until the next explicit attack/throw commit.
-    private bool suppressHitboxActivationsUntilNextCommit;
+    private bool lungePending = false;             // True while a lunge hasn't started yet; cleared when the lunge window begins or attack ends
+    private float lungeTriggerTime = 0f;           // Time.time when the lunge starts (attack start + lockDuration * lungeFrame)
+    private float lungeEndTime = 0f;               // Time.time when the lunge stops; player moves forward between lungeTriggerTime and lungeEndTime
+    private float currentLungeDistance = 0f;       // Total forward distance for this lunge (from attack data)
+    private float currentLungeDuration = 0f;       // Time span of the lunge; used to compute per-frame move speed
+    private Vector3 lungeDirection;                // World-space forward locked at commit time so the lunge doesn't steer mid-animation
+
+    private float trackingEndTime = 0f;            // Time.time until which the player auto-rotates toward the soft target after attack start
+    private float currentTrackingSpeed = 0f;       // Degrees/second for soft-target tracking during attack; 0 = no tracking
+
+    private bool hitboxPending;                    // True when hitboxDelay > 0 and the hitbox hasn't fired yet this attack
+    private float hitboxTriggerTime;               // Time.time when the delayed hitbox fires (commit time + hitboxDelay)
+    private AttackData pendingAttackData;          // Attack data stored for the delayed hitbox fire (same as currentAttackData)
+    private bool hitboxHasFired;                   // True once the hitbox has been checked this attack; prevents double-firing
+    private bool suppressHitboxActivationsUntilNextCommit; // When true, late animation-event hitbox calls are ignored (e.g. after interrupt)
     protected bool IsHitboxActivationSuppressed => suppressHitboxActivationsUntilNextCommit;
-    private AttackData currentAttackData;
+    private AttackData currentAttackData;          // Full data for the active attack; read by hitbox, lunge, charge, and SFX code
     public AttackData CurrentAttackData => currentAttackData;
     
-    // Hit stop state (animator-only freeze on hit)
-    private struct FrozenAnimator
+    private struct FrozenAnimator              // Holds an animator and its pre-freeze speed so it can be restored after hit-stop ends
     {
         public Animator animator;
-        public float originalSpeed;
+        public float originalSpeed;            // Speed before we set it to 0; restored when hit-stop expires
     }
-    private float hitStopEndTime;
-    private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>();
-    
-    // Current attack offset for debug visualization API
-    private Vector3 currentAttackOffset;
+    private float hitStopEndTime;                                           // Time.time when hit-stop expires; all frozen animators restored at this point
+    private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>(); // Animators paused for the current hit-stop (attacker + victim)
 
-    // When the current attack started (for timing debug)
-    private float currentAttackStartTime;
+    private Vector3 currentAttackOffset;      // Hitbox center offset in local space; passed to debug visualization each frame
+    private float currentAttackStartTime;     // Time.time when the current attack was committed; used for timing debug display
     
-    // Start-up and recovery (play first/last portion of attack animation slower)
-    private float currentStartUpLength;
-    private float currentStartUpSpeed;
-    private float currentRecoveryLength;
-    private float currentRecoverySpeed;
-    private string currentAttackStateName;  // Only apply speed when we're still in this state
-    private bool currentAttackStartedFromLightInput;
-    private bool currentAttackStartedFromHeavyInput;
+    private float currentStartUpLength;            // Normalized time fraction during which start-up speed is active (0 = no start-up phase)
+    private float currentStartUpSpeed;             // Animator speed during start-up (< 1 = slow for telegraph / readability)
+    private float currentRecoveryLength;           // Normalized time fraction at end of clip during which recovery speed is active
+    private float currentRecoverySpeed;            // Animator speed during recovery (< 1 = slow for vulnerability window)
+    private string currentAttackStateName;         // State name for the active attack; only apply speed changes while in this state
+    private bool currentAttackStartedFromLightInput;  // True if committed from a light button press; used for charge-threshold checks
+    private bool currentAttackStartedFromHeavyInput;  // True if committed from heavy input; used to gate charge window entry
 
     [Header("Charge (Weapon, optional)")]
     [Tooltip("If true, weapon-strike attacks can enter a charge slowdown window via animation events.")]
@@ -262,17 +251,17 @@ public partial class Combat : MonoBehaviour
     [Tooltip("Knockback multiplier at full charge. 1 = no bonus, 2 = double knockback at max charge.")]
     [Min(1f)]
     public float chargeKnockbackMultiplier = 1.5f;
-    private bool chargeWindowOpen;
-    private bool isChargingAttack;
+    private bool chargeWindowOpen;             // True between OnChargeWindowStart and OnChargeWindowEnd animation events; player can hold to charge
+    private bool isChargingAttack;             // True while the player is actively holding during the charge window
     public bool IsChargingAttack => isChargingAttack;
     public bool IsInChargeFlow => isChargingAttack || (isAttacking && chargeWindowOpen);
-    private float chargeStartTime;
-    private float currentChargeDuration;
-    private float chargeReleaseBoostEndTime;
-    private float chargeReleaseBoostSpeed = 1f;
-    private bool chargeRumbleActive;
-    private float chargeReleaseDamageScale = 1f;
-    private float chargeReleaseKnockbackScale = 1f;
+    private float chargeStartTime;             // Time.time when charge hold began; determines charge duration on release
+    private float currentChargeDuration;       // Seconds held so far; clamped at maxChargeTime; used to compute release speed/damage
+    private float chargeReleaseBoostEndTime;   // Time.time when the post-release speed boost expires
+    private float chargeReleaseBoostSpeed = 1f; // Animator speed applied during the release boost window (lerped from chargeReleaseMaxSpeed)
+    private bool chargeRumbleActive;           // True while gamepad rumble is running for charge; cleared on release
+    private float chargeReleaseDamageScale = 1f;   // Damage multiplier baked at release time (1 = no charge, up to chargeDamageMultiplier)
+    private float chargeReleaseKnockbackScale = 1f; // Knockback multiplier baked at release time (1 = no charge, up to chargeKnockbackMultiplier)
     public float ChargeReleaseDamageScale => chargeReleaseDamageScale;
     public float ChargeReleaseKnockbackScale => chargeReleaseKnockbackScale;
 

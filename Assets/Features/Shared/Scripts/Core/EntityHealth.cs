@@ -37,7 +37,7 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
     // HEALTH (shared)
     // ========================================================================
 
-    protected int hp;
+    protected int hp;       // Current hit points; decremented by TakeHit(), checked against 0 for death
     public int CurrentHp => hp;
     public abstract int MaxHp { get; }
 
@@ -45,14 +45,14 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
     // KNOCKBACK PHYSICS STATE (shared)
     // ========================================================================
 
-    protected Vector3 kbVel;                    // Current knockback velocity (world space)
-    protected float stunUntil;                  // Time.time when stun ends
-    protected float airborneUntil;              // Time.time when airborne state ends
-    protected float hitStopEndTime;             // Time.time when hit-stop ends (position frozen until then)
-    protected Vector3 pendingKnockback;         // For launchers: applied when hitstun ends
-    protected float pendingAirborneDuration;
-    protected float pendingLaunchApplyTime;     // When hitstun ends, apply knockback so we "cut to midair"
-    protected CharacterController cc;
+    protected Vector3 kbVel;                    // Current knockback velocity in world space; decays each frame via ApplyKnockback
+    protected float stunUntil;                  // Time.time when hitstun expires — entity cannot act before this
+    protected float airborneUntil;              // Time.time when airborne state ends — gravity suspends and entity can be juggled
+    protected float hitStopEndTime;             // Time.time when hit-stop ends; position is frozen until then (set to 0 when expired)
+    protected Vector3 pendingKnockback;         // Launcher knockback held in reserve — not applied until hitstun ends (so we "cut to midair")
+    protected float pendingAirborneDuration;    // Airborne duration paired with pendingKnockback; both applied together when pendingLaunchApplyTime fires
+    protected float pendingLaunchApplyTime;     // Time.time when the pending launch fires; 0 = no pending launch
+    protected CharacterController cc;           // Cached for collision-safe knockback movement; may be null (falls back to transform.position)
 
     // ========================================================================
     // IDAMAGEABLE PROPERTIES (shared)
@@ -136,6 +136,7 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
         int chosen = 0;
         if (clips.Length >= 2)
         {
+            // Re-roll until we pick a different index than last time so the same clip never plays twice in a row
             do { chosen = Random.Range(0, clips.Length); }
             while (chosen == lastIndex);
         }

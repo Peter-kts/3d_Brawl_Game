@@ -126,25 +126,18 @@ public class LockOnSystem : MonoBehaviour
     // PRIVATE STATE
     // ========================================================================
 
-    // When an enemy is hit or hits us, we record time; score gets a bonus for a while (interactionMemory).
-    private Dictionary<Transform, float> recentInteractions = new Dictionary<Transform, float>();
-    private List<Transform> interactionCleanupBuffer = new List<Transform>();
+    private Dictionary<Transform, float> recentInteractions = new Dictionary<Transform, float>(); // Maps enemy transform → Time.time of last interaction; drives the interaction bonus in scoring
+    private List<Transform> interactionCleanupBuffer = new List<Transform>();                       // Reused by CleanupInteractionMemory to avoid allocating during cleanup
 
-    // One entry per enemy transform so we don't add the same enemy twice (multiple colliders).
-    private HashSet<Transform> trackedSet = new HashSet<Transform>();
+    private HashSet<Transform> trackedSet = new HashSet<Transform>(); // Prevents duplicate entries when an enemy has multiple colliders
     private Camera mainCamera;
 
-    // Run threat detection at detectionRate Hz instead of every frame (saves CPU).
-    private float nextDetectionTime;
+    private float nextDetectionTime;       // Time.time of the next allowed threat scan; throttles detection to detectionRate Hz
+    private float currentTargetScore;     // Score of the current SoftTarget; a new target must beat this plus switchThreshold to take over (prevents flicker)
+    private float lookAtOverrideEndTime;  // After a manual LT press or cycle, auto-switching is suppressed until this time
 
-    // When we set SoftTarget, we store its score; we only switch to a new top if it beats this + switchThreshold.
-    private float currentTargetScore;
-    // After LT look-at or cycle, we suppress auto-switch until this time so focus doesn't jump away.
-    private float lookAtOverrideEndTime;
-
-    // Reused every detection tick to avoid allocating garbage.
-    private const int MAX_COLLIDERS = 32;
-    private Collider[] colliderBuffer = new Collider[MAX_COLLIDERS];
+    private const int MAX_COLLIDERS = 32;                                // Max simultaneous overlaps; increase if the scene has more than ~32 enemies at once
+    private Collider[] colliderBuffer = new Collider[MAX_COLLIDERS];     // Reused every detection tick to avoid per-frame allocation
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -427,11 +420,11 @@ public class LockOnSystem : MonoBehaviour
     float ScoreByDistance(float distance)
     {
         if (distance < 0.1f)
-            return distanceWeight;
+            return distanceWeight;                                                           // Essentially on top of us — full score
         if (distance <= preferredRange)
-            return distanceWeight * (1f - (distance / preferredRange) * 0.5f);
-        float beyondRatio = (distance - preferredRange) / (detectionRadius - preferredRange);
-        return distanceWeight * (0.5f - beyondRatio * 0.5f);
+            return distanceWeight * (1f - (distance / preferredRange) * 0.5f);              // Sweet spot: score tapers 1.0 → 0.5 as distance grows to preferredRange
+        float beyondRatio = (distance - preferredRange) / (detectionRadius - preferredRange); // 0 at preferredRange edge, 1 at detection boundary
+        return distanceWeight * (0.5f - beyondRatio * 0.5f);                                // Beyond sweet spot: score continues tapering 0.5 → 0 at detection edge
     }
 
     /// <summary>Higher score for threats that are in front of the camera (angle to camera forward closer to 0).</summary>

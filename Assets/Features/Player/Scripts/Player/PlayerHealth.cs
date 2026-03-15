@@ -113,18 +113,18 @@ public class PlayerHealth : EntityHealth
     // PRIVATE STATE
     // ========================================================================
 
-    private PlayerController playerController;
-    private Combat combat;
-    private bool isDead;
+    private PlayerController playerController;  // Cached for IsBlocking check and disabling on death
+    private Combat combat;                      // Cached for IsInChargeFlow/IsAttacking checks and CancelBufferedAttackInputs() on damage
+    private bool isDead;                        // True once HP reaches 0; blocks further TakeHit() calls
 
     // Airborne animation: one clip split into Liftoff (0→liftoffEnd), Loop (loopStart→loopEnd), Crash (crashStart→crashEnd)
     private enum AirbornePhase { None, Liftoff, Loop, Crash }
-    private AirbornePhase airbornePhase = AirbornePhase.None;
-    private bool wasAirborne;              // Previous frame airborne state (for rising/falling edge)
-    private int lastHitStateIndex = -1;    // So we don't play the same random hit state twice in a row
-    private int lastHurtSfxIndex = -1;     // So we don't play the same hurt clip twice in a row
-    private int lastDeathSfxIndex = -1;    // So we don't play the same death clip twice in a row
-    private int lastBlockSfxIndex = -1;    // So we don't play the same block clip twice in a row
+    private AirbornePhase airbornePhase = AirbornePhase.None;  // Which section of the airborne clip is currently playing
+    private bool wasAirborne;              // Previous frame airborne state — used to detect the rising edge (became airborne) and falling edge (landed)
+    private int lastHitStateIndex  = -1;   // Index of the last randomly played hit state — prevents the same state playing twice in a row
+    private int lastHurtSfxIndex   = -1;   // Index of the last hurt clip played — prevents repeat
+    private int lastDeathSfxIndex  = -1;   // Index of the last death clip played — prevents repeat
+    private int lastBlockSfxIndex  = -1;   // Index of the last block clip played — prevents repeat
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -245,6 +245,11 @@ public class PlayerHealth : EntityHealth
     // HIT ANIMATION (state + layer, speed scaled to hitstun — same as enemy)
     // ========================================================================
 
+    /// <summary>
+    /// Checks whether an animator state exists on a given layer.
+    /// Unity accepts both short names ("Hit") and full paths ("Base Layer.Hit"), so we try both.
+    /// Used before playing states to avoid errors when a state is missing from a layer.
+    /// </summary>
     bool AnimatorHasStateOnLayer(int layerIndex, string stateName)
     {
         if (animator == null || string.IsNullOrEmpty(stateName)) return false;

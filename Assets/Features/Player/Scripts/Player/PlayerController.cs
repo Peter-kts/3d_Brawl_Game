@@ -185,26 +185,22 @@ public partial class PlayerController : MonoBehaviour
     private CharacterController cc;
     private PlayerHealth playerHealth;
     private Camera mainCamera;
-    private Vector3 verticalVelocity;           // For ApplyGravity (currently not called from Update)
-    private float currentFreeRoamTurnSpeed;    // Ramps up when you start turning (free roam)
-    private bool wasInCombatMode;
-    private float combatModeLockUntil;          // Min time to stay in combat after releasing LT (UpdateCombatModeState)
-    private float lastCombatSnapTime;
-
-    // Animation: targetAnimSpeed set by movement handlers each frame; currentAnimSpeed smoothed toward it.
-    private float currentAnimSpeed;
-    private float targetAnimSpeed;
-    private float targetMoveX;
-    private float targetMoveZ;
-    private float currentMoveX;
-    private float currentMoveZ;
-    private float currentMoveMagnitude;
-    private bool hasBlockParameter;
-    private bool blockJustPressedThisFrame;
-
-    // Step sync: walk cycle timer for stepPushMultiplier / stepSlowMultiplier (free roam and combat).
-    private float stepCycleTimer = 0f;
-    private Combat ActiveCombat => weaponCombat != null ? weaponCombat : combat;
+    private Vector3 verticalVelocity;           // Used by ApplyGravity — not called from Update yet; available if jump/fall is added later
+    private float currentFreeRoamTurnSpeed;     // Ramps from freeRoamTurnSpeedMin → freeRoamTurnSpeed as the player starts turning; resets to 0 when idle
+    private bool wasInCombatMode;               // Tracks previous frame's combat mode; used to detect the exact frame the mode changes
+    private float combatModeLockUntil;          // Combat mode can't exit before this time — prevents snapping out on a brief tap of LT
+    private float lastCombatSnapTime;           // Unused — reserved for future snap-to-target behaviour
+    private float currentAnimSpeed;            // Smoothed Speed value sent to the Animator each frame
+    private float targetAnimSpeed;             // Desired speed this frame (0 = idle, 1 = full run); movement handlers set this
+    private float targetMoveX;                 // Desired MoveX blend value (-1 left, +1 right) for the combat strafe blend tree
+    private float targetMoveZ;                 // Desired MoveZ blend value (-1 back, +1 forward)
+    private float currentMoveX;               // Smoothed MoveX actually sent to the Animator
+    private float currentMoveZ;               // Smoothed MoveZ actually sent to the Animator
+    private float currentMoveMagnitude;        // Smoothed 0–1 magnitude; both cc.Move() and the Animator use this so they stay in sync
+    private bool hasBlockParameter;            // Cached at Awake: true if the Animator has the block bool parameter (avoids searching every frame)
+    private bool blockJustPressedThisFrame;    // True only on the first frame of a block press; forces Speed=0 so the block-entry pose snaps in cleanly
+    private float stepCycleTimer = 0f;         // Advances while moving; wraps at stepCycleDuration; used by GetStepSyncMultiplier
+    private Combat ActiveCombat => weaponCombat != null ? weaponCombat : combat;  // Returns WeaponCombat when equipped, plain Combat otherwise
 
     // ========================================================================
     // UNITY LIFECYCLE

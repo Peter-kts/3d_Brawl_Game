@@ -46,18 +46,17 @@ public partial class PlayerController
     [Tooltip("Crossfade duration when transitioning into dash animation (seconds)")]
     public float dashCrossfadeDuration = 0.1f;
 
-    // Dash state
-    private float dashEndTime = 0f;
-    private float nextDashTime = 0f;
-    private Vector3 dashDirection;
-    private float dashSpeed;
-    private DashDirectionType dashDirType;
-    private Transform dashCapTarget;
-    private float lastDashEndTime = -999f;
-    private bool wasDashing;
+    private float dashEndTime = 0f;             // Time.time when the current dash expires
+    private float nextDashTime = 0f;            // Time.time before which a new dash isn't allowed (cooldown)
+    private Vector3 dashDirection;              // World-space flat direction the dash travels
+    private float dashSpeed;                    // Pre-calculated as dashDistance / dashDuration
+    private DashDirectionType dashDirType;      // Forward/Back/Left/Right — resolved from stick input at dash start
+    private Transform dashCapTarget;            // Enemy to stop short of during a forward dash; null = no cap
+    private float lastDashEndTime = -999f;      // Time.time when the last dash finished; -999 = never dashed (used by RecentlyDodged)
+    private bool wasDashing;                    // Previous frame's dash state; used to detect the exact frame the dash ends
 
-    private const int DASH_OVERLAP_SIZE = 24;
-    private Collider[] dashOverlapBuffer = new Collider[DASH_OVERLAP_SIZE];
+    private const int DASH_OVERLAP_SIZE = 24;                               // Buffer size for Physics.OverlapSphereNonAlloc during dash-suck detection
+    private Collider[] dashOverlapBuffer = new Collider[DASH_OVERLAP_SIZE]; // Reused every frame to avoid per-frame allocation
 
     /// <summary>True while the player is in the middle of a dash (dodge).</summary>
     public bool IsDashing => Time.time < dashEndTime;
@@ -235,6 +234,7 @@ public partial class PlayerController
 
     void ApplyForwardDashStep()
     {
+        // Only search for a suck target on forward dashes toward the soft-lock target; side/back dashes never pull
         Transform suckTarget = (dashCapTarget != null) ? GetNearestEnemyInDashCone(dashSuckRange, dashSuckConeAngle) : null;
         if (suckTarget != null)
         {
@@ -258,13 +258,14 @@ public partial class PlayerController
             Vector3 desiredPos = transform.position + dashDirection * dashSpeed * Time.deltaTime;
             desiredPos.y = transform.position.y;
 
+            // Positive dot product means desiredPos is further along dashDirection than capPoint — we've overshot, so clamp
             if (Vector3.Dot(desiredPos - capPoint, dashDirection) > 0f)
             {
                 Vector3 clampMove = capPoint - transform.position;
                 clampMove.y = 0f;
-                if (Vector3.Dot(clampMove, dashDirection) > 0f)
+                if (Vector3.Dot(clampMove, dashDirection) > 0f) // Only move if cap is still ahead (not already past)
                     cc.Move(clampMove);
-                dashEndTime = Time.time;
+                dashEndTime = Time.time; // End the dash immediately so the player stops here
             }
             else
             {

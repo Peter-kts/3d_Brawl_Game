@@ -85,15 +85,15 @@ public class EnemyHealth : EntityHealth
     // PRIVATE STATE
     // ========================================================================
 
-    private SimpleEnemyAI enemyAI;           // Reference to AI for triggering hit animations
-    private EnemyCombat enemyCombat;         // Cached for CompleteDeath()
-    private bool isDying;                    // True once death animation starts (prevents further hits)
-    private float getUpUntil;               // Time.time when get-up stun ends (0 = not getting up)
-    private float throwVictimUntil;         // Time.time while enemy is in throw-victim phase
-    private bool crashHitAlreadyUsed;       // True after taking the one allowed hit while in crash
-    private float airborneSpeedMultiplier = 1f; // 1.4f during crash-relaunch so animation and timers match
-    private int lastHurtSfxIndex = -1;      // So we don't play the same hurt clip twice in a row
-    private int lastDeathSfxIndex = -1;     // So we don't play the same death clip twice in a row
+    private SimpleEnemyAI enemyAI;               // Cached for triggering animations and accessing AirborneSequence/ProneSystem
+    private EnemyCombat enemyCombat;             // Cached for CompleteDeath() — disabled when health reaches 0
+    private bool isDying;                        // True once death animation starts; blocks further TakeHit() calls
+    private float getUpUntil;                   // Time.time when get-up stun expires; 0 = not getting up
+    private float throwVictimUntil;             // Time.time while enemy is held in a throw; suppresses normal hit animation during this window
+    private bool crashHitAlreadyUsed;           // Allows only one hit during the crash-landing phase; reset when the crash phase ends
+    private float airborneSpeedMultiplier = 1f; // 1f normally; set to 1.4f on crash relaunch to speed up animation/timers; reset when sequence ends
+    private int lastHurtSfxIndex = -1;          // Index of the last hurt clip played — prevents the same clip twice in a row
+    private int lastDeathSfxIndex = -1;         // Index of the last death clip played — prevents repeat
 
     // ========================================================================
     // UNITY LIFECYCLE
