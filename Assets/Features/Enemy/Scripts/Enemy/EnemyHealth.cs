@@ -212,7 +212,11 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public void OnAirborneSequenceComplete()
     {
         if (isDying)
+        {
+            if (enemyAI != null)
+                enemyAI.EnterPermanentProneForDeath();
             CompleteDeath();
+        }
     }
 
     /// <summary>

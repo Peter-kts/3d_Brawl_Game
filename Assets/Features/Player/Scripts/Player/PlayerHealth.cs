@@ -44,6 +44,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public float baseHitAnimDuration = 0.4f;
     [Tooltip("Optional: multiple hit state names. If set, one is chosen at random (never the same twice in a row). Leave empty to use hitStateName only.")]
     public string[] hitStateNames;
+    [Tooltip("Base-layer fallback state used to force-exit attack animations on damage interrupt if hit state doesn't exist on Base Layer.")]
+    public string interruptFallbackBaseStateName = "Idle";
 
     [Header("Block Reaction")]
     [Tooltip("Animator state name to play when a hit is blocked. Uses existing hit state by default.")]
@@ -280,7 +282,20 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     /// <summary>
     /// Play hit reaction animation.
     /// </summary>
-    void TriggerHitAnimation(float hitstun)
+    bool AnimatorHasStateOnLayer(int layerIndex, string stateName)
+    {
+        if (animator == null || string.IsNullOrEmpty(stateName)) return false;
+        if (layerIndex < 0 || layerIndex >= animator.layerCount) return false;
+
+        int shortNameHash = Animator.StringToHash(stateName);
+        if (animator.HasState(layerIndex, shortNameHash)) return true;
+
+        string fullPath = animator.GetLayerName(layerIndex) + "." + stateName;
+        int fullPathHash = Animator.StringToHash(fullPath);
+        return animator.HasState(layerIndex, fullPathHash);
+    }
+
+    void TriggerHitAnimation(float hitstun, bool forceBaseLayerCancel = false)
     {
         if (animator == null) return;
         if (string.IsNullOrEmpty(hitStateName) && (hitStateNames == null || hitStateNames.Length == 0)) return;
@@ -304,6 +319,26 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         }
 
         animator.Play(stateToPlay, hitAnimationLayer, 0f);
+        bool baseLayerOverridden = false;
+        // When a charge attack is interrupted, also drive Base Layer if possible
+        // so the attack animation cannot continue into release frames.
+        if (forceBaseLayerCancel && hitAnimationLayer != 0)
+        {
+            if (AnimatorHasStateOnLayer(0, stateToPlay))
+            {
+                animator.Play(stateToPlay, 0, 0f);
+                baseLayerOverridden = true;
+            }
+        }
+
+        // Hard fallback: if the hit state is not present on Base Layer, force a safe locomotion/idle state
+        // to avoid staying forever in an attack clip when exit-time transitions are disabled.
+        if (forceBaseLayerCancel && !baseLayerOverridden)
+        {
+            string fallback = string.IsNullOrEmpty(interruptFallbackBaseStateName) ? "Idle" : interruptFallbackBaseStateName;
+            if (AnimatorHasStateOnLayer(0, fallback))
+                animator.Play(fallback, 0, 0f);
+        }
         animator.Update(0f);
     }
 
@@ -422,9 +457,13 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             // restore baseline speed immediately when real damage is taken.
             if (animator != null)
                 animator.speed = 1f;
+            // Clear any armed attack input so held buttons don't auto-fire post-hit.
+            if (!isBlocking && combat != null)
+                combat.CancelBufferedAttackInputs();
             PlayHurtSfx();
         }
-        bool forceChargeInterruptToStun = damage > 0 && !isBlocking && combat != null && combat.IsChargingAttack;
+        // Treat the entire charge flow (window + active hold) as interruptible on real damage.
+        bool forceAttackInterruptOnDamage = damage > 0 && !isBlocking && combat != null && (combat.IsAttacking || combat.IsInChargeFlow);
         if (airborneDuration > 0f)
         {
             pendingKnockback = knockback;
@@ -440,8 +479,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         }
 
         // Don't shorten an existing longer stun; launcher: apply knockback when stun ends.
-        // If damage landed during charge, ensure at least a tiny stun so interrupt always takes over.
-        float effectiveHitstun = forceChargeInterruptToStun ? Mathf.Max(hitstun, 0.1f) : hitstun;
+        // If damage lands during any active attack flow, ensure a tiny stun so interrupt always wins this frame.
+        float effectiveHitstun = forceAttackInterruptOnDamage ? Mathf.Max(hitstun, 0.1f) : hitstun;
         stunUntil = Mathf.Max(stunUntil, Time.time + effectiveHitstun);
         if (airborneDuration > 0f)
             pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;  // launch when hit stop ends
@@ -449,10 +488,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (animator != null)
         {
             if (isBlocking) TriggerBlockHitAnimation();
-            else TriggerHitAnimation(effectiveHitstun);
+            else TriggerHitAnimation(effectiveHitstun, forceAttackInterruptOnDamage);
         }
 
-        if (forceChargeInterruptToStun)
+        if (forceAttackInterruptOnDamage)
             combat.InterruptAttackAndChargeForStun();
 
         // Airborne for launch attacks is applied when hitstun ends (in ApplyKnockback)

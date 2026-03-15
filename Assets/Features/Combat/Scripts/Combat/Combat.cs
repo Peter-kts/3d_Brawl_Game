@@ -259,6 +259,7 @@ public partial class Combat : MonoBehaviour
     private bool chargeWindowOpen;
     private bool isChargingAttack;
     public bool IsChargingAttack => isChargingAttack;
+    public bool IsInChargeFlow => isChargingAttack || (isAttacking && chargeWindowOpen);
     private float chargeStartTime;
     private float currentChargeDuration;
     private float chargeReleaseBoostEndTime;
@@ -432,6 +433,18 @@ public partial class Combat : MonoBehaviour
         hasAppliedTorsoRotation = false;
         currentAttackData = null;
         ResetChargeState();
+    }
+
+    /// <summary>
+    /// Clears buffered/armed attack inputs so held buttons do not auto-fire after taking damage.
+    /// </summary>
+    public void CancelBufferedAttackInputs()
+    {
+        lightPressArmed = false;
+        rbXPressArmed = false;
+        resolvedLightAttackUseCharged = false;
+        forceChargeForNextAttack = false;
+        forceChargeForCurrentAttack = false;
     }
 
     void RestoreAnimatorSpeedStateAfterDamageOrStun()

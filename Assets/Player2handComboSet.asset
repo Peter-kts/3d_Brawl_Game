@@ -525,18 +525,17 @@ MonoBehaviour:
     - trigger: 1
       eventId: 0
       clips:
-      - {fileID: 8300000, guid: 2b019c6187fca1e48b47e28c891dc66c, type: 3}
-      - {fileID: 8300000, guid: b883c27c88428884fb3a10dcc42b8b47, type: 3}
+      - {fileID: 8300000, guid: 2b381edbbc1b88a42a4137e9056e735d, type: 3}
       volume: 1.006
     - trigger: 0
       eventId: 0
       clips:
-      - {fileID: 8300000, guid: 7c281791d060b4f47bea3d13dcb63f49, type: 3}
+      - {fileID: 8300000, guid: 0657b4f09f34c134c9d6906162f5f0f5, type: 3}
       volume: 1.006
     - trigger: 2
       eventId: 2
       clips:
-      - {fileID: 8300000, guid: 6cd50ce8f81dc45eea0af7410bcfaf7c, type: 3}
+      - {fileID: 8300000, guid: 92ab4364da4794648be8e647423c4a29, type: 3}
       volume: 1.073
     - trigger: 2
       eventId: 3
@@ -550,6 +549,7 @@ MonoBehaviour:
     endKnockback: 20
     endKnockbackUp: 1
     proneDuration: 3
+    invertProneRotation: 1
     faceVictimTowardThrowDirection: 1
     releaseProfiles: []
     enemyThrownStateName: Thrown
@@ -593,6 +593,7 @@ MonoBehaviour:
     endKnockback: 20
     endKnockbackUp: 1
     proneDuration: 3
+    invertProneRotation: 0
     faceVictimTowardThrowDirection: 1
     releaseProfiles: []
     enemyThrownStateName: BackThrown

@@ -42,12 +42,10 @@ public class WeaponCombat : Combat
         WeaponTipHitbox hitbox = GetHitboxById(id);
         if (hitbox == null) return;
 
-        // Use currently committed attack from base Combat. Fallback keeps setup resilient.
+        // Use only the currently committed attack from base Combat.
+        // If combat was interrupted and events still fire, do not synthesize a fallback move.
         AttackData attack = CurrentAttackData;
-        if (attack == null && comboSet != null)
-            attack = comboSet.forwardJab;
-
-        if (attack == null || attack.hitboxType != AttackHitboxType.WeaponStrike) return;
+        if (!IsAttacking || attack == null || attack.hitboxType != AttackHitboxType.WeaponStrike) return;
 
         hitbox.HitConfirmed -= OnWeaponTipHitConfirmed;
         hitbox.HitConfirmed += OnWeaponTipHitConfirmed;

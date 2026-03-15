@@ -584,10 +584,23 @@ public class SimpleEnemyAI : MonoBehaviour
     /// </summary>
     public void OnDeathAnimationComplete()
     {
+        // Death should settle into prone and stay there permanently.
+        EnterPermanentProneForDeath();
+
         if (health != null)
             health.CompleteDeath();
         else
             gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Enter prone with an effectively infinite duration so death remains on the floor.
+    /// Safe to call multiple times.
+    /// </summary>
+    public void EnterPermanentProneForDeath()
+    {
+        if (proneSystem == null) return;
+        proneSystem.Enter(float.PositiveInfinity);
     }
     
     // ========================================================================
