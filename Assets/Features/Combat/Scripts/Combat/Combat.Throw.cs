@@ -70,6 +70,8 @@ public partial class Combat
 
     bool IsAnyThrowEnabled()
     {
+        // Both forward and back throw are independently configurable now.
+        // Treat throw as available if either profile is enabled in ComboSet.
         return comboSet != null && (comboSet.throwData.enableThrow || comboSet.backThrowData.enableThrow);
     }
 
@@ -97,6 +99,8 @@ public partial class Combat
 
     bool IsThrowInProgress()
     {
+        // "In progress" intentionally includes pre-connect, hold, and deferred-release frames.
+        // We use this broad gate to block normal attacks so they cannot corrupt throw ownership.
         return pendingThrowHitbox
             || currentThrowVictim != null
             || _throwVictimPseudoParentActive
@@ -105,6 +109,8 @@ public partial class Combat
 
     void ForceThrowReleaseFallback(bool applyReleaseEffects)
     {
+        // Used when expected animation events are interrupted/missed.
+        // This keeps transforms/collision/state from getting stuck in throw mode.
         if (currentThrowVictim == null) return;
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null)
@@ -123,9 +129,11 @@ public partial class Combat
     /// <summary>Starts a throw attempt: sets attack state, schedules the grab hitbox after hitboxDelay, plays grab-attempt anim.</summary>
     void DoThrow()
     {
+        // New committed throw clears the previous interrupt-suppression window.
+        suppressHitboxActivationsUntilNextCommit = false;
         _currentThrowIsBack = false; // Throw direction now resolves on grab connect (not at throw begin).
         ThrowData t = GetThrowAttemptData();
-        if (!t.enableThrow) return;
+        if (!t.enableThrow) return; // Hard gate: do not enter throw flow if no throw profile is active.
         _activeThrowData = t; // Keep attempt data active for start cues/timing until connect resolves profile.
         _hasActiveThrowData = true;
         currentAttackStartTime = Time.time;
@@ -251,9 +259,11 @@ public partial class Combat
     /// <summary>Runs when the grab hitbox connects: find victim, start pseudo-parent hold, start victim thrown state, hit stop, VFX, play player throw anim and set end time.</summary>
     void ExecuteThrowHitbox()
     {
+        if (IsHitboxActivationSuppressed) return; // Ignore stale throw-hitbox timing after damage interrupt.
         ThrowData attemptData = GetThrowAttemptData();
-        if (!attemptData.enableThrow) return;
+        if (!attemptData.enableThrow) return; // Safety: profile may have changed since throw attempt started.
 
+        // No victim found means whiff: keep existing attack lock behavior and exit quietly.
         if (!TryFindThrowVictim(attemptData, out EnemyHealth victim, out IDamageable victimDamageable)) return;
 
         // Resolve forward/back throw at connect time using current stick input.
@@ -261,6 +271,8 @@ public partial class Combat
         ThrowData connectData = GetThrowDataForInput(_currentThrowIsBack);
         if (connectData.enableThrow)
         {
+            // Commit to the connect-time profile so subsequent events (damage/release/vfx/prone)
+            // use the same throw variant consistently for the rest of this throw.
             _activeThrowData = connectData;
             _hasActiveThrowData = true;
         }
@@ -291,7 +303,7 @@ public partial class Combat
 
     void PlayThrowCues(AttackSfxTriggerType trigger, int eventId)
     {
-        if (!_hasActiveThrowData) return;
+        if (!_hasActiveThrowData) return; // Guard against stale animation events firing after throw was aborted.
         ThrowData t = _activeThrowData;
         if (!t.enableThrow || t.sfxCues == null || t.sfxCues.Count == 0) return;
         for (int i = 0; i < t.sfxCues.Count; i++)
@@ -502,6 +514,8 @@ public partial class Combat
     /// <summary>Animation event (with profile index): defers full release to LateUpdate so bake/release/CompleteThrowRelease run after root motion this frame.</summary>
     public void OnThrowRelease(int releaseProfileIndex)
     {
+        // Ignore stale release events after interrupts/cleanup.
+        // Without this guard, old clip events could release/apply prone on the wrong target.
         if (currentThrowVictim == null || !_hasActiveThrowData || !_activeThrowData.enableThrow) return;
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
@@ -512,6 +526,7 @@ public partial class Combat
     /// <summary>Animation event: defers throw damage to LateUpdate so it applies on the exact frame; profileIndex selects release profile or -1 for default.</summary>
     public void OnThrowDamage(int profileIndex)
     {
+        // Damage is event-driven; this guard prevents phantom damage after a canceled throw.
         if (currentThrowVictim == null || !_hasActiveThrowData || !_activeThrowData.enableThrow) return;
         _deferThrowDamageToLateUpdate = true;
         _deferThrowDamageProfileIndex = profileIndex;
@@ -520,6 +535,7 @@ public partial class Combat
     /// <summary>Animation event: spawns throw-end VFX at current victim position (or in front of player if victim is missing).</summary>
     public void OnThrowEndVfxEvent()
     {
+        // Guard against VFX event timing after throw teardown.
         if (!_hasActiveThrowData || !_activeThrowData.enableThrow) return;
         ThrowData t = _activeThrowData;
         if (t.throwEndVfxPrefab == null) return;
@@ -564,6 +580,7 @@ public partial class Combat
     void ApplyThrowDamage(int releaseProfileIndex = -1)
     {
         ThrowData t = _activeThrowData;
+        // Final safety gate for deferred damage execution.
         if (!t.enableThrow || currentThrowVictim == null) return;
         Transform victimTransform = (currentThrowVictim as Component)?.transform;
         if (victimTransform == null) return;
@@ -593,6 +610,7 @@ public partial class Combat
     /// <summary>Enter prone on the throw victim. Called at release (OnThrowRelease) regardless of whether damage was already applied mid-throw.</summary>
     void EnterThrowProne(Transform victimTransform, int releaseProfileIndex = -1)
     {
+        // Only enter prone from an actively owned throw victim.
         if (!_hasActiveThrowData || victimTransform == null) return;
         ThrowData t = _activeThrowData;
         float proneDuration = (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)

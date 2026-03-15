@@ -3,12 +3,15 @@
  * PLAYERHEALTH.CS - Player HP, damage, knockback, hit stun, and hit reaction
  * ============================================================================
  *
- * Implements IDamageable so enemy attacks (EnemyCombat) can damage the player
- * when the enemy hitbox overlaps the player's CharacterController (hurtbox).
+ * Inherits from EntityHealth for shared knockback physics, stun/airborne
+ * timers, IDamageable properties, and the random-SFX helper.
  *
- * Handles: HP, TakeHit, knockback (with hit-stop position freeze), hit stun,
- * hit animation trigger, and optional death (disable on zero HP).
- * Animator freeze for hit stop is applied by EnemyCombat on the target.
+ * This class adds what is unique to the player:
+ *   - Blocking (reduces damage/knockback/hitstun)
+ *   - Hit/block animation system (multiple random states, base-layer cancel)
+ *   - Airborne animation phases (Liftoff / Loop / Crash)
+ *   - Gamepad rumble on hit-stop
+ *   - Combat interrupt on damage
  *
  * GAME CONTEXT:
  * - Same knockback/airborne/hitstun model as EnemyHealth so player and enemies
@@ -21,11 +24,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 
-public class PlayerHealth : MonoBehaviour, IDamageable
+public class PlayerHealth : EntityHealth
 {
     [Header("Health")]
     [Tooltip("Starting/maximum health points.")]
     public int maxHp = 100;
+    public override int MaxHp => maxHp;
 
     [Header("Hit Reaction")]
     [Tooltip("How quickly knockback velocity decays. Higher = stops faster.")]
@@ -100,7 +104,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Tooltip("Volume scale for block SFX.")]
     [Range(0f, 1f)]
     public float blockSfxVolume = 1f;
-    
+
     [Header("Airborne Animation (Liftoff / Loop / Crash)")]
     [Tooltip("Settings for splitting a single airborne animation into liftoff, loop, and crash phases. Leave airborneStateName empty to disable.")]
     public AirborneAnimationSettings airborneAnimation = new AirborneAnimationSettings();
@@ -109,26 +113,18 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     // PRIVATE STATE
     // ========================================================================
 
-    private int hp;                        // Current health
-    private Vector3 kbVel;                 // Knockback velocity (world space), decayed each frame
-    private float stunUntil;               // Time.time when stun ends (can't act until then)
-    private float airborneUntil;           // Time.time when airborne ends (launched by heavy/launcher)
-    private float hitStopEndTime;          // Time.time when hit-stop ends (position frozen until then)
-    private Vector3 pendingKnockback;      // For launchers: applied when hitstun ends so we "cut to midair"
-    private float pendingAirborneDuration;
-    private float pendingLaunchApplyTime;  // When hitstun ends, apply knockback/launch so we "cut to midair"
-    private CharacterController cc;        // Used for collision-safe knockback (no going through walls)
     private PlayerController playerController;
+    private Combat combat;
     private bool isDead;
-    
+
     // Airborne animation: one clip split into Liftoff (0→liftoffEnd), Loop (loopStart→loopEnd), Crash (crashStart→crashEnd)
     private enum AirbornePhase { None, Liftoff, Loop, Crash }
     private AirbornePhase airbornePhase = AirbornePhase.None;
     private bool wasAirborne;              // Previous frame airborne state (for rising/falling edge)
-    private int lastHitStateIndex = -1;     // So we don't play the same random hit state twice in a row
-    private int lastHurtSfxIndex = -1;      // So we don't play the same hurt clip twice in a row
-    private int lastDeathSfxIndex = -1;     // So we don't play the same death clip twice in a row
-    private int lastBlockSfxIndex = -1;     // So we don't play the same block clip twice in a row
+    private int lastHitStateIndex = -1;    // So we don't play the same random hit state twice in a row
+    private int lastHurtSfxIndex = -1;     // So we don't play the same hurt clip twice in a row
+    private int lastDeathSfxIndex = -1;    // So we don't play the same death clip twice in a row
+    private int lastBlockSfxIndex = -1;    // So we don't play the same block clip twice in a row
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -139,28 +135,34 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         hp = maxHp;
         cc = GetComponent<CharacterController>();
         playerController = GetComponent<PlayerController>();
+        combat = GetComponent<Combat>();
         if (animator == null) animator = PlayerController.FindAnimator(gameObject);
-        if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>();
-        if (hurtSfxSource == null) hurtSfxSource = GetComponentInChildren<AudioSource>();
-        if (deathSfxSource == null) deathSfxSource = hurtSfxSource;
-        if (deathSfxSource == null) deathSfxSource = GetComponent<AudioSource>();
-        if (deathSfxSource == null) deathSfxSource = GetComponentInChildren<AudioSource>();
-        if (blockSfxSource == null) blockSfxSource = hurtSfxSource;
-        if (blockSfxSource == null) blockSfxSource = GetComponent<AudioSource>();
-        if (blockSfxSource == null) blockSfxSource = GetComponentInChildren<AudioSource>();
+        if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
+        deathSfxSource = ResolveSfxSource(deathSfxSource);
+        blockSfxSource = ResolveSfxSource(blockSfxSource);
     }
 
     void Update()
     {
         if (isDead) return;
-        ApplyKnockback();
+        ApplyKnockback(knockbackFriction);
         UpdateAirborneAnimation();
     }
 
     // ========================================================================
+    // HELPERS
+    // ========================================================================
+
+    /// <summary>Returns the assigned source if set, otherwise falls back to hurtSfxSource, then any AudioSource on this object.</summary>
+    private AudioSource ResolveSfxSource(AudioSource assigned) =>
+        assigned != null ? assigned :
+        hurtSfxSource != null ? hurtSfxSource :
+        GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
+
+    // ========================================================================
     // AIRBORNE ANIMATION (Liftoff → Loop → Crash)
     // ========================================================================
-    
+
     /// <summary>
     /// Drives airborne animation: Liftoff (rising) → Loop (in air, can repeat) → Crash (landing).
     /// Uses normalizedTime (0..1 through the clip) to know when to switch phases.
@@ -169,14 +171,14 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         if (animator == null) return;
         if (!airborneAnimation.IsConfigured) return;
-        
+
         bool isAirborne = IsAirborne;
-        
+
         // Rising edge: just became airborne → start Liftoff (play from liftoffStart in the clip)
         if (isAirborne && !wasAirborne)
         {
             airbornePhase = AirbornePhase.Liftoff;
-            
+
             if (airborneAnimation.crossfadeDuration > 0f)
             {
                 animator.CrossFadeInFixedTime(
@@ -193,7 +195,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
                     airborneAnimation.liftoffStart);
             }
         }
-        
+
         // Falling edge: was airborne, now grounded → play Crash (landing) from crashStart
         if (!isAirborne && wasAirborne && airbornePhase != AirbornePhase.None)
         {
@@ -203,15 +205,15 @@ public class PlayerHealth : MonoBehaviour, IDamageable
                 airborneAnimation.airborneAnimationLayer,
                 airborneAnimation.crashStart);
         }
-        
+
         wasAirborne = isAirborne;
-        
+
         // Per-frame: use normalizedTime (0 = start of state, 1 = one full cycle) to advance phases
         if (airbornePhase == AirbornePhase.None) return;
-        
+
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(airborneAnimation.airborneAnimationLayer);
         float normalizedTime = stateInfo.normalizedTime; // 0..1 through current state (can go >1 if looping)
-        
+
         switch (airbornePhase)
         {
             case AirbornePhase.Liftoff:
@@ -221,7 +223,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
                     animator.Play(airborneAnimation.airborneStateName, airborneAnimation.airborneAnimationLayer, airborneAnimation.loopStart);
                 }
                 break;
-                
+
             case AirbornePhase.Loop:
                 // When we pass loopEnd, jump back to loopStart so the "in air" part repeats (juggling)
                 if (normalizedTime >= airborneAnimation.loopEnd)
@@ -229,7 +231,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
                     animator.Play(airborneAnimation.airborneStateName, airborneAnimation.airborneAnimationLayer, airborneAnimation.loopStart);
                 }
                 break;
-                
+
             case AirbornePhase.Crash:
                 if (normalizedTime >= airborneAnimation.crashEnd)
                 {
@@ -240,48 +242,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     }
 
     // ========================================================================
-    // KNOCKBACK PHYSICS
-    // ========================================================================
-
-    /// <summary>
-    /// Apply knockback each frame: move by kbVel * deltaTime, then decay kbVel (exponential decay).
-    /// During hit-stop we skip this so position is frozen; delayed launches apply when hitstun ends.
-    /// </summary>
-    void ApplyKnockback()
-    {
-        if (hitStopEndTime > 0f && Time.time < hitStopEndTime)
-            return;
-        if (hitStopEndTime > 0f && Time.time >= hitStopEndTime)
-            hitStopEndTime = 0f;
-
-        // When hitstun ends, apply delayed launch so we "cut to midair" (launcher attacks)
-        if (pendingLaunchApplyTime > 0f && Time.time >= pendingLaunchApplyTime)
-        {
-            kbVel += pendingKnockback;
-            airborneUntil = Mathf.Max(airborneUntil, Time.time + pendingAirborneDuration);
-            pendingLaunchApplyTime = 0f;
-        }
-
-        // Only move if knockback is non-trivial (sqrMagnitude < 0.0001 means ~0.01 units/sec)
-        if (kbVel.sqrMagnitude > 0.0001f)
-        {
-            Vector3 movement = kbVel * Time.deltaTime; // distance = velocity * time
-            if (cc != null)
-                cc.Move(movement);
-            else
-                transform.position += movement;
-            // Exponential decay: Lerp toward zero with factor (1 - e^(-friction*dt)). Framerate-independent slide feel.
-            kbVel = Vector3.Lerp(kbVel, Vector3.zero, 1f - Mathf.Exp(-knockbackFriction * Time.deltaTime));
-        }
-    }
-
-    // ========================================================================
     // HIT ANIMATION (state + layer, speed scaled to hitstun — same as enemy)
     // ========================================================================
 
-    /// <summary>
-    /// Play hit reaction animation.
-    /// </summary>
     bool AnimatorHasStateOnLayer(int layerIndex, string stateName)
     {
         if (animator == null || string.IsNullOrEmpty(stateName)) return false;
@@ -342,9 +305,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         animator.Update(0f);
     }
 
-    /// <summary>
-    /// Play blocked-hit reaction animation.
-    /// </summary>
     void TriggerBlockHitAnimation()
     {
         if (animator == null) return;
@@ -353,79 +313,15 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         animator.Update(0f);
     }
 
-    void PlayHurtSfx()
-    {
-        if (hurtSfxSource == null || hurtSfxClips == null || hurtSfxClips.Length == 0) return;
-
-        int chosenIndex = 0;
-        if (hurtSfxClips.Length >= 2)
-        {
-            do { chosenIndex = Random.Range(0, hurtSfxClips.Length); }
-            while (chosenIndex == lastHurtSfxIndex);
-        }
-        lastHurtSfxIndex = chosenIndex;
-
-        AudioClip clip = hurtSfxClips[chosenIndex];
-        if (clip == null) return;
-
-        float minPitch = Mathf.Min(hurtSfxPitchMin, hurtSfxPitchMax);
-        float maxPitch = Mathf.Max(hurtSfxPitchMin, hurtSfxPitchMax);
-        hurtSfxSource.pitch = Random.Range(minPitch, maxPitch);
-        hurtSfxSource.PlayOneShot(clip, Mathf.Max(0f, hurtSfxVolume));
-    }
-
-    void PlayDeathSfx()
-    {
-        if (deathSfxSource == null || deathSfxClips == null || deathSfxClips.Length == 0) return;
-
-        int chosenIndex = 0;
-        if (deathSfxClips.Length >= 2)
-        {
-            do { chosenIndex = Random.Range(0, deathSfxClips.Length); }
-            while (chosenIndex == lastDeathSfxIndex);
-        }
-        lastDeathSfxIndex = chosenIndex;
-
-        AudioClip clip = deathSfxClips[chosenIndex];
-        if (clip == null) return;
-
-        float minPitch = Mathf.Min(deathSfxPitchMin, deathSfxPitchMax);
-        float maxPitch = Mathf.Max(deathSfxPitchMin, deathSfxPitchMax);
-        deathSfxSource.pitch = Random.Range(minPitch, maxPitch);
-        deathSfxSource.PlayOneShot(clip, Mathf.Max(0f, deathSfxVolume));
-    }
-
-    void PlayBlockSfx()
-    {
-        if (blockSfxSource == null || blockSfxClips == null || blockSfxClips.Length == 0) return;
-
-        int chosenIndex = 0;
-        if (blockSfxClips.Length >= 2)
-        {
-            do { chosenIndex = Random.Range(0, blockSfxClips.Length); }
-            while (chosenIndex == lastBlockSfxIndex);
-        }
-        lastBlockSfxIndex = chosenIndex;
-
-        AudioClip clip = blockSfxClips[chosenIndex];
-        if (clip == null) return;
-
-        float minPitch = Mathf.Min(blockSfxPitchMin, blockSfxPitchMax);
-        float maxPitch = Mathf.Max(blockSfxPitchMin, blockSfxPitchMax);
-        blockSfxSource.pitch = Random.Range(minPitch, maxPitch);
-        blockSfxSource.PlayOneShot(clip, Mathf.Max(0f, blockSfxVolume));
-    }
+    void PlayHurtSfx()  => PlayRandomSfx(hurtSfxSource,  hurtSfxClips,  ref lastHurtSfxIndex,  hurtSfxPitchMin,  hurtSfxPitchMax,  hurtSfxVolume);
+    void PlayDeathSfx() => PlayRandomSfx(deathSfxSource, deathSfxClips, ref lastDeathSfxIndex, deathSfxPitchMin, deathSfxPitchMax, deathSfxVolume);
+    void PlayBlockSfx() => PlayRandomSfx(blockSfxSource, blockSfxClips, ref lastBlockSfxIndex, blockSfxPitchMin, blockSfxPitchMax, blockSfxVolume);
 
     // ========================================================================
-    // IDAMAGEABLE
+    // IDAMAGEABLE (override)
     // ========================================================================
 
-    public bool IsStunned => Time.time < stunUntil;
-    public bool IsAirborne => Time.time < airborneUntil;
-    public int CurrentHp => hp;
-    public int MaxHp => maxHp;
-
-    public void TakeHit(
+    public override void TakeHit(
         int damage,
         Vector3 knockback,
         float hitstun,
@@ -437,7 +333,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         if (isDead) return;
 
-        Combat combat = GetComponent<Combat>();
         bool isBlocking = playerController != null && playerController.IsBlocking;
         if (isBlocking)
         {
@@ -483,7 +378,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         float effectiveHitstun = forceAttackInterruptOnDamage ? Mathf.Max(hitstun, 0.1f) : hitstun;
         stunUntil = Mathf.Max(stunUntil, Time.time + effectiveHitstun);
         if (airborneDuration > 0f)
-            pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;  // launch when hit stop ends
+            pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;
 
         if (animator != null)
         {
@@ -494,20 +389,16 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (forceAttackInterruptOnDamage)
             combat.InterruptAttackAndChargeForStun();
 
-        // Airborne for launch attacks is applied when hitstun ends (in ApplyKnockback)
-
         if (hp <= 0)
         {
             isDead = true;
             PlayDeathSfx();
             // Disable input by disabling components; game-over flow can be added later
-            var controller = GetComponent<PlayerController>();
-            if (controller != null) controller.enabled = false;
-            var combatComponent = GetComponent<Combat>();
-            if (combatComponent != null) combatComponent.enabled = false;
+            if (playerController != null) playerController.enabled = false;
+            if (combat != null) combat.enabled = false;
         }
     }
-    
+
     /// <summary>Rumble gamepad for hit-stop duration (low = left motor 0.25, high = right motor 0.5). Uses realtime so pause doesn't affect it.</summary>
     IEnumerator RumbleForSeconds(float duration)
     {

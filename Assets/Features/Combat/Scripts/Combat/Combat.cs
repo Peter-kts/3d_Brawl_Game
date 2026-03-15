@@ -70,6 +70,8 @@ public partial class Combat : MonoBehaviour
     
     [Tooltip("Animator for playing attack animations. Auto-finds on this object or children if not set.")]
     public Animator animator;
+    [Tooltip("Animator bool used by attack->idle/locomotion transitions when states do not use Exit Time.")]
+    public string attackingBoolParameter = "IsAttacking";
     
     [Header("Throw (grab socket)")]
     [Tooltip("Empty child transform at hands/chest. Victim is parented here during hold so they ride the throw anim. Add Animation Event 'OnThrowRelease' at the chuck frame.")]
@@ -182,6 +184,10 @@ public partial class Combat : MonoBehaviour
     private float hitboxTriggerTime;
     private AttackData pendingAttackData;
     private bool hitboxHasFired;         // True once the hitbox has been checked this attack
+    // Interrupt fallback: when true, ignore any late animation-event hitbox activations
+    // until the next explicit attack/throw commit.
+    private bool suppressHitboxActivationsUntilNextCommit;
+    protected bool IsHitboxActivationSuppressed => suppressHitboxActivationsUntilNextCommit;
     private AttackData currentAttackData;
     public AttackData CurrentAttackData => currentAttackData;
     
@@ -356,6 +362,20 @@ public partial class Combat : MonoBehaviour
         // 4) Read and process attack inputs (light / heavy / throw with gating and dispatch).
         ReadAttackInputs(out bool lightTriggered, out bool heavyPressed, out bool throwPressed, out bool rbXReleased, out bool lightHeld, out bool heavyHeld);
         TryProcessAttackInputs(lightTriggered, heavyPressed, throwPressed, rbXReleased, lightHeld, heavyHeld);
+        SyncAnimatorAttackBool();
+    }
+
+    void OnDisable()
+    {
+        // Prevent stale true when component is disabled mid-attack.
+        if (animator != null && !string.IsNullOrEmpty(attackingBoolParameter))
+            animator.SetBool(attackingBoolParameter, false);
+    }
+
+    void SyncAnimatorAttackBool()
+    {
+        if (animator == null || string.IsNullOrEmpty(attackingBoolParameter)) return;
+        animator.SetBool(attackingBoolParameter, isAttacking || IsThrowInProgress());
     }
 
     /// <summary>
@@ -392,6 +412,8 @@ public partial class Combat : MonoBehaviour
     void HandleStunInterruptDuringAttack()
     {
         var damageableForStun = GetComponentInParent<IDamageable>();
+        // Gate intentionally requires "stunned now" and "combat work active".
+        // This avoids clearing combat state every frame while not attacking.
         if (damageableForStun == null || !damageableForStun.IsStunned || (!isAttacking && !hitboxPending)) return; // Interrupt combat flow only if stunned mid-attack.
 
         // Player stunned (e.g. hit during throw): release victim without damage/get-up, then clear state
@@ -399,6 +421,8 @@ public partial class Combat : MonoBehaviour
             ForceThrowReleaseFallback(applyReleaseEffects: false);
         else
             ClearThrowState();
+
+        SuppressFurtherHitboxActivationsAfterInterrupt();
 
         // Fully abort the attack so no delayed hitbox, lunge, or tracking continues.
         // Also restore any temporary animator speed modifications (startup/recovery/charge/hitstop).
@@ -420,9 +444,12 @@ public partial class Combat : MonoBehaviour
     /// </summary>
     public void InterruptAttackAndChargeForStun()
     {
+        // External hard-cancel path (called from PlayerHealth on damage).
+        // Early-out keeps this idempotent when multiple hits land in the same window.
         if (!isAttacking && !hitboxPending && !isChargingAttack) return;
         if (currentThrowVictim != null)
             ForceThrowReleaseFallback(applyReleaseEffects: false);
+        SuppressFurtherHitboxActivationsAfterInterrupt();
         RestoreAnimatorSpeedStateAfterDamageOrStun();
         isAttacking = false;
         hitboxPending = false;
@@ -435,11 +462,22 @@ public partial class Combat : MonoBehaviour
         ResetChargeState();
     }
 
+    void SuppressFurtherHitboxActivationsAfterInterrupt()
+    {
+        // Interrupt may happen while clips still have pending hitbox events later in the same state.
+        // This flag blocks those late activations until a fresh attack/throw is explicitly committed.
+        suppressHitboxActivationsUntilNextCommit = true;
+        hitboxPending = false;
+        pendingThrowHitbox = false;
+        _deferThrowDamageToLateUpdate = false;
+    }
+
     /// <summary>
     /// Clears buffered/armed attack inputs so held buttons do not auto-fire after taking damage.
     /// </summary>
     public void CancelBufferedAttackInputs()
     {
+        // Clear all armed input state so held buttons don't "replay" attacks post-interrupt.
         lightPressArmed = false;
         rbXPressArmed = false;
         resolvedLightAttackUseCharged = false;
@@ -575,7 +613,8 @@ public partial class Combat : MonoBehaviour
         if (comboSet == null) return;
         if (IsThrowInProgress())
         {
-            // Block all normal attack inputs while throw flow is active.
+            // Throw flow is single-owner state (victim attach, root-motion bake, deferred release events).
+            // Block normal attack dispatch here to prevent mixed state and stuck victims.
             lightPressArmed = false;
             rbXPressArmed = false;
             forceChargeForNextAttack = false;
@@ -596,6 +635,7 @@ public partial class Combat : MonoBehaviour
         bool canThrow = threatSystem != null && threatSystem.HasSoftTarget;
         if (throwInput && canThrow && !isAttacking && Time.time >= nextThrowTime && IsAnyThrowEnabled())
         {
+            // Throw has priority over normal attacks when requested and valid.
             DoThrow();
             return;
         }
@@ -800,6 +840,8 @@ public partial class Combat : MonoBehaviour
     
     void DoAttack(AttackData attack, Color visualColor)
     {
+        // New committed attack clears the previous interrupt-suppression window.
+        suppressHitboxActivationsUntilNextCommit = false;
         currentAttackStartTime = Time.time;
         ResetChargeState(resetInputOrigin: false);
         forceChargeForCurrentAttack = forceChargeForNextAttack;
@@ -1440,6 +1482,14 @@ public partial class Combat : MonoBehaviour
     /// </summary>
     void UpdatePendingHitbox()
     {
+        if (suppressHitboxActivationsUntilNextCommit)
+        {
+            // Drop any stale scheduled hitboxes left from an interrupted animation.
+            hitboxPending = false;
+            pendingThrowHitbox = false;
+            return;
+        }
+
         // Throw grab: fire once when delay elapsed; if no enemy in sphere, we whiff and attack lock ends at currentAttackEndTime
         if (pendingThrowHitbox && Time.time >= throwHitboxTriggerTime)
         {

@@ -367,7 +367,7 @@ public class SimpleEnemyAI : MonoBehaviour
         if (animator == null) return;
 
         // Lerp current toward target: smooth, framerate-independent (same formula as PlayerController).
-        float t = 1f - Mathf.Exp(-animationDamping * Time.deltaTime);
+        float t = PlayerController.ExponentialBlendFactor(animationDamping);
         currentAnimSpeed = Mathf.Lerp(currentAnimSpeed, targetAnimSpeed, t);
 
         // Avoid drift: when we're aiming for 0 and very close, clamp to exactly 0.

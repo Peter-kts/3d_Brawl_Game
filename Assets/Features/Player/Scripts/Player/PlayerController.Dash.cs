@@ -103,17 +103,10 @@ public partial class PlayerController
                     Camera cam = Camera.main;
                     if (cam != null)
                     {
-                        Vector3 camForward = cam.transform.forward;
-                        camForward.y = 0f; camForward.Normalize();
-                        Vector3 camRight = cam.transform.right;
-                        camRight.y = 0f; camRight.Normalize();
+                        GetFlatCameraAxes(cam, out Vector3 camForward, out Vector3 camRight);
                         Vector3 worldMove = (camForward * stick.y + camRight * stick.x).normalized;
                         Vector3 localMove = transform.InverseTransformDirection(worldMove);
-
-                        if (Mathf.Abs(localMove.x) > Mathf.Abs(localMove.z))
-                            dashDirType = localMove.x < 0f ? DashDirectionType.Left : DashDirectionType.Right;
-                        else
-                            dashDirType = localMove.z >= 0f ? DashDirectionType.Forward : DashDirectionType.Back;
+                        dashDirType = ClassifyLocalDirection(localMove);
                     }
                 }
 
@@ -155,10 +148,7 @@ public partial class PlayerController
                 Camera cam = Camera.main;
                 if (cam != null)
                 {
-                    Vector3 camForward = cam.transform.forward;
-                    camForward.y = 0f; camForward.Normalize();
-                    Vector3 camRight = cam.transform.right;
-                    camRight.y = 0f; camRight.Normalize();
+                    GetFlatCameraAxes(cam, out Vector3 camForward, out Vector3 camRight);
                     moveDir = (camForward * stick.y + camRight * stick.x).normalized;
                 }
                 else
@@ -169,10 +159,7 @@ public partial class PlayerController
                     else moveDir.Normalize();
                 }
                 Vector3 localMove = transform.InverseTransformDirection(moveDir);
-                if (Mathf.Abs(localMove.x) > Mathf.Abs(localMove.z))
-                    dashDirType = localMove.x < 0f ? DashDirectionType.Left : DashDirectionType.Right;
-                else
-                    dashDirType = localMove.z >= 0f ? DashDirectionType.Forward : DashDirectionType.Back;
+                dashDirType = ClassifyLocalDirection(localMove);
             }
             else
             {
@@ -288,5 +275,13 @@ public partial class PlayerController
         {
             cc.Move(dashDirection * dashSpeed * Time.deltaTime);
         }
+    }
+
+    /// <summary>Maps a local-space move vector to a DashDirectionType based on which axis dominates.</summary>
+    static DashDirectionType ClassifyLocalDirection(Vector3 localMove)
+    {
+        if (Mathf.Abs(localMove.x) > Mathf.Abs(localMove.z))
+            return localMove.x < 0f ? DashDirectionType.Left : DashDirectionType.Right;
+        return localMove.z >= 0f ? DashDirectionType.Forward : DashDirectionType.Back;
     }
 }

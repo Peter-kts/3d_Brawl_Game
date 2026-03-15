@@ -42,6 +42,10 @@ public class WeaponCombat : Combat
         WeaponTipHitbox hitbox = GetHitboxById(id);
         if (hitbox == null) return;
 
+        // Damage-interrupt fallback from base Combat: ignore any late hitbox events
+        // until a brand-new attack is committed.
+        if (IsHitboxActivationSuppressed) return;
+
         // Use only the currently committed attack from base Combat.
         // If combat was interrupted and events still fire, do not synthesize a fallback move.
         AttackData attack = CurrentAttackData;

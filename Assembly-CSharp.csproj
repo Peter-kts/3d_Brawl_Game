@@ -75,6 +75,7 @@
     <Compile Include="Assets\StylizedCharacter\Tools\ConvertMaterialsToURP.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\NHCharacterController.cs" />
     <Compile Include="Assets\Features\Airborne\Scripts\Airborne\AirborneSequence.cs" />
+    <Compile Include="Assets\Features\Shared\Scripts\Core\EntityHealth.cs" />
     <Compile Include="Assets\Features\LockOn\Scripts\LockOn\LockOnSystem.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\ItemCategory.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterInput.cs" />

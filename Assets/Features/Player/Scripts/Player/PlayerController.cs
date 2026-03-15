@@ -398,12 +398,7 @@ public partial class PlayerController : MonoBehaviour
         Camera cam = mainCamera;
         if (cam == null) return;
 
-        Vector3 camForward = cam.transform.forward;
-        camForward.y = 0f;
-        camForward.Normalize();
-        Vector3 camRight = cam.transform.right;
-        camRight.y = 0f;
-        camRight.Normalize();
+        GetFlatCameraAxes(cam, out Vector3 camForward, out Vector3 camRight);
         Vector3 moveDir = (camForward * input.z + camRight * input.x).normalized;
 
         Quaternion targetRot = Quaternion.LookRotation(moveDir, Vector3.up);
@@ -463,12 +458,7 @@ public partial class PlayerController : MonoBehaviour
         Camera cam = mainCamera;
         if (cam == null) return;
 
-        Vector3 camForward = cam.transform.forward;
-        camForward.y = 0f;
-        camForward.Normalize();
-        Vector3 camRight = cam.transform.right;
-        camRight.y = 0f;
-        camRight.Normalize();
+        GetFlatCameraAxes(cam, out Vector3 camForward, out Vector3 camRight);
         Vector3 moveDir = (camForward * input.z + camRight * input.x).normalized;
 
         if (hasTarget)
@@ -486,21 +476,7 @@ public partial class PlayerController : MonoBehaviour
                 Vector3 localMove = transform.InverseTransformDirection(moveDir);
                 targetMoveX = localMove.x;
                 targetMoveZ = localMove.z;
-                float forward = localMove.z;
-                float lateral = Mathf.Abs(localMove.x);
-                bool isDiagonal = Mathf.Abs(forward) > 0.2f && lateral > 0.2f;
-
-                float speed;
-                if (isDiagonal)
-                {
-                    float fwdSpeed = forward >= 0f ? advanceSpeed : backstepSpeed;
-                    speed = Mathf.Lerp(sidestepSpeed, fwdSpeed, Mathf.Abs(forward)) * diagonalPenalty;
-                }
-                else if (lateral > Mathf.Abs(forward))
-                    speed = sidestepSpeed;
-                else
-                    speed = forward >= 0f ? advanceSpeed : backstepSpeed;
-
+                float speed = SelectCombatMoveSpeed(localMove);
                 float stepMultiplier = GetStepSyncMultiplier(true);
                 cc.Move(moveDir * speed * stepMultiplier * blockMultiplier * currentMoveMagnitude * Time.deltaTime);
             }
@@ -559,6 +535,36 @@ public partial class PlayerController : MonoBehaviour
     // ========================================================================
     // INPUT HELPERS
     // ========================================================================
+
+    /// <summary>Framerate-independent lerp factor: 1 - e^(-damping * dt). Pass as the 't' in Mathf.Lerp to get smooth exponential decay.</summary>
+    public static float ExponentialBlendFactor(float damping) =>
+        1f - Mathf.Exp(-damping * Time.deltaTime);
+
+    /// <summary>
+    /// Returns the strafe speed for a given local-space move direction.
+    /// Diagonal blends sidestep and forward/back; pure lateral = sidestep; pure forward/back = advance/backstep.
+    /// </summary>
+    float SelectCombatMoveSpeed(Vector3 localMove)
+    {
+        float fwd     = localMove.z;
+        float lateral = Mathf.Abs(localMove.x);
+        bool isDiagonal = Mathf.Abs(fwd) > 0.2f && lateral > 0.2f;
+
+        if (isDiagonal)
+        {
+            float fwdSpeed = fwd >= 0f ? advanceSpeed : backstepSpeed;
+            return Mathf.Lerp(sidestepSpeed, fwdSpeed, Mathf.Abs(fwd)) * diagonalPenalty;
+        }
+        if (lateral > Mathf.Abs(fwd)) return sidestepSpeed;
+        return fwd >= 0f ? advanceSpeed : backstepSpeed;
+    }
+
+    /// <summary>Returns camera forward and right projected onto the XZ plane and normalized. Used wherever movement is camera-relative.</summary>
+    static void GetFlatCameraAxes(Camera cam, out Vector3 forward, out Vector3 right)
+    {
+        forward = cam.transform.forward; forward.y = 0f; forward.Normalize();
+        right   = cam.transform.right;   right.y   = 0f; right.Normalize();
+    }
 
     /// <summary>WASD or left stick, clamped to unit circle. Used for movement and dash direction.</summary>
     Vector2 GetStickInput()
@@ -632,7 +638,7 @@ public partial class PlayerController : MonoBehaviour
     void UpdateAnimator()
     {
         if (animator == null) return;
-        float blendAlpha = 1f - Mathf.Exp(-animationDamping * Time.deltaTime);
+        float blendAlpha = ExponentialBlendFactor(animationDamping);
         currentAnimSpeed = Mathf.Lerp(currentAnimSpeed, targetAnimSpeed, blendAlpha);
         if (currentAnimSpeed < 0.001f && targetAnimSpeed == 0f)
             currentAnimSpeed = 0f;

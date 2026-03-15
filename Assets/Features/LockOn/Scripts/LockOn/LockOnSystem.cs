@@ -412,24 +412,31 @@ public class LockOnSystem : MonoBehaviour
 
     float CalculateThreatScore(Transform threat, out float distance, out float angle)
     {
-        float score = 0f;
-
         Vector3 toThreat = threat.position - transform.position;
         toThreat.y = 0f;
         distance = toThreat.magnitude;
 
-        // Distance: higher score when closer. preferredRange = sweet spot; beyond that we deprioritize.
-        if (distance < 0.1f)
-            score += distanceWeight;
-        else if (distance <= preferredRange)
-            score += distanceWeight * (1f - (distance / preferredRange) * 0.5f);
-        else
-        {
-            float beyondRatio = (distance - preferredRange) / (detectionRadius - preferredRange);
-            score += distanceWeight * (0.5f - beyondRatio * 0.5f);
-        }
+        float score = ScoreByDistance(distance)
+                    + ScoreByAngle(toThreat, distance, out angle)
+                    + ScoreByScreenCenter(threat)
+                    + ScoreByRecentInteraction(threat);
+        return score;
+    }
 
-        // Angle: threats in front of camera score higher (forward = camera forward when available).
+    /// <summary>Higher score for threats closer than preferredRange; diminishing score beyond it.</summary>
+    float ScoreByDistance(float distance)
+    {
+        if (distance < 0.1f)
+            return distanceWeight;
+        if (distance <= preferredRange)
+            return distanceWeight * (1f - (distance / preferredRange) * 0.5f);
+        float beyondRatio = (distance - preferredRange) / (detectionRadius - preferredRange);
+        return distanceWeight * (0.5f - beyondRatio * 0.5f);
+    }
+
+    /// <summary>Higher score for threats that are in front of the camera (angle to camera forward closer to 0).</summary>
+    float ScoreByAngle(Vector3 toThreat, float distance, out float angle)
+    {
         Vector3 forward = transform.forward;
         if (mainCamera != null) forward = mainCamera.transform.forward;
         forward.y = 0f;
@@ -439,42 +446,29 @@ public class LockOnSystem : MonoBehaviour
         {
             toThreat.Normalize();
             angle = Vector3.Angle(forward, toThreat);
-            float angleScore = 1f - (angle / 180f);
-            score += angleWeight * angleScore;
+            return angleWeight * (1f - (angle / 180f));
         }
-        else
-        {
-            angle = 0f;
-            score += angleWeight;
-        }
+        angle = 0f;
+        return angleWeight;
+    }
 
-        // Screen center: threats near the crosshair get a bonus (viewport 0.5, 0.5).
-        if (mainCamera != null)
-        {
-            Vector3 screenPos = mainCamera.WorldToViewportPoint(threat.position);
-            if (screenPos.z > 0)
-            {
-                float screenCenterDist = Vector2.Distance(
-                    new Vector2(screenPos.x, screenPos.y),
-                    new Vector2(0.5f, 0.5f)
-                );
-                float screenScore = 1f - Mathf.Clamp01(screenCenterDist * 2f);
-                score += screenCenterWeight * screenScore;
-            }
-        }
+    /// <summary>Higher score for threats near the center of the screen (viewport 0.5, 0.5).</summary>
+    float ScoreByScreenCenter(Transform threat)
+    {
+        if (mainCamera == null) return 0f;
+        Vector3 screenPos = mainCamera.WorldToViewportPoint(threat.position);
+        if (screenPos.z <= 0) return 0f;
+        float screenCenterDist = Vector2.Distance(new Vector2(screenPos.x, screenPos.y), new Vector2(0.5f, 0.5f));
+        return screenCenterWeight * (1f - Mathf.Clamp01(screenCenterDist * 2f));
+    }
 
-        // Recent interaction: Combat/throw call RegisterInteraction; those threats get a temporary bonus.
-        if (recentInteractions.TryGetValue(threat, out float lastInteraction))
-        {
-            float timeSince = Time.time - lastInteraction;
-            if (timeSince < interactionMemory)
-            {
-                float interactionScore = 1f - (timeSince / interactionMemory);
-                score += recentInteractionBonus * interactionScore;
-            }
-        }
-
-        return score;
+    /// <summary>Bonus score for threats recently hit or that hit the player (fades over interactionMemory seconds).</summary>
+    float ScoreByRecentInteraction(Transform threat)
+    {
+        if (!recentInteractions.TryGetValue(threat, out float lastInteraction)) return 0f;
+        float timeSince = Time.time - lastInteraction;
+        if (timeSince >= interactionMemory) return 0f;
+        return recentInteractionBonus * (1f - (timeSince / interactionMemory));
     }
 
     // ========================================================================
