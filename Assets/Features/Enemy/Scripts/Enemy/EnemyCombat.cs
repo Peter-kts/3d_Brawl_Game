@@ -1,34 +1,37 @@
 /*
  * ============================================================================
- * ENEMYCOMBAT.CS - Enemy attack execution using AttackData
+ * ENEMYCOMBAT.CS - Enemy attack execution using AttackData + WeaponTipHitbox
  * ============================================================================
- * 
+ *
  * ENEMY ATTACK SYSTEM:
  * --------------------
- * 
+ *
  * This component handles the mechanics of enemy attacks:
- *   - Hitbox creation (Physics.OverlapSphere)
- *   - Damage dealing (via IDamageable interface)
+ *   - Hitbox activation via BeginHitbox(int id) / EndHitbox(int id) animation events
+ *   - Damage dealing (via IDamageable interface, fired from WeaponTipHitbox.HitConfirmed)
  *   - Attack animation triggering
  *   - Forward lunge during attacks
  *   - Cooldown and lock state tracking
- * 
- * It reuses the same AttackData class as the player's Combat.cs,
- * so enemy attacks are configured the same way in the Inspector:
- *   - range, damage, hitboxRadius
- *   - lockDuration, cooldown
- *   - knockback, hitstun
- *   - animation trigger, lunge settings
- * 
+ *
+ * It reuses the same AttackData class as the player's Combat.cs.
+ *
+ * HITBOX SETUP:
+ * -------------
+ * Add a WeaponTipHitbox component to the enemy's fist/weapon bone child GameObject.
+ * Assign it to the 'Weapon Tip Hitbox' slot (id = 0).
+ * For additional hitboxes (e.g. kick = id 1) add entries to 'Hitbox Slots'.
+ *
+ * ANIMATION EVENTS:
+ * -----------------
+ * On each attack clip, add:
+ *   BeginHitbox(int id)  — at the first active frame
+ *   EndHitbox(int id)    — at the last active frame
+ *
  * USAGE:
  * ------
- * 
  * Behaviors (like StandoffBehavior) call DoAttack() when they decide
  * to attack. They check IsAttacking to know when the attack is done.
- * 
- * This component is OPTIONAL on enemies. Without it, behaviors that
- * try to attack will gracefully skip the attack phase.
- * 
+ *
  * ============================================================================
  */
 
@@ -38,6 +41,27 @@ using System.Collections.Generic;
 public class EnemyCombat : MonoBehaviour
 {
     // ========================================================================
+    // HITBOX SLOTS
+    // ========================================================================
+
+    [System.Serializable]
+    public struct HitboxSlot
+    {
+        [Tooltip("Animation-event ID used by BeginHitbox(int)/EndHitbox(int).")]
+        public int id;
+        [Tooltip("WeaponTipHitbox component to activate for this ID.")]
+        public WeaponTipHitbox hitbox;
+    }
+
+    [Header("Hitboxes")]
+    [Tooltip("Default fist/weapon hitbox. Used by BeginHitbox(0) and EndHitbox(0).")]
+    public WeaponTipHitbox weaponTipHitbox;
+    [Tooltip("Auto-find WeaponTipHitbox in children if not assigned.")]
+    public bool autoFindWeaponTipHitbox = true;
+    [Tooltip("Optional additional hitboxes addressable by ID (e.g. 1=kick, 2=elbow).")]
+    public HitboxSlot[] hitboxSlots;
+
+    // ========================================================================
     // ATTACK DATA
     // ========================================================================
 
@@ -45,9 +69,7 @@ public class EnemyCombat : MonoBehaviour
     [Tooltip("Attack configuration - same format as player attacks in Combat.cs")]
     public AttackData basicAttack = new AttackData
     {
-        range = 1.8f,
         damage = 8,
-        hitboxRadius = 0.5f,
         lockDuration = 0.6f,
         cooldown = 0.5f,
         knockback = 5f,
@@ -61,16 +83,18 @@ public class EnemyCombat : MonoBehaviour
         hitStopDuration = 0.1f
     };
 
-    [Tooltip("Max distance to player to use punch; beyond this uses kick. Tune so enemy punches when close (e.g. 2.2) and kicks when farther.")]
+    [Header("Moveset (optional)")]
+    [Tooltip("If assigned, attack selection can be data-driven from this asset. If not assigned, legacy basic/kick/punish fields are used.")]
+    public EnemyComboSet enemyComboSet;
+
+    [Tooltip("Max distance to player to use punch; beyond this uses kick.")]
     public float punchRangeThreshold = 2.2f;
 
     [Header("Kick Attack (out of punch range)")]
-    [Tooltip("Used when the player is out of range of the basic attack. Longer range so the enemy can still connect.")]
+    [Tooltip("Used when the player is out of range of the basic attack.")]
     public AttackData kickAttack = new AttackData
     {
-        range = 2.6f,
         damage = 8,
-        hitboxRadius = 0.5f,
         lockDuration = 0.65f,
         cooldown = 0.5f,
         knockback = 8f,
@@ -85,12 +109,10 @@ public class EnemyCombat : MonoBehaviour
     };
 
     [Header("Dodge Punish Attack")]
-    [Tooltip("Used when the player recently dodged and is at punish distance. E.g. longer range / different animation.")]
+    [Tooltip("Used when the player recently dodged and is at punish distance.")]
     public AttackData dodgePunishAttack = new AttackData
     {
-        range = 2.8f,
         damage = 10,
-        hitboxRadius = 0.5f,
         lockDuration = 0.7f,
         cooldown = 0.5f,
         knockback = 6f,
@@ -105,19 +127,16 @@ public class EnemyCombat : MonoBehaviour
     };
 
     [Header("VFX (optional)")]
-    [Tooltip("Optional. Spawned when the attack animation starts (e.g. swing trail).")]
+    [Tooltip("Optional. Spawned when the attack animation starts.")]
     public GameObject attackStartVfxPrefab;
-    
-    [Tooltip("Optional. Spawned at hitbox center when the attack connects with a target.")]
+    [Tooltip("Optional. Spawned at hit point when the attack connects.")]
     public GameObject hitConnectVfxPrefab;
 
     [Header("SFX (optional)")]
-    [Tooltip("Audio source used for attack sounds. Auto-finds on this object/children if not assigned.")]
+    [Tooltip("Audio source used for attack sounds.")]
     public AudioSource sfxSource;
-    [Tooltip("Lowest random pitch used for attack SFX.")]
     [Range(0.5f, 1.5f)]
     public float sfxPitchMin = 0.96f;
-    [Tooltip("Highest random pitch used for attack SFX.")]
     [Range(0.5f, 1.5f)]
     public float sfxPitchMax = 1.04f;
 
@@ -125,44 +144,41 @@ public class EnemyCombat : MonoBehaviour
     // PRIVATE STATE
     // ========================================================================
 
-    private float attackEndTime;           // Time.time when the current attack lock expires; IsAttacking is true while before this
-    private AttackData currentAttack;      // The attack currently executing (for hitbox, lunge, and SFX lookups)
-    private Animator animator;             // Cached for triggering attack animations and controlling playback speed
-    private CharacterController cc;        // Cached for lunge movement; may be null
-    private EnemyHealth enemyHealth;       // Cached to check IsStunned — interrupts active attacks when hit
+    private float attackEndTime;
+    private AttackData currentAttack;
+    private Animator animator;
+    private CharacterController cc;
+    private EnemyHealth enemyHealth;
+    private EnemyStunMeter enemyStunMeter;
 
-    private bool lungePending;             // True while a lunge hasn't started yet; cleared when lunge window begins or attack ends
-    private float lungeTriggerTime;        // Time.time when the lunge starts (set relative to lockDuration * lungeFrame)
-    private float lungeEndTime;            // Time.time when the lunge stops; enemy moves forward between lungeTriggerTime and lungeEndTime
-    private float currentLungeDistance;   // Total forward distance for this lunge (from attack data)
-    private float currentLungeDuration;   // Time span of the lunge (from attack data); used to compute per-frame speed
-    private Vector3 lungeDirection;        // World-space forward at the moment the attack started; locked so lunge doesn't steer mid-animation
+    private bool lungePending;
+    private float lungeTriggerTime;
+    private float lungeEndTime;
+    private float currentLungeDistance;
+    private float currentLungeDuration;
+    private Vector3 lungeDirection;
 
-    private bool hitboxPending;            // True when attack has hitboxDelay > 0 and the hitbox hasn't fired yet
-    private float hitboxTriggerTime;       // Time.time when the delayed hitbox should fire
+    private bool hitConfirmedThisAttack; // gates first-hit VFX, SFX, and self hit-stop
 
-    private struct FrozenAnimator          // Holds an animator and its pre-freeze speed so it can be restored after hit-stop ends
+    private struct FrozenAnimator
     {
         public Animator animator;
-        public float originalSpeed;        // Speed value before we set it to 0 (e.g. 1.0 or a scaled value)
+        public float originalSpeed;
     }
-    private float hitStopEndTime;                                       // Time.time when hit-stop expires; animators are unfrozen at this point
-    private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>(); // All animators frozen for the current hit-stop (attacker + victim)
+    private float hitStopEndTime;
+    private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>();
 
-    private float currentStartUpLength;    // Normalized time fraction during which start-up speed is applied (0 = no start-up)
-    private float currentStartUpSpeed;     // Animator speed multiplier during start-up (< 1 = slow for telegraph)
-    private float currentRecoveryLength;   // Normalized time fraction at end of clip during which recovery speed is applied
-    private float currentRecoverySpeed;    // Animator speed multiplier during recovery (< 1 = slow for vulnerability window)
-    private string currentAttackStateName; // Animator state name for the active attack; used to detect early interruption
+    private float currentStartUpLength;
+    private float currentStartUpSpeed;
+    private float currentRecoveryLength;
+    private float currentRecoverySpeed;
+    private string currentAttackStateName;
 
     // ========================================================================
     // PUBLIC PROPERTIES
     // ========================================================================
 
-    /// <summary>
-    /// True while the enemy is locked in an attack animation.
-    /// Behaviors check this to know when the attack is done.
-    /// </summary>
+    /// <summary>True while the enemy is locked in an attack animation.</summary>
     public bool IsAttacking => Time.time < attackEndTime;
 
     // ========================================================================
@@ -175,23 +191,28 @@ public class EnemyCombat : MonoBehaviour
         if (animator == null) animator = GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
         enemyHealth = GetComponent<EnemyHealth>();
+        enemyStunMeter = GetComponent<EnemyStunMeter>();
         if (sfxSource == null) sfxSource = GetComponent<AudioSource>();
         if (sfxSource == null) sfxSource = GetComponentInChildren<AudioSource>();
+    }
+
+    void OnDisable()
+    {
+        EndAllHitboxes();
     }
 
     void Update()
     {
         var h = enemyHealth;
-        if (h != null && h.IsStunned)
+        if ((h != null && h.IsHitstunned) || (enemyStunMeter != null && enemyStunMeter.IsStandingStunned))
         {
             RestoreAnimatorSpeedStateAfterDamageOrStun();
             attackEndTime = 0f;
-            hitboxPending = false;
+            EndAllHitboxes();
             lungePending = false;
             return;
         }
         UpdateLunge();
-        UpdatePendingHitbox();
         UpdateHitStop();
         UpdateAttackStartUpSpeed();
     }
@@ -201,50 +222,54 @@ public class EnemyCombat : MonoBehaviour
         for (int i = 0; i < frozenAnimators.Count; i++)
         {
             Animator a = frozenAnimators[i].animator;
-            if (a != null)
-                a.speed = frozenAnimators[i].originalSpeed;
+            if (a != null) a.speed = frozenAnimators[i].originalSpeed;
         }
         frozenAnimators.Clear();
         hitStopEndTime = 0f;
-        if (animator != null)
-            animator.speed = 1f;
+        if (animator != null) animator.speed = 1f;
     }
 
     // ========================================================================
     // ATTACK EXECUTION
     // ========================================================================
 
-    /// <summary>
-    /// Execute the basic attack. Called by behaviors when the enemy decides to attack (default).
-    /// </summary>
+    /// <summary>Execute the basic attack.</summary>
     public void DoAttack()
     {
         DoAttack(basicAttack);
     }
 
-    /// <summary>
-    /// Execute a specific attack. Used for dodge-punish or other conditional attacks.
-    /// </summary>
+    /// <summary>Execute a specific attack by passing its AttackData directly.</summary>
     public void DoAttack(AttackData attack)
     {
         currentAttack = attack;
+        hitConfirmedThisAttack = false;
+
         attackEndTime = Time.time + attack.lockDuration;
-        currentStartUpLength = attack.startUpLength;
-        currentStartUpSpeed = attack.startUpSpeed;
-        currentRecoveryLength = attack.recoveryLength;
-        currentRecoverySpeed = attack.recoverySpeed;
+
+        currentStartUpLength   = attack.startUpLength;
+        currentStartUpSpeed    = attack.startUpSpeed;
+        currentRecoveryLength  = attack.recoveryLength;
+        currentRecoverySpeed   = attack.recoverySpeed;
         currentAttackStateName = !string.IsNullOrEmpty(attack.animationTrigger) ? attack.animationTrigger : null;
 
-        hitboxPending = false;
+        // Reset per-attack hit cache on all hitboxes
+        EnsureWeaponTipHitbox();
+        if (weaponTipHitbox != null) weaponTipHitbox.ResetHitCache();
+        if (hitboxSlots != null)
+            for (int i = 0; i < hitboxSlots.Length; i++)
+                hitboxSlots[i].hitbox?.ResetHitCache();
+
+        EndAllHitboxes();
 
         if (attack.lungeDistance > 0)
         {
-            lungePending = true;
-            lungeTriggerTime = Time.time + (attack.lockDuration * attack.lungeFrame);
-            lungeEndTime = lungeTriggerTime + attack.lungeDuration;
+            lungePending         = true;
+            lungeTriggerTime     = Time.time + (attack.lockDuration * attack.lungeFrame);
+            lungeEndTime         = lungeTriggerTime + attack.lungeDuration;
             currentLungeDistance = attack.lungeDistance;
             currentLungeDuration = attack.lungeDuration;
-            lungeDirection = transform.forward;
+            lungeDirection       = transform.forward;
         }
         else
         {
@@ -258,27 +283,213 @@ public class EnemyCombat : MonoBehaviour
 
         if (attackStartVfxPrefab != null)
         {
-            Vector3 pos = transform.position + attack.attackStartVfxPositionOffset;
+            Vector3 pos    = transform.position + attack.attackStartVfxPositionOffset;
             Quaternion rot = transform.rotation * Quaternion.Euler(attack.attackStartVfxRotationOffset);
-            var go = Object.Instantiate(attackStartVfxPrefab, pos, rot);
-            PlayVfx(go);
+            PlayVfx(Object.Instantiate(attackStartVfxPrefab, pos, rot));
         }
 
-        if (attack.hitboxDelay > 0f)
+        // Hitbox activation is driven by BeginHitbox/EndHitbox animation events on the attack clip.
+    }
+
+    /// <summary>
+    /// Try to select an attack from the EnemyComboSet using distance and player state.
+    /// Returns false if no set is assigned or no entry matches.
+    /// </summary>
+    public bool TrySelectAttack(float distanceToPlayer, bool playerRecentlyDodged, out AttackData selectedAttack)
+    {
+        selectedAttack = null;
+
+        if (enemyComboSet == null || enemyComboSet.moves == null || enemyComboSet.moves.Count == 0)
+            return false;
+
+        int bestPriority = int.MinValue;
+
+        for (int i = 0; i < enemyComboSet.moves.Count; i++)
         {
-            hitboxPending = true;
-            hitboxTriggerTime = Time.time + attack.hitboxDelay;
+            EnemyMoveEntry entry = enemyComboSet.moves[i];
+            if (entry == null || entry.attack == null) continue;
+
+            float minDist = Mathf.Min(entry.minDistance, entry.maxDistance);
+            float maxDist = Mathf.Max(entry.minDistance, entry.maxDistance);
+            if (distanceToPlayer < minDist || distanceToPlayer > maxDist) continue;
+
+            if (entry.requiresRecentDodge && !playerRecentlyDodged) continue;
+
+            if (selectedAttack == null || entry.priority > bestPriority)
+            {
+                selectedAttack = entry.attack;
+                bestPriority   = entry.priority;
+            }
         }
-        else
+
+        return selectedAttack != null;
+    }
+
+    // ========================================================================
+    // HITBOX ANIMATION EVENT HOOKS
+    // ========================================================================
+
+    /// <summary>Animation event: activate the hitbox with the given ID.</summary>
+    public void BeginHitbox(int id)
+    {
+        WeaponTipHitbox hitbox = GetHitboxById(id);
+        if (hitbox == null || currentAttack == null) return;
+
+        hitbox.HitConfirmed -= OnHitConfirmed;
+        hitbox.HitConfirmed += OnHitConfirmed;
+        hitbox.BeginActiveFrames(transform, currentAttack);
+    }
+
+    /// <summary>Animation event: deactivate the hitbox with the given ID.</summary>
+    public void EndHitbox(int id)
+    {
+        WeaponTipHitbox hitbox = GetHitboxById(id);
+        if (hitbox == null) return;
+        hitbox.HitConfirmed -= OnHitConfirmed;
+        hitbox.EndActiveFrames();
+    }
+
+    /// <summary>Force-close every configured hitbox (called on interrupt or disable).</summary>
+    public void EndAllHitboxes()
+    {
+        EnsureWeaponTipHitbox();
+        StopHitbox(weaponTipHitbox);
+
+        if (hitboxSlots == null) return;
+        for (int i = 0; i < hitboxSlots.Length; i++)
         {
-            ExecuteHitbox();
+            WeaponTipHitbox h = hitboxSlots[i].hitbox;
+            if (h == null || h == weaponTipHitbox) continue;
+            StopHitbox(h);
         }
     }
-    
+
+    void StopHitbox(WeaponTipHitbox hitbox)
+    {
+        if (hitbox == null) return;
+        hitbox.HitConfirmed -= OnHitConfirmed;
+        hitbox.EndActiveFrames();
+    }
+
+    void EnsureWeaponTipHitbox()
+    {
+        if (weaponTipHitbox != null || !autoFindWeaponTipHitbox) return;
+        weaponTipHitbox = GetComponentInChildren<WeaponTipHitbox>(true);
+    }
+
+    WeaponTipHitbox GetHitboxById(int id)
+    {
+        if (hitboxSlots != null)
+            for (int i = 0; i < hitboxSlots.Length; i++)
+                if (hitboxSlots[i].id == id && hitboxSlots[i].hitbox != null)
+                    return hitboxSlots[i].hitbox;
+
+        if (id != 0) return null;
+        EnsureWeaponTipHitbox();
+        return weaponTipHitbox;
+    }
+
     // ========================================================================
-    // HITBOX HELPERS
+    // HIT CONFIRMATION (fired by WeaponTipHitbox per unique target)
     // ========================================================================
-    
+
+    void OnHitConfirmed(AttackData attack, Transform targetTransform, Vector3 hitPoint)
+    {
+        var damageable = targetTransform.GetComponentInParent<IDamageable>();
+        if (damageable == null) return;
+
+        Vector3 horizontalDir = targetTransform.position - transform.position;
+        horizontalDir.y = 0f;
+        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
+        horizontalDir.Normalize();
+
+        Vector3 knockbackVector = (horizontalDir * attack.knockback) + (Vector3.up * attack.knockbackUp);
+
+        var targetStunMeter = targetTransform.GetComponent<EnemyStunMeter>();
+        if (targetStunMeter != null)
+            targetStunMeter.AddStun(attack.stunBuildup, attack.knockback);
+
+        if (attack.makesAirborne)
+        {
+            SimpleEnemyAI targetAI = targetTransform.GetComponentInParent<SimpleEnemyAI>();
+            if (targetAI != null && targetAI.ProneSystem != null)
+                targetAI.ProneSystem.OverrideNextProneVariant(attack.proneVariant);
+        }
+
+        float airborne = attack.makesAirborne ? attack.airborneDuration : 0f;
+        damageable.TakeHit(
+            attack.damage,
+            knockbackVector,
+            attack.hitstun,
+            airborne,
+            attack.hitStopDuration,
+            attack.heaviness,
+            attack.height
+        );
+
+        if (attack.hitStopDuration > 0f)
+        {
+            Animator targetAnim = targetTransform.GetComponentInChildren<Animator>();
+            if (targetAnim != null && !IsFrozen(targetAnim))
+            {
+                frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
+                targetAnim.speed = 0f;
+            }
+        }
+
+        // VFX, SFX, and self hit-stop fire only once per attack (on first confirmed hit)
+        if (!hitConfirmedThisAttack)
+        {
+            hitConfirmedThisAttack = true;
+
+            if (hitConnectVfxPrefab != null)
+            {
+                Quaternion rot = (hitPoint - transform.position).sqrMagnitude > 0.001f
+                    ? Quaternion.LookRotation(hitPoint - transform.position)
+                    : transform.rotation;
+                rot = rot * Quaternion.Euler(attack.hitConnectVfxRotationOffset);
+                PlayVfx(Object.Instantiate(hitConnectVfxPrefab, hitPoint + attack.hitConnectVfxPositionOffset, rot));
+            }
+
+            PlayAttackCues(attack, AttackSfxTriggerType.OnHitConfirm, 0, useLegacyFallback: true);
+
+            if (attack.hitStopDuration > 0f)
+            {
+                hitStopEndTime = Time.time + attack.hitStopDuration;
+                if (animator != null && !IsFrozen(animator))
+                {
+                    frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
+                    animator.speed = 0f;
+                }
+            }
+        }
+    }
+
+    // ========================================================================
+    // SFX ANIMATION EVENT HOOKS
+    // ========================================================================
+
+    public void OnAttackSfxEvent(int eventId)
+    {
+        PlayAttackCues(currentAttack, AttackSfxTriggerType.OnAnimEvent, eventId, useLegacyFallback: false);
+    }
+
+    public void OnAttackSfxEvent() { OnAttackSfxEvent(0); }
+    public void OnAttackSfxEvent(float eventId) { OnAttackSfxEvent(Mathf.RoundToInt(eventId)); }
+
+    public void OnAttackSfxEvent(string eventId)
+    {
+        int parsed;
+        OnAttackSfxEvent(int.TryParse(eventId, out parsed) ? parsed : 0);
+    }
+
+    public void OnAttackSFXEvent()              { OnAttackSfxEvent(0); }
+    public void OnAttackSFXEvent(int eventId)   { OnAttackSfxEvent(eventId); }
+
+    // ========================================================================
+    // HELPERS
+    // ========================================================================
+
     static void PlayVfx(GameObject instance)
     {
         if (instance == null) return;
@@ -289,8 +500,8 @@ public class EnemyCombat : MonoBehaviour
     void PlayAttackSfxClip(AudioClip clip, float volumeScale = 1f)
     {
         if (clip == null || sfxSource == null) return;
-        float minPitch = Mathf.Min(sfxPitchMin, sfxPitchMax);
-        float maxPitch = Mathf.Max(sfxPitchMin, sfxPitchMax);
+        float minPitch  = Mathf.Min(sfxPitchMin, sfxPitchMax);
+        float maxPitch  = Mathf.Max(sfxPitchMin, sfxPitchMax);
         sfxSource.pitch = Random.Range(minPitch, maxPitch);
         sfxSource.PlayOneShot(clip, Mathf.Max(0f, volumeScale));
     }
@@ -312,7 +523,6 @@ public class EnemyCombat : MonoBehaviour
                 if (cue.clips != null && cue.clips.Length > 0)
                     chosenClip = cue.clips[Random.Range(0, cue.clips.Length)];
                 if (chosenClip == null) continue;
-
                 PlayAttackSfxClip(chosenClip, cue.volume);
             }
             return;
@@ -325,162 +535,6 @@ public class EnemyCombat : MonoBehaviour
             PlayAttackSfxClip(attack.hitConnectSfx);
     }
 
-    public void OnAttackSfxEvent(int eventId)
-    {
-        PlayAttackCues(currentAttack, AttackSfxTriggerType.OnAnimEvent, eventId, useLegacyFallback: false);
-    }
-
-    public void OnAttackSfxEvent()
-    {
-        OnAttackSfxEvent(0);
-    }
-
-    // AnimationEvent can pass float/string depending on clip setup; normalize to int id.
-    public void OnAttackSfxEvent(float eventId)
-    {
-        OnAttackSfxEvent(Mathf.RoundToInt(eventId));
-    }
-
-    public void OnAttackSfxEvent(string eventId)
-    {
-        int parsed;
-        OnAttackSfxEvent(int.TryParse(eventId, out parsed) ? parsed : 0);
-    }
-
-    // Alias for naming variants often typed in clips.
-    public void OnAttackSFXEvent()
-    {
-        OnAttackSfxEvent(0);
-    }
-
-    public void OnAttackSFXEvent(int eventId)
-    {
-        OnAttackSfxEvent(eventId);
-    }
-    
-    /// <summary>
-    /// Calculate the hitbox center using range + local-space offset for the current attack.
-    /// </summary>
-    Vector3 CalculateHitboxCenter()
-    {
-        AttackData a = currentAttack != null ? currentAttack : basicAttack;
-        return transform.position
-            + transform.forward * a.range
-            + transform.right   * a.hitboxOffset.x
-            + transform.up      * a.hitboxOffset.y
-            + transform.forward * a.hitboxOffset.z;
-    }
-    
-    /// <summary>
-    /// Fires the hitbox: OverlapSphere, damage dealing, knockback, and hit stop.
-    /// Each damageable is only hit once per hitbox fire (multiple colliders on same object are deduplicated).
-    /// </summary>
-    void ExecuteHitbox()
-    {
-        hitboxPending = false;
-        AttackData a = currentAttack != null ? currentAttack : basicAttack;
-
-        Vector3 center = CalculateHitboxCenter();
-
-        Collider[] hits = Physics.OverlapSphere(
-            center,
-            a.hitboxRadius,
-            ~0,
-            QueryTriggerInteraction.Ignore
-        );
-        
-        bool didHit = false;
-        var alreadyHit = new System.Collections.Generic.HashSet<Component>();
-
-        foreach (var c in hits)
-        {
-            var damageable = c.GetComponentInParent<IDamageable>();
-            if (damageable == null) continue;
-
-            // Don't hit ourselves
-            if ((damageable as Component)?.gameObject == gameObject) continue;
-
-            var comp = damageable as Component;
-            if (comp != null && alreadyHit.Contains(comp)) continue;
-            if (comp != null) alreadyHit.Add(comp);
-
-            Transform targetTransform = (damageable as Component)?.transform;
-            if (targetTransform == null) continue;
-
-            // Knockback direction: away from attacker
-            Vector3 horizontalDir = targetTransform.position - transform.position;
-            horizontalDir.y = 0f;
-            if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
-            horizontalDir.Normalize();
-
-            Vector3 knockbackVector = (horizontalDir * a.knockback)
-                                    + (Vector3.up * a.knockbackUp);
-
-            float airborne = a.makesAirborne ? a.airborneDuration : 0f;
-            damageable.TakeHit(
-                a.damage,
-                knockbackVector,
-                a.hitstun,
-                airborne,
-                a.hitStopDuration,
-                a.heaviness,
-                a.height
-            );
-
-            // Freeze target's animator for hit stop
-            if (a.hitStopDuration > 0f)
-            {
-                Animator targetAnim = targetTransform.GetComponentInChildren<Animator>();
-                if (targetAnim != null && !IsFrozen(targetAnim))
-                {
-                    frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
-                    targetAnim.speed = 0f;
-                }
-            }
-            
-            didHit = true;
-        }
-        
-        if (didHit && hitConnectVfxPrefab != null)
-        {
-            Quaternion rot = (center - transform.position).sqrMagnitude > 0.001f
-                ? Quaternion.LookRotation(center - transform.position)
-                : transform.rotation;
-            rot = rot * Quaternion.Euler(a.hitConnectVfxRotationOffset);
-            var go = Object.Instantiate(hitConnectVfxPrefab, center + a.hitConnectVfxPositionOffset, rot);
-            PlayVfx(go);
-        }
-
-        if (didHit)
-            PlayAttackCues(a, AttackSfxTriggerType.OnHitConfirm, 0, useLegacyFallback: true);
-        
-        // Apply hit stop to attacker if we hit something
-        if (didHit && a.hitStopDuration > 0f)
-        {
-            hitStopEndTime = Time.time + a.hitStopDuration;
-            
-            if (animator != null && !IsFrozen(animator))
-            {
-                frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
-                animator.speed = 0f;
-            }
-        }
-    }
-    
-    void UpdatePendingHitbox()
-    {
-        if (!hitboxPending) return;
-        
-        if (Time.time >= hitboxTriggerTime)
-        {
-            ExecuteHitbox();
-        }
-    }
-    
-    // ========================================================================
-    // HIT STOP
-    // ========================================================================
-
     bool IsFrozen(Animator anim)
     {
         for (int i = 0; i < frozenAnimators.Count; i++)
@@ -488,45 +542,52 @@ public class EnemyCombat : MonoBehaviour
         return false;
     }
 
+    // ========================================================================
+    // HIT STOP
+    // ========================================================================
+
     void UpdateHitStop()
     {
-        if (frozenAnimators.Count > 0 && Time.time >= hitStopEndTime)
-        {
-            foreach (var frozen in frozenAnimators)
-            {
-                if (frozen.animator != null)
-                {
-                    frozen.animator.speed = frozen.originalSpeed;
-                }
-            }
-            frozenAnimators.Clear();
-        }
+        if (frozenAnimators.Count == 0) return;
+        if (Time.time < hitStopEndTime) return;
+
+        foreach (var frozen in frozenAnimators)
+            if (frozen.animator != null)
+                frozen.animator.speed = frozen.originalSpeed;
+        frozenAnimators.Clear();
     }
-    
+
+    // ========================================================================
+    // STARTUP / RECOVERY SPEED SCALING
+    // ========================================================================
+
     void UpdateAttackStartUpSpeed()
     {
         if (animator == null) return;
+
         if (Time.time >= attackEndTime)
         {
             if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && !IsFrozen(animator))
                 animator.speed = 1f;
             return;
         }
+
         if (IsFrozen(animator)) return;
-        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
-        if (!string.IsNullOrEmpty(currentAttackStateName) && !state.IsName(currentAttackStateName))
+
+        AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (!string.IsNullOrEmpty(currentAttackStateName) && !info.IsName(currentAttackStateName))
         {
             animator.speed = 1f;
             return;
         }
-        bool useStartUp = currentStartUpLength > 0f && currentStartUpSpeed < 1f;
+
+        bool useStartUp  = currentStartUpLength > 0f && currentStartUpSpeed < 1f;
         bool useRecovery = currentRecoveryLength > 0f && currentRecoverySpeed < 1f;
-        if (!useStartUp && !useRecovery)
-        {
-            animator.speed = 1f;
-            return;
-        }
-        float nt = state.normalizedTime;
+        if (!useStartUp && !useRecovery) { animator.speed = 1f; return; }
+
+        float nt = info.normalizedTime;
+
         if (nt >= 1f)
             animator.speed = 1f;
         else if (useStartUp && nt < currentStartUpLength)
@@ -536,34 +597,24 @@ public class EnemyCombat : MonoBehaviour
         else
             animator.speed = 1f;
     }
-    
+
     // ========================================================================
-    // LUNGE (forward movement during attack)
+    // LUNGE
     // ========================================================================
 
-    /*
-     * Same lunge system as player Combat.cs:
-     * Moves the enemy forward during the attack at the configured time.
-     * Uses CharacterController.Move() for collision-aware movement.
-     */
     void UpdateLunge()
     {
         if (!lungePending) return;
-        // Freeze attacker position during hitstop
         if (hitStopEndTime > 0f && Time.time < hitStopEndTime) return;
 
         if (Time.time >= lungeTriggerTime && Time.time < lungeEndTime)
         {
             float moveAmount = (currentLungeDistance / currentLungeDuration) * Time.deltaTime;
             if (cc != null && cc.enabled)
-            {
                 cc.Move(lungeDirection * moveAmount);
-            }
         }
 
         if (Time.time >= lungeEndTime)
-        {
             lungePending = false;
-        }
     }
 }

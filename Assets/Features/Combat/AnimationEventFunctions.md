@@ -155,6 +155,8 @@ What it does:
 
 ## Player Throw Events (`Combat.Throw`)
 
+- `OnThrowChargeWindowStart()` — opens the throw charge window; player can begin charging a throw
+- `OnThrowChargeWindowEnd()` — closes the throw charge window
 - `OnThrowUnparent()`
 - `OnThrowVictimRootMotion(int enabled)` (`0` off, non-zero on)
 - `OnThrowVictimRootMotionOn()`
@@ -171,6 +173,15 @@ What it does:
 
 What it does:
 - Controls throw timing, root-motion toggles, release timing, throw damage profile selection, throw-end VFX, and throw SFX cue events.
+
+## Enemy Throw Relay (`EnemyHealth`)
+
+- `OnThrowRelease()`
+- `OnThrowRelease(int releaseProfileIndex)`
+
+What it does:
+- Victim-side fallback relay for throw release events.
+- Finds the active throw owner (`Combat`) currently holding this victim and forwards `OnThrowRelease(...)` to it.
 
 ## Weapon Combat (`WeaponCombat`)
 
@@ -210,6 +221,14 @@ What it does:
 
 What it does:
 - Called at the end of death animation to finalize death (`EnemyHealth.CompleteDeath()`).
+
+## Enemy Wall Bounce (`SimpleEnemyAI`)
+
+- `OnWallBounceAnimationComplete()`
+
+What it does:
+- Called at the end of wall-bounce animation.
+- Clears wall-bounce latch and, if still hitstunned, hands off into prone (`EnemyProneSystem.Enter`).
 
 ## Forwarders (for child animators)
 

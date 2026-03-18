@@ -13,12 +13,9 @@ MonoBehaviour:
   m_Name: Player2handComboSet
   m_EditorClassIdentifier: Assembly-CSharp::ComboSet
   forwardJabNormal:
-    range: 1.6
     damage: 8
     heaviness: 1
     height: 1
-    hitboxRadius: 0.6
-    hitboxType: 1
     lockDuration: 0.7
     cooldown: 0.8
     comboWindowDelay: 0.7
@@ -26,8 +23,10 @@ MonoBehaviour:
     knockback: 3
     knockbackUp: 0
     hitstun: 0.5
+    stunBuildup: 0.2
     makesAirborne: 0
     airborneDuration: 0
+    proneVariant: 0
     animationTrigger: light f 1
     startUpLength: 0.05
     startUpSpeed: 0.2
@@ -36,8 +35,6 @@ MonoBehaviour:
     lungeFrame: 0.2
     lungeDistance: 0.35
     lungeDuration: 0.08
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
     hitStopDuration: 0
     trackingDuration: 1
     trackingSpeed: 540
@@ -54,45 +51,58 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   forwardJab:
-    range: 1.6
-    damage: 50
+    damage: 10
     heaviness: 2
     height: 2
-    hitboxRadius: 0.5
-    hitboxType: 1
     lockDuration: 1.5
     cooldown: 1.5
     comboWindowDelay: 1.5
     comboWindowDuration: 0.5
-    knockback: 120
-    knockbackUp: 50
+    knockback: 50
+    knockbackUp: 0
     hitstun: 0.3
-    makesAirborne: 1
+    stunBuildup: 0.2
+    makesAirborne: 0
     airborneDuration: 0.2
+    proneVariant: 0
     animationTrigger: Punch-F1
     startUpLength: 0
     startUpSpeed: 1
     recoveryLength: 0.3
     recoverySpeed: 0.3
     lungeFrame: 0.19
-    lungeDistance: 2
-    lungeDuration: 2
-    hitboxOffset: {x: 0, y: 1.6, z: -0.2}
-    hitboxDelay: 0.2
+    lungeDistance: 5
+    lungeDuration: 0.3
     hitStopDuration: 0.12
     trackingDuration: 1
     trackingSpeed: 720
     attackStartSfx: {fileID: 8300000, guid: a50e57fbf47efd442b3fb83cc9ed2b4d, type: 3}
     hitConnectSfx: {fileID: 8300000, guid: 2ee71cfc2c8d7334abb8ad72203c0068, type: 3}
     sfxCues:
+    - trigger: 0
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 29680b71991afbc4997d99332474e07d, type: 3}
+      volume: 1.385
+    - trigger: 1
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+      - {fileID: 8300000, guid: 1af8a500bedfac748b38fdef21c29c0e, type: 3}
+      volume: 1.385
     - trigger: 2
       eventId: 0
       clips:
       - {fileID: 8300000, guid: 7c281791d060b4f47bea3d13dcb63f49, type: 3}
       volume: 1.385
-    chargeLoopSfx: {fileID: 0}
-    chargeLoopSfxVolume: 0.7
-    chargeLoopSfxPitch: 1
+    - trigger: 2
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: cd1483bcc9d53d04584535b060f64c10, type: 3}
+      volume: 1.385
+    chargeLoopSfx: {fileID: 8300000, guid: 6bf7c6ba446fb4b47ae2710794ee6988, type: 3}
+    chargeLoopSfxVolume: 1
+    chargeLoopSfxPitch: 0.5
     attackStartVfxPrefab: {fileID: 5221624446088252456, guid: c5bc3324b9ff3364c9484f45a4dcf49f, type: 3}
     hitConnectVfxPrefab: {fileID: 3894621978031112059, guid: 594dbf2e6d47af1448c23c5bc4b3df45, type: 3}
     attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
@@ -100,12 +110,9 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   forwardJab2Normal:
-    range: 1.6
     damage: 10
     heaviness: 1
     height: 1
-    hitboxRadius: 0.6
-    hitboxType: 1
     lockDuration: 1
     cooldown: 1
     comboWindowDelay: 1
@@ -113,8 +120,10 @@ MonoBehaviour:
     knockback: 4
     knockbackUp: 0
     hitstun: 1
+    stunBuildup: 0.2
     makesAirborne: 0
     airborneDuration: 0
+    proneVariant: 0
     animationTrigger: light f 2
     startUpLength: 0.15
     startUpSpeed: 0.4
@@ -123,8 +132,6 @@ MonoBehaviour:
     lungeFrame: 0.3
     lungeDistance: 4
     lungeDuration: 0.08
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
     hitStopDuration: 0
     trackingDuration: 1
     trackingSpeed: 800
@@ -141,12 +148,9 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   forwardJab2:
-    range: 1.9
-    damage: 100
+    damage: 10
     heaviness: 2
     height: 1
-    hitboxRadius: 0.61
-    hitboxType: 1
     lockDuration: 1.5
     cooldown: 1.5
     comboWindowDelay: 0.8
@@ -154,8 +158,10 @@ MonoBehaviour:
     knockback: 0
     knockbackUp: 100
     hitstun: 1
-    makesAirborne: 1
+    stunBuildup: 0.5
+    makesAirborne: 0
     airborneDuration: 1
+    proneVariant: 0
     animationTrigger: Punch-F2
     startUpLength: 0
     startUpSpeed: 1
@@ -164,8 +170,6 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 0
     lungeDuration: 0
-    hitboxOffset: {x: 0, y: 1, z: 0.25}
-    hitboxDelay: 0.25
     hitStopDuration: 0.13
     trackingDuration: 1
     trackingSpeed: 540
@@ -207,21 +211,20 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: -0.7, y: 0, z: -0.5}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJabNormal:
-    range: 1.6
     damage: 10
     heaviness: 1
     height: 1
-    hitboxRadius: 0.6
-    hitboxType: 1
-    lockDuration: 0.28
+    lockDuration: 0.5
     cooldown: 0.25
     comboWindowDelay: 0.2
     comboWindowDuration: 0.2
     knockback: 2.5
     knockbackUp: 0
     hitstun: 0.5
+    stunBuildup: 1
     makesAirborne: 0
     airborneDuration: 0
+    proneVariant: 0
     animationTrigger: Punch-F1a
     startUpLength: 0.05
     startUpSpeed: 0.2
@@ -230,8 +233,6 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 0
     lungeDuration: 0
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
     hitStopDuration: 0
     trackingDuration: 1
     trackingSpeed: 540
@@ -248,21 +249,20 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab:
-    range: 1.2
     damage: 20
     heaviness: 2
     height: 2
-    hitboxRadius: 0.5
-    hitboxType: 1
     lockDuration: 2
     cooldown: 2
     comboWindowDelay: 1
     comboWindowDuration: 1
-    knockback: 2
+    knockback: 50
     knockbackUp: 0
     hitstun: 1.5
+    stunBuildup: 1
     makesAirborne: 0
     airborneDuration: 0
+    proneVariant: 0
     animationTrigger: Punch-N1
     startUpLength: 0.1
     startUpSpeed: 0.6
@@ -271,8 +271,6 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 0
     lungeDuration: 0
-    hitboxOffset: {x: 0, y: 1.6, z: 0}
-    hitboxDelay: 0
     hitStopDuration: 0.12
     trackingDuration: 0.5
     trackingSpeed: 540
@@ -305,12 +303,9 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: -0.2, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab2Normal:
-    range: 1.6
     damage: 10
     heaviness: 1
     height: 1
-    hitboxRadius: 0.6
-    hitboxType: 0
     lockDuration: 0.36
     cooldown: 0.24
     comboWindowDelay: -1
@@ -318,8 +313,10 @@ MonoBehaviour:
     knockback: 4
     knockbackUp: 0
     hitstun: 0.14
+    stunBuildup: 0.2
     makesAirborne: 0
     airborneDuration: 0
+    proneVariant: 0
     animationTrigger: Punch
     startUpLength: 0
     startUpSpeed: 1
@@ -328,8 +325,6 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 0
     lungeDuration: 0
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
     hitStopDuration: 0
     trackingDuration: 0
     trackingSpeed: 540
@@ -346,12 +341,9 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   neutralJab2:
-    range: 1.55
     damage: 20
     heaviness: 2
     height: 2
-    hitboxRadius: 0.7
-    hitboxType: 1
     lockDuration: 1.4
     cooldown: 1.4
     comboWindowDelay: -1
@@ -359,8 +351,10 @@ MonoBehaviour:
     knockback: 25
     knockbackUp: 0
     hitstun: 0.8
+    stunBuildup: 0.2
     makesAirborne: 0
     airborneDuration: 0
+    proneVariant: 0
     animationTrigger: Punch-N2
     startUpLength: 0.04
     startUpSpeed: 0.4
@@ -369,8 +363,6 @@ MonoBehaviour:
     lungeFrame: 0.2
     lungeDistance: 0
     lungeDuration: 0
-    hitboxOffset: {x: 0, y: -0.1, z: 0}
-    hitboxDelay: 0.01
     hitStopDuration: 0.25
     trackingDuration: 1
     trackingSpeed: 540
@@ -403,12 +395,9 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: -0.25, y: -0.1, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
   heavyAttack:
-    range: 1
     damage: 1
     heaviness: 2
     height: 2
-    hitboxRadius: 0.7
-    hitboxType: 1
     lockDuration: 1.7
     cooldown: 1.7
     comboWindowDelay: -1
@@ -416,8 +405,10 @@ MonoBehaviour:
     knockback: 20
     knockbackUp: 20
     hitstun: 1
+    stunBuildup: 0.2
     makesAirborne: 1
     airborneDuration: 0.3
+    proneVariant: 0
     animationTrigger: HeavyPunch
     startUpLength: 0.26
     startUpSpeed: 0.5
@@ -426,8 +417,6 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 1
     lungeDuration: 1
-    hitboxOffset: {x: 0, y: 1.5, z: 0.35}
-    hitboxDelay: 0.66
     hitStopDuration: 0.2
     trackingDuration: 0.5
     trackingSpeed: 540
@@ -469,12 +458,9 @@ MonoBehaviour:
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
   rbXAttack:
-    range: 1.9
     damage: 18
     heaviness: 2
     height: 1
-    hitboxRadius: 0.6
-    hitboxType: 1
     lockDuration: 0.65
     cooldown: 0.55
     comboWindowDelay: -1
@@ -482,8 +468,10 @@ MonoBehaviour:
     knockback: 8
     knockbackUp: 1
     hitstun: 0.3
+    stunBuildup: 0.2
     makesAirborne: 0
     airborneDuration: 0
+    proneVariant: 0
     animationTrigger: Rb+x
     startUpLength: 0
     startUpSpeed: 1
@@ -492,8 +480,6 @@ MonoBehaviour:
     lungeFrame: 0.15
     lungeDistance: 0.7
     lungeDuration: 0.12
-    hitboxOffset: {x: 0, y: 0, z: 0}
-    hitboxDelay: 0
     hitStopDuration: 0
     trackingDuration: 0
     trackingSpeed: 540
@@ -546,13 +532,20 @@ MonoBehaviour:
     hitboxRadius: 0.7
     hitboxOffset: {x: 0, y: 0, z: 0}
     endDamage: 15
-    endKnockback: 20
+    endKnockback: 50
     endKnockbackUp: 1
     proneDuration: 3
+    proneVariant: 0
     invertProneRotation: 1
     faceVictimTowardThrowDirection: 1
-    releaseProfiles: []
     enemyThrownStateName: Thrown
+    enableCharge: 1
+    maxChargeTime: 3
+    chargeKnockbackMultiplier: 2
+    chargeDamageMultiplier: 2
+    chargeAnimatorSpeed: 0.25
+    enableDirectionalThrow: 1
+    directionalThrowRotationSpeed: 9999
     throwCooldown: 0.8
   backThrowData:
     enableThrow: 1
@@ -590,11 +583,18 @@ MonoBehaviour:
     hitboxRadius: 0.7
     hitboxOffset: {x: 0, y: 0, z: 0}
     endDamage: 15
-    endKnockback: 20
-    endKnockbackUp: 1
+    endKnockback: 0
+    endKnockbackUp: 0
     proneDuration: 3
+    proneVariant: 0
     invertProneRotation: 0
     faceVictimTowardThrowDirection: 1
-    releaseProfiles: []
     enemyThrownStateName: BackThrown
+    enableCharge: 0
+    maxChargeTime: 0
+    chargeKnockbackMultiplier: 0
+    chargeDamageMultiplier: 0
+    chargeAnimatorSpeed: 0
+    enableDirectionalThrow: 0
+    directionalThrowRotationSpeed: 0
     throwCooldown: 0.8

@@ -15,7 +15,7 @@ MonoBehaviour:
   speedParameter: Speed
   hitSpeedParameter: HitSpeed
   airborneParameter: IsAirborne
-  stunParameter: IsStunned 0
+  stunLayerParameter: StunLayerActive
   deathTriggerParameter: Death
   hitAnimationLayer: 1
   hitStateName: Stunned
@@ -25,7 +25,15 @@ MonoBehaviour:
   - Hit_Mid
   thrownStateName: Thrown
   proneStateName: Prone
+  proneFaceDownStateName: Prone_FaceDown
   proneLayer: 1
   proneHitStateName: Prone_Hit
+  standingStunParameter: IsStandingStunned
+  knockbackStunParameter: IsKnockbackStun
+  knockbackStunEntryStateName: KnockbackStunEntry
+  knockbackStunEntryPriorityGrace: 0.1
+  standingStunLayer: 1
+  wallBounceTriggerParameter: WallBounce
+  wallBounceActiveParameter: WallBounceActive
   getUpStateName: GetUp
   getUpLayer: 1

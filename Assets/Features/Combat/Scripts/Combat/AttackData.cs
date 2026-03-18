@@ -22,12 +22,6 @@ public enum AttackSfxTriggerType
     OnAnimEvent = 2
 }
 
-public enum AttackHitboxType
-{
-    Unarmed = 0,
-    WeaponStrike = 1
-}
-
 [System.Serializable]
 public class AttackSfxCue
 {
@@ -52,10 +46,7 @@ public class AttackSfxCue
 [System.Serializable]
 public class AttackData
 {
-    [Header("Damage & Range")]
-    [Tooltip("How far the hitbox reaches from the player")]
-    public float range = 1.6f;
-    
+    [Header("Damage")]
     [Tooltip("Damage dealt on hit")]
     public int damage = 10;
 
@@ -65,12 +56,6 @@ public class AttackData
 
     [Tooltip("Target height of the move. Used for typed hit reactions.")]
     public AttackHeight height = AttackHeight.Mid;
-    
-    [Tooltip("Radius of the attack hitbox")]
-    public float hitboxRadius = 0.6f;
-
-    [Tooltip("Choose whether this move uses Combat's unarmed overlap hitbox or WeaponCombat/WeaponTipHitbox.")]
-    public AttackHitboxType hitboxType = AttackHitboxType.Unarmed;
     
     [Header("Timing")]
     [Tooltip("How long the player is locked in place (can't move or turn)")]
@@ -96,12 +81,19 @@ public class AttackData
     [Header("Hitstun & Airborne")]
     [Tooltip("How long the target is stunned")]
     public float hitstun = 0.15f;
+
+    [Header("Stun Meter")]
+    [Tooltip("Stun buildup added to the target's stun meter on hit (0–1 scale, e.g. 0.2 = 5 hits to fill).")]
+    // TODO: replace with per-move ComboSet stun value when system is ready
+    public float stunBuildup = 0.2f;
     
     [Tooltip("Whether this attack launches the target airborne")]
     public bool makesAirborne = false;
     
     [Tooltip("How long the target stays airborne")]
     public float airborneDuration = 0f;
+    [Tooltip("Prone variant to request when this move causes a knockdown/prone sequence. Default falls back to regular prone.")]
+    public ProneVariant proneVariant = ProneVariant.Default;
     
     [Header("Animation")]
     [Tooltip("Animation state name to play")]
@@ -134,14 +126,6 @@ public class AttackData
     
     [Tooltip("Duration of the lunge movement in seconds")]
     public float lungeDuration = 0.1f;
-    
-    [Header("Hitbox Position")]
-    [Tooltip("Local-space offset from origin. X = right, Y = up, Z = forward (added on top of range)")]
-    public Vector3 hitboxOffset = Vector3.zero;
-    
-    [Header("Hitbox Timing")]
-    [Tooltip("Delay in seconds before the hitbox activates (0 = instant, match to animation wind-up)")]
-    public float hitboxDelay = 0f;
     
     [Header("Hit Stop")]
     [Tooltip("Duration in seconds to freeze attacker + target animations on hit (0 = no hit stop)")]

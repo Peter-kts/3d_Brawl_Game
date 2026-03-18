@@ -80,6 +80,8 @@
     <Compile Include="Assets\StylizedCharacter\Scripts\Editor\TabComponent.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Extensions\NHItemExtension.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Windows\SelectorWindow.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\EnemyComboSetEditor.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\SimpleEnemyAIEditor.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHCameraEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\FoldoutHeaderEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\ScriptEditors.cs" />

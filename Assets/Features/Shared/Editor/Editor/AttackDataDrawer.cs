@@ -170,20 +170,7 @@ public class AttackDataDrawer : PropertyDrawer
 
     private bool ShouldHideField(SerializedProperty attackDataProperty, string absolutePath)
     {
-        SerializedProperty hitboxTypeProp = attackDataProperty.FindPropertyRelative("hitboxType");
-        if (hitboxTypeProp == null) return false;
-        if (hitboxTypeProp.enumValueIndex != (int)AttackHitboxType.WeaponStrike) return false;
-
-        string fieldName = absolutePath;
-        int dot = absolutePath.LastIndexOf('.');
-        if (dot >= 0 && dot < absolutePath.Length - 1)
-            fieldName = absolutePath.Substring(dot + 1);
-
-        // Hidden when move type is WeaponStrike (unarmed, timed overlap-sphere hitbox fields).
-        return fieldName == "range"
-            || fieldName == "hitboxRadius"
-            || fieldName == "hitboxOffset"
-            || fieldName == "hitboxDelay";
+        return false;
     }
 
     // ------------------------------------------------------------------

@@ -16,15 +16,20 @@ public class EnemyStateDebugVisual : MonoBehaviour
     public Color airborneColor = new Color(0.5f, 0f, 1f, 0.8f);
     public Color crashedColor = new Color(0.9f, 0.4f, 0f, 0.8f);
     public Color stunnedColor = new Color(1f, 0.3f, 0f, 0.8f);
+    public Color standingStunnedColor = new Color(1f, 0.95f, 0f, 0.9f);
     public Color gettingUpColor = new Color(1f, 0.6f, 0f, 0.8f);
     public Color normalColor = new Color(0f, 1f, 0f, 0.5f);
 
     private EnemyHealth health;
     private SimpleEnemyAI enemyAI;
+    private EnemyStunMeter stunMeter;
     private GameObject indicator;
     private MeshRenderer indicatorRenderer;
     private string currentStateText = "Normal";
+    private string currentReactionText = "None";
+    private string currentStunTimerText = "HS:0.00s SS:0.00s";
     private Color currentStateColor = Color.green;
+    private Color currentTimerColor = new Color(0.85f, 0.85f, 0.85f, 1f);
     private GUIStyle labelStyle;
     private bool labelStyleReady;
     private Texture2D labelBgTexture;
@@ -33,6 +38,7 @@ public class EnemyStateDebugVisual : MonoBehaviour
     {
         health = GetComponent<EnemyHealth>();
         enemyAI = GetComponent<SimpleEnemyAI>();
+        stunMeter = GetComponent<EnemyStunMeter>();
         indicator = DebugDrawHelper.CreatePrimitive(PrimitiveType.Sphere, "StateIndicator", true);
         indicatorRenderer = indicator.GetComponent<MeshRenderer>();
         indicator.transform.localScale = Vector3.one * size;
@@ -49,6 +55,16 @@ public class EnemyStateDebugVisual : MonoBehaviour
         indicator.transform.position = transform.position + Vector3.up * height;
 
         EnemyState state = enemyAI != null ? enemyAI.CurrentState : GetStateFromHealth();
+        currentReactionText = enemyAI != null ? enemyAI.CurrentReactionDebug : "None";
+        float hitstunRemaining = health != null ? health.HitstunRemaining : 0f;
+        float standingRemaining = stunMeter != null ? stunMeter.RemainingStandingStunTime : 0f;
+        currentStunTimerText = $"HS:{hitstunRemaining:0.00}s SS:{standingRemaining:0.00}s";
+        if (standingRemaining > 0f)
+            currentTimerColor = new Color(1f, 0.65f, 0.15f, 1f);   // orange: standing stun active
+        else if (hitstunRemaining > 0f)
+            currentTimerColor = new Color(1f, 0.35f, 0.35f, 1f);   // red: hitstun only
+        else
+            currentTimerColor = new Color(0.85f, 0.85f, 0.85f, 1f); // neutral: no stun
         Color targetColor;
         float pulseSpeed = 0f;
         switch (state)
@@ -73,10 +89,15 @@ public class EnemyStateDebugVisual : MonoBehaviour
                 targetColor = crashedColor;
                 pulseSpeed = 6f;
                 break;
-            case EnemyState.Stunned:
-                currentStateText = "Stunned";
+            case EnemyState.Hitstunned:
+                currentStateText = "Hitstunned";
                 targetColor = stunnedColor;
                 pulseSpeed = 8f;
+                break;
+            case EnemyState.Stunned:
+                currentStateText = "Stunned";
+                targetColor = standingStunnedColor;
+                pulseSpeed = 4f;
                 break;
             case EnemyState.GettingUp:
                 currentStateText = "GettingUp";
@@ -110,7 +131,7 @@ public class EnemyStateDebugVisual : MonoBehaviour
         if (health == null) return EnemyState.Normal;
         if (health.IsDying) return EnemyState.Dying;
         if (health.IsAirborne) return EnemyState.Airborne;
-        if (health.IsStunned) return EnemyState.Stunned;
+        if (health.IsHitstunned) return EnemyState.Hitstunned;
         if (health.IsGettingUp) return EnemyState.GettingUp;
         return EnemyState.Normal;
     }
@@ -142,11 +163,17 @@ public class EnemyStateDebugVisual : MonoBehaviour
         Vector3 worldPos = transform.position + Vector3.up * height;
         Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
         float y = Screen.height - screenPos.y;
-        float w = 90f;
-        float h = 22f;
+        float w = 170f;
+        float h = 54f;
         Rect bgRect = new Rect(screenPos.x - w * 0.5f, y - h * 0.5f, w, h);
         labelStyle.normal.textColor = currentStateColor;
-        GUI.Label(bgRect, currentStateText, labelStyle);
+        string stateAndReactionText = currentStateText + "\nRx: " + currentReactionText;
+        GUI.Label(bgRect, stateAndReactionText, labelStyle);
+        Color prevColor = GUI.color;
+        GUI.color = currentTimerColor;
+        Rect timerRect = new Rect(bgRect.x, bgRect.y + 34f, bgRect.width, 16f);
+        GUI.Label(timerRect, currentStunTimerText, labelStyle);
+        GUI.color = prevColor;
     }
 
     void OnDestroy()

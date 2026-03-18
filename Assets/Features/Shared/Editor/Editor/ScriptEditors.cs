@@ -9,9 +9,6 @@ using UnityEditor;
 [CustomEditor(typeof(Combat))]
 public class CombatEditor : FoldoutHeaderEditor { }
 
-[CustomEditor(typeof(SimpleEnemyAI))]
-public class SimpleEnemyAIEditor : FoldoutHeaderEditor { }
-
 [CustomEditor(typeof(EnemyHealth))]
 public class EnemyHealthEditor : FoldoutHeaderEditor { }
 

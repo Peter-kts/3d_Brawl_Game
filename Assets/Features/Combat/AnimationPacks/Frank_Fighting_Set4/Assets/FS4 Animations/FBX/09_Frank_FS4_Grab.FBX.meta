@@ -42,7 +42,38 @@ ModelImporter:
       be discarded.\n\t'index_03_r' has translation animation that will be discarded.\n\t'thumb_01_r'
       has translation animation that will be discarded.\n\t'thumb_02_r' has translation
       animation that will be discarded.\n\t'thumb_03_r' has translation animation
-      that will be discarded.\n"
+      that will be discarded.\nEvent OnThrowRelease has a time (1.983657) outside
+      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowVictimRootMotion
+      has a time (2.770708) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowPlayerRootMotionOff has a time (2.777778)
+      outside the clip's valid range (0.000000..1.666656). It will never be firedEvent
+      OnThrowChargeWindowEnd has a time (4.460741) outside the clip's valid range
+      (0.000000..1.666656). It will never be firedEvent OnThrowChargeWindowStart
+      has a time (27.180244) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowChargeWindowStart has a time (27.180244)
+      outside the clip's valid range (0.000000..1.666656). It will never be firedEvent
+      OnThrowSfxEvent has a time (27.180244) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowSfxEvent has a time (27.180244) outside
+      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowChargeWindowEnd
+      has a time (31.974621) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowChargeWindowEnd has a time (31.974621) outside
+      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowSfxEvent
+      has a time (55.058109) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowSfxEvent has a time (55.058109) outside
+      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowEndVfxEvent
+      has a time (63.179588) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowEndVfxEvent has a time (63.179588) outside
+      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowPlayerRootMotion
+      has a time (96.972626) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowVictimRootMotion has a time (96.972626)
+      outside the clip's valid range (0.000000..1.666656). It will never be firedEvent
+      OnThrowVictimRootMotion has a time (96.972626) outside the clip's valid range
+      (0.000000..1.666656). It will never be firedEvent OnThrowRelease has a time
+      (96.972626) outside the clip's valid range (0.000000..1.666656). It will never
+      be firedEvent OnThrowRelease has a time (96.972626) outside the clip's valid
+      range (0.000000..1.666656). It will never be firedEvent OnThrowPlayerRootMotion
+      has a time (96.972626) outside the clip's valid range (0.000000..1.666656).
+      It will never be fired"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -109,66 +140,199 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0
+      - time: 0.010710316
         functionName: OnThrowPlayerRootMotion
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.01039501
+      - time: 0.015415135
         functionName: OnThrowVictimRootMotion
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.040851757
-        functionName: StopThrowVictimPseudoParent
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.27391425
+      - time: 0.16239378
         functionName: OnThrowSfxEvent
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 3
         messageOptions: 0
-      - time: 0.5548589
+      - time: 0.27672562
+        functionName: OnThrowChargeWindowStart
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.32196233
+        functionName: OnThrowChargeWindowEnd
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.49342102
+        functionName: OnThrowVictimRootMotion
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5055186
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 73a2eb4f0993b45d48eed91b1fbf81af, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: OnThrowPlayerRootMotion
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1.1901944
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1.6624246
+        functionName: OnThrowVictimRootMotion
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1.6666666
+        functionName: OnThrowPlayerRootMotionOff
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 2.6764445
+        functionName: OnThrowChargeWindowEnd
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 16.308147
+        functionName: OnThrowChargeWindowStart
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 16.308147
         functionName: OnThrowSfxEvent
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 16.308147
+        functionName: OnThrowSfxEvent
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 16.308147
+        functionName: OnThrowChargeWindowStart
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 19.184772
+        functionName: OnThrowChargeWindowEnd
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 19.184772
+        functionName: OnThrowChargeWindowEnd
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 33.034866
+        functionName: OnThrowSfxEvent
+        data: 
+        objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 2
         messageOptions: 0
-      - time: 0.6367048
+      - time: 33.034866
+        functionName: OnThrowSfxEvent
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
+      - time: 37.907753
         functionName: OnThrowEndVfxEvent
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.7486839
-        functionName: OnThrowRelease
+      - time: 37.907753
+        functionName: OnThrowEndVfxEvent
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.97726095
-        functionName: OnThrowPlayerRootMotion
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.98079455
+      - time: 58.18358
         functionName: OnThrowVictimRootMotion
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 58.18358
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 58.18358
+        functionName: OnThrowPlayerRootMotion
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 58.18358
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 58.18358
+        functionName: OnThrowVictimRootMotion
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 58.18358
+        functionName: OnThrowPlayerRootMotion
+        data: 
+        objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
@@ -353,14 +517,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.002079002
-        functionName: OnThrowVictimRootMotion
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
-        floatParameter: 0
-        intParameter: 1
-        messageOptions: 0
-      - time: 0.013185434
+      - time: 0.01595936
         functionName: OnThrowSfxEvent
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
@@ -373,6 +530,13 @@ ModelImporter:
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
         intParameter: 0
+        messageOptions: 0
+      - time: 0.05062269
+        functionName: OnThrowVictimRootMotion
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 1
         messageOptions: 0
       - time: 0.1758267
         functionName: OnThrowSfxEvent
@@ -395,14 +559,14 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9537496
+      - time: 0.98981065
         functionName: OnThrowVictimRootMotion
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.96896905
+      - time: 1
         functionName: OnThrowPlayerRootMotionOff
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}

@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\StylizedCharacter\Scripts\Attributes\ItemTypeAttribute.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Utils\ItemTypeQuery.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyPersonality.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Attributes\BodyPartNameAttribute.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\TextureType.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\SimpleEnemyAI.cs" />
@@ -80,9 +81,10 @@
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\ItemCategory.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterInput.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\Gender.cs" />
+    <Compile Include="Assets\Features\AI\Scripts\Behaviors\FlankCoordinator.cs" />
     <Compile Include="Assets\Features\Shared\Scripts\Core\IDamageable.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyBehaviorDebugVisual.cs" />
-    <Compile Include="Assets\Features\Combat\Scripts\Combat\CombatHitboxGizmos.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\SwordBlockEffect.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyMeshParentDebugVisual.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Art\VFX\Travis Game Assets\Hit Impact Effects\Demo Scene\Scripts\HitImpactEffectsPreview.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyFacingDebugVisual.cs" />
     <Compile Include="Assets\Features\Debug\Scripts\Debug\HealthDebugVisual.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerController.Dash.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyComboSet.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyHealth.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsProperties.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Containers\ItemWrapper.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Assets\Features\Camera\Scripts\Camera\ThirdPersonCamera.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\SocketingType.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterState.cs" />
+    <Compile Include="Assets\Features\Shared\Scripts\Core\ProneVariant.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerHealth.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Equipment.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCamera.cs" />
@@ -118,6 +122,7 @@
     <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsAssets.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\BodypartWrapper.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\Combat.cs" />
+    <Compile Include="Assets\Features\AI\Scripts\Behaviors\EnemyStateMachine.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\AttackAnimationEventForwarder.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterAnimator.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\ItemTypeEnum.cs" />
@@ -128,10 +133,10 @@
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterSettings.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\ChaseBehavior.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerFacingDebugVisual.cs" />
-    <Compile Include="Assets\Features\Combat\Scripts\Combat\CombatHitboxDebugVisual.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\GameObjectByBoneTypeWrapper.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterEngine.cs" />
     <Compile Include="Assets\Features\LockOn\Scripts\LockOn\LockOnDebugVisuals.cs" />
+    <Compile Include="Assets\Features\AI\Scripts\Behaviors\EnemyReactionStateMachine.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsAttributes.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\NHItem.cs" />
     <Compile Include="Assets\StylizedCharacter\Scripts\Enums\OrderType.cs" />
@@ -148,6 +153,7 @@
     <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\ItemWrapperHandler.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerStepDebugVisual.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyState.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyStunMeter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Whip_Motion_List.txt" />
@@ -165,6 +171,7 @@
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\Female Mannequin\README.txt" />
     <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_StealthKill_Motion_List.txt" />
     <None Include="Assets\Art\VFX\Travis Game Assets\Hit Impact Effects\Readme.txt" />
+    <None Include="Assets\Features\Combat\Shaders\SwordOutline.shader" />
     <None Include="Assets\Features\Shared\Packages\ai.meshy\Third-Party Notices.txt" />
     <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Spear_Motion_List.txt" />
     <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_2Handed_Motion_List.txt" />

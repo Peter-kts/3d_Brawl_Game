@@ -7,7 +7,7 @@
  * ----------------------
  * Both PlayerHealth and EnemyHealth share:
  *   - The same knockback physics fields and ApplyKnockback() logic
- *   - The same stun/airborne timer pattern (IsStunned, IsAirborne)
+ *   - The same hitstun/airborne timer pattern (IsHitstunned, IsAirborne)
  *   - The same IDamageable properties (CurrentHp, MaxHp)
  *   - The same "random SFX with no-repeat" helper
  *
@@ -29,7 +29,7 @@ using UnityEngine;
 
 /// <summary>
 /// Abstract base for any damageable entity. Handles shared knockback physics,
-/// stun/airborne timers, and SFX utilities. Subclasses implement TakeHit().
+/// hitstun/airborne timers, and SFX utilities. Subclasses implement TakeHit().
 /// </summary>
 public abstract class EntityHealth : MonoBehaviour, IDamageable
 {
@@ -46,20 +46,23 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
     // ========================================================================
 
     protected Vector3 kbVel;                    // Current knockback velocity in world space; decays each frame via ApplyKnockback
-    protected float stunUntil;                  // Time.time when hitstun expires — entity cannot act before this
+    protected float hitstunUntil;               // Time.time when hitstun expires — entity cannot act before this
     protected float airborneUntil;              // Time.time when airborne state ends — gravity suspends and entity can be juggled
     protected float hitStopEndTime;             // Time.time when hit-stop ends; position is frozen until then (set to 0 when expired)
     protected Vector3 pendingKnockback;         // Launcher knockback held in reserve — not applied until hitstun ends (so we "cut to midair")
     protected float pendingAirborneDuration;    // Airborne duration paired with pendingKnockback; both applied together when pendingLaunchApplyTime fires
     protected float pendingLaunchApplyTime;     // Time.time when the pending launch fires; 0 = no pending launch
     protected CharacterController cc;           // Cached for collision-safe knockback movement; may be null (falls back to transform.position)
+    private Vector3 lastWallNormal;             // Most recent horizontal collision normal from OnControllerColliderHit; used for wall bounce reflection
 
     // ========================================================================
     // IDAMAGEABLE PROPERTIES (shared)
     // ========================================================================
 
-    public bool IsStunned  => Time.time < stunUntil;
+    public bool IsHitstunned => Time.time < hitstunUntil;
     public bool IsAirborne => Time.time < airborneUntil;
+    public float HitstunRemaining => Mathf.Max(0f, hitstunUntil - Time.time);
+    public Vector3 KnockbackVelocity => kbVel;
 
     // ========================================================================
     // IDAMAGEABLE INTERFACE (subclasses implement)
@@ -104,7 +107,12 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
             Vector3 movement = kbVel * Time.deltaTime;
             // Only move when CC is enabled (e.g. skip while thrown — throw system disables CC and moves the root)
             if (cc != null && cc.enabled)
-                cc.Move(movement);
+            {
+                CollisionFlags flags = cc.Move(movement);
+                // Side collision while moving fast = wall hit; notify subclass so it can bounce
+                if ((flags & CollisionFlags.Sides) != 0)
+                    OnWallBounce(lastWallNormal);
+            }
             else if (cc == null)
                 transform.position += movement;
             // else: CC exists but disabled — don't call Move (avoids "Move called on inactive controller")
@@ -113,6 +121,18 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
             kbVel = Vector3.Lerp(kbVel, Vector3.zero, 1f - Mathf.Exp(-knockbackFriction * Time.deltaTime));
         }
     }
+
+    // Captures the wall normal from the most recent CharacterController side collision.
+    // Only stores near-horizontal normals (walls) to ignore floor/ceiling contacts.
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (Mathf.Abs(hit.normal.y) < 0.5f)
+            lastWallNormal = hit.normal;
+    }
+
+    // Called when the entity hits a wall during knockback movement.
+    // Override in subclasses to apply bounce logic (reflect kbVel, play animation, etc.).
+    protected virtual void OnWallBounce(Vector3 wallNormal) { }
 
     // ========================================================================
     // RANDOM SFX HELPER (shared)

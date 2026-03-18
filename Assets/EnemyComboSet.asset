@@ -1,0 +1,153 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60da857dd1452f64984f27df29c2fe2d, type: 3}
+  m_Name: EnemyComboSet
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyComboSet
+  moves:
+  - moveId: DodgePunish
+    attack:
+      range: 0.7
+      damage: 10
+      heaviness: 1
+      height: 1
+      hitboxRadius: 0.5
+      hitboxType: 0
+      lockDuration: 0.7
+      cooldown: 0.5
+      comboWindowDelay: -1
+      comboWindowDuration: -1
+      knockback: 6
+      knockbackUp: 0
+      hitstun: 0.25
+      makesAirborne: 1
+      airborneDuration: 0.2
+      animationTrigger: Kick01
+      startUpLength: 0.12
+      startUpSpeed: 0.4
+      recoveryLength: 0.6
+      recoverySpeed: 0.6
+      lungeFrame: 0.2
+      lungeDistance: 0.8
+      lungeDuration: 0.15
+      hitboxOffset: {x: 0, y: 0, z: 0}
+      hitboxDelay: 0.7
+      hitStopDuration: 0.1
+      trackingDuration: 1
+      trackingSpeed: 820
+      attackStartSfx: {fileID: 0}
+      hitConnectSfx: {fileID: 0}
+      sfxCues: []
+      chargeLoopSfx: {fileID: 0}
+      chargeLoopSfxVolume: 0.7
+      chargeLoopSfxPitch: 1
+      attackStartVfxPrefab: {fileID: 0}
+      hitConnectVfxPrefab: {fileID: 0}
+      attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+      attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+      hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+      hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    minDistance: 0
+    maxDistance: 100
+    requiresRecentDodge: 1
+    priority: 100
+  - moveId: PunchClose
+    attack:
+      range: 1.1
+      damage: 8
+      heaviness: 1
+      height: 1
+      hitboxRadius: 0.7
+      hitboxType: 0
+      lockDuration: 1.1
+      cooldown: 1.1
+      comboWindowDelay: -1
+      comboWindowDuration: -1
+      knockback: 0.5
+      knockbackUp: 0
+      hitstun: 0.91
+      makesAirborne: 0
+      airborneDuration: 0
+      animationTrigger: Punch
+      startUpLength: 0.14
+      startUpSpeed: 0.4
+      recoveryLength: 0.15
+      recoverySpeed: 0.4
+      lungeFrame: 0.2
+      lungeDistance: 0.8
+      lungeDuration: 0.1
+      hitboxOffset: {x: 0, y: 0, z: 0}
+      hitboxDelay: 0.41
+      hitStopDuration: 0.1
+      trackingDuration: 0.2
+      trackingSpeed: 540
+      attackStartSfx: {fileID: 0}
+      hitConnectSfx: {fileID: 0}
+      sfxCues: []
+      chargeLoopSfx: {fileID: 0}
+      chargeLoopSfxVolume: 0.7
+      chargeLoopSfxPitch: 1
+      attackStartVfxPrefab: {fileID: 0}
+      hitConnectVfxPrefab: {fileID: 0}
+      attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+      attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+      hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+      hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    minDistance: 0
+    maxDistance: 2.2
+    requiresRecentDodge: 0
+    priority: 10
+  - moveId: KickFar
+    attack:
+      range: 2.6
+      damage: 8
+      heaviness: 1
+      height: 1
+      hitboxRadius: 0.5
+      hitboxType: 0
+      lockDuration: 0.65
+      cooldown: 0.5
+      comboWindowDelay: -1
+      comboWindowDuration: -1
+      knockback: 5
+      knockbackUp: 0
+      hitstun: 1
+      makesAirborne: 0
+      airborneDuration: 0
+      animationTrigger: Kick01
+      startUpLength: 0
+      startUpSpeed: 1
+      recoveryLength: 0
+      recoverySpeed: 1
+      lungeFrame: 0.2
+      lungeDistance: 0.7
+      lungeDuration: 0.12
+      hitboxOffset: {x: 0, y: 0, z: 0}
+      hitboxDelay: 0.4
+      hitStopDuration: 0.11
+      trackingDuration: 1
+      trackingSpeed: 540
+      attackStartSfx: {fileID: 0}
+      hitConnectSfx: {fileID: 0}
+      sfxCues: []
+      chargeLoopSfx: {fileID: 0}
+      chargeLoopSfxVolume: 0.7
+      chargeLoopSfxPitch: 1
+      attackStartVfxPrefab: {fileID: 0}
+      hitConnectVfxPrefab: {fileID: 0}
+      attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+      attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+      hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+      hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    minDistance: 2.2
+    maxDistance: 100
+    requiresRecentDodge: 0
+    priority: 0

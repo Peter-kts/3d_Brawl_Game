@@ -80,14 +80,14 @@ public interface IDamageable
     );
     
     /*
-     * IsStunned: Check if entity is currently in hitstun
-     * 
+     * IsHitstunned: Check if entity is currently in hitstun
+     *
      * Other systems can check this to:
      *   - Pause AI behavior
      *   - Disable player input
-     *   - Play stun animations
+     *   - Play hit reaction animations
      */
-    bool IsStunned { get; }
+    bool IsHitstunned { get; }
     
     /*
      * IsAirborne: Check if entity is currently launched in the air

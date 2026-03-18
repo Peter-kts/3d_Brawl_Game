@@ -44,16 +44,6 @@ using System.Linq;
 
 public partial class Combat : MonoBehaviour
 {
-    /// <summary>Debug visualization state for hitbox. Used by CombatHitboxDebugVisual.</summary>
-    public struct HitboxDebugState
-    {
-        public bool showActive;
-        public bool showPreview;
-        public Vector3 center;
-        public float radius;
-        public Color color;
-    }
-
     // ========================================================================
     // REFERENCES
     // ========================================================================
@@ -140,13 +130,15 @@ public partial class Combat : MonoBehaviour
     
     private float nextAttackTime;              // Earliest Time.time a new attack can start (set to Time.time + attack.cooldown after each commit)
     private float currentAttackEndTime;        // Time.time when the attack lock expires; IsAttacking stays true until this passes
-    private float currentAttackRange;          // Range of the active attack; used by the hitbox debug visualizer
-    private float currentAttackRadius;         // Hitbox sphere radius; used by the hitbox debug visualizer
-    private Color currentAttackColor;          // Debug color for the hitbox gizmo
     private bool isAttacking;                  // True from attack commit until currentAttackEndTime; blocks new attacks and dashes
+    private float lastAttackEndTime = -999f;   // Time.time when the last attack lock expired naturally; used by RecentlyAttacked()
     public bool IsAttacking => isAttacking;
     /// <summary>True while the current attack lock is active (player cannot dash until this is false).</summary>
     public bool IsInAttackLock => isAttacking && Time.time < currentAttackEndTime;
+    /// <summary>Seconds remaining in the current attack lock. 0 when not attacking. Used by cautious enemies to decide whether to interrupt.</summary>
+    public float AttackLockTimeRemaining => isAttacking ? Mathf.Max(0f, currentAttackEndTime - Time.time) : 0f;
+    /// <summary>True if the player's attack lock ended within the last windowSeconds. Mirrors RecentlyDodged() — enemies use this to punish recovery frames.</summary>
+    public bool RecentlyAttacked(float windowSeconds) => lastAttackEndTime > 0f && (Time.time - lastAttackEndTime) <= windowSeconds;
 
     private Quaternion preAttackRotation;      // Player rotation before torso rotation was applied; used to revert after attack ends
     private bool hasAppliedTorsoRotation;      // True if torso rotation was applied this attack; gates the revert logic
@@ -176,10 +168,6 @@ public partial class Combat : MonoBehaviour
     private float trackingEndTime = 0f;            // Time.time until which the player auto-rotates toward the soft target after attack start
     private float currentTrackingSpeed = 0f;       // Degrees/second for soft-target tracking during attack; 0 = no tracking
 
-    private bool hitboxPending;                    // True when hitboxDelay > 0 and the hitbox hasn't fired yet this attack
-    private float hitboxTriggerTime;               // Time.time when the delayed hitbox fires (commit time + hitboxDelay)
-    private AttackData pendingAttackData;          // Attack data stored for the delayed hitbox fire (same as currentAttackData)
-    private bool hitboxHasFired;                   // True once the hitbox has been checked this attack; prevents double-firing
     private bool suppressHitboxActivationsUntilNextCommit; // When true, late animation-event hitbox calls are ignored (e.g. after interrupt)
     protected bool IsHitboxActivationSuppressed => suppressHitboxActivationsUntilNextCommit;
     private AttackData currentAttackData;          // Full data for the active attack; read by hitbox, lunge, charge, and SFX code
@@ -193,7 +181,14 @@ public partial class Combat : MonoBehaviour
     private float hitStopEndTime;                                           // Time.time when hit-stop expires; all frozen animators restored at this point
     private List<FrozenAnimator> frozenAnimators = new List<FrozenAnimator>(); // Animators paused for the current hit-stop (attacker + victim)
 
-    private Vector3 currentAttackOffset;      // Hitbox center offset in local space; passed to debug visualization each frame
+    bool IsAnimatorFrozen(Animator anim)
+    {
+        // Manual loop — avoids the closure + enumerator allocation that LINQ Any(lambda) produces every call.
+        for (int i = 0; i < frozenAnimators.Count; i++)
+            if (frozenAnimators[i].animator == anim) return true;
+        return false;
+    }
+
     private float currentAttackStartTime;     // Time.time when the current attack was committed; used for timing debug display
     
     private float currentStartUpLength;            // Normalized time fraction during which start-up speed is active (0 = no start-up phase)
@@ -303,6 +298,14 @@ public partial class Combat : MonoBehaviour
 
     void LateUpdate()
     {
+        // Re-enforce directional throw rotation after animator/other scripts may have clobbered it
+        if (_hasDirectionalThrowTarget)
+        {
+            transform.rotation = _directionalThrowTargetRotation;
+            if (_directionalThrowVictimTransform != null)
+                _directionalThrowVictimTransform.rotation = _directionalThrowVictimRotation;
+        }
+
         UpdateThrowVictimPseudoParent();
         // Re-apply baked position one frame after release (no-launch only) so enemy scripts/gravity don't overwrite it
         if (_reapplyThrowBakeNextFrame && _reapplyThrowBakeTransform != null)
@@ -316,9 +319,9 @@ public partial class Combat : MonoBehaviour
         bool throwDamageAppliedThisFrame = false; // Track so release path can skip applying damage again
         if (_deferThrowDamageToLateUpdate && currentThrowVictim != null && IsAnyThrowEnabled())
         {
-            ApplyThrowDamage(_deferThrowDamageProfileIndex);  // Mid-throw damage only — prone handled by OnThrowRelease
+            // Damage event applies damage only; release event applies throw knockback.
+            ApplyThrowDamage(applyDamage: true, applyKnockback: false);
             _deferThrowDamageToLateUpdate = false;              // Consume deferred flag
-            _deferThrowDamageProfileIndex = -1;                 // Reset profile index
             throwDamageAppliedThisFrame = true;                 // Mark so CompleteThrowRelease doesn't double-apply
         }
         // Throw release was deferred (from OnThrowRelease or from Update timer) so we run after Animator has applied root motion this frame
@@ -326,9 +329,11 @@ public partial class Combat : MonoBehaviour
         _deferThrowReleaseToLateUpdate = false;  // Consume deferred release flag
         Transform vt = (currentThrowVictim as Component)?.transform;  // Get victim transform for release
         if (vt == null) { currentThrowVictim = null; return; }  // Bail if victim destroyed
-        ReleaseThrowVictimFromSocket();          // Bake victim, stop pseudo-parent follow, CC/rb, ClearKnockback, reapply
+        // Release applies throw knockback; if no damage event fired, it also applies fallback damage.
+        ApplyThrowDamage(applyDamage: !throwDamageAppliedThisFrame, applyKnockback: true);
+        ReleaseThrowVictimFromSocket(clearKnockback: false); // Keep release knockback velocity; only bake/re-enable systems/reapply pose
         BakePlayerThrowRootMotionAndRestore();   // Save player root motion state and restore pre-throw pose
-        CompleteThrowRelease(vt, _deferThrowReleaseProfileIndex, throwDamageAppliedThisFrame, applyReleaseEffects: true);  // Apply release forces/effects and cleanup
+        CompleteThrowRelease(vt, throwDamageAppliedThisFrame, applyReleaseEffects: true);  // Apply release forces/effects and cleanup
     }
 
     void Update()
@@ -345,6 +350,7 @@ public partial class Combat : MonoBehaviour
         UpdatePendingHitbox();
         UpdateHitStop();
         UpdateAttackStartUpSpeed();
+        UpdateThrowCharge(); // slows/releases throw charge while button is held after grab connects
         
         RevertTorsoRotationIfExpired();
 
@@ -367,6 +373,12 @@ public partial class Combat : MonoBehaviour
         animator.SetBool(attackingBoolParameter, isAttacking || IsThrowInProgress());
     }
 
+    void ClearAnimatorAttackBoolImmediate()
+    {
+        if (animator == null || string.IsNullOrEmpty(attackingBoolParameter)) return;
+        animator.SetBool(attackingBoolParameter, false);
+    }
+
     /// <summary>
     /// Ends non-throw attack state when lock duration expires. Throws with an attached victim are released by animation events.
     /// </summary>
@@ -379,13 +391,20 @@ public partial class Combat : MonoBehaviour
         if (currentThrowVictim == null || !IsAnyThrowEnabled()) // Only auto-exit when no valid throw hold needs an animation-event release.
         {
             // Release is exclusively from OnThrowRelease animation event (and stun path below); just clear attack state here.
-            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !frozenAnimators.Any(f => f.animator == animator)) // Restore normal animator speed if startup/recovery speed scaling was in use.
+            if ((currentStartUpLength > 0f || currentRecoveryLength > 0f) && animator != null && !IsAnimatorFrozen(animator)) // Restore normal animator speed if startup/recovery speed scaling was in use.
                 animator.speed = 1f;
+            lastAttackEndTime = Time.time; // Record when attack lock expired so enemies can punish recovery with RecentlyAttacked()
             isAttacking = false;
-            hitboxPending = false;      // Cancel any delayed normal-attack hitbox.
+            ClearAnimatorAttackBoolImmediate();
             pendingThrowHitbox = false; // Cancel any delayed throw grab hitbox.
             currentAttackData = null;   // Clear current move context (used by SFX/events/debug).
             ResetChargeState();
+            ResetThrowChargeState(); // clear throw charge scales and restore animator speed if still frozen
+            // Weapon hitbox cleanup: if EndWeaponTipActiveFrames animation event never fired
+            // (e.g. charge slow-down caused events to mis-order, or state exited before the
+            // end event), the weapon tip collider stays armed and fires as a ghost hit after
+            // the animation completes. Force-close it on natural lock expiry as a safety net.
+            ForceEndActiveAttackAnimationEventState();
         }
         else if (!_deferThrowReleaseToLateUpdate)
         {
@@ -401,30 +420,10 @@ public partial class Combat : MonoBehaviour
     void HandleStunInterruptDuringAttack()
     {
         var damageableForStun = GetComponentInParent<IDamageable>();
-        // Gate intentionally requires "stunned now" and "combat work active".
+        // Gate intentionally requires "in hitstun now" and "combat work active".
         // This avoids clearing combat state every frame while not attacking.
-        if (damageableForStun == null || !damageableForStun.IsStunned || (!isAttacking && !hitboxPending)) return; // Interrupt combat flow only if stunned mid-attack.
-
-        // Player stunned (e.g. hit during throw): release victim without damage/get-up, then clear state
-        if (currentThrowVictim != null) // If a throw victim is attached, release safely without applying throw end effects.
-            ForceThrowReleaseFallback(applyReleaseEffects: false);
-        else
-            ClearThrowState();
-
-        SuppressFurtherHitboxActivationsAfterInterrupt();
-
-        // Fully abort the attack so no delayed hitbox, lunge, or tracking continues.
-        // Also restore any temporary animator speed modifications (startup/recovery/charge/hitstop).
-        RestoreAnimatorSpeedStateAfterDamageOrStun();
-        isAttacking = false;
-        hitboxPending = false;
-        pendingThrowHitbox = false;
-        lungePending = false;
-        trackingEndTime = 0f;
-        lightComboCount = 0;
-        hasAppliedTorsoRotation = false;
-        currentAttackData = null;
-        ResetChargeState();
+        if (damageableForStun == null || !damageableForStun.IsHitstunned || !isAttacking) return; // Interrupt combat flow only if hitstunned mid-attack.
+        InterruptAttackForPlayerAnimationInterrupt(clearThrowStateWhenNoVictim: true);
     }
 
     /// <summary>
@@ -435,13 +434,31 @@ public partial class Combat : MonoBehaviour
     {
         // External hard-cancel path (called from PlayerHealth on damage).
         // Early-out keeps this idempotent when multiple hits land in the same window.
-        if (!isAttacking && !hitboxPending && !isChargingAttack) return;
+        if (!isAttacking && !isChargingAttack) return;
+        InterruptAttackForPlayerAnimationInterrupt(clearThrowStateWhenNoVictim: false);
+    }
+
+    /// <summary>
+    /// Shared hard-interrupt path used when the player is interrupted during an attack animation.
+    /// Clears throw/attack state, closes event-driven hitboxes, and prevents late animation events from reactivating them.
+    /// </summary>
+    void InterruptAttackForPlayerAnimationInterrupt(bool clearThrowStateWhenNoVictim)
+    {
+        // If a throw victim is attached, release safely without applying release effects.
         if (currentThrowVictim != null)
             ForceThrowReleaseFallback(applyReleaseEffects: false);
+        else if (clearThrowStateWhenNoVictim)
+            ClearThrowState();
+
+        // Ensure active event-driven attack state is closed immediately (e.g. weapon hitboxes).
+        ForceEndActiveAttackAnimationEventState();
         SuppressFurtherHitboxActivationsAfterInterrupt();
+
+        // Fully abort the attack so no delayed hitbox, lunge, or tracking continues.
+        // Also restore any temporary animator speed modifications (startup/recovery/charge/hitstop).
         RestoreAnimatorSpeedStateAfterDamageOrStun();
         isAttacking = false;
-        hitboxPending = false;
+        ClearAnimatorAttackBoolImmediate();
         pendingThrowHitbox = false;
         lungePending = false;
         trackingEndTime = 0f;
@@ -449,6 +466,7 @@ public partial class Combat : MonoBehaviour
         hasAppliedTorsoRotation = false;
         currentAttackData = null;
         ResetChargeState();
+        ResetThrowChargeState(); // clear throw charge scales and restore animator speed if still frozen
     }
 
     void SuppressFurtherHitboxActivationsAfterInterrupt()
@@ -456,7 +474,6 @@ public partial class Combat : MonoBehaviour
         // Interrupt may happen while clips still have pending hitbox events later in the same state.
         // This flag blocks those late activations until a fresh attack/throw is explicitly committed.
         suppressHitboxActivationsUntilNextCommit = true;
-        hitboxPending = false;
         pendingThrowHitbox = false;
         _deferThrowDamageToLateUpdate = false;
     }
@@ -586,7 +603,7 @@ public partial class Combat : MonoBehaviour
     {
         bool canAttack = playerController != null;
         var damageable = GetComponentInParent<IDamageable>();
-        if (damageable != null && damageable.IsStunned)
+        if (damageable != null && damageable.IsHitstunned)
             canAttack = false;
 
         if (!canAttack)
@@ -694,6 +711,8 @@ public partial class Combat : MonoBehaviour
     void UpdateAttackLunge()
     {
         if (!lungePending) return;
+        // While charge-hold is active, defer lunge movement until release.
+        if (isChargingAttack) return;
         // Freeze attacker position during hitstop
         if (hitStopEndTime > 0f && Time.time < hitStopEndTime) return;
         
@@ -826,6 +845,15 @@ public partial class Combat : MonoBehaviour
     protected virtual void OnAttackCommitted(AttackData attack)
     {
     }
+
+    /// <summary>
+    /// Hook for derived combat types to immediately close any active
+    /// animation-event-driven attack state (for example weapon tip hitboxes)
+    /// when an attack is interrupted or expires unexpectedly.
+    /// </summary>
+    protected virtual void ForceEndActiveAttackAnimationEventState()
+    {
+    }
     
     void DoAttack(AttackData attack, Color visualColor)
     {
@@ -838,10 +866,6 @@ public partial class Combat : MonoBehaviour
         // Set cooldown (when you can attack again) and lock duration (when you can move again)
         nextAttackTime = Time.time + attack.cooldown;
         currentAttackEndTime = Time.time + attack.lockDuration;
-        currentAttackRange = attack.range;
-        currentAttackRadius = attack.hitboxRadius;
-        currentAttackColor = visualColor;
-        currentAttackOffset = attack.hitboxOffset;
         currentStartUpLength = attack.startUpLength;
         currentStartUpSpeed = attack.startUpSpeed;
         currentRecoveryLength = attack.recoveryLength;
@@ -864,10 +888,6 @@ public partial class Combat : MonoBehaviour
                 }
             }
         }
-        
-        // Cancel any pending hitbox from a previous attack
-        hitboxPending = false;
-        hitboxHasFired = false;
         
         // Set up tracking window (optional: rotate toward soft target for a short time)
         if (attack.trackingDuration > 0f)
@@ -893,7 +913,7 @@ public partial class Combat : MonoBehaviour
             if (DebugSettings.Instance != null && DebugSettings.Instance.logAttackTiming)
             {
                 var state = animator.GetCurrentAnimatorStateInfo(0);
-                Debug.Log($"[AttackStart] trigger='{attack.animationTrigger}' hitboxDelay={attack.hitboxDelay:F3} startUp=({attack.startUpLength:F2},{attack.startUpSpeed:F2}) recovery=({attack.recoveryLength:F2},{attack.recoverySpeed:F2}) | fromStateHash={state.shortNameHash} fromNT={state.normalizedTime:F3}");
+                Debug.Log($"[AttackStart] trigger='{attack.animationTrigger}' startUp=({attack.startUpLength:F2},{attack.startUpSpeed:F2}) recovery=({attack.recoveryLength:F2},{attack.recoverySpeed:F2}) | fromStateHash={state.shortNameHash} fromNT={state.normalizedTime:F3}");
             }
             else
                 Debug.Log($"Playing animation trigger: '{attack.animationTrigger}'");
@@ -951,43 +971,7 @@ public partial class Combat : MonoBehaviour
             }
         }
         
-        // --------------------------------------------------------------------
-        // HITBOX (scheduled with optional delay)
-        // --------------------------------------------------------------------
-        
-        /*
-         * HITBOX SCHEDULING:
-         * 
-         * The hitbox can fire immediately (hitboxDelay = 0) or after a delay
-         * to match the animation wind-up. This lets you sync the damage check
-         * with the exact frame the punch/kick connects visually.
-         * 
-         * If the enemy is too far → whiff
-         * If the enemy is behind → whiff
-         * If the player isn't facing the enemy → whiff
-         * 
-         * This is deliberate. Spacing and facing are the player's job.
-         */
-        
-        if (attack.hitboxType == AttackHitboxType.WeaponStrike)
-        {
-            // Weapon strikes are handled exclusively by WeaponCombat + WeaponTipHitbox
-            // via BeginWeaponTipActiveFrames/EndWeaponTipActiveFrames animation events.
-            hitboxPending = false;
-            pendingAttackData = null;
-        }
-        else if (attack.hitboxDelay > 0f)
-        {
-            // Schedule hitbox for later (syncs with animation)
-            hitboxPending = true;
-            hitboxTriggerTime = Time.time + attack.hitboxDelay;
-            pendingAttackData = attack;
-        }
-        else
-        {
-            // Fire immediately (backward compatible, delay = 0)
-            ExecuteHitbox(attack);
-        }
+        // Hitbox activation is handled by WeaponCombat + WeaponTipHitbox via BeginHitbox/EndHitbox animation events.
     }
 
     // ========================================================================
@@ -1194,7 +1178,7 @@ public partial class Combat : MonoBehaviour
             // We freeze the first Animator in the target hierarchy (standard for character rigs).
             Animator targetAnim = targetTransform.GetComponentInChildren<Animator>();
             // Avoid double-adding the same animator if multiple colliders report the same hit target.
-            if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
+            if (targetAnim != null && !IsAnimatorFrozen(targetAnim))
             {
                 // Save original speed so UpdateHitStop() can restore exactly after freeze window.
                 frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
@@ -1232,7 +1216,7 @@ public partial class Combat : MonoBehaviour
             hitStopEndTime = Time.time + attack.hitStopDuration;
 
             // Freeze attacker animator once; reuse the same frozenAnimators restore pipeline.
-            if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
+            if (animator != null && !IsAnimatorFrozen(animator))
             {
                 frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
                 animator.speed = 0f;
@@ -1285,212 +1269,20 @@ public partial class Combat : MonoBehaviour
     }
     
     /// <summary>
-    /// Returns light and heavy hitbox center/radius for editor Gizmos.
-    /// </summary>
-    public (Vector3 lightCenter, float lightRadius, Vector3 heavyCenter, float heavyRadius) GetEditorHitboxCenters()
-    {
-        if (comboSet == null) return (transform.position, 0f, transform.position, 0f);
-        Transform origin = hitOrigin != null ? hitOrigin : transform;
-        AttackData light = comboSet.forwardJabNormal;
-        AttackData heavy = comboSet.heavyAttack;
-        Vector3 centerL = origin.position
-            + transform.forward * light.range
-            + transform.right * light.hitboxOffset.x
-            + transform.up * light.hitboxOffset.y
-            + transform.forward * light.hitboxOffset.z;
-        Vector3 centerH = origin.position
-            + transform.forward * heavy.range
-            + transform.right * heavy.hitboxOffset.x
-            + transform.up * heavy.hitboxOffset.y
-            + transform.forward * heavy.hitboxOffset.z;
-        return (centerL, light.hitboxRadius, centerH, heavy.hitboxRadius);
-    }
-
-    /// <summary>
-    /// Returns current hitbox state for debug visualization. No side effects.
-    /// </summary>
-    public HitboxDebugState GetHitboxDebugState()
-    {
-        var state = new HitboxDebugState();
-        bool inCombatMode = playerController != null && playerController.IsInCombatMode;
-        state.showActive = isAttacking && hitboxHasFired;
-        state.showPreview = !isAttacking && inCombatMode;
-
-        if (state.showActive)
-        {
-            Transform origin = hitOrigin != null ? hitOrigin : transform;
-            state.center = origin.position
-                + transform.forward * currentAttackRange
-                + transform.right * currentAttackOffset.x
-                + transform.up * currentAttackOffset.y
-                + transform.forward * currentAttackOffset.z;
-            state.radius = currentAttackRadius;
-            state.color = currentAttackColor;
-        }
-        else if (state.showPreview && comboSet != null)
-        {
-            state.center = CalculateHitboxCenter(comboSet.forwardJabNormal);
-            state.radius = comboSet.forwardJabNormal.hitboxRadius;
-            state.color = DebugSettings.Instance.lightAttackColor;
-            state.color.a = 0.15f;
-        }
-        return state;
-    }
-
-    /// <summary>
-    /// Calculate the hitbox center position using range + local-space offset.
-    /// X = right, Y = up, Z = additional forward (on top of range).
-    /// </summary>
-    Vector3 CalculateHitboxCenter(AttackData attack)
-    {
-        Transform origin = hitOrigin != null ? hitOrigin : transform;
-        return origin.position
-            + transform.forward * attack.range
-            + transform.right   * attack.hitboxOffset.x
-            + transform.up      * attack.hitboxOffset.y
-            + transform.forward * attack.hitboxOffset.z;
-    }
-    
-    /// <summary>
-    /// Fires the hitbox: OverlapSphere, damage dealing, knockback, and hit stop.
-    /// Called immediately (delay=0) or after hitboxDelay from UpdatePendingHitbox().
-    /// Each damageable is only hit once per hitbox fire (multiple colliders on same object are deduplicated).
-    /// </summary>
-    void ExecuteHitbox(AttackData attack)
-    {
-        hitboxHasFired = true;
-        hitboxPending = false;
-        
-        if (DebugSettings.Instance != null && DebugSettings.Instance.logAttackTiming)
-        {
-            float realTimeSinceStart = Time.time - currentAttackStartTime;
-            string stateName = "";
-            float nt = -1f;
-            if (animator != null)
-            {
-                var state = animator.GetCurrentAnimatorStateInfo(0);
-                nt = state.normalizedTime;
-                stateName = state.shortNameHash.ToString();
-            }
-            Debug.Log($"[HitboxFire] realTimeSinceStart={realTimeSinceStart:F3} (expected ~{attack.hitboxDelay:F3}) | animatorStateHash={stateName} normalizedTime={nt:F3}");
-        }
-        
-        Vector3 center = CalculateHitboxCenter(attack);
-        
-        // Find hits
-        Collider[] hits = Physics.OverlapSphere(center, attack.hitboxRadius, ~0, QueryTriggerInteraction.Ignore);
-        
-        bool didHit = false;
-        var alreadyHit = new HashSet<Component>();
-        
-        foreach (var c in hits)
-        {
-            var damageable = c.GetComponentInParent<IDamageable>();
-            if (damageable == null) continue;
-            if ((damageable as Component)?.gameObject == gameObject) continue;
-            
-            var comp = damageable as Component;
-            if (comp != null && alreadyHit.Contains(comp)) continue;
-            if (comp != null) alreadyHit.Add(comp);
-            
-            Transform targetTransform = (damageable as Component)?.transform;
-            if (targetTransform == null) continue;
-            
-            // Calculate knockback direction (away from attacker)
-            Vector3 horizontalDir = (targetTransform.position - transform.position);
-            horizontalDir.y = 0f;
-            if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
-            horizontalDir.Normalize();
-            
-            Vector3 knockbackVector = ((horizontalDir * attack.knockback) + (Vector3.up * attack.knockbackUp)) * chargeReleaseKnockbackScale;
-
-            // Apply damage
-            float airborne = attack.makesAirborne ? attack.airborneDuration : 0f;
-            damageable.TakeHit(
-                Mathf.RoundToInt(attack.damage * chargeReleaseDamageScale),
-                knockbackVector,
-                attack.hitstun,
-                airborne,
-                attack.hitStopDuration,
-                attack.heaviness,
-                attack.height
-            );
-            
-            // Register interaction with threat system (boosts this enemy's priority)
-            if (threatSystem != null)
-            {
-                threatSystem.RegisterInteraction(targetTransform);
-            }
-            
-            // Freeze target's animator for hit stop
-            if (attack.hitStopDuration > 0f)
-            {
-                Animator targetAnim = targetTransform.GetComponentInChildren<Animator>();
-                if (targetAnim != null && !frozenAnimators.Any(f => f.animator == targetAnim))
-                {
-                    frozenAnimators.Add(new FrozenAnimator { animator = targetAnim, originalSpeed = targetAnim.speed });
-                    targetAnim.speed = 0f;
-                }
-            }
-            
-            didHit = true;
-        }
-        
-        GameObject connectVfxPrefab = attack.hitConnectVfxPrefab != null ? attack.hitConnectVfxPrefab : hitConnectVfxPrefab;
-        if (didHit && connectVfxPrefab != null)
-        {
-            Quaternion rot = (center - transform.position).sqrMagnitude > 0.001f
-                ? Quaternion.LookRotation(center - transform.position)
-                : transform.rotation;
-            rot = rot * Quaternion.Euler(attack.hitConnectVfxRotationOffset);
-            var go = Instantiate(connectVfxPrefab, center + attack.hitConnectVfxPositionOffset, rot);
-            PlayVfx(go);
-        }
-
-        if (didHit)
-            PlayAttackCues(attack, AttackSfxTriggerType.OnHitConfirm, 0, useLegacyFallback: true);
-        
-        // Apply hit stop to attacker if we hit something
-        if (didHit && attack.hitStopDuration > 0f)
-        {
-            hitStopEndTime = Time.time + attack.hitStopDuration;
-            
-            if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
-            {
-                frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
-                animator.speed = 0f;
-            }
-            
-            if (Gamepad.current != null)
-                StartCoroutine(RumbleForSeconds(attack.hitStopDuration));
-        }
-    }
-    
-    /// <summary>
-    /// Check if a scheduled hitbox is ready to fire (normal attack or throw).
+    /// Check if the scheduled throw grab hitbox is ready to fire.
     /// </summary>
     void UpdatePendingHitbox()
     {
         if (suppressHitboxActivationsUntilNextCommit)
         {
-            // Drop any stale scheduled hitboxes left from an interrupted animation.
-            hitboxPending = false;
             pendingThrowHitbox = false;
             return;
         }
 
-        // Throw grab: fire once when delay elapsed; if no enemy in sphere, we whiff and attack lock ends at currentAttackEndTime
         if (pendingThrowHitbox && Time.time >= throwHitboxTriggerTime)
         {
             ExecuteThrowHitbox();
             pendingThrowHitbox = false;
-            return;
-        }
-        if (!hitboxPending) return;
-        
-        if (Time.time >= hitboxTriggerTime)
-        {
-            ExecuteHitbox(pendingAttackData);
         }
     }
     
@@ -1530,7 +1322,7 @@ public partial class Combat : MonoBehaviour
     void UpdateAttackStartUpSpeed()
     {
         if (!isAttacking || animator == null) return;
-        if (frozenAnimators.Any(f => f.animator == animator)) return;
+        if (IsAnimatorFrozen(animator)) return;
         UpdateChargeState();
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
         if (!string.IsNullOrEmpty(currentAttackStateName) && !state.IsName(currentAttackStateName))
@@ -1582,7 +1374,6 @@ public partial class Combat : MonoBehaviour
     {
         if (!enableWeaponCharge) return false;
         if (currentAttackData == null) return false;
-        if (currentAttackData.hitboxType != AttackHitboxType.WeaponStrike) return false;
         if (chargeHeavyOnly && !currentAttackStartedFromHeavyInput) return false;
         return true;
     }
@@ -1618,6 +1409,13 @@ public partial class Combat : MonoBehaviour
         if (!isChargingAttack) return;
         currentChargeDuration = Mathf.Max(0f, Time.time - chargeStartTime);
         isChargingAttack = false;
+        // Keep lunge aligned with the delayed animation timeline:
+        // if charge held for X seconds, delay lunge window by X seconds too.
+        if (lungePending && currentChargeDuration > 0f)
+        {
+            lungeTriggerTime += currentChargeDuration;
+            lungeEndTime += currentChargeDuration;
+        }
         // Charge hold slows animation and consumes extra real time; extend cooldown so
         // next attack timing stays aligned with the delayed move completion.
         nextAttackTime += currentChargeDuration;
@@ -1641,6 +1439,9 @@ public partial class Combat : MonoBehaviour
         }
         chargeReleaseDamageScale = Mathf.Lerp(1f, chargeDamageMultiplier, normalizedCharge);
         chargeReleaseKnockbackScale = Mathf.Lerp(1f, chargeKnockbackMultiplier, normalizedCharge);
+        // Scale lunge distance by charge amount too, so charged releases travel further.
+        if (lungePending && currentLungeDistance > 0f)
+            currentLungeDistance *= chargeReleaseKnockbackScale;
         // TODO: Use currentChargeDuration / maxChargeTime to increase sword size while charging/releasing.
     }
 
@@ -1721,6 +1522,22 @@ public partial class Combat : MonoBehaviour
     public void OnAttackChargeWindowEnd()
     {
         OnChargeWindowEnd();
+    }
+
+    // Animation Event: place on the throw animation at the frame where the "loaded" hold begins.
+    // If the player is still holding the throw button, the animation freezes and knockback scales up.
+    public void OnThrowChargeWindowStart()
+    {
+        throwChargeWindowOpen = true;
+        StartThrowChargeIfInputHeld();
+    }
+
+    // Animation Event: optional safety — closes the charge window. Place at the windup frame
+    // where charging should no longer be possible. If the player is still holding, releases now.
+    public void OnThrowChargeWindowEnd()
+    {
+        if (isChargingThrow) StopThrowCharge();
+        throwChargeWindowOpen = false;
     }
     
     IEnumerator RumbleForSeconds(float duration)

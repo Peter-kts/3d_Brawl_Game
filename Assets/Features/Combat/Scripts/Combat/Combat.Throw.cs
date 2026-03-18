@@ -7,6 +7,7 @@
  *       -> LateUpdate runs deferred release: ReleaseThrowVictimFromSocket, BakePlayer, CompleteThrowRelease.
  */
 
+using System.Collections;
 using UnityEngine;
 using System.Linq;
 
@@ -30,8 +31,6 @@ public partial class Combat
     private bool _playerThrowRootMotionChanged;
     // Set by OnThrowRelease animation event; consumed in LateUpdate to run release after root motion has been applied this frame.
     private bool _deferThrowReleaseToLateUpdate;
-    // Which release profile (damage/knockback) to use when we run the deferred release; -1 = default.
-    private int _deferThrowReleaseProfileIndex;
     // True when the throw was committed with stick back (back throw); used for back vs neutral anim/state names.
     private bool _currentThrowIsBack;
     // Active throw config selected at throw start (forward vs back), used for the full throw lifecycle.
@@ -39,7 +38,6 @@ public partial class Combat
     private bool _hasActiveThrowData;
     // Set by OnThrowDamage animation event; consumed in LateUpdate to apply throw damage on the exact frame.
     private bool _deferThrowDamageToLateUpdate;
-    private int _deferThrowDamageProfileIndex;
     // When we release without launching, we reapply the baked victim position next frame so physics doesn't snap them.
     private Transform _reapplyThrowBakeTransform;
     private Vector3 _reapplyThrowBakePosition;
@@ -48,6 +46,28 @@ public partial class Combat
     // Victim mesh (animator transform) local pose before we parented; restored when we bake and release.
     private Vector3 _throwVictimMeshLocalPosition;
     private Quaternion _throwVictimMeshLocalRotation;
+
+    // Throw charge state — active between OnThrowChargeWindowStart and release/auto-release.
+    private bool throwChargeWindowOpen;        // true while the charge window is open (animation event brackets this)
+    private bool isChargingThrow;              // player is actively holding the button during the charge window
+    private float throwChargeStartTime;        // Time.time when the hold began
+    private float throwChargeKnockbackScale = 1f; // baked at release; applied in ApplyThrowDamage
+    private float throwChargeDamageScale    = 1f; // baked at release; applied in ApplyThrowDamage
+    private Animator _throwVictimAnimator;     // cached at charge start so we can mirror speed changes to the victim
+    // True while directional throw rotation is actively steering — OnAnimatorMove skips
+    // rotation root motion so our manual RotateTowards is not overwritten each frame.
+    private bool _directionalThrowRotationActive;
+    // Last computed world-space throw direction; re-enforced in LateUpdate to survive
+    // anything that writes transform.rotation between Update and LateUpdate.
+    private Quaternion _directionalThrowTargetRotation;
+    private bool _hasDirectionalThrowTarget;
+    // Same enforcement for the victim — enemy AI/animator can write its rotation back after we set it.
+    private Transform _directionalThrowVictimTransform;
+    private Quaternion _directionalThrowVictimRotation;
+    // The exact world-space direction the throw was committed in — set at charge release and
+    // used as the authoritative knockback direction, ignoring socket offsets and bake artifacts.
+    private Vector3 _committedThrowDirection;
+    private bool _hasCommittedThrowDirection;
     // Position-only pseudo-parent state while throw hold is active.
     private Transform _throwVictimPseudoParentTarget;
     private bool _throwVictimPseudoParentActive;
@@ -107,6 +127,17 @@ public partial class Combat
             || _deferThrowReleaseToLateUpdate;
     }
 
+    /// <summary>
+    /// True when this Combat currently owns the provided throw victim.
+    /// Used by victim-side animation-event relay methods (fallback path).
+    /// </summary>
+    public bool IsHoldingThrowVictim(IDamageable victim)
+    {
+        if (victim == null) return false;
+        if (!_hasActiveThrowData || !_activeThrowData.enableThrow) return false;
+        return currentThrowVictim == victim;
+    }
+
     void ForceThrowReleaseFallback(bool applyReleaseEffects)
     {
         // Used when expected animation events are interrupted/missed.
@@ -120,9 +151,10 @@ public partial class Combat
         }
 
         // Mirror the standard release order so victim/player transforms and controller state stay consistent.
+        ResetThrowChargeState(); // restore animator speed if frozen mid-charge
         BakePlayerThrowRootMotionAndRestore();
         ReleaseThrowVictimFromSocket();
-        CompleteThrowRelease(vt, -1, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: applyReleaseEffects);
+        CompleteThrowRelease(vt, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: applyReleaseEffects);
     }
 
     #region Throw (attempted grab -> hitbox -> hold -> release)
@@ -142,8 +174,6 @@ public partial class Combat
         currentAttackStateName = t.grabAttemptAnimationTrigger;
         currentThrowVictim = null;                              // No victim until hitbox connects
         isAttacking = true;
-        hitboxPending = false;
-        hitboxHasFired = false;
         pendingThrowHitbox = true;                              // Update will call ExecuteThrowHitbox at throwHitboxTriggerTime
         throwHitboxTriggerTime = Time.time + t.hitboxDelay;
         if (animator != null && !string.IsNullOrEmpty(t.grabAttemptAnimationTrigger))
@@ -351,7 +381,8 @@ public partial class Combat
         Quaternion bakeRotation = vt.rotation;
         if (victimAnim != null)
         {
-            bakePosition = victimAnim.rootPosition;
+            // Use grab socket world position as release origin so charge duration doesn't affect launch position.
+            bakePosition = grabSocket != null ? grabSocket.position : victimAnim.rootPosition;
             bakeRotation = victimAnim.rootRotation;
             if (_throwVictimRootMotionChanged)
             {
@@ -370,8 +401,12 @@ public partial class Combat
         return (bakePosition, standingRotation);
     }
 
-    /// <summary>Bake victim root motion, stop pseudo-parent follow, re-enable CC/Rigidbody, clear knockback; if not launching, schedule reapply of baked pose next frame.</summary>
-    void ReleaseThrowVictimFromSocket()
+    /// <summary>
+    /// Bake victim root motion, stop pseudo-parent follow, re-enable CC/Rigidbody.
+    /// Optionally clear existing knockback (useful for cleanup paths, but should stay false for throw-launch release).
+    /// If not launching, schedule reapply of baked pose next frame.
+    /// </summary>
+    void ReleaseThrowVictimFromSocket(bool clearKnockback = true)
     {
         if (currentThrowVictim == null) return;
         Transform vt = (currentThrowVictim as Component)?.transform;
@@ -387,7 +422,7 @@ public partial class Combat
         if (rb != null) rb.isKinematic = false;
 
         var victimHealth = vt.GetComponent<EnemyHealth>();
-        if (victimHealth != null)
+        if (victimHealth != null && clearKnockback)
             victimHealth.ClearKnockback();
 
         _reapplyThrowBakeTransform = vt;
@@ -396,15 +431,24 @@ public partial class Combat
         _reapplyThrowBakeNextFrame = true;
     }
 
-    /// <summary>Apply release outcome: enter prone, then clear collision ignore and throw state. Damage is applied only by OnThrowDamage events.</summary>
-    void CompleteThrowRelease(Transform victimTransform, int releaseProfileIndex, bool damageAlreadyAppliedThisFrame, bool applyReleaseEffects = true)
+    /// <summary>Apply release outcome: optionally enter prone, then clear collision ignore and throw state. Damage is applied only by OnThrowDamage events.</summary>
+    void CompleteThrowRelease(Transform victimTransform, bool damageAlreadyAppliedThisFrame, bool applyReleaseEffects = true)
     {
-        if (applyReleaseEffects && _hasActiveThrowData && _activeThrowData.enableThrow)
+        if (applyReleaseEffects && _hasActiveThrowData && _activeThrowData.enableThrow && ShouldEnterProneOnThrowRelease(victimTransform))
         {
-            EnterThrowProne(victimTransform, releaseProfileIndex);
+            EnterThrowProne(victimTransform);
         }
-        SetThrowVictimCollisionIgnore(victimTransform, false);
+        StartCoroutine(RestoreCollisionAfterDelay(victimTransform, 1f));
         ClearThrowState();
+    }
+
+    // Throw release should not force prone if release impact has explicitly routed victim into knockback-stun.
+    bool ShouldEnterProneOnThrowRelease(Transform victimTransform)
+    {
+        if (victimTransform == null) return false;
+        EnemyStunMeter victimStun = victimTransform.GetComponent<EnemyStunMeter>();
+        if (victimStun == null) return true;
+        return !(victimStun.IsStandingStunned && victimStun.TriggerWasHeavy);
     }
 
     /// <summary>Clears throw-related state: victim ref, pseudo-parent follow, isAttacking, hitbox pending, restores animator speeds and clears hit stop.</summary>
@@ -413,7 +457,6 @@ public partial class Combat
         StopThrowVictimPseudoParent();
         currentThrowVictim = null;
         isAttacking = false;
-        hitboxPending = false;
         pendingThrowHitbox = false;
         _hasActiveThrowData = false;
         ResetChargeState();
@@ -437,14 +480,17 @@ public partial class Combat
     /// <summary>Animation event: toggle victim root motion (0 = off/restore, non-zero = on).</summary>
     public void OnThrowVictimRootMotion(int enabled)
     {
+        // No active victim to toggle.
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
+        // Victim has no animator in hierarchy.
         var victimAnim = vt.GetComponentInChildren<Animator>();
         if (victimAnim == null) return;
 
         bool enable = enabled != 0;
         if (enable)
         {
+            // Cache original state once so "off" can restore the real value.
             if (!_throwVictimRootMotionChanged)
                 _throwVictimRootMotionRestore = victimAnim.applyRootMotion;
             victimAnim.applyRootMotion = true;
@@ -452,6 +498,7 @@ public partial class Combat
             return;
         }
 
+        // Restore only if we changed it in this throw flow.
         if (_throwVictimRootMotionChanged)
         {
             victimAnim.applyRootMotion = _throwVictimRootMotionRestore;
@@ -505,31 +552,26 @@ public partial class Combat
         OnThrowPlayerRootMotion(0);
     }
 
-    /// <summary>Animation event (no arg): defers full release to LateUpdate with default profile index -1.</summary>
+    /// <summary>Animation event: defers full release to LateUpdate so bake/release/CompleteThrowRelease run after root motion this frame.</summary>
     public void OnThrowRelease()
-    {
-        OnThrowRelease(-1);
-    }
-
-    /// <summary>Animation event (with profile index): defers full release to LateUpdate so bake/release/CompleteThrowRelease run after root motion this frame.</summary>
-    public void OnThrowRelease(int releaseProfileIndex)
     {
         // Ignore stale release events after interrupts/cleanup.
         // Without this guard, old clip events could release/apply prone on the wrong target.
         if (currentThrowVictim == null || !_hasActiveThrowData || !_activeThrowData.enableThrow) return;
+        // Idempotency guard for fail-safe dual authoring (player + victim clip):
+        // once release is queued for this frame, ignore duplicate release events.
+        if (_deferThrowReleaseToLateUpdate) return;
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
         _deferThrowReleaseToLateUpdate = true;
-        _deferThrowReleaseProfileIndex = releaseProfileIndex;
     }
 
-    /// <summary>Animation event: defers throw damage to LateUpdate so it applies on the exact frame; profileIndex selects release profile or -1 for default.</summary>
-    public void OnThrowDamage(int profileIndex)
+    /// <summary>Animation event: defers throw damage (no knockback) to LateUpdate so it applies on the exact frame. Knockback is applied at OnThrowRelease.</summary>
+    public void OnThrowDamage()
     {
         // Damage is event-driven; this guard prevents phantom damage after a canceled throw.
         if (currentThrowVictim == null || !_hasActiveThrowData || !_activeThrowData.enableThrow) return;
         _deferThrowDamageToLateUpdate = true;
-        _deferThrowDamageProfileIndex = profileIndex;
     }
 
     /// <summary>Animation event: spawns throw-end VFX at current victim position (or in front of player if victim is missing).</summary>
@@ -559,6 +601,12 @@ public partial class Combat
         OnThrowSfxEvent(0);
     }
 
+    IEnumerator RestoreCollisionAfterDelay(Transform victimTransform, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SetThrowVictimCollisionIgnore(victimTransform, false);
+    }
+
     /// <summary>Ignore or re-enable collisions between all player colliders and all victim colliders (avoids overlap during throw).</summary>
     void SetThrowVictimCollisionIgnore(Transform victimTransform, bool ignore)
     {
@@ -576,49 +624,90 @@ public partial class Combat
         }
     }
 
-    /// <summary>Apply throw damage and knockback to currentThrowVictim. Prone is entered separately via EnterThrowProne at release.</summary>
-    void ApplyThrowDamage(int releaseProfileIndex = -1)
+    /// <summary>
+    /// Apply throw impact to currentThrowVictim.
+    /// For throw flow we can split impact timing:
+    /// - OnThrowDamage event: damage only (no knockback)
+    /// - OnThrowRelease event: knockback (and optional fallback damage if no damage event fired)
+    /// Prone is entered separately via EnterThrowProne at release.
+    /// </summary>
+    void ApplyThrowDamage(bool applyDamage = true, bool applyKnockback = true)
     {
         ThrowData t = _activeThrowData;
         // Final safety gate for deferred damage execution.
         if (!t.enableThrow || currentThrowVictim == null) return;
         Transform victimTransform = (currentThrowVictim as Component)?.transform;
         if (victimTransform == null) return;
-        Vector3 horizontalDir = (victimTransform.position - transform.position);
-        horizontalDir.y = 0f;
-        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
-        horizontalDir.Normalize();
-        int damage;
-        float knockback, knockbackUp;
-        if (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)
+        // If a directional throw direction was committed at charge release, use it as the
+        // authoritative knockback direction — it's immune to socket offsets, baking, and
+        // any rotation that happened after the player released the charge button.
+        // Otherwise fall back to the player's current facing.
+        Vector3 horizontalDir;
+        if (_hasCommittedThrowDirection)
         {
-            var p = t.releaseProfiles[releaseProfileIndex];
-            damage = p.endDamage;
-            knockback = p.endKnockback;
-            knockbackUp = p.endKnockbackUp;
+            horizontalDir = _committedThrowDirection;
         }
         else
         {
-            damage = t.endDamage;
-            knockback = t.endKnockback;
-            knockbackUp = t.endKnockbackUp;
+            horizontalDir = transform.forward;
+            horizontalDir.y = 0f;
+            if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = Vector3.forward;
+            horizontalDir.Normalize();
         }
-        Vector3 knockbackVector = (horizontalDir * knockback) + (Vector3.up * knockbackUp);
-        currentThrowVictim.TakeHit(damage, knockbackVector, 0f, 0f);
+        int damage = t.endDamage;
+        float knockback = t.endKnockback;
+        float knockbackUp = t.endKnockbackUp;
+        // Apply throw charge scaling (1x when no charge was held, up to charge multipliers at full hold)
+        int scaledDamage = Mathf.RoundToInt(damage * throwChargeDamageScale);
+        float scaledKnockback = knockback * throwChargeKnockbackScale;
+        float scaledKnockbackUp = knockbackUp * throwChargeKnockbackScale;
+
+        Vector3 knockbackVector = applyKnockback
+            ? ((horizontalDir * scaledKnockback) + (Vector3.up * scaledKnockbackUp))
+            : Vector3.zero;
+
+        // TEMP DEBUG — show exactly what direction the knockback is fired in
+        Debug.Log($"[Throw knockback] horizontalDir={horizontalDir}, transform.fwd={transform.forward}, committedDir={_committedThrowDirection}, hasCommitted={_hasCommittedThrowDirection}");
+        Debug.DrawRay(transform.position + Vector3.up, horizontalDir * 4f, Color.magenta, 3f, false);
+
+        // Throw release can explicitly route into knockback-stun animation path based on release knockback.
+        // This guarantees IsKnockbackStun can activate even if the previous standing-stun phase has ended.
+        if (applyKnockback)
+        {
+            EnemyStunMeter victimStun = victimTransform.GetComponent<EnemyStunMeter>();
+            if (victimStun != null)
+            {
+                float minKnockbackStunWindow = Mathf.Max(0.1f, victimStun.standingStunEntryDuration);
+
+                // If already in standing stun, just extend the timer first so release impact doesn't drop out early.
+                if (victimStun.IsStandingStunned)
+                    victimStun.ExtendStandingStunMinRemaining(minKnockbackStunWindow);
+
+                if (knockbackVector.magnitude >= victimStun.knockbackStunThreshold)
+                {
+                    bool retriggered = victimStun.TryRetriggerAsKnockback(knockbackVector.magnitude);
+                    if (!retriggered)
+                    {
+                        // If not currently standing stunned, start a short standing-stun window in knockback mode.
+                        victimStun.ForceStandingStun(minKnockbackStunWindow, asKnockback: true);
+                    }
+                }
+            }
+        }
+
+        int damageToApply = applyDamage ? scaledDamage : 0;
+        currentThrowVictim.TakeHit(damageToApply, knockbackVector, 0f, 0f);
     }
 
     /// <summary>Enter prone on the throw victim. Called at release (OnThrowRelease) regardless of whether damage was already applied mid-throw.</summary>
-    void EnterThrowProne(Transform victimTransform, int releaseProfileIndex = -1)
+    void EnterThrowProne(Transform victimTransform)
     {
         // Only enter prone from an actively owned throw victim.
         if (!_hasActiveThrowData || victimTransform == null) return;
         ThrowData t = _activeThrowData;
-        float proneDuration = (releaseProfileIndex >= 0 && t.releaseProfiles != null && releaseProfileIndex < t.releaseProfiles.Length)
-            ? t.releaseProfiles[releaseProfileIndex].proneDuration
-            : t.proneDuration;
         var victimAI = victimTransform.GetComponentInParent<SimpleEnemyAI>();
-        float dur = proneDuration > 0f ? proneDuration : (victimAI != null ? victimAI.groundedDuration : 1f);
-        victimAI?.ProneSystem?.Enter(dur, t.invertProneRotation);
+        float dur = t.proneDuration > 0f ? t.proneDuration : (victimAI != null ? victimAI.groundedDuration : 1f);
+        victimAI?.ProneSystem?.Enter(dur, t.invertProneRotation, t.proneVariant);
 
         // Keep deferred one-frame bake reapply aligned with the final prone-facing rotation.
         if (_reapplyThrowBakeTransform == victimTransform)
@@ -636,4 +725,200 @@ public partial class Combat
             + transform.forward * t.hitboxOffset.z;
     }
     #endregion
+
+    // =========================================================================
+    // THROW CHARGE
+    // =========================================================================
+    // After grab connects and the throw animation reaches OnThrowChargeWindowStart,
+    // the player can hold the throw button to scale knockback (and optionally damage).
+    // Mirrors the weapon charge system but operates on ThrowData instead of AttackData.
+
+    // Called every frame from Update while a throw charge is active.
+    void UpdateThrowCharge()
+    {
+        if (!isChargingThrow) return;
+        ThrowData t = _activeThrowData;
+
+        // Slow both the player and victim animations while holding
+        float chargeSpeed = t.chargeAnimatorSpeed > 0f ? t.chargeAnimatorSpeed : 0.05f;
+        if (animator != null) animator.speed = chargeSpeed;
+        if (_throwVictimAnimator != null) _throwVictimAnimator.speed = chargeSpeed;
+
+        // Directional throw: pivot thrower and victim together toward the held movement direction.
+        // Because animator.speed is nearly 0 during charge, root-motion delta per frame is negligible
+        // and our manual rotation dominates cleanly.
+        if (t.enableDirectionalThrow)
+        //When you want to unmess this up this is the starting point here for directional throw
+            // UpdateDirectionalThrowRotation(t);
+
+        // Auto-release when max hold time is reached (prevents holding forever)
+        if (t.maxChargeTime > 0f && Time.time - throwChargeStartTime >= t.maxChargeTime)
+            StopThrowCharge();
+        else if (!IsThrowInputStillHeld()) // Player released the button
+            StopThrowCharge();
+    }
+
+    /*
+     * Rotates the thrower toward the camera-relative stick direction,
+     * then snaps the victim rotation to keep them facing the thrower.
+     * The victim's POSITION is already anchored to grabSocket (which is a child
+     * of the player rig), so rotating the player pivots the socket — and thus
+     * the victim — around the player's body automatically.  We only need to
+     * manually fix the victim's FACING so they don't spin away from the camera.
+     */
+    void UpdateDirectionalThrowRotation(ThrowData t)
+    {
+        // Read raw stick (not CombatStickInput — that's zeroed during attacks)
+        Vector2 rawStick = GetRawStickInput();
+        if (rawStick.magnitude < 0.2f) return; // ignore dead zone; no direction held
+
+        // Convert stick axes to world-space direction relative to camera
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        Vector3 camFwd   = cam.transform.forward; camFwd.y   = 0f; camFwd.Normalize();
+        Vector3 camRight = cam.transform.right;   camRight.y = 0f; camRight.Normalize();
+
+        Vector3 dir = (camFwd * rawStick.y + camRight * rawStick.x).normalized;
+        if (dir.sqrMagnitude < 0.001f) return;
+
+        // TEMP DEBUG: red = target throw direction, blue = current player facing, green = camera forward
+        Vector3 origin = transform.position + Vector3.up * 1.2f;
+        Debug.DrawRay(origin, dir           * 3f, Color.red,   0f, false); // where we want to face
+        Debug.DrawRay(origin, transform.forward * 3f, Color.blue,  0f, false); // where we're actually facing
+        Debug.DrawRay(origin, camFwd        * 2f, Color.green, 0f, false); // camera forward (reference)
+
+        // Rotate the thrower (player root) toward the held direction
+        float rotSpeed   = t.directionalThrowRotationSpeed > 0f ? t.directionalThrowRotationSpeed : 360f;
+        Quaternion targetRot = Quaternion.LookRotation(dir, Vector3.up);
+        transform.rotation = targetRot;
+        
+
+        // Store for LateUpdate enforcement — if anything clobbers this between Update and LateUpdate we re-apply it
+        _directionalThrowTargetRotation = transform.rotation;
+        _hasDirectionalThrowTarget      = true;
+
+        // Keep victim facing the thrower so they look like a single rotating unit.
+        // The victim's world position already tracks the grabSocket (child of our rig),
+        // so a pure facing correction here is all that's needed.
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        if (vt == null) return;
+
+        Vector3 toPlayer = transform.position - vt.position;
+        toPlayer.y = 0f;
+        if (toPlayer.sqrMagnitude > 0.001f)
+        {
+            Quaternion victimTarget = Quaternion.LookRotation(toPlayer, Vector3.up);
+            vt.rotation = Quaternion.RotateTowards(vt.rotation, victimTarget, rotSpeed * Time.deltaTime);
+        }
+
+        // Store victim rotation for LateUpdate enforcement (enemy AI/animator may clobber it)
+        _directionalThrowVictimTransform = vt;
+        _directionalThrowVictimRotation  = vt.rotation;
+    }
+
+    // Check whether the throw button is currently held (not just tapped).
+    // Mirrors IsChargeInputStillHeld() from the weapon charge system.
+    bool IsThrowInputStillHeld()
+    {
+        if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.gKey.isPressed) return true;
+        if (UnityEngine.InputSystem.Gamepad.current != null && UnityEngine.InputSystem.Gamepad.current.buttonWest.isPressed) return true;
+        return false;
+    }
+
+    // Called by OnThrowChargeWindowStart animation event. If the button is still held,
+    // starts slowing the animation and accumulating charge time.
+    void StartThrowChargeIfInputHeld()
+    {
+        ThrowData t = _activeThrowData;
+        if (!t.enableCharge) return;
+        if (!IsThrowInputStillHeld()) return;
+        isChargingThrow       = true;
+        throwChargeWindowOpen = true;
+        throwChargeStartTime  = Time.time;
+        // When directional throw is enabled, OnAnimatorMove will suppress rotation root motion
+        // so UpdateDirectionalThrowRotation can steer without being overwritten.
+        _directionalThrowRotationActive = t.enableDirectionalThrow;
+        // Cache victim animator so UpdateThrowCharge can mirror speed changes to them each frame
+        Transform vt = (currentThrowVictim as Component)?.transform;
+        _throwVictimAnimator = vt != null ? vt.GetComponentInChildren<Animator>() : null;
+    }
+
+    // Bakes the charge scales, extends the attack lock so the throw anim has time to play out,
+    // and restores normal animator speed. Called on button release OR auto-release at max time.
+    void StopThrowCharge()
+    {
+        if (!isChargingThrow) return;
+        ThrowData t = _activeThrowData;
+        float held       = Mathf.Clamp(Time.time - throwChargeStartTime, 0f, t.maxChargeTime > 0f ? t.maxChargeTime : float.MaxValue);
+        float normalized = t.maxChargeTime > 0f ? held / t.maxChargeTime : 1f;
+
+        // Lerp multipliers from 1x (no charge) to configured max (full charge)
+        throwChargeKnockbackScale = Mathf.Lerp(1f, t.chargeKnockbackMultiplier > 0f ? t.chargeKnockbackMultiplier : 1f, normalized);
+        throwChargeDamageScale    = Mathf.Lerp(1f, t.chargeDamageMultiplier    > 0f ? t.chargeDamageMultiplier    : 1f, normalized);
+
+        // Extend the attack lock to cover the time we held — the throw animation was frozen,
+        // so it still needs that much time to finish playing after the release.
+        currentAttackEndTime += held;
+
+        // Bake the intended throw direction at the moment the player releases the charge.
+        // Using the target rotation (not transform.forward) so baking / root-motion restoration
+        // that happens later in the same frame cannot corrupt the knockback direction.
+        if (_hasDirectionalThrowTarget)
+        {
+            _committedThrowDirection    = _directionalThrowTargetRotation * Vector3.forward;
+            _committedThrowDirection.y  = 0f;
+            _committedThrowDirection.Normalize();
+            _hasCommittedThrowDirection = true;
+        }
+
+        isChargingThrow       = false;
+        throwChargeWindowOpen = false;
+        // NOTE: _directionalThrowRotationActive is intentionally NOT cleared here.
+        // The throw animation's root motion rotation would snap the player back to the
+        // clip's authored direction the moment the charge ends. We keep suppressing
+        // rotation root motion until the full throw is over (ResetThrowChargeState clears it).
+        if (animator != null) animator.speed = 1f;
+        if (_throwVictimAnimator != null) _throwVictimAnimator.speed = 1f; // resume victim throw animation speed
+    }
+
+    // Clears all throw charge state. Called on attack end, stun interrupt, and ForceThrowReleaseFallback.
+    void ResetThrowChargeState()
+    {
+        if (isChargingThrow)
+        {
+            if (animator != null) animator.speed = 1f;
+            if (_throwVictimAnimator != null) _throwVictimAnimator.speed = 1f; // restore victim speed if still frozen
+        }
+        isChargingThrow                    = false;
+        throwChargeWindowOpen              = false;
+        throwChargeKnockbackScale          = 1f;
+        throwChargeDamageScale             = 1f;
+        _directionalThrowRotationActive    = false;
+        _hasDirectionalThrowTarget         = false;
+        _hasCommittedThrowDirection        = false;
+        _directionalThrowVictimTransform   = null;
+        _throwVictimAnimator               = null;
+    }
+
+    // =========================================================================
+    // ROOT MOTION OVERRIDE
+    // =========================================================================
+    /*
+     * Defining OnAnimatorMove() takes full control of root motion application.
+     * Normally Unity would apply both deltaPosition and deltaRotation automatically
+     * when applyRootMotion = true.  Here we selectively suppress rotation root
+     * motion during a directional throw charge so our manual steering owns facing
+     * without being overwritten each frame.
+     *
+     * Outside of directional throw (flag is false), we replicate Unity's default
+     * behaviour exactly — both position and rotation deltas are applied — so no
+     * other system is affected.
+     */
+    void OnAnimatorMove()
+    {
+        if (animator == null || !animator.applyRootMotion) return;
+        transform.position += animator.deltaPosition;
+        transform.rotation *= animator.deltaRotation;
+    }
 }

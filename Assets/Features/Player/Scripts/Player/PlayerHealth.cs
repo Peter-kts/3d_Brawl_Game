@@ -381,7 +381,7 @@ public class PlayerHealth : EntityHealth
         // Don't shorten an existing longer stun; launcher: apply knockback when stun ends.
         // If damage lands during any active attack flow, ensure a tiny stun so interrupt always wins this frame.
         float effectiveHitstun = forceAttackInterruptOnDamage ? Mathf.Max(hitstun, 0.1f) : hitstun;
-        stunUntil = Mathf.Max(stunUntil, Time.time + effectiveHitstun);
+        hitstunUntil = Mathf.Max(hitstunUntil, Time.time + effectiveHitstun);
         if (airborneDuration > 0f)
             pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;
 

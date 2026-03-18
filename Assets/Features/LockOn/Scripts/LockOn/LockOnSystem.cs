@@ -8,10 +8,9 @@
  * Tracks nearby enemies (via OverlapSphere + EnemyHealth), scores them by
  * distance/angle/screen position/recent interaction, and exposes a single
  * "soft target" (SoftTarget) that other systems read. The player chooses
- * when to lock on (LT/RMB = SetTargetToLookAt) and when to clear (R3/Tab =
- * ReleaseFocus). While locked on, the system can auto-switch to a better
- * target only if it wins by a margin (stickiness), or the player can cycle
- * (CycleToNextTargetInLookDirection).
+ * when to lock on (LT/RMB = SetTargetToLookAt), when to cycle (LT again =
+ * CycleToNextTargetInLookDirection), and when to clear (R3/Tab = ReleaseFocus).
+ * The lock is sticky — it never auto-switches unless the target leaves range or dies.
  *
  * THREAT FOCUS PHILOSOPHY:
  * ------------------------
@@ -35,7 +34,7 @@
  *   Update (throttled) -> UpdateThreatTracking (OverlapSphere, score, sort)
  *   -> stickiness logic decides if SoftTarget changes.
  *   Player input -> SetTargetToLookAt / CycleToNextTargetInLookDirection /
- *   ReleaseFocus -> update SoftTarget and lookAtOverrideEndTime.
+ *   ReleaseFocus -> clears SoftTarget (player releases lock).
  *
  * ============================================================================
  */
@@ -88,12 +87,6 @@ public class LockOnSystem : MonoBehaviour
     [Tooltip("How long interaction bonus lasts (seconds)")]
     public float interactionMemory = 3f;
 
-    [Header("Target Stickiness")]
-    // Prevents flicker: we only switch SoftTarget when the new top candidate wins by this much.
-    [Tooltip("New top-scored target must beat current target's score by this margin to switch (reduces flicker)")]
-    public float switchThreshold = 0.2f;
-    [Tooltip("After LT (look-at) target, suppress auto-switch for this duration so focus doesn't jump to the other enemy in cone")]
-    public float lookAtOverrideDuration = 0.8f;
 
     // ========================================================================
     // PUBLIC PROPERTIES (read by PlayerController, Combat, Camera, etc.)
@@ -132,9 +125,7 @@ public class LockOnSystem : MonoBehaviour
     private HashSet<Transform> trackedSet = new HashSet<Transform>(); // Prevents duplicate entries when an enemy has multiple colliders
     private Camera mainCamera;
 
-    private float nextDetectionTime;       // Time.time of the next allowed threat scan; throttles detection to detectionRate Hz
-    private float currentTargetScore;     // Score of the current SoftTarget; a new target must beat this plus switchThreshold to take over (prevents flicker)
-    private float lookAtOverrideEndTime;  // After a manual LT press or cycle, auto-switching is suppressed until this time
+    private float nextDetectionTime;  // Time.time of the next allowed threat scan; throttles detection to detectionRate Hz
 
     private const int MAX_COLLIDERS = 32;                                // Max simultaneous overlaps; increase if the scene has more than ~32 enemies at once
     private Collider[] colliderBuffer = new Collider[MAX_COLLIDERS];     // Reused every detection tick to avoid per-frame allocation
@@ -151,6 +142,11 @@ public class LockOnSystem : MonoBehaviour
     void Update()
     {
         if (mainCamera == null) mainCamera = Camera.main;
+
+        // Destroyed-target fast-clear. Unity's == null returns true for destroyed objects.
+        // Without this, a destroyed SoftTarget persists until the next 10 Hz tick (up to 100 ms).
+        if (SoftTarget == null)
+            SoftTarget = null;  // Replace the destroyed wrapper with a true C# null.
 
         // Run threat detection at fixed rate (e.g. 10 Hz) instead of every frame for performance.
         if (Time.time >= nextDetectionTime)
@@ -189,6 +185,7 @@ public class LockOnSystem : MonoBehaviour
 
             var enemyHealth = col.GetComponent<EnemyHealth>();
             if (enemyHealth == null) continue;
+            if (enemyHealth.IsDying) continue;
 
             Transform threatTransform = enemyHealth.transform;
 
@@ -216,53 +213,34 @@ public class LockOnSystem : MonoBehaviour
         }
 
         Transform candidate = TrackedThreats[0].transform;
-        float candidateScore = TrackedThreats[0].score;
 
         // We never auto-assign SoftTarget; player must press LT to lock on. Until then, SoftTarget stays null.
-        if (SoftTarget == null)
-            return;
+        if (SoftTarget == null) return;
 
-        // Is our current SoftTarget still in the list this frame? (e.g. still in range, not destroyed)
+        TryUpdateSoftTarget(candidate);
+    }
+
+    /// <summary>
+    /// Decides whether SoftTarget should change this tick.
+    /// The lock is fully sticky — only switches if the current target left range or was destroyed.
+    /// The player controls all intentional switches via LT (cycle) or R3/Tab (release).
+    /// Call only after TrackedThreats is sorted and non-empty, and only when SoftTarget != null.
+    /// </summary>
+    void TryUpdateSoftTarget(Transform candidate)
+    {
         bool currentStillTracked = false;
-        float currentScore = 0f;
         foreach (var t in TrackedThreats)
         {
-            if (t.transform == SoftTarget)
-            {
-                currentStillTracked = true;
-                currentScore = t.score;
-                break;
-            }
+            if (t.transform == SoftTarget) { currentStillTracked = true; break; }
         }
 
-        // Current target lost (out of range or dead): switch to best available.
-        if (!currentStillTracked || SoftTarget == null)
+        if (!currentStillTracked)
         {
+            // Target left range or was destroyed — auto-acquire the best available enemy.
+            // The player shouldn't drop out of lock-on just because they killed their target.
             SoftTarget = candidate;
-            currentTargetScore = candidateScore;
-            return;
         }
-
-        // Same target is still top: just refresh its score.
-        if (candidate == SoftTarget)
-        {
-            currentTargetScore = candidateScore;
-            return;
-        }
-
-        // Player recently used LT to pick this target: don't auto-switch for a short time.
-        if (Time.time < lookAtOverrideEndTime && currentStillTracked)
-        {
-            currentTargetScore = currentScore;
-            return;
-        }
-
-        // Different target is now top: switch only if it wins by switchThreshold (reduces flicker).
-        if (candidateScore > currentTargetScore + switchThreshold)
-        {
-            SoftTarget = candidate;
-            currentTargetScore = candidateScore;
-        }
+        // Otherwise: keep current target. Only the player changes it (LT to cycle, R3/Tab to release).
     }
 
     // ========================================================================
@@ -287,31 +265,34 @@ public class LockOnSystem : MonoBehaviour
         {
             // Hit something: must be an enemy (EnemyHealth on the hit collider's GameObject)
             var enemyHealth = hit.collider.GetComponent<EnemyHealth>();
-            // Reject if we hit ourselves (e.g. camera inside player or player collider in front); avoid locking onto player
-            bool hitIsPlayer = hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform) || transform.IsChildOf(hit.collider.transform);
-            if (enemyHealth != null && !hitIsPlayer)
+            // EnemyHealth presence is sufficient: if the collider has EnemyHealth, it cannot be the player.
+            if (enemyHealth != null && !enemyHealth.IsDying)
             {
                 SoftTarget = enemyHealth.transform;
-                currentTargetScore = CalculateThreatScore(SoftTarget, out _, out _);
-                // Briefly suppress auto-switch so chosen target doesn't immediately flip to another in cone
-                lookAtOverrideEndTime = Time.time + lookAtOverrideDuration;
                 return;
             }
         }
 
-        // No valid ray hit (nothing in center, or hit was non-enemy/player): choose best tracked threat by angle to camera
-        if (TrackedThreats.Count == 0)
-        {
-            SoftTarget = null;
-            return;
-        }
-        // Camera forward in world (flattened to XZ for angle comparison)
+        // No direct raycast hit: fall back to the tracked enemy closest to camera center.
+        Transform best = GetBestTrackedByAngle();
+        if (best == null) { SoftTarget = null; return; }
+        SoftTarget = best;
+    }
+
+    /// <summary>
+    /// Returns the tracked threat whose XZ direction is closest to the camera's forward axis.
+    /// Used as the fallback in SetTargetToLookAt when no raycast hit lands on an enemy.
+    /// Returns null if TrackedThreats is empty.
+    /// </summary>
+    Transform GetBestTrackedByAngle()
+    {
+        if (TrackedThreats.Count == 0) return null;
+
         Vector3 camForward = mainCamera.transform.forward;
         camForward.y = 0f;
         if (camForward.sqrMagnitude < 0.0001f) camForward = transform.forward;
         camForward.Normalize();
 
-        // Find tracked threat with smallest angle to camera forward (closest to crosshair)
         int bestIdx = 0;
         float bestAngle = float.MaxValue;
         for (int i = 0; i < TrackedThreats.Count; i++)
@@ -319,17 +300,10 @@ public class LockOnSystem : MonoBehaviour
             Vector3 toThreat = TrackedThreats[i].transform.position - transform.position;
             toThreat.y = 0f;
             if (toThreat.sqrMagnitude < 0.01f) continue;
-            toThreat.Normalize();
-            float angle = Vector3.Angle(camForward, toThreat);
-            if (angle < bestAngle)
-            {
-                bestAngle = angle;
-                bestIdx = i;
-            }
+            float angle = Vector3.Angle(camForward, toThreat.normalized);
+            if (angle < bestAngle) { bestAngle = angle; bestIdx = i; }
         }
-        SoftTarget = TrackedThreats[bestIdx].transform;
-        currentTargetScore = TrackedThreats[bestIdx].score;
-        lookAtOverrideEndTime = Time.time + lookAtOverrideDuration;
+        return TrackedThreats[bestIdx].transform;
     }
 
     /// <summary>
@@ -347,7 +321,7 @@ public class LockOnSystem : MonoBehaviour
         if (camForward.sqrMagnitude < 0.0001f) camForward = transform.forward;
         camForward.Normalize();
 
-        // Build list of (transform, angle to camera) and sort by angle so order = "left to right" on screen
+        // Build list of (transform, angle) sorted by angle — "left to right" on screen order.
         threatsByAngleBuffer.Clear();
         for (int i = 0; i < TrackedThreats.Count; i++)
         {
@@ -363,27 +337,12 @@ public class LockOnSystem : MonoBehaviour
         int currentIdx = -1;
         for (int i = 0; i < threatsByAngleBuffer.Count; i++)
         {
-            if (threatsByAngleBuffer[i].transform == SoftTarget)
-            {
-                currentIdx = i;
-                break;
-            }
+            if (threatsByAngleBuffer[i].transform == SoftTarget) { currentIdx = i; break; }
         }
 
-        // Next target = (currentIndex + 1) wraparound; if current not in list, use first
+        // Next target = (currentIndex + 1) wraparound; if current not in list, start from first
         int nextIdx = currentIdx < 0 ? 0 : (currentIdx + 1) % threatsByAngleBuffer.Count;
-        Transform next = threatsByAngleBuffer[nextIdx].transform;
-        SoftTarget = next;
-        // Keep score in sync with TrackedThreats for the new target
-        foreach (var t in TrackedThreats)
-        {
-            if (t.transform == next)
-            {
-                currentTargetScore = t.score;
-                break;
-            }
-        }
-        lookAtOverrideEndTime = Time.time + lookAtOverrideDuration;
+        SoftTarget = threatsByAngleBuffer[nextIdx].transform;
     }
 
     /// <summary>

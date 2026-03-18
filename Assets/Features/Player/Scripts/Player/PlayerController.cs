@@ -141,6 +141,9 @@ public partial class PlayerController : MonoBehaviour
     [Tooltip("Animator parameter name for active blocking pose (bool).")]
     public string blockParameter = "IsBlocking";
 
+    [Tooltip("Animator parameter name for hitstun (bool). True while the player is in a hit reaction.")]
+    public string stunParameter = "IsStunned";
+
     [Tooltip("Animator parameter for local lateral movement (-1 left, +1 right)")]
     public string moveXParameter = "MoveX";
 
@@ -178,6 +181,19 @@ public partial class PlayerController : MonoBehaviour
     /// </summary>
     public float StepCycleNormalizedTime => stepCycleDuration > 0 ? stepCycleTimer / stepCycleDuration : 0f;
 
+    /// <summary>
+    /// True if the player's attack lock ended within the last windowSeconds.
+    /// Enemies use this to time punish attacks during the player's recovery frames.
+    /// Mirrors RecentlyDodged() — same pattern, different trigger.
+    /// </summary>
+    public bool RecentlyAttacked(float windowSeconds) => ActiveCombat != null && ActiveCombat.RecentlyAttacked(windowSeconds);
+
+    /// <summary>
+    /// Seconds remaining in the current attack lock. 0 when not attacking.
+    /// Cautious enemies use this to decide whether interrupting is safe.
+    /// </summary>
+    public float AttackLockTimeRemaining => ActiveCombat?.AttackLockTimeRemaining ?? 0f;
+
     // ========================================================================
     // PRIVATE STATE
     // ========================================================================
@@ -198,6 +214,7 @@ public partial class PlayerController : MonoBehaviour
     private float currentMoveZ;               // Smoothed MoveZ actually sent to the Animator
     private float currentMoveMagnitude;        // Smoothed 0–1 magnitude; both cc.Move() and the Animator use this so they stay in sync
     private bool hasBlockParameter;            // Cached at Awake: true if the Animator has the block bool parameter (avoids searching every frame)
+    private bool hasStunParameter;             // Cached at Awake: true if the Animator has the stun bool parameter
     private bool blockJustPressedThisFrame;    // True only on the first frame of a block press; forces Speed=0 so the block-entry pose snaps in cleanly
     private float stepCycleTimer = 0f;         // Advances while moving; wraps at stepCycleDuration; used by GetStepSyncMultiplier
     private Combat ActiveCombat => weaponCombat != null ? weaponCombat : combat;  // Returns WeaponCombat when equipped, plain Combat otherwise
@@ -222,6 +239,7 @@ public partial class PlayerController : MonoBehaviour
         if (combat == null) combat = weaponCombat != null ? weaponCombat : GetComponent<Combat>();
         if (animator == null) animator = FindAnimator(gameObject);
         hasBlockParameter = HasBoolParameter(animator, blockParameter);
+        hasStunParameter  = HasBoolParameter(animator, stunParameter);
     }
 
     void Update()
@@ -235,8 +253,8 @@ public partial class PlayerController : MonoBehaviour
         // Block pose checked every frame regardless of state (Q / Left Shoulder).
         UpdateBlockState();
 
-        // Stunned players skip all input and movement; just keep animator/gravity ticking.
-        if (TryHandleStunnedState()) return;
+        // Hitstunned players skip all input and movement; just keep animator/gravity ticking.
+        if (TryHandleHitstunnedState()) return;
 
         // Read held inputs to determine combat mode and lock-on state this frame.
         UpdateCombatModeState();  // Hold LT/RMB/Shift toggles IsInCombatMode
@@ -273,10 +291,10 @@ public partial class PlayerController : MonoBehaviour
         ApplyGravity();
     }
 
-    /// <summary>If player is stunned (hit reaction), update animator and return true so Update skips input/movement.</summary>
-    bool TryHandleStunnedState()
+    /// <summary>If player is in hitstun (hit reaction), update animator and return true so Update skips input/movement.</summary>
+    bool TryHandleHitstunnedState()
     {
-        if (playerHealth != null && playerHealth.IsStunned)
+        if (playerHealth != null && playerHealth.IsHitstunned)
         {
             UpdateAnimator();
             ApplyGravity();
@@ -520,6 +538,8 @@ public partial class PlayerController : MonoBehaviour
         if (forward.sqrMagnitude < 0.001f) return;
         forward.Normalize();
 
+        // Use camera forward (not player forward) for the cone check — the focus cone describes
+        // where the *camera* is pointing, so soft-facing only assists when the threat is in view.
         float angleToThreat = Vector3.Angle(forward, toThreat);
         if (angleToThreat > coneAngle) return;
 
@@ -647,6 +667,8 @@ public partial class PlayerController : MonoBehaviour
         animator.SetBool(combatModeParameter, IsInCombatMode);
         if (hasBlockParameter)
             animator.SetBool(blockParameter, IsBlocking);
+        if (hasStunParameter)
+            animator.SetBool(stunParameter, playerHealth != null && playerHealth.IsHitstunned);
     }
 
     static bool HasBoolParameter(Animator targetAnimator, string parameterName)

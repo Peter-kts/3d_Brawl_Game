@@ -50,11 +50,7 @@ public class ThrowAnimationEventForwarder : MonoBehaviour
     {
         WarnMissingThrowHandlers(nameof(OnThrowRelease));
     }
-    public void OnThrowRelease(int releaseProfileIndex)
-    {
-        WarnMissingThrowHandlers(nameof(OnThrowRelease));
-    }
-    public void OnThrowDamage(int profileIndex)
+    public void OnThrowDamage()
     {
         WarnMissingThrowHandlers(nameof(OnThrowDamage));
     }

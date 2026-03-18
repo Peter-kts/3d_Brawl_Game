@@ -69,6 +69,9 @@ public class AnimationEventAuthoringWindow : EditorWindow
         public float floatParameter = 0f;
         public string stringParameter = string.Empty;
         public UnityEngine.Object objectParameter;
+        // True for markers the user created this session; false for markers loaded from the clip.
+        // Used by Append mode to avoid re-writing events already present in the clip.
+        public bool isNewMarker = true;
     }
 
     private static readonly GUIContent[] HitboxPresetLabels =
@@ -849,17 +852,11 @@ public class AnimationEventAuthoringWindow : EditorWindow
                 return;
 
             case "OnThrowRelease":
-                label = "Release Profile Index";
-                helpText = "-1 = default throw values, 0+ = ThrowData.releaseProfiles[index] when available.";
-                presetLabels = ProfilePresetLabels;
-                presetValues = ProfilePresetValues;
+                // No parameters — release uses ThrowData values directly.
                 return;
 
             case "OnThrowDamage":
-                label = "Damage Profile Index";
-                helpText = "-1 = default throw values, 0+ = ThrowData.releaseProfiles[index] when available.";
-                presetLabels = ProfilePresetLabels;
-                presetValues = ProfilePresetValues;
+                // No parameters — applies damage only at this frame; knockback fires at OnThrowRelease.
                 return;
 
             case "OnAttackSfxEvent":
@@ -1116,6 +1113,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
             marker.parameterKind = ResolveParameterKindFromAnimator(marker.functionName, marker.parameterKind, out marker.hasAmbiguousOverload, out marker.ambiguityReason);
             marker.loadedFunctionName = marker.functionName;
             marker.loadedParameterKind = marker.parameterKind;
+            marker.isNewMarker = false;
             markers.Add(marker);
         }
     }
@@ -1125,13 +1123,24 @@ public class AnimationEventAuthoringWindow : EditorWindow
         if (targetClip == null) return;
         if (!ValidateMarkers()) return;
 
-        // Overwrite replaces all clip events; append preserves existing clip events first.
+        // Overwrite replaces all clip events with the current marker list.
+        // Append keeps existing clip events and adds only markers the user created this session
+        // (isNewMarker == true), preventing loaded markers from being written twice.
         List<AnimationEvent> output = new List<AnimationEvent>();
         if (!overwrite)
+        {
             output.AddRange(AnimationUtility.GetAnimationEvents(targetClip));
-
-        for (int i = 0; i < markers.Count; i++)
-            output.Add(BuildAnimationEvent(markers[i]));
+            for (int i = 0; i < markers.Count; i++)
+            {
+                if (markers[i].isNewMarker)
+                    output.Add(BuildAnimationEvent(markers[i]));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < markers.Count; i++)
+                output.Add(BuildAnimationEvent(markers[i]));
+        }
 
         output.Sort((a, b) => a.time.CompareTo(b.time));
         if (IsClipReadOnly(targetClip))
@@ -1184,10 +1193,14 @@ public class AnimationEventAuthoringWindow : EditorWindow
 
         importer.clipAnimations = clips;
         EditorUtility.SetDirty(importer);
+
+        // Capture clip name before SaveAndReimport() — reimport destroys the sub-asset reference
+        // and accessing targetClip.name afterwards returns "" on the invalidated object.
+        string clipName = targetClip.name;
         importer.SaveAndReimport();
 
         // Reimport recreates clip sub-assets; reacquire selected clip by name.
-        AnimationClip resolved = LoadImportedClipByName(clipPath, targetClip.name);
+        AnimationClip resolved = LoadImportedClipByName(clipPath, clipName);
         if (resolved != null)
         {
             targetClip = resolved;
@@ -1200,13 +1213,22 @@ public class AnimationEventAuthoringWindow : EditorWindow
     private static int FindImportedClipIndex(ModelImporterClipAnimation[] clips, string clipName)
     {
         if (clips == null || clips.Length == 0) return -1;
+
+        // Exact match first.
         for (int i = 0; i < clips.Length; i++)
         {
             if (string.Equals(clips[i].name, clipName, StringComparison.Ordinal))
                 return i;
         }
 
-        // Fallback for single-clip imports where naming can differ by take naming.
+        // Case-insensitive fallback — some importers use different casing than the sub-asset name.
+        for (int i = 0; i < clips.Length; i++)
+        {
+            if (string.Equals(clips[i].name, clipName, StringComparison.OrdinalIgnoreCase))
+                return i;
+        }
+
+        // Last resort for single-clip imports where take naming can differ entirely.
         return clips.Length == 1 ? 0 : -1;
     }
 
@@ -1216,12 +1238,23 @@ public class AnimationEventAuthoringWindow : EditorWindow
             return null;
 
         UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(clipPath);
+
+        // Exact match first.
         for (int i = 0; i < assets.Length; i++)
         {
             AnimationClip clip = assets[i] as AnimationClip;
             if (clip == null) continue;
-            if (!string.Equals(clip.name, clipName, StringComparison.Ordinal)) continue;
-            return clip;
+            if (string.Equals(clip.name, clipName, StringComparison.Ordinal))
+                return clip;
+        }
+
+        // Case-insensitive fallback to match FindImportedClipIndex behaviour.
+        for (int i = 0; i < assets.Length; i++)
+        {
+            AnimationClip clip = assets[i] as AnimationClip;
+            if (clip == null) continue;
+            if (string.Equals(clip.name, clipName, StringComparison.OrdinalIgnoreCase))
+                return clip;
         }
 
         return null;

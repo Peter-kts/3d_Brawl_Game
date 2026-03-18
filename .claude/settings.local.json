@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(find d:/3dbrawlerlearn -name *hrow* -o -name *Throw*)",
+      "Bash(find d:/3dbrawlerlearn -name ComboSet.cs -o -name *ComboSet*)",
+      "Bash(find /d/3dbrawlerlearn/Assets -type f \\\\\\(-name *.urp -o -name *RenderPipeline* -o -name *.shadergraph \\\\\\))",
+      "Bash(find d:3dbrawlerlearn -iname *outline*)",
+      "Bash(find /d/3dbrawlerlearn/Assets -type f -name \"*.cs\" -exec grep -l \"renderer\\\\|Renderer\\\\|GetComponent.*Renderer\\\\|SkinnedMesh\\\\|MeshRenderer\" {})",
+      "Bash(grep -E \"\\\\.\\(cs|mat|shadergraph\\)$\")",
+      "Bash(grep -r \"Material\\\\|material\\\\|renderer\\\\|Renderer\" /d/3dbrawlerlearn/Assets/bsoldierswordf/*.mat --include=*.mat)"
     ]
   }
 }

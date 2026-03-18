@@ -1,0 +1,15 @@
+---
+description: Keep animation event callbacks wired into authoring tool and docs
+alwaysApply: true
+---
+
+# Animation Event Callback Checklist
+
+When adding or renaming any public animation-event callback method (for example on `Combat`, `SimpleEnemyAI`, forwarders, or related animation receiver components):
+
+- Add/update the method in `Assets/Features/Combat/Editor/AnimationEventMethodCatalog.cs` curated entries so it appears in `Tools > Combat > Animation Event Authoring` curated mode.
+- Add/update the method reference in `Assets/Features/Combat/AnimationEventFunctions.md` with short behavior notes.
+- If the callback uses an `int` parameter, add/update descriptor metadata in the JSON block in `Assets/Features/Combat/AnimationEventFunctions.md` so the authoring window shows clear labels/help/presets.
+- Keep method names and signatures consistent between runtime scripts, curated catalog labels, and docs.
+
+Do not rely only on reflection mode for newly added production callbacks; keep curated entries updated.

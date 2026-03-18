@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: ed4c9c4daacf3d74fa2eb9c8f4b4f3de
+AssetOrigin:
+  serializedVersion: 1
+  productId: 327644
+  packageName: Frank FS4 - Fighting Set 4
+  packageVersion: 1.0
+  assetPath: Assets/Frank_Fighting_Set4/Assets/FS3 Animations/Hit/Frank_FS3@Hit_WallBound.FBX
+  uploadId: 776003
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24200
   internalIDToNameTable: []
   externalObjects: {}
   materials:
@@ -60,7 +67,43 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Hit_WallBound
+      takeName: Take 001
+      internalID: 1827226128182048838
+      firstFrame: 0
+      lastFrame: 45
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.9635479
+        functionName: OnWallBounceAnimationComplete
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: ea72a185acc4a534fb855c4f223f1d68, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -87,6 +130,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -566,8 +612,7 @@ ModelImporter:
     - name: ik_hand_r
       parentName: ik_hand_gun
       position: {x: -0, y: 0, z: -0.000000019073486}
-      rotation: {x: 0.00000000745058, y: -0.000000029802326, z: 0.000000014901163,
-        w: 1}
+      rotation: {x: 0.00000000745058, y: -0.000000029802326, z: 0.000000014901163, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: ik_hand_l
       parentName: ik_hand_gun
@@ -896,8 +941,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9d810e4005f751946abe466f715226d0,
-    type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 9d810e4005f751946abe466f715226d0, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
@@ -909,10 +953,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 327644
-  packageName: Frank FS4 - Fighting Set 4
-  packageVersion: 1.0
-  assetPath: Assets/Frank_Fighting_Set4/Assets/FS3 Animations/Hit/Frank_FS3@Hit_WallBound.FBX
-  uploadId: 776003

@@ -156,6 +156,9 @@ public class DebugSettings : MonoBehaviour
     [Tooltip("Show HP bar and value above player and enemies (requires HealthDebugVisual on same GameObject as EnemyHealth/PlayerHealth)")]
     public bool showHealthIndicator = true;
 
+    [Tooltip("Show stun meter bar above enemies (requires EnemyStunMeter on same GameObject as EnemyHealth)")]
+    public bool showEnemyStunMeter = true;
+
     // ========================================================================
     // HELPER METHODS
     // ========================================================================
@@ -193,5 +196,6 @@ public class DebugSettings : MonoBehaviour
         showEnemyStateIndicator = true;
         showEnemyBehaviorIndicator = true;
         showHealthIndicator = true;
+        showEnemyStunMeter = true;
     }
 }

@@ -576,7 +576,7 @@ ModelImporter:
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 0
       keepOriginalPositionXZ: 1
       heightFromFeet: 1
@@ -584,14 +584,42 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.2871504
+      - time: 0
+        functionName: OnAttackSfxEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.13675149
+        functionName: OnChargeWindowStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.25871223
+        functionName: OnChargeWindowEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 5a3b7e25a9c8c45bb91e6c2e98a1f4f1, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.26591352
+        functionName: OnAttackSfxEvent
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.276976
         functionName: BeginWeaponTipActiveFrames
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.66269004
+      - time: 0.4940854
         functionName: EndWeaponTipActiveFrames
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 4b614a766cfea3341bd7edf028bc021f, type: 3}

@@ -51,6 +51,15 @@ public class EnemyHealth : EntityHealth
     [Range(0f, 1f)]
     public float crashRelaunchKnockbackYScale = 0.25f;
 
+    [Header("Wall Bounce")]
+    [Tooltip("Minimum kbVel speed (units/sec) to trigger a wall bounce. Below this the enemy just stops against the wall normally.")]
+    public float wallBounceMinSpeed = 6f;
+    [Tooltip("How much velocity is kept after bouncing (0 = stop dead, 1 = full elastic). 0.5–0.7 gives a satisfying bounce.")]
+    [Range(0f, 1f)]
+    public float wallBounceDamping = 0.6f;
+    [Tooltip("Minimum remaining standing-stun time after a valid wall bounce. Only applies while standing stun is active.")]
+    public float wallBounceMinStandingStunAfterBounce = 0.35f;
+
     [Header("Hurt SFX (optional)")]
     [Tooltip("Audio source used for hurt sounds. Auto-finds on this object/children if not assigned.")]
     public AudioSource hurtSfxSource;
@@ -87,6 +96,7 @@ public class EnemyHealth : EntityHealth
 
     private SimpleEnemyAI enemyAI;               // Cached for triggering animations and accessing AirborneSequence/ProneSystem
     private EnemyCombat enemyCombat;             // Cached for CompleteDeath() — disabled when health reaches 0
+    private EnemyStunMeter stunMeter;            // Cached to check for heavy-hit re-trigger during standing stun
     private bool isDying;                        // True once death animation starts; blocks further TakeHit() calls
     private float getUpUntil;                   // Time.time when get-up stun expires; 0 = not getting up
     private float throwVictimUntil;             // Time.time while enemy is held in a throw; suppresses normal hit animation during this window
@@ -106,6 +116,7 @@ public class EnemyHealth : EntityHealth
         cc = GetComponent<CharacterController>();
         enemyAI = GetComponent<SimpleEnemyAI>();
         enemyCombat = GetComponent<EnemyCombat>();
+        stunMeter = GetComponent<EnemyStunMeter>();
         if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
         deathSfxSource = ResolveSfxSource(deathSfxSource);
     }
@@ -185,6 +196,8 @@ public class EnemyHealth : EntityHealth
         if (enemyAI != null) enemyAI.enabled = false;
         if (enemyCombat != null) enemyCombat.enabled = false;
         if (cc != null) cc.enabled = false;
+        Animator enemyAnimator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
+        if (enemyAnimator != null) enemyAnimator.enabled = false;
         enabled = false;
     }
 
@@ -215,6 +228,29 @@ public class EnemyHealth : EntityHealth
         hitStopEndTime = 0f;
     }
 
+    // Called by EntityHealth when cc.Move() reports a side collision during knockback.
+    // If speed is high enough, reflect velocity off the wall and play the bounce animation.
+    protected override void OnWallBounce(Vector3 wallNormal)
+    {
+        if (kbVel.magnitude < wallBounceMinSpeed) return;
+        if (isDying) return;
+
+        // Extend the underlying standing-stun state (not micro hitstun) so bounce has room to resolve.
+        if (stunMeter != null && wallBounceMinStandingStunAfterBounce > 0f)
+            stunMeter.ExtendStandingStunMinRemaining(wallBounceMinStandingStunAfterBounce);
+
+        // Reflect horizontal velocity off the wall normal, keep vertical component as-is
+        Vector3 reflected = Vector3.Reflect(kbVel, wallNormal) * wallBounceDamping;
+        kbVel = reflected;
+
+        if (enemyAI != null)
+        {
+            // Re-seed facing opposite the reflected direction (inverted bounce-facing behavior).
+            enemyAI.SetKnockbackFacingDirection(-reflected, snap: true);
+            enemyAI.TriggerWallBounce();
+        }
+    }
+
     /// <summary>
     /// Start throw-victim state: stun for duration and play the thrown animation.
     /// </summary>
@@ -222,9 +258,29 @@ public class EnemyHealth : EntityHealth
     {
         if (isDying) return;
         throwVictimUntil = Mathf.Max(throwVictimUntil, Time.time + durationSeconds);
-        stunUntil = Mathf.Max(stunUntil, Time.time + durationSeconds);
+        // Throw lock should be represented as standing stun (not micro hitstun).
+        hitstunUntil = Time.time;
+        if (stunMeter != null)
+            stunMeter.ForceStandingStun(durationSeconds, asKnockback: false);
         if (enemyAI != null)
             enemyAI.TriggerThrownAnimation(durationSeconds, thrownStateName);
+    }
+
+    /// <summary>
+    /// Victim-side animation-event relay (fallback path): forwards throw release to the owning player Combat.
+    /// This allows OnThrowRelease events authored on victim clips to still trigger the release flow.
+    /// </summary>
+    public void OnThrowRelease()
+    {
+        Combat[] combats = FindObjectsOfType<Combat>();
+        for (int i = 0; i < combats.Length; i++)
+        {
+            Combat combat = combats[i];
+            if (combat == null) continue;
+            if (!combat.IsHoldingThrowVictim(this)) continue;
+            combat.OnThrowRelease();
+            return;
+        }
     }
 
     // ========================================================================
@@ -266,10 +322,22 @@ public class EnemyHealth : EntityHealth
         if (hp < hpBeforeDamage)
             PlayHurtSfx();
 
-        // When prone (on floor after crash): take damage and play prone hit animation only —
-        // no knockback, airborne, hitstop, stun, or normal hit animation.
+        // When prone (on floor after crash): take damage; heavy hits also apply knockback and hitstun.
         if (inGrounded)
         {
+            bool heavyKnockback = stunMeter != null
+                ? knockback.magnitude >= stunMeter.knockbackStunThreshold
+                : heaviness == AttackHeaviness.Heavy;
+
+            // Heavy hit while prone: slide them across the floor and extend the stun window
+            if (heavyKnockback)
+            {
+                kbVel += knockback;
+                hitstunUntil = Mathf.Max(hitstunUntil, Time.time + hitstun);
+                if (hitStopDuration > 0f)
+                    hitStopEndTime = Time.time + hitStopDuration;
+            }
+
             if (hp <= 0)
             {
                 isDying = true;
@@ -281,7 +349,7 @@ public class EnemyHealth : EntityHealth
             }
             else if (enemyAI != null)
             {
-                enemyAI.TriggerHitAnimation(hitstun, height);
+                enemyAI.TriggerHitAnimation(hitstun, height, heavyKnockback);
             }
             return;
         }
@@ -300,12 +368,16 @@ public class EnemyHealth : EntityHealth
             hitStopEndTime = Time.time + hitStopDuration;
 
         // STEP 3: Apply hit stun — Mathf.Max so we don't shorten an existing longer stun
-        stunUntil = Mathf.Max(stunUntil, Time.time + hitstun);
+        hitstunUntil = Mathf.Max(hitstunUntil, Time.time + hitstun);
         if (airborneDuration > 0f)
             pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;
 
         // STEP 4: Trigger hit animation (skip if currently being thrown)
         bool isBeingThrown = Time.time < throwVictimUntil;
+        // If already standing stunned and this was a heavy knockback hit, re-enter the knockback stun entry.
+        // TryRetriggerAsKnockback resets the phase so TriggerHitAnimation can detect it via TriggerWasHeavy.
+        if (stunMeter != null && stunMeter.IsStandingStunned)
+            stunMeter.TryRetriggerAsKnockback(knockback.magnitude);
         if (enemyAI != null && !isBeingThrown)
             enemyAI.TriggerHitAnimation(hitstun, height);
 

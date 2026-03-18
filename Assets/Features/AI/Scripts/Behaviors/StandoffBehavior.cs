@@ -2,40 +2,52 @@
  * ============================================================================
  * STANDOFFBEHAVIOR.CS - Circle the target, occasionally attack
  * ============================================================================
- * 
+ *
  * STANDOFF PATTERN:
  * -----------------
- * 
+ *
  * Common in action games (Batman Arkham, Devil May Cry, etc.):
  *   - Enemies don't all rush in at once
  *   - They circle the player, creating tension
  *   - Occasionally one enemy breaks from the circle to attack
  *   - This gives the player time to react and creates visual drama
- * 
+ *
  * CIRCLING LOGIC:
  * ---------------
- * 
+ *
  * The enemy moves along a TANGENT to the circle around the player:
- * 
+ *
  *          tangent -->
  *          --------
  *         /        \
  *   Enemy *    P    *   (P = Player at center)
  *         \        /
  *          --------
- * 
+ *
  * To maintain the correct distance, we blend tangent movement with
  * a radial correction (push toward/away from player).
- * 
+ *
  * SUB-STATES:
  * -----------
- * 
+ *
  *   Circling --> PreAttack --> Attacking --> Circling
- * 
- *   - Circling: move tangentially, face target, maintain radius
- *   - PreAttack: brief pause/telegraph so the player can react
- *   - Attacking: EnemyCombat fires the attack, enemy is locked in place
- * 
+ *   Circling/Attacking --> (reaction fires) --> BackingOff or Interrupting --> Circling
+ *
+ *   - Circling:     move tangentially, face target, maintain radius
+ *   - PreAttack:    brief pause/telegraph so the player can react
+ *   - Attacking:    EnemyCombat fires the attack, enemy is locked in place
+ *   - BackingOff:   step away until player's attack ends
+ *   - Interrupting: rush in to punish player during their attack animation
+ *
+ * REACTION SYSTEM:
+ * ----------------
+ *
+ * Separate from the sub-state machine. When the player charges an attack
+ * aimed at the enemy and the enemy is within range, a reaction timer starts.
+ * The enemy continues its current behavior while the timer counts down
+ * (this is the "thinking" window — purely internal, debug-only visible).
+ * When the timer expires the enemy commits: BackingOff or Interrupting.
+ *
  * ============================================================================
  */
 
@@ -43,14 +55,14 @@ using UnityEngine;
 
 public class StandoffBehavior : EnemyBehavior
 {
-    // Internal sub-states for the standoff behavior
-    private enum SubState { Circling, PreAttack, Attacking }
+    // Internal sub-states — Reading is NOT a state, it's a parallel timer
+    private enum SubState { Circling, PreAttack, Attacking, BackingOff, Interrupting }
 
     private SubState state = SubState.Circling;
 
     /*
      * circleDirection: 1 = clockwise, -1 = counter-clockwise (viewed from above)
-     * 
+     *
      * Randomized on enter and periodically reversed for variety.
      * Different enemies will circle in different directions,
      * making group encounters look more dynamic.
@@ -60,26 +72,46 @@ public class StandoffBehavior : EnemyBehavior
     private float directionChangeTimer;
     private float attackTimer;
     private float preAttackTimer;
+    private float interruptRushTimer; // safety cap on Interrupting — abort if we can't close the gap in time
+
+    // ---- Reaction system (parallel to sub-states) ----
+    // reactionTimer >= 0 means a reaction is in progress (debug shows "Reading").
+    // reactionTriggered prevents the same attack from firing the reaction twice.
+    private float reactionTimer = -1f;
+    private bool reactionTriggered;
 
     public StandoffBehavior(SimpleEnemyAI ai) : base(ai) { }
 
     /// <summary>
     /// Returns the current sub-state name for debug visualization.
-    /// Shows both the behavior (Standoff) and the internal phase.
+    /// "Reading" overlays when a reaction timer is active regardless of actual sub-state,
+    /// so the debug shows the enemy is "thinking" while still moving normally.
     /// </summary>
-    public override string CurrentStateName => state switch
+    public override string CurrentStateName
     {
-        SubState.Circling   => "Circling",
-        SubState.PreAttack  => "PreAttack",
-        SubState.Attacking  => "Attacking",
-        _                   => "Standoff"
-    };
+        get
+        {
+            // Reaction timer is running — enemy is mid-decision; overlay "Reading" regardless of sub-state
+            if (reactionTimer >= 0f) return "Reading";
+            return state switch
+            {
+                SubState.Circling     => "Circling",
+                SubState.PreAttack    => "PreAttack",
+                SubState.Attacking    => "Attacking",
+                SubState.BackingOff   => "BackingOff",
+                SubState.Interrupting => "Interrupting",
+                _                     => "Standoff"
+            };
+        }
+    }
 
     public override void Enter()
     {
         state = SubState.Circling;
+        reactionTimer = -1f;
+        reactionTriggered = false;
 
-        // Randomly pick circle direction only the first time we enter standoff (avoids re-randomizing every time we cross the hysteresis band)
+        // Only randomize circle direction once — prevents re-rolling every time we re-enter standoff from the hysteresis band
         if (!circleDirectionInitialized)
         {
             circleDirection = Random.value > 0.5f ? 1f : -1f;
@@ -94,24 +126,140 @@ public class StandoffBehavior : EnemyBehavior
     {
         if (ai.player == null) return;
 
+        // Reaction system is independent of sub-states — runs every frame on top of normal behavior
+        TryTriggerReaction();
+        TickReaction();
+
         switch (state)
         {
-            case SubState.Circling:
-                ExecuteCircling();
-                break;
-            case SubState.PreAttack:
-                ExecutePreAttack();
-                break;
-            case SubState.Attacking:
-                ExecuteAttacking();
-                break;
+            case SubState.Circling:     ExecuteCircling();     break;
+            case SubState.PreAttack:    ExecutePreAttack();    break;
+            case SubState.Attacking:    ExecuteAttacking();    break;
+            case SubState.BackingOff:   ExecuteBackingOff();   break;
+            case SubState.Interrupting: ExecuteInterrupting(); break;
         }
     }
 
     public override void Exit()
     {
-        // Reset to circling so we start fresh next time we enter standoff
         state = SubState.Circling;
+        reactionTimer = -1f;
+        reactionTriggered = false;
+    }
+
+    // ========================================================================
+    // REACTION SYSTEM (parallel to sub-states)
+    // ========================================================================
+
+    /*
+     * TryTriggerReaction — called every frame before the sub-state runs.
+     *
+     * Fires once per player attack when: the attack is aimed at us, we're in range,
+     * and a personality chance roll passes.
+     *
+     * reactionTriggered is a latch — it stays true until the player stops attacking
+     * so the same swing can't restart the timer mid-execution.
+     */
+    void TryTriggerReaction()
+    {
+        var pc = ai.PlayerController;
+        if (pc == null || pc.combat == null) return;
+
+        if (!pc.combat.IsAttacking)
+        {
+            // Player stopped attacking — clear the latch so the next attack can be reacted to
+            reactionTriggered = false;
+            return;
+        }
+
+        // Already processing a reaction for this attack — don't start a second timer
+        if (reactionTriggered) return;
+
+        // Already committed to a response — let it play out before reacting again
+        if (state == SubState.BackingOff || state == SubState.Interrupting) return;
+
+        // Don't react while mid-attack — we're the aggressor right now, not the defender
+        if (state == SubState.Attacking) return;
+
+        // Check that the player is actually swinging AT us (dot product: player forward vs direction to enemy)
+        Vector3 toPlayer   = ai.player.position - ai.transform.position;
+        toPlayer.y = 0f;
+        float dist         = toPlayer.magnitude;
+        Vector3 dirToPlayer = toPlayer / Mathf.Max(dist, 0.001f);
+        Vector3 toEnemy    = -dirToPlayer; // from player toward us
+        float facingDot    = Vector3.Dot(pc.transform.forward, toEnemy);
+
+        // Attack isn't aimed at us or we're too far away to care — ignore it
+        if (facingDot < ai.backOffFacingThreshold || dist >= ai.standoffRadius + 1.5f) return;
+
+        // Lock the latch now regardless of the roll — we've "seen" this attack
+        reactionTriggered = true;
+
+        // Personality chance: not every enemy reacts every time (makes them feel less robotic)
+        var p = ai.personality;
+        float reactionChance = p != null ? p.reactionChance : 0.8f;
+        if (Random.value >= reactionChance) return; // decided to ignore this one
+
+        // Start the thinking timer — enemy continues doing whatever it's doing until this fires
+        float minDelay = p != null ? p.reactionTimeMin : 0.1f;
+        float maxDelay = p != null ? p.reactionTimeMax : 0.25f;
+        reactionTimer = Random.Range(minDelay, maxDelay);
+    }
+
+    /*
+     * TickReaction — counts down the reaction timer each frame.
+     *
+     * Normal behavior continues uninterrupted while this ticks.
+     * When it hits zero the enemy commits to either BackingOff or Interrupting,
+     * overriding whatever sub-state they were in.
+     *
+     * If the player stops attacking before the timer fires, the reaction is
+     * silently cancelled — the enemy missed their window to react.
+     */
+    void TickReaction()
+    {
+        // No active reaction — nothing to do
+        if (reactionTimer < 0f) return;
+
+        var pc = ai.PlayerController;
+
+        // Player stopped attacking before we decided — cancel the reaction silently
+        if (pc == null || pc.combat == null || !pc.combat.IsAttacking)
+        {
+            reactionTimer = -1f;
+            return;
+        }
+
+        reactionTimer -= Time.deltaTime;
+        // Still thinking — let normal behavior continue
+        if (reactionTimer > 0f) return;
+
+        // Timer expired — make the decision and commit
+        reactionTimer = -1f;
+
+        Vector3 toPlayer = ai.player.position - ai.transform.position;
+        toPlayer.y = 0f;
+        float dist = toPlayer.magnitude;
+
+        var p = ai.personality;
+        float interruptChance   = p != null ? p.interruptChance   : 0.4f;
+        float interruptMaxRange = p != null ? p.interruptMaxRange : 3.5f;
+
+        // Only attempt to interrupt if close enough — too far and we'd never reach in time
+        bool inInterruptRange = dist <= interruptMaxRange;
+        // Personality roll: aggressive enemies interrupt more often, cautious ones back off more
+        bool rollSucceeds = Random.value < interruptChance;
+
+        if (inInterruptRange && rollSucceeds)
+        {
+            interruptRushTimer = 2f; // safety cap — if we don't reach in 2 seconds, abort
+            state = SubState.Interrupting;
+        }
+        else
+        {
+            // Either out of range or roll failed — retreat instead
+            state = SubState.BackingOff;
+        }
     }
 
     // ========================================================================
@@ -120,81 +268,22 @@ public class StandoffBehavior : EnemyBehavior
 
     void ExecuteCircling()
     {
-        Vector3 toPlayer = ai.player.position - ai.transform.position;
-        toPlayer.y = 0f;
-        float dist = toPlayer.magnitude;
-        Vector3 dirToPlayer = toPlayer / Mathf.Max(dist, 0.001f);
-
-        // --------------------------------------------------------------------
-        // Tangent direction (perpendicular to line toward player)
-        // --------------------------------------------------------------------
-
-        /*
-         * Vector3.Cross(up, dirToPlayer) gives a horizontal vector
-         * perpendicular to the direction toward the player.
-         * 
-         * Multiplying by circleDirection (1 or -1) flips between
-         * clockwise and counter-clockwise orbiting.
-         */
-        Vector3 tangent = Vector3.Cross(Vector3.up, dirToPlayer) * circleDirection;
-
-        // --------------------------------------------------------------------
-        // Radial correction (maintain preferred distance)
-        // --------------------------------------------------------------------
-
-        /*
-         * radiusError: positive = too far, negative = too close
-         * 
-         * We blend the tangent movement with a push toward/away from
-         * the player to stay near the preferred standoff radius.
-         * 
-         * The blend weight increases as we drift further from the ideal distance,
-         * so at the right distance we move purely tangentially (smooth circle),
-         * and when too far/close we course-correct.
-         */
-        float radiusError = dist - ai.standoffRadius;
-        Vector3 radialCorrection = dirToPlayer * Mathf.Sign(radiusError);
-
-        float radialWeight = Mathf.Clamp01(Mathf.Abs(radiusError) / ai.standoffRadius);
-        Vector3 moveDir = Vector3.Lerp(tangent, radialCorrection, radialWeight).normalized;
-
-        // --------------------------------------------------------------------
-        // Move and rotate
-        // --------------------------------------------------------------------
-
-        Vector3 movement = moveDir * ai.circleSpeed * Time.deltaTime;
-        ai.CC.Move(movement);
-
-        // Face the player while circling (not the movement direction)
-        if (dirToPlayer.sqrMagnitude > 0.001f)
+        var pc = ai.PlayerController;
+        if (pc != null)
         {
-            Quaternion targetRot = Quaternion.LookRotation(dirToPlayer, Vector3.up);
-            ai.transform.rotation = Quaternion.RotateTowards(
-                ai.transform.rotation,
-                targetRot,
-                ai.rotationSpeed * Time.deltaTime
-            );
+            // Opportunity punish: when player's attack lock JUST ended, collapse the attack timer
+            // so the enemy immediately moves to PreAttack instead of waiting the full random interval
+            if (pc.RecentlyAttacked(ai.opportunityWindow) && attackTimer > ai.opportunityAttackDelay)
+                attackTimer = ai.opportunityAttackDelay;
         }
 
-        // Slower animation speed for strafing vs full-speed chase
-        ai.TargetAnimSpeed = 0.5f;
+        DoCirclingMovement();
 
-        // --------------------------------------------------------------------
-        // Timers
-        // --------------------------------------------------------------------
-
-        // Periodically reverse circle direction for variety
-        directionChangeTimer -= Time.deltaTime;
-        if (directionChangeTimer <= 0f)
-        {
-            circleDirection *= -1f;
-            ResetDirectionTimer();
-        }
-
-        // Attack timer - when it expires, transition to pre-attack
+        // Attack timer: counts down each frame; when it hits zero the enemy commits to PreAttack
         attackTimer -= Time.deltaTime;
         if (attackTimer <= 0f)
         {
+            // Only attack if we have a combat component — without it there's nothing to fire
             if (ai.EnemyCombat != null)
             {
                 state = SubState.PreAttack;
@@ -202,9 +291,46 @@ public class StandoffBehavior : EnemyBehavior
             }
             else
             {
-                // No combat component - just reset timer and keep circling
+                // No combat component — reset and keep circling (enemy is unarmed/passive)
                 ResetAttackTimer();
             }
+        }
+    }
+
+    // Shared movement used by both Circling and Interrupting approach phase.
+    // Handles tangent orbit, radial correction, rotation, animation speed, and direction-flip timer.
+    // The attack timer is NOT ticked here — callers handle that separately.
+    void DoCirclingMovement()
+    {
+        Vector3 toPlayer    = ai.player.position - ai.transform.position;
+        toPlayer.y          = 0f;
+        float dist          = toPlayer.magnitude;
+        Vector3 dirToPlayer = toPlayer / Mathf.Max(dist, 0.001f);
+
+        // Tangent: perpendicular to the line toward the player, flipped by circleDirection for CW vs CCW orbit
+        Vector3 tangent = Vector3.Cross(Vector3.up, dirToPlayer) * circleDirection;
+
+        // Radial correction: how far off are we from the preferred orbit radius?
+        // Positive = too far, negative = too close. We blend toward it so the enemy self-corrects naturally.
+        float radiusError         = dist - ai.standoffRadius;
+        Vector3 radialCorrection  = dirToPlayer * Mathf.Sign(radiusError);  // push toward or away from player
+        float radialWeight        = Mathf.Clamp01(Mathf.Abs(radiusError) / ai.standoffRadius); // stronger correction the further off we are
+        Vector3 moveDir           = Vector3.Lerp(tangent, radialCorrection, radialWeight).normalized;
+
+        ai.CC.Move(moveDir * ai.circleSpeed * Time.deltaTime);
+
+        // Face the player while moving — orbit should always look like we're watching the target
+        ai.RotateTowardWithDelay(dirToPlayer);
+
+        // 0.5 = strafing blend in the animator (between idle and full run)
+        ai.TargetAnimSpeed = 0.5f;
+
+        // Periodically reverse orbit direction so the enemy doesn't just loop forever in one direction
+        directionChangeTimer -= Time.deltaTime;
+        if (directionChangeTimer <= 0f)
+        {
+            circleDirection *= -1f;
+            ResetDirectionTimer();
         }
     }
 
@@ -213,13 +339,12 @@ public class StandoffBehavior : EnemyBehavior
     // ========================================================================
 
     /*
-     * Brief pause before the actual attack.
-     * 
-     * This is a TELEGRAPH: a visual cue that tells the player
-     * "an attack is coming!" so they can dodge or counter.
-     * 
-     * The enemy stops moving and snaps to face the player precisely.
-     * In a full game, you'd play a wind-up animation here.
+     * Brief pause before the actual attack fires.
+     *
+     * This is a TELEGRAPH — a visual tell the player can learn to react to.
+     * The enemy stops moving and snaps to face the player so the incoming
+     * attack direction is clearly readable. In a full game this would play
+     * a wind-up animation (raising weapon, shifting weight, etc.).
      */
     void ExecutePreAttack()
     {
@@ -227,38 +352,38 @@ public class StandoffBehavior : EnemyBehavior
         {
             Vector3 toPlayer = ai.player.position - ai.transform.position;
             toPlayer.y = 0f;
-            if (toPlayer.sqrMagnitude > 0.001f)
-            {
-                // Faster rotation to snap toward target before attacking
-                Quaternion targetRot = Quaternion.LookRotation(toPlayer.normalized, Vector3.up);
-                ai.transform.rotation = Quaternion.RotateTowards(
-                    ai.transform.rotation,
-                    targetRot,
-                    ai.rotationSpeed * 2f * Time.deltaTime
-                );
-            }
+            // Faster than normal while telegraphing, but still uses turn reaction delay.
+            ai.RotateTowardWithDelay(toPlayer, 2f);
         }
 
-        // No movement during telegraph
+        // Stop moving during the telegraph — standing still makes the pause feel intentional
         ai.TargetAnimSpeed = 0f;
 
         preAttackTimer -= Time.deltaTime;
         if (preAttackTimer <= 0f)
         {
-            // Choose attack: dodge-punish when player recently dodged and is in range, else kick if beyond punchRangeThreshold, else punch (close)
+            // Choose which attack to use based on distance and player state
             Vector3 toPlayer = ai.player != null ? ai.player.position - ai.transform.position : Vector3.zero;
             toPlayer.y = 0f;
             float dist = toPlayer.magnitude;
+
+            // Dodge punish: if player recently dodged and is in the punish distance window, use the punish attack
             bool usePunish = ai.PlayerController != null
                 && ai.PlayerController.RecentlyDodged(ai.dodgePunishWindow)
                 && dist >= ai.dodgePunishDistMin
                 && dist <= ai.dodgePunishDistMax;
-            if (usePunish)
-                ai.EnemyCombat.DoAttack(ai.EnemyCombat.dodgePunishAttack);
+
+            // Try the EnemyComboSet first (data-driven moveset); fall back to legacy basic/kick/punish fields
+            AttackData selectedAttack;
+            if (ai.EnemyCombat.TrySelectAttack(dist, usePunish, out selectedAttack))
+                ai.EnemyCombat.DoAttack(selectedAttack);
+            else if (usePunish)
+                ai.EnemyCombat.DoAttack(ai.EnemyCombat.dodgePunishAttack);    // player exposed after dodge
             else if (dist > ai.EnemyCombat.punchRangeThreshold)
-                ai.EnemyCombat.DoAttack(ai.EnemyCombat.kickAttack);
+                ai.EnemyCombat.DoAttack(ai.EnemyCombat.kickAttack);           // too far for a punch — use kick
             else
-                ai.EnemyCombat.DoAttack();
+                ai.EnemyCombat.DoAttack();                                    // default punch at close range
+
             state = SubState.Attacking;
         }
     }
@@ -268,20 +393,137 @@ public class StandoffBehavior : EnemyBehavior
     // ========================================================================
 
     /*
-     * Wait for the attack to finish (lock duration from AttackData).
-     * The enemy stays in place while the attack plays out.
-     * Once EnemyCombat.IsAttacking becomes false, resume circling.
+     * Waits for the attack animation lock to expire (lockDuration from AttackData).
+     * Enemy holds position during the swing — moving during an attack would make
+     * the hitbox teleport and feel disconnected from the animation.
+     * Once EnemyCombat.IsAttacking goes false, return to circling.
      */
     void ExecuteAttacking()
     {
-        // No movement during attack
+        // Stop dead while the attack plays — hitbox fires via EnemyCombat independently
         ai.TargetAnimSpeed = 0f;
 
-        // Wait for attack lock to expire
+        // IsAttacking uses Time.time < attackEndTime — when the lock expires, resume circling
         if (!ai.EnemyCombat.IsAttacking)
         {
             state = SubState.Circling;
-            ResetAttackTimer();
+            ResetAttackTimer(); // pick a new random interval before the next attack
+        }
+    }
+
+    // ========================================================================
+    // BACKING OFF (reaction decision: step away while player attacks)
+    // ========================================================================
+
+    /*
+     * The reaction timer fired and the enemy decided to disengage.
+     * Steps backward (away from player) until the player's attack ends,
+     * then resumes circling with a flipped orbit direction.
+     *
+     * Flipping direction after a retreat feels natural — like the enemy
+     * repositioned themselves while backing away.
+     */
+    void ExecuteBackingOff()
+    {
+        Vector3 toPlayer    = ai.player.position - ai.transform.position;
+        toPlayer.y          = 0f;
+        Vector3 dirToPlayer = toPlayer.normalized;
+
+        // Personality multiplier: aggressive = tighter step back, cautious = faster decisive retreat
+        var p           = ai.personality;
+        float speedMult = p != null ? p.backOffSpeedMultiplier : 1f;
+        ai.CC.Move(-dirToPlayer * ai.backOffSpeed * speedMult * Time.deltaTime); // move away from player
+
+        // Keep facing the player during the retreat so we don't lose sight of the threat
+        ai.RotateTowardWithDelay(dirToPlayer);
+
+        ai.TargetAnimSpeed = 0.5f;
+
+        var pc = ai.PlayerController;
+        // Player's attack finished — they can act again; time for us to reposition and circle
+        if (pc == null || pc.combat == null || !pc.combat.IsAttacking)
+        {
+            circleDirection *= -1f; // flip orbit so repositioning looks deliberate, not a loop
+            state = SubState.Circling;
+        }
+    }
+
+    // ========================================================================
+    // INTERRUPTING (reaction decision: rush in during player's attack)
+    // ========================================================================
+
+    /*
+     * The reaction timer fired and the enemy decided to go aggressive.
+     * Rushes toward the player at interruptRushSpeed. Once close enough,
+     * decides whether to actually commit to attacking based on trade willingness:
+     *
+     *   Aggressive: commits regardless — willing to eat a hit to land one
+     *   Cautious:   only commits when player's lock is nearly expired (safe punish)
+     *   Normal:     probability roll weighted by personality
+     *
+     * If the player's attack ends before the enemy gets in range, the window
+     * is missed and the enemy returns to circling — rewarding fast combos.
+     */
+    void ExecuteInterrupting()
+    {
+        var pc = ai.PlayerController;
+        var p  = ai.personality;
+
+        // Player stopped attacking — we missed the window, resume circling normally
+        if (pc == null || pc.combat == null || !pc.combat.IsAttacking)
+        {
+            state = SubState.Circling;
+            ResetAttackTimer(); // fresh timer so we don't immediately attack again after missing
+            return;
+        }
+
+        // Safety cap: if we've been chasing for 2 seconds and still can't reach, give up
+        interruptRushTimer -= Time.deltaTime;
+        if (interruptRushTimer <= 0f)
+        {
+            // Took too long to close — switch to backing off so we don't stand there looking confused
+            state = SubState.BackingOff;
+            return;
+        }
+
+        // Rush toward the player at the personality-defined interrupt speed
+        Vector3 toPlayer = ai.player.position - ai.transform.position;
+        toPlayer.y       = 0f;
+        float dist       = toPlayer.magnitude;
+        Vector3 dir      = toPlayer.normalized;
+
+        float rushSpeed  = p != null ? p.interruptRushSpeed : 5f;
+        ai.CC.Move(dir * rushSpeed * Time.deltaTime);
+
+        // Lock rotation toward target while rushing — don't let the animation drift sideways
+        ai.RotateTowardWithDelay(dir);
+
+        // Full run speed animation while closing the gap
+        ai.TargetAnimSpeed = 1f;
+
+        // Not in attack range yet — keep closing
+        if (ai.EnemyCombat == null || dist > ai.EnemyCombat.punchRangeThreshold + 0.3f) return;
+
+        // In range — now decide whether to actually fire the attack
+        float lockRemaining = pc.AttackLockTimeRemaining; // how long is left on the player's attack lock
+        float tradeWill     = p != null ? p.tradeWillingness    : 0.5f;
+        float safeThresh    = p != null ? p.safeWindowThreshold : 0.3f;
+
+        // "Safe" means the player's attack is basically over — no risk of trading
+        bool isSafe    = lockRemaining <= safeThresh;
+        // "WillTrade" means the personality rolled to commit even if it's not safe (aggressive behavior)
+        bool willTrade = Random.value < tradeWill;
+
+        if (isSafe || willTrade)
+        {
+            // Commit: go straight into PreAttack with a shortened/zero telegraph (no time to wind up mid-rush)
+            preAttackTimer = p != null ? p.interruptAttackDelay : 0.05f;
+            state = SubState.PreAttack;
+        }
+        else
+        {
+            // Not willing to eat the hit and it's not safe yet — abort and back off
+            state = SubState.BackingOff;
         }
     }
 
@@ -291,6 +533,7 @@ public class StandoffBehavior : EnemyBehavior
 
     void ResetDirectionTimer()
     {
+        // Random interval before the next orbit direction flip
         directionChangeTimer = Random.Range(
             ai.directionChangeIntervalMin,
             ai.directionChangeIntervalMax
@@ -299,6 +542,7 @@ public class StandoffBehavior : EnemyBehavior
 
     void ResetAttackTimer()
     {
+        // Random delay before the next attack attempt from standoff
         attackTimer = Random.Range(ai.attackIntervalMin, ai.attackIntervalMax);
     }
 }

@@ -76,6 +76,12 @@ public class SimpleEnemyAI : MonoBehaviour
     
     [Tooltip("Rotation speed in degrees per second")]
     public float rotationSpeed = 540f;
+
+    [Tooltip("Randomized delay before starting to rotate toward the player (seconds).")]
+    public float faceTurnDelayMin = 0.06f;
+
+    [Tooltip("Max delay before rotating toward the player (seconds). Keep >= Min.")]
+    public float faceTurnDelayMax = 0.14f;
     
     // --- Standoff: when to switch to circling and how to circle ---
     [Header("Behavior - Standoff")]
@@ -116,7 +122,23 @@ public class SimpleEnemyAI : MonoBehaviour
     public float dodgePunishDistMin = 2.5f;
     [Tooltip("Use dodge-punish attack only when distance to player is at most this")]
     public float dodgePunishDistMax = 6f;
-    
+
+    // --- Personality: drives reaction timing, interrupt vs back-off decisions, trade willingness ---
+    [Header("Personality")]
+    [Tooltip("ScriptableObject defining this enemy's reaction style. Create via Assets > Create > Enemy > Personality. Leave null to use hardcoded Normal defaults.")]
+    public EnemyPersonality personality;
+
+    // --- Player reactivity: back off when player attacks; punish their recovery ---
+    [Header("Attack - Player Reactivity")]
+    [Tooltip("Speed the enemy moves backward when the player is attacking (units/sec). Slower than circleSpeed so the player can still close the gap with a lunge.")]
+    public float backOffSpeed = 2f;
+    [Tooltip("Minimum dot product between the player's forward and the direction to the enemy for back-off to trigger. 0.4 ≈ within ~66° of facing. Prevents backing off from attacks aimed elsewhere.")]
+    public float backOffFacingThreshold = 0.4f;
+    [Tooltip("Seconds after the player's attack lock ends during which the enemy will immediately punish (collapse attack timer to opportunityAttackDelay).")]
+    public float opportunityWindow = 0.5f;
+    [Tooltip("How long the enemy waits before punishing during the player's recovery (the enemy still telegraphs briefly so the window isn't zero-frame).")]
+    public float opportunityAttackDelay = 0.15f;
+
     // --- Physics: gravity (CharacterController has no built-in gravity) ---
     [Header("Physics")]
     [Tooltip("Gravity applied to the enemy (should match player's gravity)")]
@@ -132,6 +154,11 @@ public class SimpleEnemyAI : MonoBehaviour
 
     [Tooltip("How quickly the animation speed blends (higher = snappier)")]
     public float animationDamping = 10f;
+
+    [Tooltip("Yaw turn speed while in knockback-stun (deg/sec). Faces knockback direction so entry/loop orientation matches movement.")]
+    public float knockbackStunFacingTurnSpeed = 900f;
+    [Tooltip("If enabled, knockback-stun faces opposite the knockback movement direction (useful for clips authored to move backward).")]
+    public bool invertKnockbackStunFacing;
 
     [Tooltip("Fallback base duration (seconds) when auto-detect fails. Hit state length is auto-fetched from the Animator and cached; use this if a state has no motion or to override.")]
     public float baseHitAnimDuration = 0.4f;
@@ -167,11 +194,15 @@ public class SimpleEnemyAI : MonoBehaviour
      * the enemy plays a get-up animation. The enemy stays stunned for
      * getUpDuration so they can't act while getting off the ground.
      */
-    [Header("Prone (after crash landing)")]
-    [Tooltip("Seconds the enemy lies prone on the floor after crash before get-up starts. 0 = get-up starts immediately.")]
+    [Header("Prone (ground knockdown)")]
+    [Tooltip("Seconds the enemy lies prone before get-up starts when entering prone from airborne crash (and as default fallback for other prone entries). 0 = get-up starts immediately.")]
     public float groundedDuration = 1f;
     [Tooltip("Seconds to blend into the prone animation (0 = snap immediately).")]
     public float proneTransitionDuration = 0.08f;
+    [Tooltip("Prone variant used specifically when wall-bounce resolves into prone.")]
+    public ProneVariant wallBounceProneVariant = ProneVariant.Default;
+    [Tooltip("If enabled, wall-bounce -> prone applies a 180-degree facing flip when entering prone.")]
+    public bool invertWallBounceProneFacing = false;
 
     [Header("Get Up (after prone)")]
     [Tooltip("Duration the enemy is stunned while getting up (and length the get-up animation is scaled to).")]
@@ -196,17 +227,34 @@ public class SimpleEnemyAI : MonoBehaviour
     private Dictionary<string, float> cachedHitStateDurations;  // Clip length per hit state name; avoids GetCurrentAnimatorStateInfo every hit
     private AirborneSequence airborneSequence;  // Liftoff → Loop → Crash; fires onCrashLanded when crash ends; created in Awake
     private EnemyProneSystem proneSystem;       // Prone timer and animation; created in Awake; entered via AirborneSequence.onCrashLanded
+    private EnemyReactionStateMachine reactionStateMachine; // Visual-only reaction machine for temporary animation priority (currently knockback-entry)
 
-    private EnemyBehavior currentBehavior;      // Active behavior — Execute() called every frame; switched by distance (chase↔standoff)
+    private EnemyStunMeter stunMeter;           // Optional; when present, IsStandingStunned blocks behavior and drives animator
+
+    private EnemyStateMachine stateMachine;     // Central behavioral state machine — all Chase↔Standoff transitions go through stateMachine.Transition()
     private ChaseBehavior chaseBehavior;        // Pre-allocated; reused every time the enemy enters the chase state
     private StandoffBehavior standoffBehavior;  // Pre-allocated; reused every time the enemy enters the standoff state
+    private string currentReactionDebug = "None"; // Debug-only visual reaction state (None/WallBounce/KnockbackEntry)
+    // Wall-bounce latch:
+    // - Set true when OnWallBounce fires
+    // - While true, stun animator params are forced off so wall-bounce owns presentation
+    // - Cleared by re-hit or wall-bounce completion callback
+    private bool wallBounceStunLatched;
+    // After wall-bounce, keep standing/knockback stun params suppressed until a new hit arrives.
+    // This prevents old standing-stun timer state from re-activating those params at wall-bounce end.
+    private bool suppressStandingStunParamsUntilNextHit;
+    private bool wasInKnockbackStun;              // Tracks entry into knockback-stun mode for direction seeding
+    private Vector3 lastKnockbackFacingDir = Vector3.forward; // Last valid horizontal knockback direction used for stable facing as velocity decays
+    private float faceTurnDelayTimer;
+    private bool isFaceTurnReady = true;
+    private Vector3 lastFaceDirection = Vector3.forward;
     
     // ========================================================================
     // PUBLIC PROPERTIES (accessed by behaviors and debug visuals)
     // ========================================================================
     
     /// <summary>Current behavior state name for debug visualization (Chase, Circling, PreAttack, Attacking).</summary>
-    public string CurrentBehaviorStateName => currentBehavior?.CurrentStateName ?? "Unknown";
+    public string CurrentBehaviorStateName => stateMachine?.CurrentBehavior?.CurrentStateName ?? "Unknown";
     
     /// <summary>CharacterController for collision-aware movement.</summary>
     public CharacterController CC => cc;
@@ -239,7 +287,9 @@ public class SimpleEnemyAI : MonoBehaviour
             // Lying prone after crash, playing prone animation until get-up starts
             if (proneSystem != null && proneSystem.IsInProne) return EnemyState.Prone;
             // Hitstun (non-airborne)
-            if (health.IsStunned) return EnemyState.Stunned;
+            if (health.IsHitstunned) return EnemyState.Hitstunned;
+            // Stun meter filled — stunned state (lower priority than hitstun so flinches still show)
+            if (stunMeter != null && stunMeter.IsStunned) return EnemyState.Stunned;
             // Get-up after crash
             if (health.IsGettingUp) return EnemyState.GettingUp;
             return EnemyState.Normal;
@@ -262,6 +312,7 @@ public class SimpleEnemyAI : MonoBehaviour
     /// the Animator Controller uses that parameter in transition conditions (e.g. Speed &gt; 0.1 to leave Idle).
     /// </summary>
     public float TargetAnimSpeed { get => targetAnimSpeed; set => targetAnimSpeed = value; }
+    public string CurrentReactionDebug => currentReactionDebug;
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -275,6 +326,7 @@ public class SimpleEnemyAI : MonoBehaviour
          */
         cc = GetComponent<CharacterController>();
         health = GetComponent<EnemyHealth>();
+        stunMeter = GetComponent<EnemyStunMeter>();
         
         /*
          * Auto-find player if not assigned:
@@ -304,20 +356,22 @@ public class SimpleEnemyAI : MonoBehaviour
         // Find EnemyCombat component (optional - enemies work without it, just can't attack)
         EnemyCombat = GetComponent<EnemyCombat>();
         
-        // Create behaviors and start in Chase (transitions to Standoff when in range)
-        chaseBehavior = new ChaseBehavior(this);
+        // Create behaviors and wire up the central state machine (always starts in Chase)
+        chaseBehavior    = new ChaseBehavior(this);
         standoffBehavior = new StandoffBehavior(this);
-        currentBehavior = chaseBehavior;
-        currentBehavior.Enter();  // Let Chase initialize if it has entry logic
+        stateMachine     = new EnemyStateMachine();
+        stateMachine.Initialize(chaseBehavior);
+        reactionStateMachine = new EnemyReactionStateMachine();
 
         if (animationConfig == null)
             Debug.LogError($"SimpleEnemyAI on '{name}': animationConfig is not assigned. Create an EnemyAnimationConfig asset (Assets > Create > Enemy > Animation Config) and assign it.", this);
 
         // Prone system: owns the prone timer/animation; fires TriggerGetUpSequence when timer expires.
         // Created before airborneSequence so the lambda below can close over it.
-        string proneState    = animationConfig != null ? animationConfig.proneStateName : "";
-        int    proneLayerIdx = animationConfig != null ? animationConfig.proneLayer     : 1;
-        proneSystem = new EnemyProneSystem(transform, animator, proneState, proneLayerIdx, proneTransitionDuration, health, TriggerGetUpSequence);
+        string proneState         = animationConfig != null ? animationConfig.proneStateName         : "";
+        string proneFaceDownState = animationConfig != null ? animationConfig.proneFaceDownStateName : "";
+        int    proneLayerIdx      = animationConfig != null ? animationConfig.proneLayer              : 1;
+        proneSystem = new EnemyProneSystem(transform, animator, proneState, proneFaceDownState, proneLayerIdx, proneTransitionDuration, health, TriggerGetUpSequence);
 
         // Airborne sequence: Liftoff → Loop → Crash; when crash ends fires onCrashLanded → proneSystem.Enter(dur).
         string hitSpeedParam = animationConfig != null ? animationConfig.hitSpeedParameter : "";
@@ -334,6 +388,7 @@ public class SimpleEnemyAI : MonoBehaviour
         ApplyGravity();
         if (airborneSequence != null) airborneSequence.Update(health);
         if (proneSystem != null) proneSystem.Update();
+        UpdateKnockbackStunFacing();
         UpdateAnimator();
         // While dying (including airborne-as-death): skip movement/behavior
         if (health != null && health.IsDying) return;
@@ -375,6 +430,21 @@ public class SimpleEnemyAI : MonoBehaviour
 
         if (animationConfig == null) return;
 
+        // Visual arbitration overview:
+        // 1) Wall-bounce uses a latch (not a timer) while bounce owns presentation.
+        // 2) Knockback-entry uses a short priority window from reactionStateMachine.
+        // 3) Debug text reports which visual channel currently has priority.
+        bool wallBounceActive = wallBounceStunLatched;
+        bool knockbackEntryActive = reactionStateMachine != null &&
+                                    reactionStateMachine.IsKnockbackEntryActive(
+                                        Time.time,
+                                        animator,
+                                        animationConfig.standingStunLayer,
+                                        animationConfig.knockbackStunEntryStateName);
+        currentReactionDebug = wallBounceActive ? "WallBounce" : (knockbackEntryActive ? "KnockbackEntry" : "None");
+        if (!string.IsNullOrEmpty(animationConfig.wallBounceActiveParameter))
+            animator.SetBool(animationConfig.wallBounceActiveParameter, wallBounceActive);
+
         // Send to Animator. During prone/airborne, zero locomotion speed so enemy doesn't walk.
         bool inAirbornePhase = airborneSequence != null && airborneSequence.CurrentPhase != AirborneSequence.Phase.None;
         bool inProne = proneSystem != null && proneSystem.IsInProne;
@@ -393,12 +463,89 @@ public class SimpleEnemyAI : MonoBehaviour
 
             // StunLayerActive: hitstun (and not airborne), prone, or get-up all activate the Stun animator layer
             if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
-                animator.SetBool(animationConfig.stunLayerParameter, (!inAirbornePhase && !health.IsAirborne && health.IsStunned) || inProne || health.IsGettingUp);
+                animator.SetBool(animationConfig.stunLayerParameter, ((!inAirbornePhase && !health.IsAirborne && health.IsHitstunned) || inProne || health.IsGettingUp) && !wallBounceActive);
 
             // When not in stun/airborne/prone/get-up, ensure hit layer plays at 1x (TriggerHitAnimation sets it when hit)
-            if (!inAirbornePhase && !health.IsStunned && !inProne && !health.IsGettingUp && !string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
+            if (!inAirbornePhase && !health.IsHitstunned && !inProne && !health.IsGettingUp && !string.IsNullOrEmpty(animationConfig.hitSpeedParameter))
                 animator.SetFloat(animationConfig.hitSpeedParameter, 1f);
+
+            // StandingStunned: stun meter filled — both paths (normal and knockback) are fully parameter-driven
+            if (stunMeter != null)
+            {
+                bool canShowStandingStunParams = !wallBounceActive && !suppressStandingStunParamsUntilNextHit;
+                if (!string.IsNullOrEmpty(animationConfig.standingStunParameter))
+                    animator.SetBool(animationConfig.standingStunParameter, canShowStandingStunParams && stunMeter.IsStandingStunned);
+                if (!string.IsNullOrEmpty(animationConfig.knockbackStunParameter))
+                    animator.SetBool(animationConfig.knockbackStunParameter, canShowStandingStunParams && stunMeter.TriggerWasHeavy && stunMeter.IsStandingStunned);
+            }
         }
+    }
+
+    // Keep knockback-stun entry/loop oriented toward movement direction so the reaction reads consistently
+    // from all impact angles (including reflected wall bounces).
+    void UpdateKnockbackStunFacing()
+    {
+        if (health == null) return;
+        // Rotation ownership rule:
+        // while prone, EnemyProneSystem locks yaw every frame to the chosen prone orientation.
+        // If knockback-facing also ran here, the two systems would fight and cause one-frame snaps.
+        if (proneSystem != null && proneSystem.IsInProne)
+        {
+            wasInKnockbackStun = false;
+            return;
+        }
+
+        bool inKnockbackStun = !wallBounceStunLatched
+            && stunMeter != null
+            && stunMeter.IsStandingStunned
+            && stunMeter.TriggerWasHeavy;
+
+        if (!inKnockbackStun)
+        {
+            wasInKnockbackStun = false;
+            return;
+        }
+
+        Vector3 horizontalVel = health.KnockbackVelocity;
+        horizontalVel.y = 0f;
+
+        if (horizontalVel.sqrMagnitude > 0.0004f)
+            lastKnockbackFacingDir = horizontalVel.normalized;
+        else if (!wasInKnockbackStun)
+        {
+            Vector3 fallback = transform.forward;
+            fallback.y = 0f;
+            if (fallback.sqrMagnitude > 0.0001f)
+                lastKnockbackFacingDir = fallback.normalized;
+        }
+
+        if (lastKnockbackFacingDir.sqrMagnitude > 0.0001f)
+        {
+            Vector3 facingDir = invertKnockbackStunFacing ? -lastKnockbackFacingDir : lastKnockbackFacingDir;
+            Quaternion targetRot = Quaternion.LookRotation(facingDir, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRot,
+                knockbackStunFacingTurnSpeed * Time.deltaTime);
+        }
+
+        wasInKnockbackStun = true;
+    }
+
+    /// <summary>
+    /// Inject a world-space knockback facing direction (used by wall-bounce reflection).
+    /// Keeps knockback-stun orientation coherent when velocity direction flips on impact.
+    /// </summary>
+    public void SetKnockbackFacingDirection(Vector3 worldDirection, bool snap = false)
+    {
+        worldDirection.y = 0f;
+        if (worldDirection.sqrMagnitude <= 0.0001f) return;
+        lastKnockbackFacingDir = worldDirection.normalized;
+        wasInKnockbackStun = true;
+
+        if (!snap) return;
+        Vector3 facingDir = invertKnockbackStunFacing ? -lastKnockbackFacingDir : lastKnockbackFacingDir;
+        transform.rotation = Quaternion.LookRotation(facingDir, Vector3.up);
     }
 
     /// <summary>
@@ -407,19 +554,66 @@ public class SimpleEnemyAI : MonoBehaviour
     /// The Stun layer must NOT have an Any State transition for the stun bool, or that transition would override this and always show one state.
     /// </summary>
     /// <param name="hitstun">Duration of the hitstun; animation is scaled to match.</param>
-    public void TriggerHitAnimation(float hitstun, AttackHeight height)
+    /// <param name="heavyKnockback">True when the hit's knockback magnitude exceeded the stun threshold. Routes prone hits to KnockbackStunEntry instead of the normal prone hit state.</param>
+    public void TriggerHitAnimation(float hitstun, AttackHeight height, bool heavyKnockback = false)
     {
         if (animator == null || animationConfig == null) return;
-
-        // If the enemy is prone, use the prone-specific hit state (if configured and exists in the controller).
-        bool currentlyProne = proneSystem != null && proneSystem.IsInProne;
-        if (currentlyProne
-            && !string.IsNullOrEmpty(animationConfig.proneHitStateName)
-            && AnimatorHasStateOnLayer(animator, animationConfig.hitAnimationLayer, animationConfig.proneHitStateName))
+        // A fresh hit is the only thing that re-arms standing/knockback stun params after wall-bounce.
+        suppressStandingStunParamsUntilNextHit = false;
+        if (wallBounceStunLatched)
         {
-            animator.Play(animationConfig.proneHitStateName, animationConfig.hitAnimationLayer, 0f);
+            // Re-hit always wins: any new hit reaction cancels wall-bounce latch immediately.
+            wallBounceStunLatched = false;
+        }
+
+        // If already in standing stun and hit was a heavy knockback, play KnockbackStunEntry directly.
+        // TryRetriggerAsKnockback (called in EnemyHealth.TakeHit) already reset the phase + TriggerWasHeavy.
+        if (stunMeter != null && stunMeter.IsStandingStunned)
+        {
+            if (stunMeter.TriggerWasHeavy
+                && !string.IsNullOrEmpty(animationConfig.knockbackStunEntryStateName))
+            {
+                reactionStateMachine?.RequestKnockbackEntry(Time.time, animationConfig.knockbackStunEntryPriorityGrace);
+                if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
+                    animator.SetBool(animationConfig.stunLayerParameter, true);
+                animator.Play(animationConfig.knockbackStunEntryStateName, animationConfig.standingStunLayer, 0f);
+            }
+            // Normal hits while stunned — no animation change, let the stun continue uninterrupted
             return;
         }
+
+        // If the enemy is prone, route to the appropriate hit state.
+        bool currentlyProne = proneSystem != null && proneSystem.IsInProne;
+        if (currentlyProne)
+        {
+            // Heavy knockback while prone — play the knockback stun entry (same state as standing stun knockback)
+            if (heavyKnockback
+                && !string.IsNullOrEmpty(animationConfig.knockbackStunEntryStateName)
+                && AnimatorHasStateOnLayer(animator, animationConfig.standingStunLayer, animationConfig.knockbackStunEntryStateName))
+            {
+                reactionStateMachine?.RequestKnockbackEntry(Time.time, animationConfig.knockbackStunEntryPriorityGrace);
+                if (!string.IsNullOrEmpty(animationConfig.stunLayerParameter))
+                    animator.SetBool(animationConfig.stunLayerParameter, true);
+                animator.Play(animationConfig.knockbackStunEntryStateName, animationConfig.standingStunLayer, 0f);
+                return;
+            }
+            // Normal hit while prone — play prone-specific hit state if configured
+            if (!string.IsNullOrEmpty(animationConfig.proneHitStateName)
+                && AnimatorHasStateOnLayer(animator, animationConfig.hitAnimationLayer, animationConfig.proneHitStateName))
+            {
+                animator.Play(animationConfig.proneHitStateName, animationConfig.hitAnimationLayer, 0f);
+                return;
+            }
+        }
+
+        // Keep knockback-stun entry visual priority over normal hit reactions.
+        if (reactionStateMachine != null
+            && reactionStateMachine.IsKnockbackEntryActive(
+                Time.time,
+                animator,
+                animationConfig.standingStunLayer,
+                animationConfig.knockbackStunEntryStateName))
+            return;
 
         // Prefer height-only state first (Hit_High / Hit_Mid / Hit_Low); fallback to existing random/single setup.
         string stateToPlay;
@@ -568,6 +762,40 @@ public class SimpleEnemyAI : MonoBehaviour
     }
     
     /// <summary>
+    /// Plays the wall bounce animation when the enemy hits a wall at high velocity during knockback.
+    /// Called by EnemyHealth.OnWallBounce(). kbVel is already reflected before this fires.
+    /// </summary>
+    public void TriggerWallBounce()
+    {
+        if (animator == null || animationConfig == null) return;
+        if (string.IsNullOrEmpty(animationConfig.wallBounceTriggerParameter)) return;
+        wallBounceStunLatched = true;
+        suppressStandingStunParamsUntilNextHit = true;
+        if (!string.IsNullOrEmpty(animationConfig.wallBounceActiveParameter))
+            animator.SetBool(animationConfig.wallBounceActiveParameter, true);
+        animator.SetTrigger(animationConfig.wallBounceTriggerParameter);
+    }
+
+    /// <summary>
+    /// Called at the end of the WallBounce animation (Animation Event).
+    /// If the enemy is still hitstunned, hand off to prone; otherwise just clear wall-bounce mode.
+    /// This keeps re-hits interruptible while still allowing "wall bounce -> prone" when stun outlasts the clip.
+    /// </summary>
+    public void OnWallBounceAnimationComplete()
+    {
+        wallBounceStunLatched = false;
+        if (health == null || proneSystem == null) return;
+        bool hasAnyStun = health.IsHitstunned || (stunMeter != null && stunMeter.IsStunned);
+        if (!hasAnyStun) return;
+        if (proneSystem.IsInProne) return;
+        proneSystem.Enter(
+            groundedDuration,
+            invertFacing: invertWallBounceProneFacing,
+            proneVariant: wallBounceProneVariant,
+            preserveCurrentFacing: true);
+    }
+
+    /// <summary>
     /// Triggers the death animation. Called by EnemyHealth when HP reaches 0.
     /// The actual disable/hide happens when OnDeathAnimationComplete() is invoked by an Animation Event on the death clip.
     /// </summary>
@@ -608,72 +836,85 @@ public class SimpleEnemyAI : MonoBehaviour
     
     void HandleMovement()
     {
-        // --------------------------------------------------------------------
-        // STEP 1: Validate state - can we act?
-        // --------------------------------------------------------------------
-        
-        // No player reference? Can't do anything
         if (player == null) return;
         if (!cc.enabled) return;
-        
-        // Block all behavior when not in Normal state (stun, airborne, crash, get-up, dying)
+
+        // Block everything when not in Normal state (hitstun, airborne, crash, prone, get-up, dying).
+        // CanAct reads CurrentState which is the priority-ordered interrupt check — one gate for all behavior.
         if (!CanAct) return;
 
-        // --------------------------------------------------------------------
-        // STEP 2: Check behavior transitions (distance-based)
-        // --------------------------------------------------------------------
-        
-        /*
-         * Transition logic with HYSTERESIS:
-         * 
-         * standoffEnterRange < standoffExitRange prevents rapid flickering:
-         *   - Chase -> Standoff at 4 units
-         *   - Standoff -> Chase at 6 units
-         *   - Between 4-6 units: stays in current behavior
-         * 
-         * Don't transition mid-attack (enemy should finish attacking first)
-         */
-        bool midAttack = EnemyCombat != null && EnemyCombat.IsAttacking;
-        
-        if (!midAttack)
-        {
-            // Horizontal distance only (ignore height difference)
-            Vector3 toPlayer = player.position - transform.position;
-            toPlayer.y = 0f;
-            float dist = toPlayer.magnitude;
+        EvaluateBehaviorTransition(); // decide what state to be in
+        stateMachine.Tick();          // run it
+    }
 
-            // Enter standoff when close enough; leave when far enough (hysteresis band between enter/exit)
-            if (currentBehavior == chaseBehavior && dist <= standoffEnterRange)
+    // -------------------------------------------------------------------------
+    // THE CENTRAL DECISION POINT
+    // -------------------------------------------------------------------------
+    // All Chase <-> Standoff transitions are decided here and ONLY here.
+    // To add a new behavioral state (e.g. Flee, Search), write its condition
+    // below and call stateMachine.Transition(yourBehavior).
+    void EvaluateBehaviorTransition()
+    {
+        // Hold current behavior until the attack animation finishes —
+        // switching mid-swing would cut off the hit and look wrong.
+        if (EnemyCombat != null && EnemyCombat.IsAttacking) return;
+
+        Vector3 toPlayer = player.position - transform.position;
+        toPlayer.y = 0f; // horizontal distance only; ignore height
+        float dist = toPlayer.magnitude;
+
+        // Hysteresis band prevents flickering at the boundary:
+        //   Chase → Standoff at standoffEnterRange (e.g. 4 units)
+        //   Standoff → Chase at standoffExitRange  (e.g. 6 units)
+        //   Between 4–6: stay in whatever is already active
+        if (stateMachine.CurrentBehavior == chaseBehavior && dist <= standoffEnterRange)
+            stateMachine.Transition(standoffBehavior);
+        else if (stateMachine.CurrentBehavior == standoffBehavior && dist > standoffExitRange)
+            stateMachine.Transition(chaseBehavior);
+    }
+
+    /// <summary>
+    /// Rotates toward the player with a short randomized "reaction" delay.
+    /// Call this each frame where facing should happen.
+    /// </summary>
+    public void RotateTowardWithDelay(Vector3 directionToTarget, float speedMultiplier = 1f)
+    {
+        directionToTarget.y = 0f;
+        if (directionToTarget.sqrMagnitude <= 0.001f) return;
+
+        Vector3 normalizedDirection = directionToTarget.normalized;
+        float delayMin = Mathf.Max(0f, faceTurnDelayMin);
+        float delayMax = Mathf.Max(delayMin, faceTurnDelayMax);
+
+        // If the facing target changed meaningfully, start a new short reaction delay.
+        if (Vector3.Dot(lastFaceDirection, normalizedDirection) < 0.995f)
+        {
+            if (delayMax <= 0f)
             {
-                SetBehavior(standoffBehavior);
+                isFaceTurnReady = true;
+                faceTurnDelayTimer = 0f;
             }
-            else if (currentBehavior == standoffBehavior && dist > standoffExitRange)
+            else
             {
-                SetBehavior(chaseBehavior);
+                isFaceTurnReady = false;
+                faceTurnDelayTimer = Random.Range(delayMin, delayMax);
             }
+            lastFaceDirection = normalizedDirection;
         }
 
-        // --------------------------------------------------------------------
-        // STEP 3: Execute current behavior
-        // --------------------------------------------------------------------
-        
-        /*
-         * The current behavior handles all movement/decision logic:
-         *   - ChaseBehavior: move toward player, rotate to face them
-         *   - StandoffBehavior: circle player, occasionally attack
-         */
-        currentBehavior?.Execute();
-    }
-    
-    /// <summary>
-    /// Switch to a new behavior. Calls Exit() on old and Enter() on new.
-    /// </summary>
-    public void SetBehavior(EnemyBehavior newBehavior)
-    {
-        if (currentBehavior == newBehavior) return;
-        currentBehavior?.Exit();   // Cleanup (e.g. reset timers)
-        currentBehavior = newBehavior;
-        currentBehavior?.Enter(); // Initialize (e.g. pick next attack time)
+        if (!isFaceTurnReady)
+        {
+            faceTurnDelayTimer -= Time.deltaTime;
+            if (faceTurnDelayTimer > 0f) return;
+            isFaceTurnReady = true;
+        }
+
+        Quaternion targetRot = Quaternion.LookRotation(normalizedDirection, Vector3.up);
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            targetRot,
+            rotationSpeed * Mathf.Max(0f, speedMultiplier) * Time.deltaTime
+        );
     }
     
     // ========================================================================
@@ -765,7 +1006,7 @@ public class SimpleEnemyAI : MonoBehaviour
  * SimpleEnemyAI.cs (this script)
  *   └── Manages behavior system (current behavior + transitions)
  *   └── Delegates movement/decisions to current EnemyBehavior
- *   └── Pauses all behaviors when stunned (EnemyHealth.IsStunned)
+ *   └── Pauses all behaviors when in hitstun (EnemyHealth.IsHitstunned)
  *   └── Handles animation blending and gravity
  * 
  * EnemyBehavior.cs (abstract base)

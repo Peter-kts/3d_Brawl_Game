@@ -10,9 +10,7 @@ public class ComboSet : ScriptableObject
     [Header("Forward Jab 1 (Normal / Tap)")]
     public AttackData forwardJabNormal = new AttackData
     {
-        range = 1.6f,
         damage = 8,
-        hitboxRadius = 0.6f,
         lockDuration = 0.3f,
         cooldown = 0.15f,
         knockback = 3f,
@@ -29,9 +27,7 @@ public class ComboSet : ScriptableObject
     [Header("Forward Jab 1 (Charged / Hold)")]
     public AttackData forwardJab = new AttackData
     {
-        range = 1.6f,
         damage = 10,
-        hitboxRadius = 0.6f,
         lockDuration = 0.35f,
         cooldown = 0.2f,
         knockback = 4f,
@@ -48,9 +44,7 @@ public class ComboSet : ScriptableObject
     [Header("Forward Jab 2 (Normal / Tap)")]
     public AttackData forwardJab2Normal = new AttackData
     {
-        range = 1.6f,
         damage = 10,
-        hitboxRadius = 0.6f,
         lockDuration = 0.4f,
         cooldown = 0.3f,
         knockback = 4f,
@@ -67,9 +61,7 @@ public class ComboSet : ScriptableObject
     [Header("Forward Jab 2 (Charged / Hold)")]
     public AttackData forwardJab2 = new AttackData
     {
-        range = 1.6f,
         damage = 12,
-        hitboxRadius = 0.6f,
         lockDuration = 0.5f,
         cooldown = 0.4f,
         knockback = 6f,
@@ -86,9 +78,7 @@ public class ComboSet : ScriptableObject
     [Header("Neutral Jab 1 (Normal / Tap)")]
     public AttackData neutralJabNormal = new AttackData
     {
-        range = 1.6f,
         damage = 7,
-        hitboxRadius = 0.6f,
         lockDuration = 0.28f,
         cooldown = 0.12f,
         knockback = 2.5f,
@@ -105,9 +95,7 @@ public class ComboSet : ScriptableObject
     [Header("Neutral Jab 1 (Charged / Hold)")]
     public AttackData neutralJab = new AttackData
     {
-        range = 1.6f,
         damage = 8,
-        hitboxRadius = 0.6f,
         lockDuration = 0.3f,
         cooldown = 0.15f,
         knockback = 3f,
@@ -124,9 +112,7 @@ public class ComboSet : ScriptableObject
     [Header("Neutral Jab 2 (Normal / Tap)")]
     public AttackData neutralJab2Normal = new AttackData
     {
-        range = 1.6f,
         damage = 9,
-        hitboxRadius = 0.6f,
         lockDuration = 0.36f,
         cooldown = 0.24f,
         knockback = 4f,
@@ -143,9 +129,7 @@ public class ComboSet : ScriptableObject
     [Header("Neutral Jab 2 (Charged / Hold)")]
     public AttackData neutralJab2 = new AttackData
     {
-        range = 1.6f,
         damage = 10,
-        hitboxRadius = 0.6f,
         lockDuration = 0.4f,
         cooldown = 0.3f,
         knockback = 5f,
@@ -162,9 +146,7 @@ public class ComboSet : ScriptableObject
     [Header("Heavy Attack")]
     public AttackData heavyAttack = new AttackData
     {
-        range = 2.0f,
         damage = 22,
-        hitboxRadius = 0.6f,
         lockDuration = 0.8f,
         cooldown = 0.75f,
         knockback = 10f,
@@ -181,9 +163,7 @@ public class ComboSet : ScriptableObject
     [Header("RB + X Attack")]
     public AttackData rbXAttack = new AttackData
     {
-        range = 1.9f,
         damage = 18,
-        hitboxRadius = 0.6f,
         lockDuration = 0.65f,
         cooldown = 0.55f,
         knockback = 8f,

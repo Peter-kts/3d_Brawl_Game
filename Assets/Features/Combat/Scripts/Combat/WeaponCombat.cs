@@ -35,21 +35,17 @@ public class WeaponCombat : Combat
     {
         EndHitbox(0);
     }
+    
 
     // Animation Event hook: call at first active frame for the provided hitbox ID.
     public void BeginHitbox(int id)
     {
         WeaponTipHitbox hitbox = GetHitboxById(id);
         if (hitbox == null) return;
-
-        // Damage-interrupt fallback from base Combat: ignore any late hitbox events
-        // until a brand-new attack is committed.
         if (IsHitboxActivationSuppressed) return;
 
-        // Use only the currently committed attack from base Combat.
-        // If combat was interrupted and events still fire, do not synthesize a fallback move.
         AttackData attack = CurrentAttackData;
-        if (!IsAttacking || attack == null || attack.hitboxType != AttackHitboxType.WeaponStrike) return;
+        if (!IsAttacking || attack == null) return;
 
         hitbox.HitConfirmed -= OnWeaponTipHitConfirmed;
         hitbox.HitConfirmed += OnWeaponTipHitConfirmed;
@@ -125,8 +121,21 @@ public class WeaponCombat : Combat
 
     protected override void OnAttackCommitted(AttackData attack)
     {
+        // Reset per-attack hit cache first so the new attack can hit enemies that were
+        // hit by the previous attack, but cannot re-hit the same enemy within this attack.
+        EnsureWeaponTipHitbox();
+        if (weaponTipHitbox != null) weaponTipHitbox.ResetHitCache();
+        if (hitboxSlots != null)
+            foreach (var slot in hitboxSlots)
+                slot.hitbox?.ResetHitCache();
+
         // Combo cancels can skip prior EndWeaponTipActiveFrames events.
-        // Hard-reset stale active window/hit cache whenever a new attack begins.
+        // Hard-reset stale active window state whenever a new attack begins.
+        StopAllConfiguredHitboxes();
+    }
+
+    protected override void ForceEndActiveAttackAnimationEventState()
+    {
         StopAllConfiguredHitboxes();
     }
 }

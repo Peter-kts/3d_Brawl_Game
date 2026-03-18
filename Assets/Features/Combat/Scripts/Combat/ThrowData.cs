@@ -2,21 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// One release variant for multi-throw: damage, knockback, facing. Use via OnThrowRelease(profileIndex) from Animation Event.
-/// </summary>
-[System.Serializable]
-public struct ThrowReleaseProfile
-{
-    [Tooltip("Rotate victim to face throw direction at release.")]
-    public bool faceTowardThrowDirection;
-    public int endDamage;
-    public float endKnockback;
-    public float endKnockbackUp;
-    [Tooltip("Override how long the enemy lies prone after landing from this throw (seconds). 0 = use the enemy's default groundedDuration.")]
-    public float proneDuration;
-}
-
-/// <summary>
 /// Config for the synced throw move: attempted grab (phase 1) then throw on success (phase 2),
 /// with hit stop and VFX on grab connect, damage/knockback at throw end.
 /// Serializes inline on ComboSet so the throw appears in the moveset in the Inspector.
@@ -68,18 +53,38 @@ public struct ThrowData
     public float endKnockbackUp;
     [Tooltip("Override how long the enemy lies prone after landing from this throw (seconds). 0 = use the enemy's default groundedDuration.")]
     public float proneDuration;
+    [Tooltip("Default prone variant for this throw. Release profile can override this.")]
+    public ProneVariant proneVariant;
     [Tooltip("If enabled, rotate victim prone facing by 180 degrees for this throw type.")]
     public bool invertProneRotation;
     [Tooltip("If true, victim is rotated to face the throw direction at release. Turn off for throws where they stay facing you.")]
     public bool faceVictimTowardThrowDirection;
 
-    [Header("Release profiles (optional)")]
-    [Tooltip("Different release behaviors per throw type. In the throw Animation Event set Int to 0, 1, 2... to use the profile at that index. Leave empty to use the values above.")]
-    public ThrowReleaseProfile[] releaseProfiles;
-
     [Header("Enemy")]
     [Tooltip("Animator state name for the enemy (throw receiver) while locked for the throw duration.")]
     public string enemyThrownStateName;
+
+    [Header("Charge (optional)")]
+    [Tooltip("Enable throw charge. When true, holding the throw button after grab connects slows the animation and scales knockback on release.")]
+    public bool enableCharge;
+    [Tooltip("Max seconds the player can hold before auto-release fires at full charge.")]
+    public float maxChargeTime;
+    [Tooltip("Knockback multiplier at full charge. Lerps from 1x (tap) to this value (full hold).")]
+    public float chargeKnockbackMultiplier;
+    [Tooltip("Damage multiplier at full charge. Set to 1 to leave damage unchanged.")]
+    public float chargeDamageMultiplier;
+    [Tooltip("Animator speed while the player is holding the charge. Lower = more dramatic freeze.")]
+    public float chargeAnimatorSpeed;
+
+    [Header("Directional Throw (optional — requires Charge enabled)")]
+    [Tooltip(
+        "If enabled, the player can steer the throw direction during the charge window by holding a movement direction. " +
+        "Both the thrower and the grabbed enemy rotate together toward the held direction. " +
+        "At release the throw launches in whatever direction they ended up facing."
+    )]
+    public bool enableDirectionalThrow;
+    [Tooltip("Rotation speed (degrees per second) used to turn thrower + victim toward the held direction during charge. 360 = full turn in one second.")]
+    public float directionalThrowRotationSpeed;
 
     [Header("Cooldown")]
     [Tooltip("Seconds before another throw can be started.")]

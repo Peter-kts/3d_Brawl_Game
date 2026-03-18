@@ -42,15 +42,38 @@ public class EnemyAnimationConfig : ScriptableObject
     [Tooltip("Animator state name played on this enemy when thrown by the player.")]
     public string thrownStateName = "Thrown";
 
-    [Header("Prone (after crash landing)")]
-    [Tooltip("Animator state name for the prone (lying on ground) looping animation. Played during groundedDuration after the crash animation finishes. Leave empty to freeze on crash pose.")]
+    [Header("Prone (ground knockdown)")]
+    [Tooltip("Animator state name for the default prone (lying on ground) loop. Used for crash-landing prone and as fallback for other prone entries.")]
     public string proneStateName = "Prone";
+    [Tooltip("Optional prone state for FaceDown variant. If empty, proneStateName is used as fallback.")]
+    public string proneFaceDownStateName = "";
 
     [Tooltip("Animator layer index for the prone state.")]
     public int proneLayer = 1;
 
     [Tooltip("Animator state name played when the enemy is hit while already prone. Leave empty to use the normal hit reaction instead.")]
     public string proneHitStateName = "Prone_Hit";
+
+    [Header("Standing Stun (stun meter filled)")]
+    [Tooltip("Bool parameter name set true while the enemy is in standing stun. Must match the Animator Controller exactly.")]
+    public string standingStunParameter = "IsStandingStunned";
+
+    [Tooltip("Bool parameter name set true when the triggering hit had high knockback. Use alongside IsStandingStunned in the Animator Controller to route to KnockbackStunEntry/Loop states.")]
+    public string knockbackStunParameter = "IsKnockbackStun";
+
+    [Tooltip("Animator state name played directly when the enemy is hit with a heavy knockback move while already in standing stun. Leave empty to rely solely on the Animator Controller bool transitions.")]
+    public string knockbackStunEntryStateName = "KnockbackStunEntry";
+    [Tooltip("Seconds knockback-stun entry keeps visual priority before normal hit reactions may take over.")]
+    public float knockbackStunEntryPriorityGrace = 0.1f;
+
+    [Tooltip("Animator layer index used for both the entry and loop states (e.g. 1 = Stun layer).")]
+    public int standingStunLayer = 1;
+
+    [Header("Wall Bounce")]
+    [Tooltip("Animator trigger parameter name set when the enemy hits a wall at high knockback velocity. Leave empty to skip the animation.")]
+    public string wallBounceTriggerParameter = "WallBounce";
+    [Tooltip("Animator bool parameter that stays true while wall-bounce has priority. Use this to gate stun transitions (e.g. require WallBounceActive == false).")]
+    public string wallBounceActiveParameter = "WallBounceActive";
 
     [Header("Get Up (after prone)")]
     [Tooltip("Animator state name for the get-up animation. Played after groundedDuration expires.")]

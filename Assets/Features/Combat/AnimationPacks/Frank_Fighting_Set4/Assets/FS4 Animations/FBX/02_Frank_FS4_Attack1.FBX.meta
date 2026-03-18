@@ -283,24 +283,17 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0
-        functionName: BeginWeaponTipActiveFrames
+      - time: 0.1081964
+        functionName: BeginHitbox
         data: 
-        objectReferenceParameter: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.19202898
-        functionName: BeginWeaponTipActiveFrames
-        data: 
-        objectReferenceParameter: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: 8e038c20d0fbca04da70e128f5f3875f, type: 3}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.43209273
-        functionName: EndWeaponTipActiveFrames
+      - time: 0.8480526
+        functionName: EndHitbox
         data: 
-        objectReferenceParameter: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+        objectReferenceParameter: {fileID: 11500000, guid: 8e038c20d0fbca04da70e128f5f3875f, type: 3}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
