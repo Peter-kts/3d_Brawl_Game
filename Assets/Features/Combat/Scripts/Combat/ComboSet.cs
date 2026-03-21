@@ -143,6 +143,40 @@ public class ComboSet : ScriptableObject
         lungeDuration = 0f
     };
 
+    [Header("Neutral Jab 3 (Normal / Tap)")]
+    public AttackData neutralJab3Normal = new AttackData
+    {
+        damage = 13,
+        lockDuration = 0.5f,
+        cooldown = 0.4f,
+        knockback = 7f,
+        knockbackUp = 0f,
+        hitstun = 0.22f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "Punch",
+        lungeFrame = 0f,
+        lungeDistance = 0f,
+        lungeDuration = 0f
+    };
+
+    [Header("Neutral Jab 3 (Charged / Hold)")]
+    public AttackData neutralJab3 = new AttackData
+    {
+        damage = 16,
+        lockDuration = 0.55f,
+        cooldown = 0.45f,
+        knockback = 9f,
+        knockbackUp = 0.5f,
+        hitstun = 0.28f,
+        makesAirborne = false,
+        airborneDuration = 0f,
+        animationTrigger = "Punch",
+        lungeFrame = 0f,
+        lungeDistance = 0f,
+        lungeDuration = 0f
+    };
+
     [Header("Heavy Attack")]
     public AttackData heavyAttack = new AttackData
     {
@@ -184,6 +218,9 @@ public class ComboSet : ScriptableObject
     [Tooltip("How long the cancel window stays open")]
     public float comboWindowDuration = 0.25f;
 
+    [Tooltip("When enabled, pressing attack after the last neutral hit loops back to neutral jab 1 instead of ending the combo.")]
+    public bool loopNeutralCombo = true;
+
     [Header("Throw")]
     [Tooltip("Throw move config (attempted grab then synced throw on success). Expand to edit; uncheck Enable Throw to disable.")]
     public ThrowData throwData = new ThrowData
@@ -200,7 +237,7 @@ public class ComboSet : ScriptableObject
         endDamage = 15,
         endKnockback = 6f,
         endKnockbackUp = 0f,
-        faceVictimTowardThrowDirection = true,
+        faceVictimTowardPlayerOnRelease = true,
         enemyThrownStateName = "Thrown",
         throwCooldown = 0.8f
     };
@@ -221,7 +258,7 @@ public class ComboSet : ScriptableObject
         endDamage = 15,
         endKnockback = 6f,
         endKnockbackUp = 0f,
-        faceVictimTowardThrowDirection = true,
+        faceVictimTowardPlayerOnRelease = true,
         enemyThrownStateName = "BackThrown",
         throwCooldown = 0.8f
     };

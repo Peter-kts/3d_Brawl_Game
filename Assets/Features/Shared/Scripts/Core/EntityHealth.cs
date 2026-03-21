@@ -124,11 +124,23 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
 
     // Captures the wall normal from the most recent CharacterController side collision.
     // Only stores near-horizontal normals (walls) to ignore floor/ceiling contacts.
+    // Also fires OnEnemyKnockbackCollision when actively knocked back into another entity.
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (Mathf.Abs(hit.normal.y) < 0.5f)
             lastWallNormal = hit.normal;
+
+        if (kbVel.sqrMagnitude > 0.01f)
+        {
+            var other = hit.gameObject.GetComponent<EntityHealth>();
+            if (other != null && other != this)
+                OnEnemyKnockbackCollision(other, kbVel);
+        }
     }
+
+    // Called when this entity (while being knocked back) collides with another entity.
+    // velocity is this entity's current kbVel at the moment of contact.
+    protected virtual void OnEnemyKnockbackCollision(EntityHealth other, Vector3 velocity) { }
 
     // Called when the entity hits a wall during knockback movement.
     // Override in subclasses to apply bounce logic (reflect kbVel, play animation, etc.).

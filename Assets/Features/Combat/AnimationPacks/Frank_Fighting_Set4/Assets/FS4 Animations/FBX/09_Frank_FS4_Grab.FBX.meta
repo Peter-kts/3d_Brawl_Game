@@ -50,30 +50,30 @@ ModelImporter:
       OnThrowChargeWindowEnd has a time (4.460741) outside the clip's valid range
       (0.000000..1.666656). It will never be firedEvent OnThrowChargeWindowStart
       has a time (27.180244) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowSfxEvent has a time (27.180244) outside
+      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowSfxEvent
+      has a time (27.180244) outside the clip's valid range (0.000000..1.666656).
       It will never be firedEvent OnThrowChargeWindowStart has a time (27.180244)
       outside the clip's valid range (0.000000..1.666656). It will never be firedEvent
-      OnThrowSfxEvent has a time (27.180244) outside the clip's valid range (0.000000..1.666656).
-      It will never be firedEvent OnThrowSfxEvent has a time (27.180244) outside
-      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowChargeWindowEnd
-      has a time (31.974621) outside the clip's valid range (0.000000..1.666656).
-      It will never be firedEvent OnThrowChargeWindowEnd has a time (31.974621) outside
-      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowSfxEvent
+      OnThrowChargeWindowEnd has a time (31.974621) outside the clip's valid range
+      (0.000000..1.666656). It will never be firedEvent OnThrowChargeWindowEnd has
+      a time (31.974621) outside the clip's valid range (0.000000..1.666656). It
+      will never be firedEvent OnThrowSfxEvent has a time (55.058109) outside the
+      clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowSfxEvent
       has a time (55.058109) outside the clip's valid range (0.000000..1.666656).
-      It will never be firedEvent OnThrowSfxEvent has a time (55.058109) outside
+      It will never be firedEvent OnThrowEndVfxEvent has a time (63.179588) outside
       the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowEndVfxEvent
       has a time (63.179588) outside the clip's valid range (0.000000..1.666656).
-      It will never be firedEvent OnThrowEndVfxEvent has a time (63.179588) outside
-      the clip's valid range (0.000000..1.666656). It will never be firedEvent OnThrowPlayerRootMotion
-      has a time (96.972626) outside the clip's valid range (0.000000..1.666656).
       It will never be firedEvent OnThrowVictimRootMotion has a time (96.972626)
       outside the clip's valid range (0.000000..1.666656). It will never be firedEvent
-      OnThrowVictimRootMotion has a time (96.972626) outside the clip's valid range
-      (0.000000..1.666656). It will never be firedEvent OnThrowRelease has a time
-      (96.972626) outside the clip's valid range (0.000000..1.666656). It will never
-      be firedEvent OnThrowRelease has a time (96.972626) outside the clip's valid
-      range (0.000000..1.666656). It will never be firedEvent OnThrowPlayerRootMotion
-      has a time (96.972626) outside the clip's valid range (0.000000..1.666656).
-      It will never be fired"
+      OnThrowRelease has a time (96.972626) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowPlayerRootMotion has a time (96.972626)
+      outside the clip's valid range (0.000000..1.666656). It will never be firedEvent
+      OnThrowRelease has a time (96.972626) outside the clip's valid range (0.000000..1.666656).
+      It will never be firedEvent OnThrowVictimRootMotion has a time (96.972626)
+      outside the clip's valid range (0.000000..1.666656). It will never be firedEvent
+      OnThrowPlayerRootMotion has a time (96.972626) outside the clip's valid range
+      (0.000000..1.666656). It will never be fired"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -147,7 +147,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.015415135
+      - time: 0.015415136
         functionName: OnThrowVictimRootMotion
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -295,13 +295,6 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 58.18358
-        functionName: OnThrowVictimRootMotion
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 58.18358
         functionName: OnThrowRelease
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -316,13 +309,6 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 58.18358
-        functionName: OnThrowRelease
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 58.18358
         functionName: OnThrowVictimRootMotion
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -331,6 +317,20 @@ ModelImporter:
         messageOptions: 0
       - time: 58.18358
         functionName: OnThrowPlayerRootMotion
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 58.18358
+        functionName: OnThrowRelease
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 58.18358
+        functionName: OnThrowVictimRootMotion
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

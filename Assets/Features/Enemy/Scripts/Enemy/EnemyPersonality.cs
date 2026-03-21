@@ -16,6 +16,66 @@ using UnityEngine;
 public class EnemyPersonality : ScriptableObject
 {
     // =========================================================================
+    // STANDOFF — how close to get and how to circle
+    // =========================================================================
+
+    [Header("Standoff - Range")]
+    [Tooltip("Distance at which enemy stops chasing and begins circling the target.")]
+    public float standoffEnterRange = 4f;
+
+    [Tooltip("Distance at which enemy stops circling and resumes chasing. Should be > standoffEnterRange to prevent flickering.")]
+    public float standoffExitRange = 6f;
+
+    [Tooltip("Preferred distance to maintain while circling the target.")]
+    public float standoffRadius = 3f;
+
+    [Tooltip("Movement speed while circling (typically slower than chase speed).")]
+    public float circleSpeed = 2.5f;
+
+    [Tooltip("Minimum time between orbit direction changes while circling.")]
+    public float directionChangeIntervalMin = 1.5f;
+
+    [Tooltip("Maximum time between orbit direction changes while circling.")]
+    public float directionChangeIntervalMax = 4f;
+
+    // =========================================================================
+    // ATTACK TIMING — when to attack from standoff
+    // =========================================================================
+
+    [Header("Attack Timing")]
+    [Tooltip("Minimum time between attacks from standoff.")]
+    public float attackIntervalMin = 1.5f;
+
+    [Tooltip("Maximum time between attacks from standoff.")]
+    public float attackIntervalMax = 4f;
+
+    [Tooltip("Brief pause before attacking (telegraph so player can react).")]
+    public float attackTelegraphDuration = 0.2f;
+
+    // =========================================================================
+    // BACK OFF — retreat when player attacks
+    // =========================================================================
+
+    [Header("Back Off")]
+    [Tooltip("Speed the enemy moves backward when reacting to a player attack.")]
+    public float backOffSpeed = 2f;
+
+    [Tooltip("Minimum dot product between player forward and direction to enemy for back-off to trigger. 0.4 ≈ within ~66° of facing.")]
+    [Range(0f, 1f)]
+    public float backOffFacingThreshold = 0.4f;
+
+    // =========================================================================
+    // OPPORTUNITY ATTACK — punish player recovery
+    // =========================================================================
+
+    [Header("Opportunity Attack")]
+    [Tooltip("Seconds after the player's attack lock ends during which the enemy will immediately punish.")]
+    public float opportunityWindow = 0.5f;
+
+    [Tooltip("How long the enemy waits before punishing during the player's recovery.")]
+    public float opportunityAttackDelay = 0.15f;
+
+    // =========================================================================
     // REACTION TIME — how quickly the enemy "sees" the player's attack starting
     // =========================================================================
 
@@ -74,13 +134,4 @@ public class EnemyPersonality : ScriptableObject
     [Range(0f, 0.4f)]
     public float interruptAttackDelay = 0.05f;
 
-    // =========================================================================
-    // BACK OFF — tuning
-    // =========================================================================
-
-    [Header("Back Off")]
-    [Tooltip("Multiplier applied on top of SimpleEnemyAI.backOffSpeed when this personality backs off. " +
-             "Aggressive = 0.7 (quick half-step), Cautious = 1.3 (decisive retreat).")]
-    [Range(0.3f, 2f)]
-    public float backOffSpeedMultiplier = 1f;
 }

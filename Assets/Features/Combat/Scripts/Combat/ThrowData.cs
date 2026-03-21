@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Config for the synced throw move: attempted grab (phase 1) then throw on success (phase 2),
@@ -57,8 +58,10 @@ public struct ThrowData
     public ProneVariant proneVariant;
     [Tooltip("If enabled, rotate victim prone facing by 180 degrees for this throw type.")]
     public bool invertProneRotation;
-    [Tooltip("If true, victim is rotated to face the throw direction at release. Turn off for throws where they stay facing you.")]
-    public bool faceVictimTowardThrowDirection;
+    [Header("Release Facing")]
+    [FormerlySerializedAs("faceVictimTowardThrowDirection")]
+    [Tooltip("Throw release facing: ON = victim faces player, OFF = victim faces away from player.")]
+    public bool faceVictimTowardPlayerOnRelease;
 
     [Header("Enemy")]
     [Tooltip("Animator state name for the enemy (throw receiver) while locked for the throw duration.")]
@@ -85,6 +88,21 @@ public struct ThrowData
     public bool enableDirectionalThrow;
     [Tooltip("Rotation speed (degrees per second) used to turn thrower + victim toward the held direction during charge. 360 = full turn in one second.")]
     public float directionalThrowRotationSpeed;
+
+    [Header("Suck To Target (optional)")]
+    [Tooltip("If enabled, the player steps toward the soft target (or nearest threat) during the grab attempt window.")]
+    public bool suckToTarget;
+    [Tooltip("Total distance (units) covered toward the target over the full grab attempt window (hitboxDelay). Mirrors attack lungeDistance.")]
+    public float throwSuckDistance;
+    [Tooltip("Stop when within this distance of the target — prevents overlapping them.")]
+    public float throwSuckStopDistance;
+
+    [Header("Battle Momentum (optional)")]
+    [Tooltip("If true, this throw costs momentum to use. If the player lacks enough, the throw is blocked.")]
+    public bool consumesMomentum;
+    [Tooltip("Amount of momentum consumed (and required) when this throw fires.")]
+    [Min(0f)]
+    public float momentumCost;
 
     [Header("Cooldown")]
     [Tooltip("Seconds before another throw can be started.")]

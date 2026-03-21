@@ -94,7 +94,14 @@ public partial class PlayerController : MonoBehaviour
     [Tooltip("Movement speed multiplier while blocking.")]
     [Range(0f, 1f)]
     public float blockMoveMultiplier = 0.3f;
-    
+
+    [Header("Block - Active Window")]
+    [Tooltip("How long the block active window lasts after OnBlockActiveWindowStart fires (seconds). " +
+             "Only during this window are incoming attacks actually blocked. " +
+             "Set to 0 to disable the feature and always block while the button is held.")]
+    [Min(0f)]
+    public float blockActiveWindowDuration = 0.2f;
+
     [Header("Combat Mode - Facing")]
     [Tooltip("How fast character rotates toward focus target")]
     public float combatTurnSpeed = 300f;
@@ -170,6 +177,16 @@ public partial class PlayerController : MonoBehaviour
     /// True while block input is held (Q / Left Shoulder).
     /// </summary>
     public bool IsBlocking { get; private set; }
+
+    /// <summary>
+    /// True when the block is both held AND within the active window opened by OnBlockActiveWindowStart.
+    /// If blockActiveWindowDuration is 0 the feature is disabled and this mirrors IsBlocking.
+    /// PlayerHealth uses this to decide whether an incoming hit is actually blocked.
+    /// </summary>
+    public bool IsBlockWindowActive =>
+        blockActiveWindowDuration <= 0f
+            ? wasBlockingThisPress
+            : (wasBlockingThisPress && Time.time < blockWindowEndTime);
     
     /// <summary>
     /// Current stick input in character space (for attack direction sampling)
@@ -201,7 +218,11 @@ public partial class PlayerController : MonoBehaviour
     private CharacterController cc;
     private PlayerHealth playerHealth;
     private Camera mainCamera;
-    private Vector3 verticalVelocity;           // Used by ApplyGravity — not called from Update yet; available if jump/fall is added later
+    private Vector3 verticalVelocity;           // Vertical impulse applied each frame; y is set by gravity and attack launches
+    private Vector3 pendingLungeVelocity;       // Horizontal lunge delta queued by Combat this frame; drained and combined with gravity in ApplyGravity
+    private float attackLaunchForwardSpeed;     // Horizontal speed from an attack launch (m/s); 0 when inactive
+    private Vector3 attackLaunchForwardDir;     // World-space direction for the horizontal launch component
+    private float attackLaunchForwardEndTime;   // Time.time when horizontal launch force expires
     private float currentFreeRoamTurnSpeed;     // Ramps from freeRoamTurnSpeedMin → freeRoamTurnSpeed as the player starts turning; resets to 0 when idle
     private bool wasInCombatMode;               // Tracks previous frame's combat mode; used to detect the exact frame the mode changes
     private float combatModeLockUntil;          // Combat mode can't exit before this time — prevents snapping out on a brief tap of LT
@@ -216,7 +237,27 @@ public partial class PlayerController : MonoBehaviour
     private bool hasBlockParameter;            // Cached at Awake: true if the Animator has the block bool parameter (avoids searching every frame)
     private bool hasStunParameter;             // Cached at Awake: true if the Animator has the stun bool parameter
     private bool blockJustPressedThisFrame;    // True only on the first frame of a block press; forces Speed=0 so the block-entry pose snaps in cleanly
+    private bool wasBlockingThisPress = false;  // Latched on press; keeps IsBlocking true for the full press duration
+    private float blockWindowEndTime = 0f;      // Time.time when the active block window expires; set by OnBlockActiveWindowStart
+    private bool blockWindowFiredThisPress = false; // Prevents the looping block animation from re-opening the window mid-press
     private float stepCycleTimer = 0f;         // Advances while moving; wraps at stepCycleDuration; used by GetStepSyncMultiplier
+    // Right-stick lock-on state machine (tap = cycle, hold = camera tilt).
+    private enum RSState { Idle, Pending, Tilting }
+    private RSState rightStickState;
+    private float rightStickHoldTimer;
+    private int rightStickDirection;          // +1 or -1, captured when stick first crosses threshold
+    private const float RSThreshold = 0.5f;   // Stick magnitude that starts a tap/hold
+    private const float RSReset    = 0.25f;   // Stick must return below this to reset state
+    private const float TapWindow  = 0.18f;   // Seconds: shorter than this = tap, longer = hold/tilt
+    private const float R3HoldWindow = 0.18f; // Seconds: hold beyond this enables free-look while held
+    private float r3HoldTimer;
+    private bool r3HoldConsumed;
+
+    /// <summary>
+    /// -1..+1 while the right stick is held in tilt mode (beyond TapWindow), 0 otherwise.
+    /// ThirdPersonCamera reads this to apply a temporary yaw offset that snaps back on release.
+    /// </summary>
+    public float LockOnTiltX { get; private set; }
     private Combat ActiveCombat => weaponCombat != null ? weaponCombat : combat;  // Returns WeaponCombat when equipped, plain Combat otherwise
 
     // ========================================================================
@@ -258,7 +299,7 @@ public partial class PlayerController : MonoBehaviour
 
         // Read held inputs to determine combat mode and lock-on state this frame.
         UpdateCombatModeState();  // Hold LT/RMB/Shift toggles IsInCombatMode
-        HandleLockOnInput();      // R3/Tab clears lock; LT/RMB sets or cycles soft target
+        HandleLockOnInput();      // R3 tap toggles lock; hold = temporary free-look; Tab releases lock
         TryStartDashFromInput();  // B starts a dash if off cooldown and not attack-locked
 
         // Dashing overrides normal movement entirely; still ramp magnitude down
@@ -303,23 +344,105 @@ public partial class PlayerController : MonoBehaviour
         return false;
     }
 
-    /// <summary>R3 or Tab = clear soft target. LT or RMB = lock on to look-at target, or cycle to next if already locked.</summary>
+    /// <summary>
+    /// R3 tap    = toggle hard lock-on.
+    /// R3 hold   = free-look while held (releases back to tracking).
+    /// Tab       = fully release lock-on.
+    /// Right stick X when locked on (not free-looking):
+    ///   Tap  (released before TapWindow) = cycle target left/right.
+    ///   Hold (past TapWindow)            = tilt camera left/right; snaps back on release.
+    /// Right stick when free-looking: normal camera orbit (handled by ThirdPersonCamera).
+    /// </summary>
     void HandleLockOnInput()
     {
-        bool clearLockPressed = (Gamepad.current != null && Gamepad.current.rightStickButton.wasPressedThisFrame) ||
-                               (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame);
-        if (clearLockPressed && threatSystem != null)
+        // R3 (gamepad): tap = hard lock toggle, hold = temporary free-look while held.
+        if (Gamepad.current != null && threatSystem != null)
+        {
+            if (Gamepad.current.rightStickButton.wasPressedThisFrame)
+            {
+                r3HoldTimer = 0f;
+                r3HoldConsumed = false;
+            }
+
+            if (Gamepad.current.rightStickButton.isPressed)
+            {
+                r3HoldTimer += Time.deltaTime;
+                if (!r3HoldConsumed && r3HoldTimer >= R3HoldWindow && threatSystem.IsLockedOn)
+                {
+                    if (!threatSystem.IsFreeLooking)
+                        threatSystem.ToggleFreeLook();
+                    r3HoldConsumed = true;
+                }
+            }
+
+            if (Gamepad.current.rightStickButton.wasReleasedThisFrame)
+            {
+                if (r3HoldConsumed)
+                    threatSystem.ExitFreeLook();
+                else
+                    threatSystem.ToggleLockOn();
+                r3HoldTimer = 0f;
+                r3HoldConsumed = false;
+            }
+        }
+
+        // Tab (keyboard): full release, same as before.
+        if (Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame && threatSystem != null)
             threatSystem.ReleaseFocus();
 
-        bool ltPressed = (Gamepad.current != null && Gamepad.current.leftTrigger.wasPressedThisFrame) ||
-                         (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame) ||
+        bool lockOnPressed = (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame) ||
                          (Keyboard.current != null && Keyboard.current.leftShiftKey.wasPressedThisFrame);
-        if (ltPressed && threatSystem != null)
+        if (lockOnPressed && threatSystem != null)
+            threatSystem.ToggleLockOn();
+
+        // Right stick tap-vs-hold state machine (gamepad only, locked on, NOT free-looking).
+        // During free-look the camera consumes the right stick directly for orbit.
+        bool locked = threatSystem != null && threatSystem.IsLockedOn && !threatSystem.IsFreeLooking && Gamepad.current != null;
+        if (!locked)
         {
-            if (threatSystem.HasSoftTarget)
-                threatSystem.CycleToNextTargetInLookDirection();
-            else
-                threatSystem.SetTargetToLookAt();
+            rightStickState = RSState.Idle;
+            LockOnTiltX = 0f;
+            return;
+        }
+
+        float rx = Gamepad.current.rightStick.ReadValue().x;
+
+        switch (rightStickState)
+        {
+            case RSState.Idle:
+                if (Mathf.Abs(rx) >= RSThreshold)
+                {
+                    rightStickDirection = rx > 0f ? 1 : -1;
+                    rightStickHoldTimer = 0f;
+                    rightStickState = RSState.Pending;
+                }
+                break;
+
+            case RSState.Pending:
+                rightStickHoldTimer += Time.deltaTime;
+
+                if (rightStickHoldTimer >= TapWindow)
+                {
+                    // Held long enough — switch to tilt mode (no cycle fired).
+                    rightStickState = RSState.Tilting;
+                }
+                else if (Mathf.Abs(rx) < RSReset)
+                {
+                    // Released quickly — it was a tap, fire cycle.
+                    if (rightStickDirection > 0) threatSystem.CycleRight();
+                    else                         threatSystem.CycleLeft();
+                    rightStickState = RSState.Idle;
+                }
+                break;
+
+            case RSState.Tilting:
+                LockOnTiltX = rx;
+                if (Mathf.Abs(rx) < RSReset)
+                {
+                    LockOnTiltX = 0f;
+                    rightStickState = RSState.Idle;
+                }
+                break;
         }
     }
 
@@ -327,17 +450,35 @@ public partial class PlayerController : MonoBehaviour
     // COMBAT MODE INPUT
     // ========================================================================
 
-    /// <summary>Sets IsBlocking from dedicated held inputs (Q / A).</summary>
+    /// <summary>
+    /// Block button (A gamepad / Q keyboard). Hold to block.
+    /// </summary>
     void UpdateBlockState()
     {
-        bool blockHeld = false;
-        bool blockPressedThisFrame = false;
-        if (Keyboard.current != null) blockHeld |= Keyboard.current.qKey.isPressed;
-        if (Keyboard.current != null) blockPressedThisFrame |= Keyboard.current.qKey.wasPressedThisFrame;
-        if (Gamepad.current != null) blockHeld |= Gamepad.current.buttonSouth.isPressed;
-        if (Gamepad.current != null) blockPressedThisFrame |= Gamepad.current.buttonSouth.wasPressedThisFrame;
-        IsBlocking = blockHeld;
-        blockJustPressedThisFrame = blockPressedThisFrame;
+        bool buttonHeld = (Gamepad.current  != null && Gamepad.current.buttonSouth.isPressed) ||
+                          (Keyboard.current != null && Keyboard.current.qKey.isPressed);
+
+        bool prevWasBlocking = wasBlockingThisPress;
+
+        if (buttonHeld && !wasBlockingThisPress)
+            wasBlockingThisPress = true;
+
+        if (!buttonHeld)
+        {
+            wasBlockingThisPress      = false;
+            blockWindowFiredThisPress = false;
+        }
+
+        blockJustPressedThisFrame = wasBlockingThisPress && !prevWasBlocking;
+        IsBlocking = buttonHeld && wasBlockingThisPress;
+
+        // Hard-block behavior: pressing block immediately halts locomotion/dash.
+        if (blockJustPressedThisFrame)
+        {
+            currentMoveMagnitude = 0f;
+            currentAnimSpeed = 0f;
+            dashEndTime = Time.time;
+        }
     }
 
     /// <summary>Sets IsInCombatMode from LT/RMB/Shift hold. Uses minCombatHoldTime so releasing doesn't exit instantly.</summary>
@@ -357,6 +498,11 @@ public partial class PlayerController : MonoBehaviour
         {
             IsInCombatMode = Time.time < combatModeLockUntil;
         }
+
+        // Hard lock-on always keeps you in combat strafe mode (Dark Souls behaviour).
+        if (threatSystem != null && threatSystem.IsLockedOn)
+            IsInCombatMode = true;
+
         wasInCombatMode = IsInCombatMode;
     }
 
@@ -375,10 +521,16 @@ public partial class PlayerController : MonoBehaviour
     // FREE ROAM MOVEMENT
     // ========================================================================
 
-    /// <summary>Dispatches to combat strafe or free roam based on IsInCombatMode. No movement during dash cooldown.</summary>
+    /// <summary>Dispatches to combat strafe or free roam based on IsInCombatMode. No movement during dash cooldown, but still faces target.</summary>
     void HandleMovementByMode()
     {
-        if (Time.time < nextDashTime) return;
+        if (Time.time < nextDashTime)
+        {
+            // Still face the soft target while on cooldown (e.g. dash too short to move — too close)
+            if (!IsDashing && IsInCombatMode && threatSystem != null && threatSystem.HasSoftTarget)
+                HandleCombatFacing();
+            return;
+        }
         if (IsInCombatMode)
             HandleCombatMovement();
         else
@@ -389,6 +541,13 @@ public partial class PlayerController : MonoBehaviour
     void HandleFreeRoamMovement()
     {
         if (ActiveCombat != null && ActiveCombat.IsAttacking)
+        {
+            targetAnimSpeed = 0f;
+            CombatStickInput = Vector2.zero;
+            GetStepSyncMultiplier(false);
+            return;
+        }
+        if (IsBlocking)
         {
             targetAnimSpeed = 0f;
             CombatStickInput = Vector2.zero;
@@ -450,6 +609,14 @@ public partial class PlayerController : MonoBehaviour
             targetAnimSpeed = 0f;
             CombatStickInput = Vector2.zero;
             GetStepSyncMultiplier(false);
+            return;
+        }
+        if (IsBlocking)
+        {
+            targetAnimSpeed = 0f;
+            CombatStickInput = Vector2.zero;
+            GetStepSyncMultiplier(false);
+            HandleCombatFacing();
             return;
         }
 
@@ -583,7 +750,7 @@ public partial class PlayerController : MonoBehaviour
     }
 
     /// <summary>WASD or left stick, clamped to unit circle. Used for movement and dash direction.</summary>
-    Vector2 GetStickInput()
+    public Vector2 GetStickInput()
     {
         Vector2 input = Vector2.zero;
         if (Keyboard.current != null)
@@ -624,15 +791,54 @@ public partial class PlayerController : MonoBehaviour
     }
 
     // ========================================================================
-    // GRAVITY (not called from Update currently; available for use if needed)
+    // ATTACK LAUNCH
     // ========================================================================
+
+    /// <summary>
+    /// Called by Combat when an attack with launchPlayer=true fires.
+    /// Sets an upward velocity impulse and an optional timed horizontal push.
+    /// </summary>
+    public void ApplyAttackLaunch(float upSpeed, float forwardSpeed, float forwardDuration, Vector3 forwardDir)
+    {
+        if (upSpeed > 0f)
+            verticalVelocity.y = upSpeed;
+        if (forwardSpeed > 0f && forwardDuration > 0f)
+        {
+            attackLaunchForwardSpeed = forwardSpeed;
+            attackLaunchForwardDir   = forwardDir.sqrMagnitude > 0.001f ? forwardDir.normalized : transform.forward;
+            attackLaunchForwardEndTime = Time.time + forwardDuration;
+        }
+    }
+
+    void ApplyAttackLaunchForward()
+    {
+        if (attackLaunchForwardSpeed <= 0f || Time.time >= attackLaunchForwardEndTime)
+        {
+            attackLaunchForwardSpeed = 0f;
+            return;
+        }
+        cc.Move(attackLaunchForwardDir * attackLaunchForwardSpeed * Time.deltaTime);
+    }
+
+    // ========================================================================
+    // GRAVITY
+    // ========================================================================
+
+    /// <summary>
+    /// Called by Combat each lunge frame (before this Update runs, guaranteed by DefaultExecutionOrder).
+    /// The velocity is merged with gravity in ApplyGravity so both are applied in one cc.Move,
+    /// preventing the CharacterController's isGrounded snap from zeroing out vertical momentum.
+    /// </summary>
+    public void AddLungeVelocity(Vector3 velocity) => pendingLungeVelocity += velocity;
 
     void ApplyGravity()
     {
         if (cc.isGrounded && verticalVelocity.y < 0f)
             verticalVelocity.y = -2f;
         verticalVelocity.y += gravity * Time.deltaTime;
-        cc.Move(verticalVelocity * Time.deltaTime);
+        cc.Move(verticalVelocity * Time.deltaTime + pendingLungeVelocity);
+        pendingLungeVelocity = Vector3.zero;
+        ApplyAttackLaunchForward();
     }
 
     // ========================================================================
@@ -668,7 +874,31 @@ public partial class PlayerController : MonoBehaviour
         if (hasBlockParameter)
             animator.SetBool(blockParameter, IsBlocking);
         if (hasStunParameter)
-            animator.SetBool(stunParameter, playerHealth != null && playerHealth.IsHitstunned);
+            animator.SetBool(stunParameter, playerHealth != null && playerHealth.IsHitstunned && !IsBlockWindowActive);
+
+        bool isIdle = targetAnimSpeed == 0f && currentMoveMagnitude <= 0.001f && !IsDashing;
+        // Root motion must not run while airborne — the attack animation's Y component would
+        // hold the character at the pose height and override gravity until the clip ends.
+        if (isIdle && cc.isGrounded && !animator.applyRootMotion)
+            animator.applyRootMotion = true;
+        else if (!cc.isGrounded && animator.applyRootMotion)
+            animator.applyRootMotion = false;
+    }
+
+    // ========================================================================
+    // BLOCK ANIMATION EVENTS
+    // ========================================================================
+
+    /// <summary>
+    /// Animation event: place on the block animation at the frame where the guard becomes active.
+    /// Opens the block active window for blockActiveWindowDuration seconds.
+    /// Only hits that land while IsBlockWindowActive is true will be blocked.
+    /// </summary>
+    public void OnBlockActiveWindowStart()
+    {
+        if (blockWindowFiredThisPress) return;
+        blockWindowFiredThisPress = true;
+        blockWindowEndTime = Time.time + blockActiveWindowDuration;
     }
 
     static bool HasBoolParameter(Animator targetAnimator, string parameterName)

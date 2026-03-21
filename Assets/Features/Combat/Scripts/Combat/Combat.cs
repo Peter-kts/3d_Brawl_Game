@@ -42,6 +42,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+// Run before PlayerController so lunge velocity is queued before ApplyGravity drains it.
+[DefaultExecutionOrder(-100)]
 public partial class Combat : MonoBehaviour
 {
     // ========================================================================
@@ -144,10 +146,20 @@ public partial class Combat : MonoBehaviour
     private bool hasAppliedTorsoRotation;      // True if torso rotation was applied this attack; gates the revert logic
     
     // Combo state
-    private int lightComboCount = 0;        // 0 = ready, 1 = in first jab (can cancel), 2 = in second jab (must wait)
-    private float comboWindowStart = 0f;    // When the cancel window opens
-    private float comboWindowEnd = 0f;      // When the cancel window closes
-    private bool isNeutralCombo = false;    // True = neutral jab chain, False = forward jab chain
+    private int lightComboCount = 0;           // 0 = ready, 1 = in first jab (can cancel), 2 = in second jab (must wait)
+    private float comboWindowStart = 0f;       // When the cancel window opens
+    private float comboWindowEnd = 0f;         // When the cancel window closes
+    private bool isNeutralCombo = false;       // True = neutral jab chain, False = forward jab chain
+    private bool neutralComboLoopPending = false; // True after neutral jab 2 when loopNeutralCombo is on; next cancel fires jab 1 again
+
+    [Tooltip("Max seconds between pressing forward and pressing attack for it to count as a forward attack. " +
+             "If forward was already held before this window, the attack is treated as neutral.")]
+    [Min(0f)]
+    public float forwardAttackInputWindow = 0.15f;
+    private float forwardStickPressTime = -999f; // Time.time when stick Y last crossed the forward threshold (rising edge)
+    private float prevRawForwardY = 0f;          // Previous frame's raw stick Y; used to detect the rising edge
+    private float stickMoveTime = -999f;          // Time.time when stick magnitude last crossed the movement threshold (rising edge)
+    private float prevStickMagnitude = 0f;        // Previous frame's stick magnitude; used to detect the rising edge
     [Tooltip("How long light input must be held before release uses charged light move.")]
     [Min(0f)]
     public float lightHoldChargeThreshold = 0.1f;
@@ -155,6 +167,7 @@ public partial class Combat : MonoBehaviour
     private float lightPressStartTime;             // Time.time the light button was pressed; compared against lightHoldChargeThreshold on release
     private bool resolvedLightAttackUseCharged;    // Set on release: true if held long enough to be a charged light, false if a tap
     private bool rbXPressArmed;                    // True while RB/X is held; used to detect new RB press each frame
+    private bool currentAttackStartedFromRbXInput; // True when the active attack was committed via the RB+X chord; gates charge hold check
     private bool forceChargeForNextAttack;         // When true, the next attack commit will start in charge mode (set by anim events)
     private bool forceChargeForCurrentAttack;      // Latched from forceChargeForNextAttack at commit time; cleared when attack ends
     
@@ -167,6 +180,11 @@ public partial class Combat : MonoBehaviour
 
     private float trackingEndTime = 0f;            // Time.time until which the player auto-rotates toward the soft target after attack start
     private float currentTrackingSpeed = 0f;       // Degrees/second for soft-target tracking during attack; 0 = no tracking
+
+    [Tooltip("Without lock-on: max angle from current facing to auto-snap toward a nearby enemy on attack. " +
+             "0 = disabled. 90 = snap to anything in front hemisphere.")]
+    [Range(0f, 180f)]
+    public float softSnapMaxAngle = 90f;
 
     private bool suppressHitboxActivationsUntilNextCommit; // When true, late animation-event hitbox calls are ignored (e.g. after interrupt)
     protected bool IsHitboxActivationSuppressed => suppressHitboxActivationsUntilNextCommit;
@@ -246,6 +264,9 @@ public partial class Combat : MonoBehaviour
     [Tooltip("Knockback multiplier at full charge. 1 = no bonus, 2 = double knockback at max charge.")]
     [Min(1f)]
     public float chargeKnockbackMultiplier = 1.5f;
+    [Tooltip("Launch speed multiplier at full charge. 1 = no bonus, 2 = double launch speed/distance at max charge.")]
+    [Min(1f)]
+    public float chargeLaunchMultiplier = 2f;
     private bool chargeWindowOpen;             // True between OnChargeWindowStart and OnChargeWindowEnd animation events; player can hold to charge
     private bool isChargingAttack;             // True while the player is actively holding during the charge window
     public bool IsChargingAttack => isChargingAttack;
@@ -257,17 +278,23 @@ public partial class Combat : MonoBehaviour
     private bool chargeRumbleActive;           // True while gamepad rumble is running for charge; cleared on release
     private float chargeReleaseDamageScale = 1f;   // Damage multiplier baked at release time (1 = no charge, up to chargeDamageMultiplier)
     private float chargeReleaseKnockbackScale = 1f; // Knockback multiplier baked at release time (1 = no charge, up to chargeKnockbackMultiplier)
+    private float chargeReleaseLaunchScale = 1f;    // Launch speed multiplier baked at release time (1 = no charge, up to chargeLaunchMultiplier)
     public float ChargeReleaseDamageScale => chargeReleaseDamageScale;
     public float ChargeReleaseKnockbackScale => chargeReleaseKnockbackScale;
+    /// <summary>Fired when an attack hits a target. float = chargeReleaseDamageScale (1 = uncharged, higher = charged).</summary>
+    public event System.Action<AttackData, float> OnHitConfirmed;
 
     // ========================================================================
     // UNITY LIFECYCLE
     // ========================================================================
     
+    private BattleMomentum battleMomentum; // Optional — only present on player
+
     void Awake()
     {
         if (playerController == null) playerController = GetComponent<PlayerController>();
         if (threatSystem == null) threatSystem = GetComponent<LockOnSystem>();
+        battleMomentum = GetComponent<BattleMomentum>();
 
         if (animator == null) animator = PlayerController.FindAnimator(gameObject);
         if (sfxSource == null) sfxSource = GetComponent<AudioSource>();
@@ -347,11 +374,12 @@ public partial class Combat : MonoBehaviour
         UpdateComboState();
         UpdateAttackTracking();
         UpdateAttackLunge();
+        UpdateThrowSuck();
         UpdatePendingHitbox();
         UpdateHitStop();
         UpdateAttackStartUpSpeed();
         UpdateThrowCharge(); // slows/releases throw charge while button is held after grab connects
-        
+
         RevertTorsoRotationIfExpired();
 
         // 4) Read and process attack inputs (light / heavy / throw with gating and dispatch).
@@ -461,8 +489,10 @@ public partial class Combat : MonoBehaviour
         ClearAnimatorAttackBoolImmediate();
         pendingThrowHitbox = false;
         lungePending = false;
+        ClearAttackSpawn();
         trackingEndTime = 0f;
         lightComboCount = 0;
+        neutralComboLoopPending = false;
         hasAppliedTorsoRotation = false;
         currentAttackData = null;
         ResetChargeState();
@@ -570,23 +600,26 @@ public partial class Combat : MonoBehaviour
             lightTriggered = true;
         }
 
-        // Simultaneous gamepad shortcut: arm when both are held and one was just pressed, fire on release.
-        if (!rbXPressArmed && ((rbPressedThisFrame && xHeldNow) || (xPressedThisFrame && rbHeldNow)))
-            rbXPressArmed = true;
+        // Simultaneous gamepad shortcut: fires on press (second button down while first is held) so
+        // both buttons are still held at commit time, allowing the charge window to detect them.
         rbXReleased = false;
-        if (rbXPressArmed && (rbReleasedThisFrame || xReleasedThisFrame))
+        if (!rbXPressArmed && ((rbPressedThisFrame && xHeldNow) || (xPressedThisFrame && rbHeldNow)))
         {
-            rbXReleased = true;
-            rbXPressArmed = false;
-        }
-        if (!rbHeldNow && !xHeldNow && !rbXReleased)
-            rbXPressArmed = false;
-        if (rbXPressArmed || rbXReleased)
+            rbXPressArmed = true;
+            rbXReleased = true;   // Fire immediately on press, not on release.
             lightPressArmed = false;
+        }
+        if (rbXPressArmed && !rbHeldNow && !xHeldNow)
+            rbXPressArmed = false;
 
+        bool yPressedThisFrame = Gamepad.current != null && Gamepad.current.buttonNorth.wasPressedThisFrame;
+        bool bPressedThisFrame = Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame;
+        bool yHeldNow = Gamepad.current != null && Gamepad.current.buttonNorth.isPressed;
+        bool bHeldNow = Gamepad.current != null && Gamepad.current.buttonEast.isPressed;
+        bool ybChordPressed = (yPressedThisFrame && bHeldNow) || (bPressedThisFrame && yHeldNow);
         throwPressed =
             (Keyboard.current != null && Keyboard.current.gKey.wasPressedThisFrame) ||
-            ((Gamepad.current != null && Gamepad.current.buttonWest.wasPressedThisFrame) && !rbHeldNow && !rbXPressArmed);
+            ybChordPressed;
 
         lightHeld =
             (Keyboard.current != null && Keyboard.current.jKey.isPressed) ||
@@ -596,6 +629,20 @@ public partial class Combat : MonoBehaviour
         heavyHeld =
             (Keyboard.current != null && Keyboard.current.kKey.isPressed) ||
             (Gamepad.current != null && Gamepad.current.rightTrigger.isPressed);
+
+        // Track when forward stick crosses the threshold (rising edge only).
+        // Holding forward from before the attack window does NOT count as a forward attack.
+        float rawY = GetRawStickInput().y;
+        if (prevRawForwardY <= 0.3f && rawY > 0.3f)
+            forwardStickPressTime = Time.time;
+        prevRawForwardY = rawY;
+
+        // Track any stick movement rising edge — used to detect "toward enemy" forward attacks
+        // even when the stick Y alone doesn't cross the forward threshold (e.g. diagonal toward enemy).
+        float rawMag = GetRawStickInput().magnitude;
+        if (prevStickMagnitude <= 0.3f && rawMag > 0.3f)
+            stickMoveTime = Time.time;
+        prevStickMagnitude = rawMag;
     }
 
     /// <summary>Gate checks (stun, comboSet, cooldown) then dispatch throw / light / heavy.</summary>
@@ -633,20 +680,20 @@ public partial class Combat : MonoBehaviour
             lightComboCount = 0;
             currentAttackStartedFromLightInput = false;
             currentAttackStartedFromHeavyInput = false;
+            currentAttackStartedFromRbXInput = true;
             forceChargeForNextAttack = false;
             DoAttack(comboSet.rbXAttack, Color.magenta);
             return;
         }
 
-        bool canThrow = threatSystem != null && threatSystem.HasSoftTarget;
-        if (throwInput && canThrow && !isAttacking && Time.time >= nextThrowTime && IsAnyThrowEnabled())
+        if (throwInput && !isAttacking && Time.time >= nextThrowTime && IsAnyThrowEnabled())
         {
             // Throw has priority over normal attacks when requested and valid.
             DoThrow();
             return;
         }
 
-        bool inCancelWindow = (lightComboCount == 1) &&
+        bool inCancelWindow = (lightComboCount == 1 || lightComboCount == 2) &&
                               (Time.time >= comboWindowStart) &&
                               (Time.time <= comboWindowEnd);
 
@@ -698,13 +745,48 @@ public partial class Combat : MonoBehaviour
         
         return input;
     }
-    
+
+    [Tooltip("Max angle (degrees) between the stick direction and the direction to a soft-lock target " +
+             "for the input to count as a forward attack toward that enemy.")]
+    [Range(10f, 90f)]
+    public float towardEnemyForwardAngle = 60f;
+
+    /// <summary>
+    /// Returns true if the stick was recently moved AND is currently pointing toward the soft-lock
+    /// target (or the best threat in the stick direction) within towardEnemyForwardAngle degrees.
+    /// Used to count diagonal-toward-enemy stick input as a forward attack trigger.
+    /// </summary>
+    bool IsStickPointingTowardEnemy()
+    {
+        if (threatSystem == null) return false;
+        if ((Time.time - stickMoveTime) > forwardAttackInputWindow) return false; // must be recent
+
+        // Use the locked target if hard-locked, otherwise the closest threat in front.
+        Transform target = threatSystem.IsLockedOn ? threatSystem.SoftTarget : GetBestThreatInFront();
+        if (target == null) return false;
+
+        Vector2 stick = GetRawStickInput();
+        if (stick.sqrMagnitude < 0.09f) return false; // ~0.3 deadzone
+
+        Camera cam = Camera.main;
+        if (cam == null) return false;
+        Vector3 camForward = cam.transform.forward; camForward.y = 0f; camForward.Normalize();
+        Vector3 camRight   = cam.transform.right;   camRight.y   = 0f; camRight.Normalize();
+        Vector3 stickWorld = (camForward * stick.y + camRight * stick.x).normalized;
+
+        Vector3 toTarget = target.position - transform.position; toTarget.y = 0f;
+        if (toTarget.sqrMagnitude < 0.01f) return false;
+
+        return Vector3.Angle(stickWorld, toTarget.normalized) <= towardEnemyForwardAngle;
+    }
+
     void UpdateComboState()
     {
         // Reset combo if cancel window expired without chaining
-        if (lightComboCount == 1 && Time.time > comboWindowEnd)
+        if ((lightComboCount == 1 || lightComboCount == 2) && Time.time > comboWindowEnd)
         {
             lightComboCount = 0;
+            neutralComboLoopPending = false;
         }
     }
     
@@ -719,19 +801,28 @@ public partial class Combat : MonoBehaviour
         // Check if we've reached the trigger frame
         if (Time.time >= lungeTriggerTime && Time.time < lungeEndTime)
         {
-            // During tracking window, lunge direction follows current facing so step and hitbox stay aligned
-            if (Time.time < trackingEndTime)
+            // During tracking window, lunge direction follows current facing so step and hitbox stay aligned.
+            // When suck-to-target is active and hard-locked, steer directly at the lock target every frame.
+            if (currentAttackData != null && currentAttackData.suckToTarget
+                && threatSystem != null && threatSystem.IsLockedOn && threatSystem.SoftTarget != null)
+            {
+                Vector3 toTarget = threatSystem.SoftTarget.position - transform.position;
+                toTarget.y = 0f;
+                if (toTarget.sqrMagnitude > 0.001f)
+                    lungeDirection = toTarget.normalized;
+            }
+            else if (Time.time < trackingEndTime)
+            {
                 lungeDirection = transform.forward;
+            }
             // Calculate how much to move this frame
             float lungeProgress = (Time.time - lungeTriggerTime) / currentLungeDuration;
             if (lungeProgress <= 1f)
             {
                 float moveAmount = (currentLungeDistance / currentLungeDuration) * Time.deltaTime;
-                CharacterController cc = GetComponent<CharacterController>();
-                if (cc != null)
-                {
-                    cc.Move(lungeDirection * moveAmount);
-                }
+                Transform suckTarget = (currentAttackData != null && currentAttackData.suckToTarget) ? GetSuckTarget() : null;
+                float stopDist = currentAttackData != null ? currentAttackData.suckToTargetStopDistance : 0f;
+                ApplyLungeMove(lungeDirection, moveAmount, suckTarget, stopDist);
             }
         }
         
@@ -742,31 +833,117 @@ public partial class Combat : MonoBehaviour
         }
     }
     
+    // ── Shared suck-to-target helpers ────────────────────────────────────────
+
+    /// <summary>Returns the best suck target: soft lock-on target first, then nearest threat in front.</summary>
+    Transform GetSuckTarget() =>
+        (threatSystem != null && threatSystem.SoftTarget != null)
+            ? threatSystem.SoftTarget
+            : GetBestThreatInFront();
+
+    /// <summary>
+    /// Moves the CharacterController in direction by up to maxAmount (horizontal, direct cc.Move).
+    /// Used by throws, which are ground moves and don't need gravity combined in.
+    /// If suckTarget is non-null, clamps so the player stops stopDistance away (flat XZ).
+    /// </summary>
+    void ApplySuckMove(Vector3 direction, float maxAmount, Transform suckTarget, float stopDistance)
+    {
+        if (suckTarget != null)
+        {
+            float flatDist = new Vector2(
+                suckTarget.position.x - transform.position.x,
+                suckTarget.position.z - transform.position.z).magnitude;
+            if (flatDist <= stopDistance) return;
+            maxAmount = Mathf.Min(maxAmount, flatDist - stopDistance);
+        }
+        CharacterController cc = GetComponent<CharacterController>();
+        if (cc != null) cc.Move(direction * maxAmount);
+    }
+
+    /// <summary>
+    /// Attack lunge movement. Feeds the horizontal delta into PlayerController.AddLungeVelocity
+    /// so it is merged with gravity in a single cc.Move — preventing the CharacterController's
+    /// isGrounded snap from killing vertical momentum on aerial attacks.
+    /// </summary>
+    void ApplyLungeMove(Vector3 direction, float maxAmount, Transform suckTarget, float stopDistance)
+    {
+        if (suckTarget != null)
+        {
+            float flatDist = new Vector2(
+                suckTarget.position.x - transform.position.x,
+                suckTarget.position.z - transform.position.z).magnitude;
+            if (flatDist <= stopDistance) return;
+            maxAmount = Mathf.Min(maxAmount, flatDist - stopDistance);
+        }
+        playerController?.AddLungeVelocity(direction * maxAmount);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>Animation event. Place on the attack clip at the exact frame the launch should fire.</summary>
+    public void OnPlayerLaunch()
+    {
+        if (currentAttackData == null || !currentAttackData.launchPlayer) return;
+        float chargeEffect = chargeReleaseLaunchScale - 1f;
+        playerController?.ApplyAttackLaunch(
+            currentAttackData.playerLaunchUpSpeed      * (1f + chargeEffect * 0.6f),
+            currentAttackData.playerLaunchForwardSpeed * chargeReleaseLaunchScale,
+            currentAttackData.playerLaunchForwardDuration,
+            transform.forward
+        );
+    }
+
     void UpdateAttackTracking()
     {
-        if (!isAttacking || trackingEndTime <= 0f || Time.time >= trackingEndTime) return;
-        if (threatSystem == null || !threatSystem.HasSoftTarget) return;
-        
-        Transform target = threatSystem.SoftTarget;
-        Vector3 toTarget = target.position - transform.position;
-        toTarget.y = 0f;
-        if (toTarget.sqrMagnitude < 0.0001f) return;
-        toTarget.Normalize();
-        
-        Vector3 currentForward = transform.forward;
-        currentForward.y = 0f;
-        if (currentForward.sqrMagnitude < 0.0001f) return;
-        currentForward.Normalize();
-        
-        float maxRadians = currentTrackingSpeed * Mathf.Deg2Rad * Time.deltaTime;
-        Vector3 newForward = Vector3.RotateTowards(currentForward, toTarget, maxRadians, 0f);
-        newForward.y = 0f;
-        newForward.Normalize();
-        if (newForward.sqrMagnitude < 0.0001f) return;
-        
-        transform.rotation = Quaternion.LookRotation(newForward);
+        // Mid-attack rotation disabled: facing is locked at commit time (DoAttack) for the
+        // full duration of the animation. No steering during swings, locked or soft-locked.
     }
     
+    /// <summary>
+    /// Returns the tracked threat most aligned with the thumbstick direction (camera-relative).
+    /// Falls back to player forward when stick is neutral.
+    /// Used for soft auto-facing during attacks when not hard-locked.
+    /// </summary>
+    Transform GetBestThreatInFront()
+    {
+        if (threatSystem == null || softSnapMaxAngle <= 0f) return null;
+
+        // Convert thumbstick to a camera-relative world direction.
+        // This matches the direction the player would actually move if they walked.
+        Vector3 referenceDir = transform.forward;
+        Vector2 stick = GetRawStickInput();
+        if (stick.sqrMagnitude > 0.01f)
+        {
+            Camera cam = Camera.main;
+            if (cam != null)
+            {
+                Vector3 camForward = cam.transform.forward; camForward.y = 0f; camForward.Normalize();
+                Vector3 camRight   = cam.transform.right;   camRight.y   = 0f; camRight.Normalize();
+                Vector3 dir = camForward * stick.y + camRight * stick.x;
+                if (dir.sqrMagnitude > 0.001f)
+                    referenceDir = dir.normalized;
+            }
+        }
+
+        // Collect every enemy inside the aim cone, then return the closest by distance.
+        // When two enemies are nearly aligned with the stick, proximity wins.
+        Transform best = null;
+        float bestDistSq = float.MaxValue;
+        foreach (var threat in threatSystem.TrackedThreats)
+        {
+            Vector3 toThreat = threat.transform.position - transform.position;
+            toThreat.y = 0f;
+            if (toThreat.sqrMagnitude < 0.01f) continue;
+            if (Vector3.Angle(referenceDir, toThreat) > softSnapMaxAngle) continue;
+            if (toThreat.sqrMagnitude < bestDistSq)
+            {
+                bestDistSq = toThreat.sqrMagnitude;
+                best = threat.transform;
+            }
+        }
+        return best;
+    }
+
     void SetupLunge(AttackData attack)
     {
         lungePending = true;
@@ -798,18 +975,22 @@ public partial class Combat : MonoBehaviour
         
         if (lightComboCount == 0)
         {
-            // Starting a new combo - check if holding forward
-            bool holdingForward = playerController != null && GetRawStickInput().y > 0.3f;
+            // Forward attack only triggers if forward was pressed recently (simultaneous input).
+            // Holding forward before pressing attack gives a neutral attack instead.
+            // Also counts as forward if the stick is pointing toward the soft-lock target.
+            bool forwardPressedRecently = (Time.time - forwardStickPressTime) <= forwardAttackInputWindow;
+            bool holdingForward = playerController != null &&
+                ((GetRawStickInput().y > 0.3f && forwardPressedRecently) || IsStickPointingTowardEnemy());
             isNeutralCombo = !holdingForward;
-            Debug.Log($"[Combat] holdingForward: {holdingForward}");
-            
+            neutralComboLoopPending = false;
+
             // First jab - starts the combo
             AttackData jab1 = isNeutralCombo
                 ? (useCharged ? comboSet.neutralJab : comboSet.neutralJabNormal)
                 : (useCharged ? comboSet.forwardJab : comboSet.forwardJabNormal);
             forceChargeForNextAttack = useCharged;
             DoAttack(jab1, visualColor);
-            
+
             // Set up cancel window (during the animation)
             lightComboCount = 1;
             float delay = jab1.comboWindowDelay >= 0f ? jab1.comboWindowDelay : comboSet.comboWindowDelay;
@@ -819,17 +1000,73 @@ public partial class Combat : MonoBehaviour
         }
         else if (lightComboCount == 1 && inCancelWindow)
         {
-            // Second jab - read raw input directly (CombatStickInput is stale during attacks)
-            bool holdingForwardNow = GetRawStickInput().y > 0.3f;
-            AttackData jab2 = holdingForwardNow
-                ? (useCharged ? comboSet.forwardJab2 : comboSet.forwardJab2Normal)
-                : (useCharged ? comboSet.neutralJab2 : comboSet.neutralJab2Normal);
-            Color jab2Color = holdingForwardNow ? Color.cyan : Color.yellow;
+            if (neutralComboLoopPending)
+            {
+                // Loop back to neutral jab 1 (loopNeutralCombo is on and last hit was neutral jab 2).
+                AttackData jab1Loop = useCharged ? comboSet.neutralJab : comboSet.neutralJabNormal;
+                forceChargeForNextAttack = useCharged;
+                DoAttack(jab1Loop, visualColor);
+                neutralComboLoopPending = false;
+
+                // Open cancel window so the player can chain into jab 2 again.
+                float loopDelay = jab1Loop.comboWindowDelay >= 0f ? jab1Loop.comboWindowDelay : comboSet.comboWindowDelay;
+                float loopDuration = jab1Loop.comboWindowDuration >= 0f ? jab1Loop.comboWindowDuration : comboSet.comboWindowDuration;
+                comboWindowStart = Time.time + loopDelay;
+                comboWindowEnd = comboWindowStart + loopDuration;
+                // lightComboCount stays 1 so the next cancel window leads to jab 2 or another loop.
+            }
+            else
+            {
+                // Second jab: same simultaneous-input rule — only forward jab if forward was pressed recently,
+                // or if the stick is pointing toward the soft-lock target.
+                bool forwardPressedRecently = (Time.time - forwardStickPressTime) <= forwardAttackInputWindow;
+                bool holdingForwardNow = (GetRawStickInput().y > 0.3f && forwardPressedRecently) || IsStickPointingTowardEnemy();
+                AttackData jab2 = holdingForwardNow
+                    ? (useCharged ? comboSet.forwardJab2 : comboSet.forwardJab2Normal)
+                    : (useCharged ? comboSet.neutralJab2 : comboSet.neutralJab2Normal);
+                Color jab2Color = holdingForwardNow ? Color.cyan : Color.yellow;
+                forceChargeForNextAttack = useCharged;
+                DoAttack(jab2, jab2Color);
+
+                if (!holdingForwardNow)
+                {
+                    // Neutral jab 2 → open window for jab 3.
+                    lightComboCount = 2;
+                    float jab2Delay = jab2.comboWindowDelay >= 0f ? jab2.comboWindowDelay : comboSet.comboWindowDelay;
+                    float jab2Duration = jab2.comboWindowDuration >= 0f ? jab2.comboWindowDuration : comboSet.comboWindowDuration;
+                    comboWindowStart = Time.time + jab2Delay;
+                    comboWindowEnd = comboWindowStart + jab2Duration;
+                }
+                else
+                {
+                    // Forward jab 2 ends the combo.
+                    lightComboCount = 0;
+                    neutralComboLoopPending = false;
+                }
+            }
+        }
+        else if (lightComboCount == 2 && inCancelWindow)
+        {
+            // Third neutral jab (finale of the neutral chain).
+            AttackData jab3 = useCharged ? comboSet.neutralJab3 : comboSet.neutralJab3Normal;
             forceChargeForNextAttack = useCharged;
-            DoAttack(jab2, jab2Color);
-            
-            // Combo finished - must wait full cooldown now
-            lightComboCount = 0;
+            DoAttack(jab3, Color.yellow);
+
+            if (comboSet.loopNeutralCombo)
+            {
+                // Loop back to jab 1 — reuse the same loop-pending path at count 1.
+                neutralComboLoopPending = true;
+                lightComboCount = 1;
+                float loopDelay = jab3.comboWindowDelay >= 0f ? jab3.comboWindowDelay : comboSet.comboWindowDelay;
+                float loopDuration = jab3.comboWindowDuration >= 0f ? jab3.comboWindowDuration : comboSet.comboWindowDuration;
+                comboWindowStart = Time.time + loopDelay;
+                comboWindowEnd = comboWindowStart + loopDuration;
+            }
+            else
+            {
+                lightComboCount = 0;
+                neutralComboLoopPending = false;
+            }
         }
         // If not in cancel window, attack is blocked by cooldown check in Update()
     }
@@ -855,8 +1092,22 @@ public partial class Combat : MonoBehaviour
     {
     }
     
+    /// <summary>Returns true and consumes momentum if the attack's cost is met, or if the attack doesn't require momentum.</summary>
+    bool TryConsumeMomentum(bool consumesMomentum, float cost)
+    {
+        if (!consumesMomentum || battleMomentum == null) return true;
+        if (battleMomentum.Momentum < cost) return false;
+        battleMomentum.ConsumeMomentum(cost);
+        return true;
+    }
+
     void DoAttack(AttackData attack, Color visualColor)
     {
+        if (!TryConsumeMomentum(attack.consumesMomentum, attack.momentumCost)) return;
+
+        // Attacking while free-looking snaps the camera back to tracking the locked target.
+        playerController?.threatSystem?.ExitFreeLook();
+
         // New committed attack clears the previous interrupt-suppression window.
         suppressHitboxActivationsUntilNextCommit = false;
         currentAttackStartTime = Time.time;
@@ -905,9 +1156,9 @@ public partial class Combat : MonoBehaviour
         {
             SetupLunge(attack);
         }
-        
-        // Play attack animation with a near-instant fixed-time crossfade (~1-2 frames at 60fps).
-        // If attack animations feel delayed or hitbox timing drifts, revert to: animator.Play(attack.animationTrigger, 0, 0f);
+
+        // Play attack animation: hard-cut to frame 0 so hit reactions or recovery
+        // animations never bleed into the new attack clip.
         if (animator != null && !string.IsNullOrEmpty(attack.animationTrigger))
         {
             if (DebugSettings.Instance != null && DebugSettings.Instance.logAttackTiming)
@@ -917,7 +1168,8 @@ public partial class Combat : MonoBehaviour
             }
             else
                 Debug.Log($"Playing animation trigger: '{attack.animationTrigger}'");
-            animator.CrossFadeInFixedTime(attack.animationTrigger, 0.033f, 0, 0f);
+            animator.speed = 1f;
+            animator.Play(attack.animationTrigger, 0, 0f);
         }
 
         PlayAttackCues(attack, AttackSfxTriggerType.OnAttackStart, 0, useLegacyFallback: true);
@@ -953,8 +1205,35 @@ public partial class Combat : MonoBehaviour
          * - Wrong facing = whiff
          */
         
+        // Instantly face the best threat in the current stick direction at commit time (unlocked only).
+        // This makes mid-combo redirects crisp: point stick at a different enemy and attack,
+        // you snap to face them on frame 0 of the animation rather than slowly rotating during it.
+        // Hard lock-on skips this — the tracking window handles it already.
+        if (threatSystem != null && !threatSystem.IsLockedOn)
+        {
+            // Suck-to-target attacks snap to the suck target unconditionally (no cone restriction)
+            // so a dash-left → attack still faces the enemy on commit.
+            Transform snapTarget = (attack.suckToTarget)
+                ? GetSuckTarget()
+                : GetBestThreatInFront();
+            if (snapTarget != null)
+            {
+                Vector3 toSnap = snapTarget.position - transform.position;
+                toSnap.y = 0f;
+                if (toSnap.sqrMagnitude > 0.01f)
+                    transform.rotation = Quaternion.LookRotation(toSnap.normalized, Vector3.up);
+            }
+        }
+
+        // After the facing snap, realign lungeDirection so suck-to-target lunges
+        // travel toward the enemy rather than continuing in the dash direction.
+        if (attack.suckToTarget && lungePending)
+            lungeDirection = transform.forward;
+
+        // Save rotation NOW (after snap, before torso tweak) so the end-of-attack revert
+        // only undoes the small torso adjustment, not the full facing snap.
         preAttackRotation = transform.rotation;
-        
+
         if (playerController != null)
         {
             Vector2 stickInput = playerController.CombatStickInput;
@@ -1171,6 +1450,8 @@ public partial class Combat : MonoBehaviour
         if (targetTransform != null && threatSystem != null)
             threatSystem.RegisterInteraction(targetTransform);
 
+        OnHitConfirmed?.Invoke(attack, chargeReleaseDamageScale);
+
         // Target-side hit stop:
         // Freeze only the target Animator (not whole game time) for attack.hitStopDuration seconds.
         if (targetTransform != null && attack.hitStopDuration > 0f)
@@ -1362,11 +1643,13 @@ public partial class Combat : MonoBehaviour
         chargeReleaseBoostSpeed = 1f;
         chargeReleaseDamageScale = 1f;
         chargeReleaseKnockbackScale = 1f;
+        chargeReleaseLaunchScale = 1f;
         forceChargeForCurrentAttack = false;
         if (resetInputOrigin)
         {
             currentAttackStartedFromLightInput = false;
             currentAttackStartedFromHeavyInput = false;
+            currentAttackStartedFromRbXInput = false;
         }
     }
 
@@ -1391,6 +1674,8 @@ public partial class Combat : MonoBehaviour
 
         if (currentAttackStartedFromHeavyInput) return heavyHeld;
         if (currentAttackStartedFromLightInput) return lightHeld;
+        if (currentAttackStartedFromRbXInput)   // Chord: charge while either button is still held.
+            return (Gamepad.current != null && (Gamepad.current.rightShoulder.isPressed || Gamepad.current.buttonWest.isPressed));
         return false;
     }
 
@@ -1409,12 +1694,26 @@ public partial class Combat : MonoBehaviour
         if (!isChargingAttack) return;
         currentChargeDuration = Mathf.Max(0f, Time.time - chargeStartTime);
         isChargingAttack = false;
-        // Keep lunge aligned with the delayed animation timeline:
-        // if charge held for X seconds, delay lunge window by X seconds too.
-        if (lungePending && currentChargeDuration > 0f)
+        // Keep all delayed timings aligned with the charge-extended animation timeline.
+        if (currentChargeDuration > 0f)
         {
-            lungeTriggerTime += currentChargeDuration;
-            lungeEndTime += currentChargeDuration;
+            if (lungePending)
+            {
+                lungeTriggerTime += currentChargeDuration;
+                lungeEndTime     += currentChargeDuration;
+            }
+            // Combo cancel window: opened at commit time relative to the animation; shift it
+            // so it stays in the correct position after the charge-extended animation plays out.
+            // Without this the window expires mid-hold and the next chain hit becomes unreachable.
+            if (lightComboCount > 0)
+            {
+                comboWindowStart += currentChargeDuration;
+                comboWindowEnd   += currentChargeDuration;
+            }
+            // Attack tracking window: tracks the active frames of the swing; those frames arrive
+            // later when charge slows the animation, so extend the window to match.
+            if (trackingEndTime > 0f)
+                trackingEndTime += currentChargeDuration;
         }
         // Charge hold slows animation and consumes extra real time; extend cooldown so
         // next attack timing stays aligned with the delayed move completion.
@@ -1439,6 +1738,7 @@ public partial class Combat : MonoBehaviour
         }
         chargeReleaseDamageScale = Mathf.Lerp(1f, chargeDamageMultiplier, normalizedCharge);
         chargeReleaseKnockbackScale = Mathf.Lerp(1f, chargeKnockbackMultiplier, normalizedCharge);
+        chargeReleaseLaunchScale = Mathf.Lerp(1f, chargeLaunchMultiplier, normalizedCharge);
         // Scale lunge distance by charge amount too, so charged releases travel further.
         if (lungePending && currentLungeDistance > 0f)
             currentLungeDistance *= chargeReleaseKnockbackScale;

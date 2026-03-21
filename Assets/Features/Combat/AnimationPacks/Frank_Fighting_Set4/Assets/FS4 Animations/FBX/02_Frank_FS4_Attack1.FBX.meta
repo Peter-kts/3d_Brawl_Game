@@ -195,7 +195,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.22306865
+        functionName: BeginHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 8e038c20d0fbca04da70e128f5f3875f, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.50246775
+        functionName: EndHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 8e038c20d0fbca04da70e128f5f3875f, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -253,7 +267,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.17124462
+        functionName: BeginHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 8e038c20d0fbca04da70e128f5f3875f, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.700751
+        functionName: EndHitbox
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 8e038c20d0fbca04da70e128f5f3875f, type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

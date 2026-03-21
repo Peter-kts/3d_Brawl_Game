@@ -31,7 +31,7 @@ MonoBehaviour:
   standingStunParameter: IsStandingStunned
   knockbackStunParameter: IsKnockbackStun
   knockbackStunEntryStateName: KnockbackStunEntry
-  knockbackStunEntryPriorityGrace: 0.1
+  knockbackStunEntryPriorityGrace: 0.5
   standingStunLayer: 1
   wallBounceTriggerParameter: WallBounce
   wallBounceActiveParameter: WallBounceActive

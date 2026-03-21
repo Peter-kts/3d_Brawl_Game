@@ -190,7 +190,7 @@ public class StandoffBehavior : EnemyBehavior
         float facingDot    = Vector3.Dot(pc.transform.forward, toEnemy);
 
         // Attack isn't aimed at us or we're too far away to care — ignore it
-        if (facingDot < ai.backOffFacingThreshold || dist >= ai.standoffRadius + 1.5f) return;
+        if (facingDot < ai.BackOffFacingThreshold || dist >= ai.StandoffRadius + 1.5f) return;
 
         // Lock the latch now regardless of the roll — we've "seen" this attack
         reactionTriggered = true;
@@ -273,8 +273,8 @@ public class StandoffBehavior : EnemyBehavior
         {
             // Opportunity punish: when player's attack lock JUST ended, collapse the attack timer
             // so the enemy immediately moves to PreAttack instead of waiting the full random interval
-            if (pc.RecentlyAttacked(ai.opportunityWindow) && attackTimer > ai.opportunityAttackDelay)
-                attackTimer = ai.opportunityAttackDelay;
+            if (pc.RecentlyAttacked(ai.OpportunityWindow) && attackTimer > ai.OpportunityAttackDelay)
+                attackTimer = ai.OpportunityAttackDelay;
         }
 
         DoCirclingMovement();
@@ -287,7 +287,7 @@ public class StandoffBehavior : EnemyBehavior
             if (ai.EnemyCombat != null)
             {
                 state = SubState.PreAttack;
-                preAttackTimer = ai.attackTelegraphDuration;
+                preAttackTimer = ai.AttackTelegraphDuration;
             }
             else
             {
@@ -312,12 +312,12 @@ public class StandoffBehavior : EnemyBehavior
 
         // Radial correction: how far off are we from the preferred orbit radius?
         // Positive = too far, negative = too close. We blend toward it so the enemy self-corrects naturally.
-        float radiusError         = dist - ai.standoffRadius;
+        float radiusError         = dist - ai.StandoffRadius;
         Vector3 radialCorrection  = dirToPlayer * Mathf.Sign(radiusError);  // push toward or away from player
-        float radialWeight        = Mathf.Clamp01(Mathf.Abs(radiusError) / ai.standoffRadius); // stronger correction the further off we are
+        float radialWeight        = Mathf.Clamp01(Mathf.Abs(radiusError) / ai.StandoffRadius); // stronger correction the further off we are
         Vector3 moveDir           = Vector3.Lerp(tangent, radialCorrection, radialWeight).normalized;
 
-        ai.CC.Move(moveDir * ai.circleSpeed * Time.deltaTime);
+        ai.CC.Move(moveDir * ai.CircleSpeed * Time.deltaTime);
 
         // Face the player while moving — orbit should always look like we're watching the target
         ai.RotateTowardWithDelay(dirToPlayer);
@@ -367,22 +367,9 @@ public class StandoffBehavior : EnemyBehavior
             toPlayer.y = 0f;
             float dist = toPlayer.magnitude;
 
-            // Dodge punish: if player recently dodged and is in the punish distance window, use the punish attack
-            bool usePunish = ai.PlayerController != null
-                && ai.PlayerController.RecentlyDodged(ai.dodgePunishWindow)
-                && dist >= ai.dodgePunishDistMin
-                && dist <= ai.dodgePunishDistMax;
-
-            // Try the EnemyComboSet first (data-driven moveset); fall back to legacy basic/kick/punish fields
             AttackData selectedAttack;
-            if (ai.EnemyCombat.TrySelectAttack(dist, usePunish, out selectedAttack))
+            if (ai.EnemyCombat.TrySelectAttack(dist, out selectedAttack))
                 ai.EnemyCombat.DoAttack(selectedAttack);
-            else if (usePunish)
-                ai.EnemyCombat.DoAttack(ai.EnemyCombat.dodgePunishAttack);    // player exposed after dodge
-            else if (dist > ai.EnemyCombat.punchRangeThreshold)
-                ai.EnemyCombat.DoAttack(ai.EnemyCombat.kickAttack);           // too far for a punch — use kick
-            else
-                ai.EnemyCombat.DoAttack();                                    // default punch at close range
 
             state = SubState.Attacking;
         }
@@ -429,10 +416,7 @@ public class StandoffBehavior : EnemyBehavior
         toPlayer.y          = 0f;
         Vector3 dirToPlayer = toPlayer.normalized;
 
-        // Personality multiplier: aggressive = tighter step back, cautious = faster decisive retreat
-        var p           = ai.personality;
-        float speedMult = p != null ? p.backOffSpeedMultiplier : 1f;
-        ai.CC.Move(-dirToPlayer * ai.backOffSpeed * speedMult * Time.deltaTime); // move away from player
+        ai.CC.Move(-dirToPlayer * ai.BackOffSpeed * Time.deltaTime); // move away from player
 
         // Keep facing the player during the retreat so we don't lose sight of the threat
         ai.RotateTowardWithDelay(dirToPlayer);
@@ -502,7 +486,8 @@ public class StandoffBehavior : EnemyBehavior
         ai.TargetAnimSpeed = 1f;
 
         // Not in attack range yet — keep closing
-        if (ai.EnemyCombat == null || dist > ai.EnemyCombat.punchRangeThreshold + 0.3f) return;
+        AttackData rangeCheckAttack;
+        if (ai.EnemyCombat == null || !ai.EnemyCombat.TrySelectAttack(dist, out rangeCheckAttack)) return;
 
         // In range — now decide whether to actually fire the attack
         float lockRemaining = pc.AttackLockTimeRemaining; // how long is left on the player's attack lock
@@ -533,16 +518,11 @@ public class StandoffBehavior : EnemyBehavior
 
     void ResetDirectionTimer()
     {
-        // Random interval before the next orbit direction flip
-        directionChangeTimer = Random.Range(
-            ai.directionChangeIntervalMin,
-            ai.directionChangeIntervalMax
-        );
+        directionChangeTimer = Random.Range(ai.DirChangeIntervalMin, ai.DirChangeIntervalMax);
     }
 
     void ResetAttackTimer()
     {
-        // Random delay before the next attack attempt from standoff
-        attackTimer = Random.Range(ai.attackIntervalMin, ai.attackIntervalMax);
+        attackTimer = Random.Range(ai.AttackIntervalMin, ai.AttackIntervalMax);
     }
 }

@@ -159,6 +159,9 @@ public class DebugSettings : MonoBehaviour
     [Tooltip("Show stun meter bar above enemies (requires EnemyStunMeter on same GameObject as EnemyHealth)")]
     public bool showEnemyStunMeter = true;
 
+    [Tooltip("Show battle momentum bar above the player (requires BattleMomentum on same GameObject as PlayerHealth)")]
+    public bool showBattleMomentum = true;
+
     // ========================================================================
     // HELPER METHODS
     // ========================================================================

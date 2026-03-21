@@ -71,21 +71,24 @@ public class LockOnSystem : MonoBehaviour
     public float snapOnEnterMaxRange = 12f;
 
     [Header("Threat Scoring")]
-    // Score = weighted sum of distance, angle to camera, screen-center proximity, and recent interaction.
+    // Score = weighted sum of distance, angle to stick direction, and recent interaction.
     [Tooltip("Weight for distance scoring (closer = higher)")]
     public float distanceWeight = 1f;
-    
-    [Tooltip("Weight for angle scoring (more centered = higher)")]
+
+    [Tooltip("Weight for angle scoring (more aligned with stick direction = higher; falls back to player forward when stick is neutral)")]
     public float angleWeight = 0.8f;
-    
-    [Tooltip("Weight for screen-center proximity")]
-    public float screenCenterWeight = 0.5f;
     
     [Tooltip("Bonus for threats that recently attacked or were attacked")]
     public float recentInteractionBonus = 2f;
-    
+
     [Tooltip("How long interaction bonus lasts (seconds)")]
     public float interactionMemory = 3f;
+
+    [Header("Lock-On Indicator")]
+    [Tooltip("Prefab to show above the locked target. Leave null for an auto-generated gold ring.")]
+    public GameObject lockOnIndicatorPrefab;
+    [Tooltip("World-space offset from the locked target's position (above head)")]
+    public Vector3 lockOnIndicatorOffset = new Vector3(0f, 2.2f, 0f);
 
 
     // ========================================================================
@@ -95,6 +98,13 @@ public class LockOnSystem : MonoBehaviour
     /// <summary>The current soft focus target (one enemy transform). Null when not locked on.</summary>
     public Transform SoftTarget { get; private set; }
     public bool HasSoftTarget => SoftTarget != null;
+    /// <summary>True when hard lock-on is active (Dark Souls style). Player explicitly locked onto SoftTarget.</summary>
+    public bool IsLockedOn { get; private set; }
+    /// <summary>
+    /// True while the player is temporarily free-looking (R3 held).
+    /// Lock-on target is preserved — camera just orbits freely until R3 again or an attack.
+    /// </summary>
+    public bool IsFreeLooking { get; private set; }
     /// <summary>All threats currently in range, sorted by score descending (best first).</summary>
     public List<ThreatInfo> TrackedThreats { get; private set; } = new List<ThreatInfo>();
 
@@ -124,8 +134,13 @@ public class LockOnSystem : MonoBehaviour
 
     private HashSet<Transform> trackedSet = new HashSet<Transform>(); // Prevents duplicate entries when an enemy has multiple colliders
     private Camera mainCamera;
+    private PlayerController playerController;
 
     private float nextDetectionTime;  // Time.time of the next allowed threat scan; throttles detection to detectionRate Hz
+
+    private GameObject lockOnIndicatorInstance; // Instantiated once; repositioned/shown each frame when locked on
+    private Transform lockOnIndicatorLastTarget; // Tracks when the locked target changes so we can refresh the height cache
+    private float lockOnIndicatorCachedTopY;     // Cached height above target.position for the current locked target
 
     private const int MAX_COLLIDERS = 32;                                // Max simultaneous overlaps; increase if the scene has more than ~32 enemies at once
     private Collider[] colliderBuffer = new Collider[MAX_COLLIDERS];     // Reused every detection tick to avoid per-frame allocation
@@ -137,6 +152,19 @@ public class LockOnSystem : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
+        playerController = GetComponent<PlayerController>();
+        InitializeLockOnIndicator();
+    }
+
+    void InitializeLockOnIndicator()
+    {
+        if (lockOnIndicatorPrefab != null)
+            lockOnIndicatorInstance = Instantiate(lockOnIndicatorPrefab);
+        else
+            lockOnIndicatorInstance = CreateDefaultIndicator();
+
+        if (lockOnIndicatorInstance != null)
+            lockOnIndicatorInstance.SetActive(false);
     }
 
     void Update()
@@ -155,6 +183,8 @@ public class LockOnSystem : MonoBehaviour
             CleanupInteractionMemory();
             nextDetectionTime = Time.time + (1f / detectionRate);
         }
+
+        UpdateLockOnIndicator();
     }
 
     // ========================================================================
@@ -209,13 +239,20 @@ public class LockOnSystem : MonoBehaviour
         if (TrackedThreats.Count == 0)
         {
             SoftTarget = null;
+            IsLockedOn = false;
             return;
         }
 
         Transform candidate = TrackedThreats[0].transform;
 
-        // We never auto-assign SoftTarget; player must press LT to lock on. Until then, SoftTarget stays null.
-        if (SoftTarget == null) return;
+        if (SoftTarget == null)
+        {
+            // If hard locked on and target was destroyed/left range, re-acquire the best remaining enemy.
+            // Otherwise, player must explicitly press LT — never auto-assign.
+            if (IsLockedOn)
+                SoftTarget = candidate;
+            return;
+        }
 
         TryUpdateSoftTarget(candidate);
     }
@@ -293,7 +330,8 @@ public class LockOnSystem : MonoBehaviour
         if (camForward.sqrMagnitude < 0.0001f) camForward = transform.forward;
         camForward.Normalize();
 
-        int bestIdx = 0;
+        // First pass: prefer enemies that are actually visible (not behind walls).
+        int bestIdx = -1;
         float bestAngle = float.MaxValue;
         for (int i = 0; i < TrackedThreats.Count; i++)
         {
@@ -301,60 +339,142 @@ public class LockOnSystem : MonoBehaviour
             toThreat.y = 0f;
             if (toThreat.sqrMagnitude < 0.01f) continue;
             float angle = Vector3.Angle(camForward, toThreat.normalized);
-            if (angle < bestAngle) { bestAngle = angle; bestIdx = i; }
+            if (angle < bestAngle && HasLineOfSight(TrackedThreats[i].transform))
+            {
+                bestAngle = angle;
+                bestIdx = i;
+            }
         }
-        return TrackedThreats[bestIdx].transform;
+
+        // Fallback: no visible enemy found — pick closest by angle ignoring LOS.
+        if (bestIdx < 0)
+        {
+            bestAngle = float.MaxValue;
+            for (int i = 0; i < TrackedThreats.Count; i++)
+            {
+                Vector3 toThreat = TrackedThreats[i].transform.position - transform.position;
+                toThreat.y = 0f;
+                if (toThreat.sqrMagnitude < 0.01f) continue;
+                float angle = Vector3.Angle(camForward, toThreat.normalized);
+                if (angle < bestAngle) { bestAngle = angle; bestIdx = i; }
+            }
+        }
+
+        return bestIdx >= 0 ? TrackedThreats[bestIdx].transform : null;
     }
 
     /// <summary>
-    /// When already locked on: cycle to the next target closest to camera center (excluding current).
-    /// Order: all tracked threats sorted by angle to camera forward; next = (currentIndex + 1) % count.
+    /// True if there is a clear sightline from the player's eye level to the target.
+    /// Casts against all non-trigger geometry, ignoring threat-layer colliders so
+    /// enemies don't block each other's line of sight.
     /// </summary>
-    public void CycleToNextTargetInLookDirection()
+    bool HasLineOfSight(Transform threat)
     {
-        if (mainCamera == null) mainCamera = Camera.main;
-        if (mainCamera == null || TrackedThreats.Count == 0) return;
+        Vector3 eyePos = transform.position + Vector3.up * 1.5f;
+        Vector3 targetPos = threat.position + Vector3.up * 0.8f;
+        Vector3 dir = targetPos - eyePos;
+        float dist = dir.magnitude;
+        if (dist < 0.1f) return true;
 
-        // Camera forward in XZ for angle sorting
-        Vector3 camForward = mainCamera.transform.forward;
-        camForward.y = 0f;
-        if (camForward.sqrMagnitude < 0.0001f) camForward = transform.forward;
-        camForward.Normalize();
-
-        // Build list of (transform, angle) sorted by angle — "left to right" on screen order.
-        threatsByAngleBuffer.Clear();
-        for (int i = 0; i < TrackedThreats.Count; i++)
-        {
-            Transform t = TrackedThreats[i].transform;
-            Vector3 toThreat = t.position - transform.position;
-            toThreat.y = 0f;
-            float angle = toThreat.sqrMagnitude < 0.01f ? 0f : Vector3.Angle(camForward, toThreat.normalized);
-            threatsByAngleBuffer.Add((t, angle));
-        }
-        threatsByAngleBuffer.Sort((a, b) => a.angle.CompareTo(b.angle));
-
-        // Index of current soft target in the sorted list (-1 if not found)
-        int currentIdx = -1;
-        for (int i = 0; i < threatsByAngleBuffer.Count; i++)
-        {
-            if (threatsByAngleBuffer[i].transform == SoftTarget) { currentIdx = i; break; }
-        }
-
-        // Next target = (currentIndex + 1) wraparound; if current not in list, start from first
-        int nextIdx = currentIdx < 0 ? 0 : (currentIdx + 1) % threatsByAngleBuffer.Count;
-        SoftTarget = threatsByAngleBuffer[nextIdx].transform;
+        // Cast against everything except threats (enemies don't occlude each other) and triggers.
+        int obstacleMask = ~threatMask;
+        return !Physics.Raycast(eyePos, dir / dist, dist - 0.1f, obstacleMask, QueryTriggerInteraction.Ignore);
     }
 
     /// <summary>
-    /// Clear lock-on. Called when player presses R3 or Tab. Next LT will lock on to who they're looking at.
+    /// Toggle hard lock-on: acquire the best target if not locked, release if already locked.
+    /// Call when the player taps LT.
+    /// </summary>
+    public void ToggleLockOn()
+    {
+        if (IsLockedOn)
+            ReleaseFocus();
+        else
+            AcquireLockOn();
+    }
+
+    void AcquireLockOn()
+    {
+        SetTargetToLookAt();
+        if (SoftTarget != null)
+            IsLockedOn = true;
+    }
+
+    /// <summary>
+    /// Toggle free-look: temporarily lets the camera orbit freely while keeping the lock-on target.
+    /// Call on R3 press. A second R3 press or any attack call ExitFreeLook() to snap back.
+    /// Has no effect if not currently locked on.
+    /// </summary>
+    public void ToggleFreeLook()
+    {
+        if (!IsLockedOn) return;
+        IsFreeLooking = !IsFreeLooking;
+    }
+
+    /// <summary>Snap camera back to tracking the locked target. Call on attack or second R3 press.</summary>
+    public void ExitFreeLook()
+    {
+        IsFreeLooking = false;
+    }
+
+    /// <summary>
+    /// Fully release lock-on (LT toggle or Tab). Also clears free-look.
     /// </summary>
     public void ReleaseFocus()
     {
         SoftTarget = null;
+        IsLockedOn = false;
+        IsFreeLooking = false;
     }
 
-    // Reused in CycleToNextTargetInLookDirection to sort threats by angle to camera (left-to-right order).
-    private List<(Transform transform, float angle)> threatsByAngleBuffer = new List<(Transform, float)>();
+    /// <summary>
+    /// Cycle to the enemy that is angularly nearest clockwise (right) of the current target
+    /// when viewed from above the player. Camera-independent.
+    /// </summary>
+    public void CycleRight() => CycleByWorldAngle(1);
+
+    /// <summary>
+    /// Cycle to the enemy that is angularly nearest counter-clockwise (left) of the current target
+    /// when viewed from above the player. Camera-independent.
+    /// </summary>
+    public void CycleLeft() => CycleByWorldAngle(-1);
+
+    /// <summary>
+    /// Picks the enemy with the smallest signed world-space angular offset from the current target
+    /// in the requested direction (measured around the player's Y axis).
+    /// direction: +1 = clockwise / right, -1 = counter-clockwise / left.
+    /// Always finds someone — wraps around if no enemy exists in that arc.
+    /// </summary>
+    void CycleByWorldAngle(int direction)
+    {
+        if (SoftTarget == null || TrackedThreats.Count < 2) return;
+
+        Vector3 toCurrentTarget = SoftTarget.position - transform.position;
+        toCurrentTarget.y = 0f;
+        if (toCurrentTarget.sqrMagnitude < 0.01f) return;
+
+        Transform best = null;
+        float bestAngle = 360f;
+
+        foreach (var threat in TrackedThreats)
+        {
+            if (threat.transform == SoftTarget) continue;
+            Vector3 toThreat = threat.transform.position - transform.position;
+            toThreat.y = 0f;
+            if (toThreat.sqrMagnitude < 0.01f) continue;
+
+            // Signed angle around Y: positive = clockwise, negative = counter-clockwise.
+            // Multiply by direction so "forward" is always the requested sweep direction.
+            float signed = Vector3.SignedAngle(toCurrentTarget, toThreat, Vector3.up) * direction;
+
+            // Normalise to (0, 360] so every candidate is ahead in the sweep.
+            if (signed <= 0f) signed += 360f;
+
+            if (signed < bestAngle) { bestAngle = signed; best = threat.transform; }
+        }
+
+        if (best != null) SoftTarget = best;
+    }
 
     // ========================================================================
     // THREAT SCORING
@@ -370,7 +490,6 @@ public class LockOnSystem : MonoBehaviour
 
         float score = ScoreByDistance(distance)
                     + ScoreByAngle(toThreat, distance, out angle)
-                    + ScoreByScreenCenter(threat)
                     + ScoreByRecentInteraction(threat);
         return score;
     }
@@ -386,32 +505,32 @@ public class LockOnSystem : MonoBehaviour
         return distanceWeight * (0.5f - beyondRatio * 0.5f);                                // Beyond sweet spot: score continues tapering 0.5 → 0 at detection edge
     }
 
-    /// <summary>Higher score for threats that are in front of the camera (angle to camera forward closer to 0).</summary>
+    /// <summary>Higher score for threats more aligned with the movement stick direction (camera-relative). Falls back to player forward when stick is neutral.</summary>
     float ScoreByAngle(Vector3 toThreat, float distance, out float angle)
     {
-        Vector3 forward = transform.forward;
-        if (mainCamera != null) forward = mainCamera.transform.forward;
-        forward.y = 0f;
-        forward.Normalize();
+        // Build reference direction from stick (camera-relative), same as GetBestThreatInFront in Combat.
+        Vector3 referenceDir = transform.forward;
+        if (playerController != null)
+        {
+            Vector2 stick = playerController.GetStickInput();
+            if (stick.sqrMagnitude > 0.01f && mainCamera != null)
+            {
+                Vector3 camForward = mainCamera.transform.forward; camForward.y = 0f; camForward.Normalize();
+                Vector3 camRight   = mainCamera.transform.right;   camRight.y   = 0f; camRight.Normalize();
+                Vector3 dir = camForward * stick.y + camRight * stick.x;
+                if (dir.sqrMagnitude > 0.001f)
+                    referenceDir = dir.normalized;
+            }
+        }
 
         if (distance > 0.1f)
         {
             toThreat.Normalize();
-            angle = Vector3.Angle(forward, toThreat);
+            angle = Vector3.Angle(referenceDir, toThreat);
             return angleWeight * (1f - (angle / 180f));
         }
         angle = 0f;
         return angleWeight;
-    }
-
-    /// <summary>Higher score for threats near the center of the screen (viewport 0.5, 0.5).</summary>
-    float ScoreByScreenCenter(Transform threat)
-    {
-        if (mainCamera == null) return 0f;
-        Vector3 screenPos = mainCamera.WorldToViewportPoint(threat.position);
-        if (screenPos.z <= 0) return 0f;
-        float screenCenterDist = Vector2.Distance(new Vector2(screenPos.x, screenPos.y), new Vector2(0.5f, 0.5f));
-        return screenCenterWeight * (1f - Mathf.Clamp01(screenCenterDist * 2f));
     }
 
     /// <summary>Bonus score for threats recently hit or that hit the player (fades over interactionMemory seconds).</summary>
@@ -488,5 +607,69 @@ public class LockOnSystem : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    // ========================================================================
+    // LOCK-ON INDICATOR
+    // ========================================================================
+
+    void UpdateLockOnIndicator()
+    {
+        if (lockOnIndicatorInstance == null) return;
+
+        if (IsLockedOn && SoftTarget != null)
+        {
+            // Refresh the height cache whenever the locked target changes.
+            if (SoftTarget != lockOnIndicatorLastTarget)
+            {
+                lockOnIndicatorLastTarget = SoftTarget;
+                var r = SoftTarget.GetComponentInChildren<Renderer>();
+                lockOnIndicatorCachedTopY = r != null
+                    ? r.bounds.max.y - SoftTarget.position.y + 0.15f
+                    : lockOnIndicatorOffset.y;
+            }
+
+            lockOnIndicatorInstance.SetActive(true);
+            lockOnIndicatorInstance.transform.position = SoftTarget.position
+                + new Vector3(lockOnIndicatorOffset.x, lockOnIndicatorCachedTopY, lockOnIndicatorOffset.z);
+            lockOnIndicatorInstance.transform.Rotate(Vector3.up, 90f * Time.deltaTime, Space.World);
+        }
+        else
+        {
+            lockOnIndicatorInstance.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Creates a simple gold spinning ring using a LineRenderer.
+    /// Used automatically when no lockOnIndicatorPrefab is assigned.
+    /// You can replace this by assigning any prefab to lockOnIndicatorPrefab in the inspector.
+    /// </summary>
+    GameObject CreateDefaultIndicator()
+    {
+        var root = new GameObject("LockOnIndicator_Default");
+        var lr = root.AddComponent<LineRenderer>();
+        lr.useWorldSpace = false;
+        lr.loop = true;
+        lr.widthMultiplier = 0.04f;
+        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lr.receiveShadows = false;
+
+        // Use a simple unlit shader so the ring is always visible.
+        var shader = Shader.Find("Sprites/Default");
+        if (shader == null) shader = Shader.Find("Unlit/Color");
+        lr.material = new Material(shader);
+        lr.startColor = lr.endColor = new Color(1f, 0.85f, 0f, 1f); // Gold
+
+        int segments = 24;
+        lr.positionCount = segments;
+        float radius = 0.5f;
+        for (int i = 0; i < segments; i++)
+        {
+            float angle = (float)i / segments * Mathf.PI * 2f;
+            lr.SetPosition(i, new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius));
+        }
+
+        return root;
     }
 }

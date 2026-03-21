@@ -27,6 +27,7 @@
  * ============================================================================
  */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyHealth : EntityHealth
@@ -59,6 +60,22 @@ public class EnemyHealth : EntityHealth
     public float wallBounceDamping = 0.6f;
     [Tooltip("Minimum remaining standing-stun time after a valid wall bounce. Only applies while standing stun is active.")]
     public float wallBounceMinStandingStunAfterBounce = 0.35f;
+
+    [Header("Enemy Collision")]
+    [Tooltip("Minimum kbVel speed (units/sec) for a collision to deal damage to another enemy.")]
+    public float collisionMinSpeed = 4f;
+    [Tooltip("Damage dealt per unit of collision speed. E.g. 0.5 at speed 10 = 5 damage.")]
+    [Min(0f)]
+    public float collisionDamagePerSpeed = 0.5f;
+    [Tooltip("Fraction of this enemy's kbVel transferred as knockback to the hit enemy.")]
+    [Range(0f, 1f)]
+    public float collisionKnockbackTransfer = 0.7f;
+    [Tooltip("Hitstun applied to the hit enemy.")]
+    [Min(0f)]
+    public float collisionHitstun = 0.25f;
+    [Tooltip("Seconds before the same enemy can be hit again by this collision. Prevents multi-frame spam.")]
+    [Min(0f)]
+    public float collisionCooldown = 0.2f;
 
     [Header("Hurt SFX (optional)")]
     [Tooltip("Audio source used for hurt sounds. Auto-finds on this object/children if not assigned.")]
@@ -104,6 +121,7 @@ public class EnemyHealth : EntityHealth
     private float airborneSpeedMultiplier = 1f; // 1f normally; set to 1.4f on crash relaunch to speed up animation/timers; reset when sequence ends
     private int lastHurtSfxIndex = -1;          // Index of the last hurt clip played — prevents the same clip twice in a row
     private int lastDeathSfxIndex = -1;         // Index of the last death clip played — prevents repeat
+    private Dictionary<int, float> collisionCooldowns = new Dictionary<int, float>(); // Per-enemy cooldown: instanceID → last hit time
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -249,6 +267,24 @@ public class EnemyHealth : EntityHealth
             enemyAI.SetKnockbackFacingDirection(-reflected, snap: true);
             enemyAI.TriggerWallBounce();
         }
+    }
+
+    // Called by EntityHealth when this enemy collides with another entity while being knocked back.
+    // Deals damage and transfers knockback to the other enemy, scaled by current speed.
+    protected override void OnEnemyKnockbackCollision(EntityHealth other, Vector3 velocity)
+    {
+        if (isDying) return;
+        float speed = velocity.magnitude;
+        if (speed < collisionMinSpeed) return;
+
+        int id = other.GetInstanceID();
+        if (collisionCooldowns.TryGetValue(id, out float lastTime) && Time.time < lastTime + collisionCooldown)
+            return;
+        collisionCooldowns[id] = Time.time;
+
+        int damage = Mathf.Max(1, Mathf.RoundToInt(speed * collisionDamagePerSpeed));
+        Vector3 knockback = velocity * collisionKnockbackTransfer;
+        other.TakeHit(damage, knockback, collisionHitstun, 0f);
     }
 
     /// <summary>

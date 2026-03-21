@@ -119,4 +119,25 @@ public class AttackAnimationEventForwarder : MonoBehaviour
     {
         OnEndHitbox(0);
     }
+
+    public void OnBlockActiveWindowStart()
+    {
+        PlayerController pc = GetComponentInParent<PlayerController>();
+        if (pc != null)
+            pc.OnBlockActiveWindowStart();
+    }
+
+    public void OnPlayerLaunch()
+    {
+        Combat combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnPlayerLaunch();
+    }
+
+    public void OnSpawnObject()
+    {
+        Combat combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnSpawnObject();
+    }
 }

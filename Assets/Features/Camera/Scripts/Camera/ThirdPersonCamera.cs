@@ -60,8 +60,13 @@ public class ThirdPersonCamera : MonoBehaviour
      * For more advanced cameras, you'd rotate offset by player's rotation
      */
     public Vector3 offset = new Vector3(0f, 3.2f, -8.5f);
+    [Tooltip("How far behind the target the camera sits. Overrides the Z component of offset.")]
+    public float cameraDistance = 8.5f;
     [Tooltip("If true, offset is applied in the player's local space (so camera stays behind them)")]
     public bool useLocalOffset = true;
+
+    // offset with Z replaced by -cameraDistance so the distance slider is the single source of truth.
+    Vector3 CameraOffset => new Vector3(offset.x, offset.y, -cameraDistance);
 
     [Header("Orbit Controls")]
     [Tooltip("Rotate camera around the target with right stick / mouse")]
@@ -106,6 +111,21 @@ public class ThirdPersonCamera : MonoBehaviour
     [Tooltip("Max distance to allow soft target look bias")]
     public float softTargetMaxDistance = 12f;
 
+    [Header("Hard Lock-On Camera")]
+    [Tooltip("How fast the camera auto-rotates (yaw) to position behind the player when locked on. Higher = snappier.")]
+    public float lockOnRotateSpeed = 4f;
+    [Tooltip("How far toward the locked target the camera looks (0 = player only, 0.5 = midpoint, 1 = target only).")]
+    [Range(0f, 1f)]
+    public float lockOnLookBlend = 0.4f;
+    [Tooltip("Pitch (up/down) speed when locked on. Right stick Y still controls vertical angle.")]
+    public float lockOnPitchSpeed = 110f;
+    [Tooltip("Vertical angle limits when locked on (min, max degrees). Tighter than free orbit to keep enemy in frame.")]
+    public Vector2 lockOnPitchLimits = new Vector2(-10f, 50f);
+    [Tooltip("Max degrees the camera tilts sideways when the right stick is held left/right while locked on.")]
+    public float lockOnTiltAmount = 50f;
+    [Tooltip("How fast the tilt snaps back to center when the stick is released (higher = snappier).")]
+    public float lockOnTiltSnapSpeed = 8f;
+
     // ========================================================================
     // PRIVATE STATE
     // ========================================================================
@@ -113,6 +133,8 @@ public class ThirdPersonCamera : MonoBehaviour
     private float yaw;
     private float pitch;
     private bool orbitInitialized;
+    private float lockOnTiltYaw;        // Current smoothed tilt offset (degrees); blends toward target and snaps back to 0
+    private PlayerController playerController; // Resolved lazily from target; source of LockOnTiltX
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -130,15 +152,51 @@ public class ThirdPersonCamera : MonoBehaviour
         // --------------------------------------------------------------------
         
         // Base desired camera position from target + configured offset.
-        Vector3 desiredPos = target.position + (useLocalOffset ? target.TransformDirection(offset) : offset);
+        Vector3 desiredPos = target.position + (useLocalOffset ? target.TransformDirection(CameraOffset) : CameraOffset);
 
         if (useOrbitControls)
         {
             // Orbit mode overrides base offset with yaw/pitch driven offset around target.
             InitializeOrbitIfNeeded();
-            UpdateOrbitAngles();
-            Quaternion orbitRot = Quaternion.Euler(pitch, yaw, 0f);
-            desiredPos = target.position + (orbitRot * offset);
+
+            // Lazy-resolve threatSystem from the target if not assigned.
+            if (threatSystem == null && target != null)
+                threatSystem = target.GetComponent<LockOnSystem>();
+
+            bool isHardLocked = threatSystem != null && threatSystem.IsLockedOn && threatSystem.SoftTarget != null;
+            bool isFreeLooking = threatSystem != null && threatSystem.IsFreeLooking;
+
+            if (isHardLocked && !isFreeLooking)
+            {
+                // Auto-rotate yaw so the camera sits behind the player, facing the locked target.
+                // desiredYaw = angle from player toward target → places camera on the opposite side.
+                Vector3 toTarget = threatSystem.SoftTarget.position - target.position;
+                toTarget.y = 0f;
+                if (toTarget.sqrMagnitude > 0.01f)
+                {
+                    float desiredYaw = Mathf.Atan2(toTarget.x, toTarget.z) * Mathf.Rad2Deg;
+                    yaw = Mathf.LerpAngle(yaw, desiredYaw, 1f - Mathf.Exp(-lockOnRotateSpeed * Time.deltaTime));
+                }
+
+                // Right stick Y still controls pitch; X is handled by PlayerController (tap/hold).
+                UpdateLockOnPitch();
+
+                // Tilt: right stick held sideways adds a temporary yaw offset that snaps back.
+                if (playerController == null && target != null)
+                    playerController = target.GetComponent<PlayerController>();
+                float targetTilt = playerController != null ? playerController.LockOnTiltX * lockOnTiltAmount : 0f;
+                lockOnTiltYaw = Mathf.Lerp(lockOnTiltYaw, targetTilt, 1f - Mathf.Exp(-lockOnTiltSnapSpeed * Time.deltaTime));
+            }
+            else
+            {
+                // Free-look (R3 held) or not locked: full orbit control with right stick.
+                // Tilt snaps to zero so it doesn't persist when returning from free-look.
+                UpdateOrbitAngles();
+                lockOnTiltYaw = Mathf.Lerp(lockOnTiltYaw, 0f, 1f - Mathf.Exp(-lockOnTiltSnapSpeed * Time.deltaTime));
+            }
+
+            Quaternion orbitRot = Quaternion.Euler(pitch, yaw + lockOnTiltYaw, 0f);
+            desiredPos = target.position + (orbitRot * CameraOffset);
         }
         
         /*
@@ -174,20 +232,24 @@ public class ThirdPersonCamera : MonoBehaviour
         // Default look point is a point above the target (chest/head framing).
         Vector3 lookPoint = target.position + Vector3.up * lookHeight;
 
-        // Optional: soft target look bias (subtle, not a lock)
-        if (useSoftTargetLook)
+        // Hard lock-on: look at a point blended between the player and the locked target.
+        // This keeps both player and enemy in frame (Dark Souls style).
+        if (threatSystem != null && threatSystem.IsLockedOn && threatSystem.SoftTarget != null)
         {
+            Vector3 targetLookPoint = threatSystem.SoftTarget.position + Vector3.up * lookHeight;
+            lookPoint = Vector3.Lerp(lookPoint, targetLookPoint, lockOnLookBlend);
+        }
+        else if (useSoftTargetLook)
+        {
+            // Soft look bias (subtle, not a lock).
             if (threatSystem == null && target != null)
-            {
                 threatSystem = target.GetComponent<LockOnSystem>();
-            }
 
             if (threatSystem != null && threatSystem.HasSoftTarget)
             {
                 Transform softTarget = threatSystem.SoftTarget;
                 if (softTarget != null)
                 {
-                    // Compute soft target relevance in the horizontal plane.
                     Vector3 toTarget = softTarget.position - target.position;
                     toTarget.y = 0f;
                     float dist = toTarget.magnitude;
@@ -202,11 +264,9 @@ public class ThirdPersonCamera : MonoBehaviour
                         float angle = Vector3.Angle(forward, toTarget);
                         if (angle <= softTargetMaxAngle && dist <= softTargetMaxDistance)
                         {
-                            // Blend bias by how centered and close the soft target is.
                             float angleFactor = 1f - (angle / softTargetMaxAngle);
                             float distFactor = 1f - (dist / softTargetMaxDistance);
                             float blend = softTargetLookWeight * Mathf.Clamp01(angleFactor * distFactor);
-
                             Vector3 softLookPoint = softTarget.position + Vector3.up * lookHeight;
                             lookPoint = Vector3.Lerp(lookPoint, softLookPoint, blend);
                         }
@@ -289,24 +349,44 @@ public class ThirdPersonCamera : MonoBehaviour
     void UpdateOrbitAngles()
     {
         Vector2 lookDelta = Vector2.zero;
-        
+
         bool hasGamepad = Gamepad.current != null;
-        
+
         if (hasGamepad)
         {
             Vector2 stick = Gamepad.current.rightStick.ReadValue();
             lookDelta += new Vector2(stick.x * yawSpeed, stick.y * pitchSpeed) * Time.deltaTime;
         }
-        
+
         if (!hasGamepad && Mouse.current != null)
         {
             Vector2 mouse = Mouse.current.delta.ReadValue();
             lookDelta += mouse * mouseSensitivity;
         }
-        
+
         if (invertY) lookDelta.y = -lookDelta.y;
-        
+
         yaw += lookDelta.x;
         pitch = Mathf.Clamp(pitch + lookDelta.y, pitchLimits.x, pitchLimits.y);
+    }
+
+    // When locked on, yaw is auto-driven. Only read the vertical axis for pitch.
+    void UpdateLockOnPitch()
+    {
+        float pitchDelta = 0f;
+
+        if (Gamepad.current != null)
+        {
+            float stickY = Gamepad.current.rightStick.ReadValue().y;
+            pitchDelta += stickY * lockOnPitchSpeed * Time.deltaTime;
+        }
+        else if (Mouse.current != null)
+        {
+            pitchDelta += Mouse.current.delta.ReadValue().y * mouseSensitivity;
+        }
+
+        if (invertY) pitchDelta = -pitchDelta;
+
+        pitch = Mathf.Clamp(pitch + pitchDelta, lockOnPitchLimits.x, lockOnPitchLimits.y);
     }
 }

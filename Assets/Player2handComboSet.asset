@@ -20,7 +20,7 @@ MonoBehaviour:
     cooldown: 0.8
     comboWindowDelay: 0.7
     comboWindowDuration: 0.6
-    knockback: 3
+    knockback: 20
     knockbackUp: 0
     hitstun: 0.5
     stunBuildup: 0.2
@@ -35,7 +35,9 @@ MonoBehaviour:
     lungeFrame: 0.2
     lungeDistance: 0.35
     lungeDuration: 0.08
-    hitStopDuration: 0
+    suckToTarget: 1
+    suckToTargetStopDistance: 0.6
+    hitStopDuration: 0.1
     trackingDuration: 1
     trackingSpeed: 540
     attackStartSfx: {fileID: 8300000, guid: 317636aa8abbd32409039ccb5e45c4fe, type: 3}
@@ -50,6 +52,18 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   forwardJab:
     damage: 10
     heaviness: 2
@@ -61,7 +75,7 @@ MonoBehaviour:
     knockback: 50
     knockbackUp: 0
     hitstun: 0.3
-    stunBuildup: 0.2
+    stunBuildup: 0.3
     makesAirborne: 0
     airborneDuration: 0.2
     proneVariant: 0
@@ -73,6 +87,8 @@ MonoBehaviour:
     lungeFrame: 0.19
     lungeDistance: 5
     lungeDuration: 0.3
+    suckToTarget: 1
+    suckToTargetStopDistance: 0.6
     hitStopDuration: 0.12
     trackingDuration: 1
     trackingSpeed: 720
@@ -87,8 +103,7 @@ MonoBehaviour:
     - trigger: 1
       eventId: 0
       clips:
-      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
-      - {fileID: 8300000, guid: 1af8a500bedfac748b38fdef21c29c0e, type: 3}
+      - {fileID: 8300000, guid: ce990998b24c0804a825fdfd8573a097, type: 3}
       volume: 1.385
     - trigger: 2
       eventId: 0
@@ -109,6 +124,18 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   forwardJab2Normal:
     damage: 10
     heaviness: 1
@@ -132,6 +159,8 @@ MonoBehaviour:
     lungeFrame: 0.3
     lungeDistance: 4
     lungeDuration: 0.08
+    suckToTarget: 1
+    suckToTargetStopDistance: 2
     hitStopDuration: 0
     trackingDuration: 1
     trackingSpeed: 800
@@ -147,6 +176,18 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   forwardJab2:
     damage: 10
     heaviness: 2
@@ -170,6 +211,8 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 0
     lungeDuration: 0
+    suckToTarget: 0
+    suckToTargetStopDistance: 0.6
     hitStopDuration: 0.13
     trackingDuration: 1
     trackingSpeed: 540
@@ -210,18 +253,30 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: -0.7, y: 0, z: -0.5}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   neutralJabNormal:
     damage: 10
     heaviness: 1
     height: 1
     lockDuration: 0.5
-    cooldown: 0.25
-    comboWindowDelay: 0.2
+    cooldown: 0.5
+    comboWindowDelay: 0.35
     comboWindowDuration: 0.2
-    knockback: 2.5
+    knockback: 10
     knockbackUp: 0
     hitstun: 0.5
-    stunBuildup: 1
+    stunBuildup: 0.4
     makesAirborne: 0
     airborneDuration: 0
     proneVariant: 0
@@ -230,12 +285,14 @@ MonoBehaviour:
     startUpSpeed: 0.2
     recoveryLength: 0.1
     recoverySpeed: 0.2
-    lungeFrame: 0
-    lungeDistance: 0
-    lungeDuration: 0
+    lungeFrame: 0.1
+    lungeDistance: 2
+    lungeDuration: 0.1
+    suckToTarget: 1
+    suckToTargetStopDistance: 2.8
     hitStopDuration: 0
     trackingDuration: 1
-    trackingSpeed: 540
+    trackingSpeed: 9999
     attackStartSfx: {fileID: 8300000, guid: 317636aa8abbd32409039ccb5e45c4fe, type: 3}
     hitConnectSfx: {fileID: 8300000, guid: a0ac722d1ccc58546afbfd0be4feedad, type: 3}
     sfxCues: []
@@ -248,18 +305,30 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   neutralJab:
     damage: 20
     heaviness: 2
     height: 2
-    lockDuration: 2
-    cooldown: 2
-    comboWindowDelay: 1
+    lockDuration: 1
+    cooldown: 1
+    comboWindowDelay: 0.6
     comboWindowDuration: 1
-    knockback: 50
+    knockback: 10
     knockbackUp: 0
-    hitstun: 1.5
-    stunBuildup: 1
+    hitstun: 1
+    stunBuildup: 0.4
     makesAirborne: 0
     airborneDuration: 0
     proneVariant: 0
@@ -268,10 +337,12 @@ MonoBehaviour:
     startUpSpeed: 0.6
     recoveryLength: 0.5
     recoverySpeed: 0.4
-    lungeFrame: 0
-    lungeDistance: 0
-    lungeDuration: 0
-    hitStopDuration: 0.12
+    lungeFrame: 0.3
+    lungeDistance: 5
+    lungeDuration: 0.1
+    suckToTarget: 1
+    suckToTargetStopDistance: 3
+    hitStopDuration: 0.1
     trackingDuration: 0.5
     trackingSpeed: 540
     attackStartSfx: {fileID: 8300000, guid: ccaaa7f731ce6f2458218cd91a4878b3, type: 3}
@@ -280,18 +351,17 @@ MonoBehaviour:
     - trigger: 2
       eventId: 0
       clips:
-      - {fileID: 8300000, guid: 31fa302b5536e994db68a846119a2608, type: 3}
+      - {fileID: 8300000, guid: d8277303efbd0b748b11713a737fefdb, type: 3}
       volume: 1.05
     - trigger: 1
       eventId: 0
       clips:
-      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
-      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+      - {fileID: 8300000, guid: ce990998b24c0804a825fdfd8573a097, type: 3}
       volume: 1.05
     - trigger: 2
       eventId: 1
       clips:
-      - {fileID: 8300000, guid: ccaaa7f731ce6f2458218cd91a4878b3, type: 3}
+      - {fileID: 8300000, guid: 8b1708f331f3ec841bab5c8d54758f92, type: 3}
       volume: 1.05
     chargeLoopSfx: {fileID: 8300000, guid: 2ea32cc16f03dd14a9394fcaeda79b54, type: 3}
     chargeLoopSfxVolume: 1
@@ -302,17 +372,148 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: -0.2, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   neutralJab2Normal:
     damage: 10
     heaviness: 1
     height: 1
-    lockDuration: 0.36
+    lockDuration: 0.85
     cooldown: 0.24
     comboWindowDelay: -1
     comboWindowDuration: -1
     knockback: 4
     knockbackUp: 0
-    hitstun: 0.14
+    hitstun: 0.1
+    stunBuildup: 0.3
+    makesAirborne: 0
+    airborneDuration: 0
+    proneVariant: 0
+    animationTrigger: Attack_Neutral_Tap_2
+    startUpLength: 0.15
+    startUpSpeed: 0.4
+    recoveryLength: 0.1
+    recoverySpeed: 0.2
+    lungeFrame: 0.1
+    lungeDistance: 1
+    lungeDuration: 0.1
+    suckToTarget: 1
+    suckToTargetStopDistance: 2
+    hitStopDuration: 0.1
+    trackingDuration: 0.5
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: 317636aa8abbd32409039ccb5e45c4fe, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: af16b118870f1034285193208a073cd7, type: 3}
+    sfxCues: []
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
+  neutralJab2:
+    damage: 20
+    heaviness: 2
+    height: 2
+    lockDuration: 1.4
+    cooldown: 1
+    comboWindowDelay: 0.8
+    comboWindowDuration: 1
+    knockback: 10
+    knockbackUp: 0
+    hitstun: 1
+    stunBuildup: 0.5
+    makesAirborne: 0
+    airborneDuration: 0
+    proneVariant: 0
+    animationTrigger: Punch-N2
+    startUpLength: 0.04
+    startUpSpeed: 0.4
+    recoveryLength: 0.5
+    recoverySpeed: 0.5
+    lungeFrame: 0.3
+    lungeDistance: 5
+    lungeDuration: 0.1
+    suckToTarget: 1
+    suckToTargetStopDistance: 3
+    hitStopDuration: 0.25
+    trackingDuration: 1
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: 31fa302b5536e994db68a846119a2608, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
+    sfxCues:
+    - trigger: 2
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 31fa302b5536e994db68a846119a2608, type: 3}
+      volume: 1.07
+    - trigger: 2
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: ccaaa7f731ce6f2458218cd91a4878b3, type: 3}
+      volume: 1.07
+    - trigger: 1
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: ce990998b24c0804a825fdfd8573a097, type: 3}
+      volume: 1.07
+    chargeLoopSfx: {fileID: 8300000, guid: 2ea32cc16f03dd14a9394fcaeda79b54, type: 3}
+    chargeLoopSfxVolume: 1
+    chargeLoopSfxPitch: 1
+    attackStartVfxPrefab: {fileID: 0}
+    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.25, y: -0.1, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
+  neutralJab3Normal:
+    damage: 13
+    heaviness: 1
+    height: 1
+    lockDuration: 0.5
+    cooldown: 0.4
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 7
+    knockbackUp: 0
+    hitstun: 0.22
     stunBuildup: 0.2
     makesAirborne: 0
     airborneDuration: 0
@@ -325,6 +526,8 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 0
     lungeDuration: 0
+    suckToTarget: 0
+    suckToTargetStopDistance: 0.6
     hitStopDuration: 0
     trackingDuration: 0
     trackingSpeed: 540
@@ -340,60 +543,70 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
-  neutralJab2:
-    damage: 20
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
+  neutralJab3:
+    damage: 16
     heaviness: 2
     height: 2
-    lockDuration: 1.4
-    cooldown: 1.4
+    lockDuration: 1
+    cooldown: 1
     comboWindowDelay: -1
     comboWindowDuration: -1
-    knockback: 25
+    knockback: 0.1
     knockbackUp: 0
-    hitstun: 0.8
-    stunBuildup: 0.2
+    hitstun: 1
+    stunBuildup: 0.9
     makesAirborne: 0
     airborneDuration: 0
-    proneVariant: 0
-    animationTrigger: Punch-N2
-    startUpLength: 0.04
-    startUpSpeed: 0.4
-    recoveryLength: 0.5
+    proneVariant: 1
+    animationTrigger: Charge Overhead
+    startUpLength: 0.2
+    startUpSpeed: 0.5
+    recoveryLength: 0.2
     recoverySpeed: 0.5
-    lungeFrame: 0.2
-    lungeDistance: 0
-    lungeDuration: 0
-    hitStopDuration: 0.25
+    lungeFrame: 0.5
+    lungeDistance: 5
+    lungeDuration: 0.1
+    suckToTarget: 1
+    suckToTargetStopDistance: 3.8
+    hitStopDuration: 0.5
     trackingDuration: 1
     trackingSpeed: 540
-    attackStartSfx: {fileID: 8300000, guid: 31fa302b5536e994db68a846119a2608, type: 3}
-    hitConnectSfx: {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
-    sfxCues:
-    - trigger: 2
-      eventId: 0
-      clips:
-      - {fileID: 8300000, guid: d8277303efbd0b748b11713a737fefdb, type: 3}
-      volume: 1.07
-    - trigger: 2
-      eventId: 1
-      clips:
-      - {fileID: 8300000, guid: a662ca1fe7aad5e4f912f48ba2604837, type: 3}
-      volume: 1.07
-    - trigger: 1
-      eventId: 1
-      clips:
-      - {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
-      - {fileID: 8300000, guid: 90af736081ce501468a39a417cdce156, type: 3}
-      volume: 1.07
-    chargeLoopSfx: {fileID: 8300000, guid: 2ea32cc16f03dd14a9394fcaeda79b54, type: 3}
-    chargeLoopSfxVolume: 1
+    attackStartSfx: {fileID: 8300000, guid: 4dd4847e59130bb41b2f22db3f437814, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: ce990998b24c0804a825fdfd8573a097, type: 3}
+    sfxCues: []
+    chargeLoopSfx: {fileID: 0}
+    chargeLoopSfxVolume: 0.7
     chargeLoopSfxPitch: 1
     attackStartVfxPrefab: {fileID: 0}
     hitConnectVfxPrefab: {fileID: 0}
     attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
-    hitConnectVfxPositionOffset: {x: -0.25, y: -0.1, z: 0}
-    hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
+    hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   heavyAttack:
     damage: 1
     heaviness: 2
@@ -417,6 +630,8 @@ MonoBehaviour:
     lungeFrame: 0
     lungeDistance: 1
     lungeDuration: 1
+    suckToTarget: 0
+    suckToTargetStopDistance: 0.6
     hitStopDuration: 0.2
     trackingDuration: 0.5
     trackingSpeed: 540
@@ -431,7 +646,7 @@ MonoBehaviour:
     - trigger: 1
       eventId: 0
       clips:
-      - {fileID: 8300000, guid: 1af8a500bedfac748b38fdef21c29c0e, type: 3}
+      - {fileID: 8300000, guid: ce990998b24c0804a825fdfd8573a097, type: 3}
       volume: 1.043
     - trigger: 2
       eventId: 3
@@ -448,55 +663,103 @@ MonoBehaviour:
       eventId: 4
       clips: []
       volume: 1.022
-    chargeLoopSfx: {fileID: 8300000, guid: 2ea32cc16f03dd14a9394fcaeda79b54, type: 3}
-    chargeLoopSfxVolume: 1
-    chargeLoopSfxPitch: 1
+    chargeLoopSfx: {fileID: 8300000, guid: 80d951bcedf906b40b83ac5e0614debd, type: 3}
+    chargeLoopSfxVolume: 0.175
+    chargeLoopSfxPitch: 0.548
     attackStartVfxPrefab: {fileID: 5221624446088252456, guid: c5bc3324b9ff3364c9484f45a4dcf49f, type: 3}
     hitConnectVfxPrefab: {fileID: 1460392947683876891, guid: 068c15477f50ef44fb758bbb7d08b9c1, type: 3}
     attackStartVfxPositionOffset: {x: 0, y: -1.2, z: 0}
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
+    launchPlayer: 0
+    playerLaunchUpSpeed: 6
+    playerLaunchForwardSpeed: 0
+    playerLaunchForwardDuration: 0.2
+    consumesMomentum: 0
+    momentumCost: 25
+    spawnObject: 0
+    spawnPrefab: {fileID: 0}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
   rbXAttack:
-    damage: 18
+    damage: 100
     heaviness: 2
     height: 1
-    lockDuration: 0.65
-    cooldown: 0.55
+    lockDuration: 1.5
+    cooldown: 1.5
     comboWindowDelay: -1
     comboWindowDuration: -1
-    knockback: 8
-    knockbackUp: 1
-    hitstun: 0.3
-    stunBuildup: 0.2
+    knockback: 35
+    knockbackUp: 0
+    hitstun: 1
+    stunBuildup: 1
     makesAirborne: 0
     airborneDuration: 0
-    proneVariant: 0
+    proneVariant: 1
     animationTrigger: Rb+x
-    startUpLength: 0
-    startUpSpeed: 1
-    recoveryLength: 0
-    recoverySpeed: 1
-    lungeFrame: 0.15
-    lungeDistance: 0.7
-    lungeDuration: 0.12
-    hitStopDuration: 0
-    trackingDuration: 0
-    trackingSpeed: 540
-    attackStartSfx: {fileID: 0}
-    hitConnectSfx: {fileID: 0}
-    sfxCues: []
-    chargeLoopSfx: {fileID: 0}
-    chargeLoopSfxVolume: 0.7
+    startUpLength: 0.2
+    startUpSpeed: 0.5
+    recoveryLength: 0.2
+    recoverySpeed: 0.5
+    lungeFrame: 0.5
+    lungeDistance: 1
+    lungeDuration: 0.05
+    suckToTarget: 1
+    suckToTargetStopDistance: 0.2
+    hitStopDuration: 0.3
+    trackingDuration: 1
+    trackingSpeed: 9999
+    attackStartSfx: {fileID: 8300000, guid: 26a1bc99ca5b56b4fbff2b72a4749061, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: ce990998b24c0804a825fdfd8573a097, type: 3}
+    sfxCues:
+    - trigger: 0
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 80d951bcedf906b40b83ac5e0614debd, type: 3}
+      volume: 0.151
+    - trigger: 1
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: 1811d8194520f1346a168202b48da165, type: 3}
+      - {fileID: 8300000, guid: 4e0edf13075c2ee4487a8674896484f1, type: 3}
+      volume: 0.304
+    - trigger: 2
+      eventId: 0
+      clips:
+      - {fileID: 8300000, guid: ab4a34e88f2c6374e98120aabdeda43a, type: 3}
+      volume: 0.189
+    - trigger: 2
+      eventId: 1
+      clips:
+      - {fileID: 8300000, guid: 89c8e2fee04561844aafe59c8e251666, type: 3}
+      volume: 0.523
+    chargeLoopSfx: {fileID: 8300000, guid: ab4a34e88f2c6374e98120aabdeda43a, type: 3}
+    chargeLoopSfxVolume: 0.035
     chargeLoopSfxPitch: 1
-    attackStartVfxPrefab: {fileID: 0}
-    hitConnectVfxPrefab: {fileID: 0}
+    attackStartVfxPrefab: {fileID: 7276749470285950497, guid: 7780cbe44d3f3ef449a832e4b9b9c920, type: 3}
+    hitConnectVfxPrefab: {fileID: 8393927888780647174, guid: 0777bc22e9e6ace47a89e97740ea56e9, type: 3}
     attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 0, z: 0}
-  comboWindowDelay: 0.8
-  comboWindowDuration: 0.25
+    launchPlayer: 1
+    playerLaunchUpSpeed: 0.4
+    playerLaunchForwardSpeed: 0.25
+    playerLaunchForwardDuration: 0.5
+    consumesMomentum: 1
+    momentumCost: 50
+    spawnObject: 1
+    spawnPrefab: {fileID: 1049422153301622869, guid: cd681ba58da947641b74e90cdf377200, type: 3}
+    spawnOffset: {x: 0, y: 0, z: 0}
+    spawnInLocalSpace: 1
+    inheritPlayerRotation: 1
+    parentToPlayer: 0
+  comboWindowDelay: 0.45
+  comboWindowDuration: 0.3
+  loopNeutralCombo: 1
   throwData:
     enableThrow: 1
     grabAttemptAnimationTrigger: GrabAttempt
@@ -535,9 +798,9 @@ MonoBehaviour:
     endKnockback: 50
     endKnockbackUp: 1
     proneDuration: 3
-    proneVariant: 0
+    proneVariant: 1
     invertProneRotation: 1
-    faceVictimTowardThrowDirection: 1
+    faceVictimTowardPlayerOnRelease: 1
     enemyThrownStateName: Thrown
     enableCharge: 1
     maxChargeTime: 3
@@ -546,6 +809,11 @@ MonoBehaviour:
     chargeAnimatorSpeed: 0.25
     enableDirectionalThrow: 1
     directionalThrowRotationSpeed: 9999
+    suckToTarget: 1
+    throwSuckDistance: 3
+    throwSuckStopDistance: 0.5
+    consumesMomentum: 0
+    momentumCost: 0
     throwCooldown: 0.8
   backThrowData:
     enableThrow: 1
@@ -588,7 +856,7 @@ MonoBehaviour:
     proneDuration: 3
     proneVariant: 0
     invertProneRotation: 0
-    faceVictimTowardThrowDirection: 1
+    faceVictimTowardPlayerOnRelease: 1
     enemyThrownStateName: BackThrown
     enableCharge: 0
     maxChargeTime: 0
@@ -597,4 +865,9 @@ MonoBehaviour:
     chargeAnimatorSpeed: 0
     enableDirectionalThrow: 0
     directionalThrowRotationSpeed: 0
+    suckToTarget: 0
+    throwSuckDistance: 0
+    throwSuckStopDistance: 0
+    consumesMomentum: 0
+    momentumCost: 0
     throwCooldown: 0.8

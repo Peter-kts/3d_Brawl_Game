@@ -6,8 +6,6 @@ using UnityEngine;
 public class EnemyComboSetEditor : Editor
 {
     private const string PrefsKeyPrefix = "EnemyComboSetEditor_SelectedIndex_";
-    private EnemyCombat populateSource;
-
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
@@ -31,24 +29,6 @@ public class EnemyComboSetEditor : Editor
             EditorGUI.indentLevel--;
         }
 
-        EditorGUILayout.Space(8);
-        EditorGUILayout.LabelField("Populate From EnemyCombat", EditorStyles.boldLabel);
-        if (populateSource == null && Selection.activeGameObject != null)
-            populateSource = Selection.activeGameObject.GetComponent<EnemyCombat>();
-        populateSource = (EnemyCombat)EditorGUILayout.ObjectField("Source EnemyCombat", populateSource, typeof(EnemyCombat), true);
-        if (GUILayout.Button("Populate moves from legacy attacks"))
-        {
-            EnemyComboSet comboSet = (EnemyComboSet)target;
-            if (populateSource == null)
-            {
-                EditorUtility.DisplayDialog("EnemyCombat required", "Assign a source EnemyCombat first.", "OK");
-            }
-            else
-            {
-                PopulateFromLegacy(comboSet, populateSource);
-                serializedObject.Update();
-            }
-        }
 
         int moveCount = movesProp != null ? movesProp.arraySize : 0;
         if (moveCount <= 0)
@@ -120,37 +100,6 @@ public class EnemyComboSetEditor : Editor
         if (source != null)
             JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(source), clone);
         return clone;
-    }
-
-    private static EnemyMoveEntry BuildEntry(string moveId, AttackData attack, float minDistance, float maxDistance, bool requiresRecentDodge, int priority)
-    {
-        return new EnemyMoveEntry
-        {
-            moveId = moveId,
-            attack = CloneAttackData(attack),
-            minDistance = minDistance,
-            maxDistance = maxDistance,
-            requiresRecentDodge = requiresRecentDodge,
-            priority = priority
-        };
-    }
-
-    private static void PopulateFromLegacy(EnemyComboSet comboSet, EnemyCombat source)
-    {
-        Undo.RecordObject(comboSet, "Populate Enemy Combo Set");
-        if (comboSet.moves == null)
-            comboSet.moves = new List<EnemyMoveEntry>();
-        comboSet.moves.Clear();
-
-        float threshold = source.punchRangeThreshold;
-        comboSet.moves.Add(BuildEntry("DodgePunish", source.dodgePunishAttack, 0f, 100f, true, 100));
-        comboSet.moves.Add(BuildEntry("PunchClose", source.basicAttack, 0f, threshold, false, 10));
-        comboSet.moves.Add(BuildEntry("KickFar", source.kickAttack, threshold, 100f, false, 0));
-        EditorUtility.SetDirty(comboSet);
-
-        Undo.RecordObject(source, "Assign Enemy Combo Set");
-        source.enemyComboSet = comboSet;
-        EditorUtility.SetDirty(source);
     }
 
     private static string[] BuildMoveOptions(SerializedProperty movesProp, int moveCount)

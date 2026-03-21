@@ -105,6 +105,23 @@ public class PlayerHealth : EntityHealth
     [Range(0f, 1f)]
     public float blockSfxVolume = 1f;
 
+    [Header("Parry SFX (optional — plays only during the active block window)")]
+    [Tooltip("Audio source used for parry sounds. Falls back to blockSfxSource if not assigned.")]
+    public AudioSource parrySfxSource;
+    [Tooltip("Parry clips played when a hit lands during the active block window. If empty, falls back to blockSfxClips.")]
+    public AudioClip[] parrySfxClips;
+    [Tooltip("Lowest random pitch used for parry SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float parrySfxPitchMin = 0.9f;
+    [Tooltip("Highest random pitch used for parry SFX.")]
+    [Range(0.5f, 1.5f)]
+    public float parrySfxPitchMax = 1.1f;
+    [Tooltip("Volume scale for parry SFX.")]
+    [Range(0f, 1f)]
+    public float parrySfxVolume = 1f;
+    [Tooltip("When a parry lands, instantly rotate the player to face the attacker (direction inferred from knockback).")]
+    public bool faceAttackerOnParry = true;
+
     [Header("Airborne Animation (Liftoff / Loop / Crash)")]
     [Tooltip("Settings for splitting a single airborne animation into liftoff, loop, and crash phases. Leave airborneStateName empty to disable.")]
     public AirborneAnimationSettings airborneAnimation = new AirborneAnimationSettings();
@@ -125,6 +142,7 @@ public class PlayerHealth : EntityHealth
     private int lastHurtSfxIndex   = -1;   // Index of the last hurt clip played — prevents repeat
     private int lastDeathSfxIndex  = -1;   // Index of the last death clip played — prevents repeat
     private int lastBlockSfxIndex  = -1;   // Index of the last block clip played — prevents repeat
+    private int lastParrySfxIndex  = -1;   // Index of the last parry clip played — prevents repeat
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -140,6 +158,7 @@ public class PlayerHealth : EntityHealth
         if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
         deathSfxSource = ResolveSfxSource(deathSfxSource);
         blockSfxSource = ResolveSfxSource(blockSfxSource);
+        parrySfxSource = ResolveSfxSource(parrySfxSource);
     }
 
     void Update()
@@ -321,10 +340,21 @@ public class PlayerHealth : EntityHealth
     void PlayHurtSfx()  => PlayRandomSfx(hurtSfxSource,  hurtSfxClips,  ref lastHurtSfxIndex,  hurtSfxPitchMin,  hurtSfxPitchMax,  hurtSfxVolume);
     void PlayDeathSfx() => PlayRandomSfx(deathSfxSource, deathSfxClips, ref lastDeathSfxIndex, deathSfxPitchMin, deathSfxPitchMax, deathSfxVolume);
     void PlayBlockSfx() => PlayRandomSfx(blockSfxSource, blockSfxClips, ref lastBlockSfxIndex, blockSfxPitchMin, blockSfxPitchMax, blockSfxVolume);
+    void PlayParrySfx()
+    {
+        // Use dedicated parry clips if assigned; otherwise fall back to block clips.
+        if (parrySfxClips != null && parrySfxClips.Length > 0)
+            PlayRandomSfx(parrySfxSource, parrySfxClips, ref lastParrySfxIndex, parrySfxPitchMin, parrySfxPitchMax, parrySfxVolume);
+        else
+            PlayBlockSfx();
+    }
 
     // ========================================================================
     // IDAMAGEABLE (override)
     // ========================================================================
+
+    /// <summary>Fired when real (unblocked) damage is applied to the player. Subscribable by systems like BattleMomentum.</summary>
+    public event System.Action<int> OnDamageTaken;
 
     public override void TakeHit(
         int damage,
@@ -338,21 +368,30 @@ public class PlayerHealth : EntityHealth
     {
         if (isDead) return;
 
-        bool isBlocking = playerController != null && playerController.IsBlocking;
+        bool isBlocking = playerController != null && playerController.IsBlocking && playerController.IsBlockWindowActive;
         if (isBlocking)
         {
             damage = 0;
+            hitstun = 0;
             float multiplier = Mathf.Clamp01(blockedHitEffectMultiplier);
             knockback *= multiplier;
-            hitstun *= multiplier;
             hitStopDuration *= multiplier;
-            PlayBlockSfx();
+            PlayParrySfx();
+
+            // Face the attacker: knockback points away from attacker, so we reverse it.
+            if (faceAttackerOnParry && knockback != Vector3.zero)
+            {
+                Vector3 toAttacker = new Vector3(-knockback.x, 0f, -knockback.z).normalized;
+                if (toAttacker != Vector3.zero)
+                    transform.rotation = Quaternion.LookRotation(toAttacker);
+            }
         }
 
         hp -= damage;
         ScreenShake.RequestShake();
         if (damage > 0)
         {
+            OnDamageTaken?.Invoke(damage);
             // Safety reset: if Combat slowed animator speed (startup/recovery/charge),
             // restore baseline speed immediately when real damage is taken.
             if (animator != null)

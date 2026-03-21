@@ -161,11 +161,25 @@ public partial class Combat
     /// <summary>Starts a throw attempt: sets attack state, schedules the grab hitbox after hitboxDelay, plays grab-attempt anim.</summary>
     void DoThrow()
     {
+        // Snap to face the nearest enemy in the stick direction, same as regular attacks.
+        if (threatSystem != null && !threatSystem.IsLockedOn)
+        {
+            Transform snapTarget = GetBestThreatInFront();
+            if (snapTarget != null)
+            {
+                Vector3 toSnap = snapTarget.position - transform.position;
+                toSnap.y = 0f;
+                if (toSnap.sqrMagnitude > 0.01f)
+                    transform.rotation = Quaternion.LookRotation(toSnap.normalized, Vector3.up);
+            }
+        }
+
         // New committed throw clears the previous interrupt-suppression window.
         suppressHitboxActivationsUntilNextCommit = false;
         _currentThrowIsBack = false; // Throw direction now resolves on grab connect (not at throw begin).
         ThrowData t = GetThrowAttemptData();
         if (!t.enableThrow) return; // Hard gate: do not enter throw flow if no throw profile is active.
+        if (!TryConsumeMomentum(t.consumesMomentum, t.momentumCost)) return;
         _activeThrowData = t; // Keep attempt data active for start cues/timing until connect resolves profile.
         _hasActiveThrowData = true;
         currentAttackStartTime = Time.time;
@@ -228,6 +242,24 @@ public partial class Combat
         _throwVictimPseudoParentActive = false;
         _throwVictimPseudoParentTarget = null;
         _throwVictimPseudoParentOffset = Vector3.zero;
+    }
+
+    /// <summary>Steps the player toward the grab target while the throw hitbox is still pending.</summary>
+    void UpdateThrowSuck()
+    {
+        if (!pendingThrowHitbox) return;
+        if (!_hasActiveThrowData || !_activeThrowData.suckToTarget) return;
+        if (_activeThrowData.hitboxDelay <= 0f) return;
+
+        Transform target = GetSuckTarget();
+        if (target == null) return;
+
+        Vector3 toTarget = target.position - transform.position;
+        toTarget.y = 0f;
+        if (toTarget.sqrMagnitude < 0.001f) return;
+
+        float moveAmount = (_activeThrowData.throwSuckDistance / _activeThrowData.hitboxDelay) * Time.deltaTime;
+        ApplyLungeMove(toTarget.normalized, moveAmount, target, _activeThrowData.throwSuckStopDistance);
     }
 
     /// <summary>Returns animator state name for victim (active throw profile first, then per-AI fallback).</summary>
@@ -707,7 +739,15 @@ public partial class Combat
         ThrowData t = _activeThrowData;
         var victimAI = victimTransform.GetComponentInParent<SimpleEnemyAI>();
         float dur = t.proneDuration > 0f ? t.proneDuration : (victimAI != null ? victimAI.groundedDuration : 1f);
-        victimAI?.ProneSystem?.Enter(dur, t.invertProneRotation, t.proneVariant);
+        Vector3 toPlayer = transform.position - victimTransform.position;
+        toPlayer.y = 0f;
+        if (toPlayer.sqrMagnitude > 0.001f)
+        {
+            toPlayer.Normalize();
+            Vector3 desiredFacing = t.faceVictimTowardPlayerOnRelease ? toPlayer : -toPlayer;
+            victimTransform.rotation = Quaternion.LookRotation(desiredFacing, Vector3.up);
+        }
+        victimAI?.ProneSystem?.Enter(dur, t.invertProneRotation, t.proneVariant, preserveCurrentFacing: true);
 
         // Keep deferred one-frame bake reapply aligned with the final prone-facing rotation.
         if (_reapplyThrowBakeTransform == victimTransform)
@@ -749,7 +789,7 @@ public partial class Combat
         // and our manual rotation dominates cleanly.
         if (t.enableDirectionalThrow)
         //When you want to unmess this up this is the starting point here for directional throw
-            // UpdateDirectionalThrowRotation(t);
+            UpdateDirectionalThrowRotation(t);
 
         // Auto-release when max hold time is reached (prevents holding forever)
         if (t.maxChargeTime > 0f && Time.time - throwChargeStartTime >= t.maxChargeTime)
@@ -822,7 +862,12 @@ public partial class Combat
     bool IsThrowInputStillHeld()
     {
         if (UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.gKey.isPressed) return true;
-        if (UnityEngine.InputSystem.Gamepad.current != null && UnityEngine.InputSystem.Gamepad.current.buttonWest.isPressed) return true;
+        if (UnityEngine.InputSystem.Gamepad.current != null)
+        {
+            bool yHeld = UnityEngine.InputSystem.Gamepad.current.buttonNorth.isPressed;
+            bool bHeld = UnityEngine.InputSystem.Gamepad.current.buttonEast.isPressed;
+            if (yHeld && bHeld) return true;
+        }
         return false;
     }
 
@@ -917,7 +962,7 @@ public partial class Combat
      */
     void OnAnimatorMove()
     {
-        if (animator == null || !animator.applyRootMotion) return;
+        if (animator == null) return;
         transform.position += animator.deltaPosition;
         transform.rotation *= animator.deltaRotation;
     }

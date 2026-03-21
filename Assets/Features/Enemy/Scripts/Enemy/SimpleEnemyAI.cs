@@ -83,61 +83,17 @@ public class SimpleEnemyAI : MonoBehaviour
     [Tooltip("Max delay before rotating toward the player (seconds). Keep >= Min.")]
     public float faceTurnDelayMax = 0.14f;
     
-    // --- Standoff: when to switch to circling and how to circle ---
-    [Header("Behavior - Standoff")]
-    [Tooltip("Distance at which enemy stops chasing and begins circling the target")]
-    public float standoffEnterRange = 4f;
-    
-    [Tooltip("Distance at which enemy stops circling and resumes chasing (should be > standoffEnterRange to prevent flickering)")]
-    public float standoffExitRange = 6f;
-    
-    [Tooltip("Preferred distance to maintain while circling the target")]
-    public float standoffRadius = 3f;
-    
-    [Tooltip("Movement speed while circling (typically slower than chase speed)")]
-    public float circleSpeed = 2.5f;
-    
-    [Tooltip("Minimum time between direction changes while circling")]
-    public float directionChangeIntervalMin = 1.5f;
-    
-    [Tooltip("Maximum time between direction changes while circling")]
-    public float directionChangeIntervalMax = 4f;
-    
-    // --- Attack from standoff: timing and telegraph ---
-    [Header("Behavior - Attack")]
-    [Tooltip("Minimum time between enemy attacks from standoff")]
-    public float attackIntervalMin = 1.5f;
-    
-    [Tooltip("Maximum time between enemy attacks from standoff")]
-    public float attackIntervalMax = 4f;
-    
-    [Tooltip("Brief pause before attacking (telegraph for player to react)")]
-    public float attackTelegraphDuration = 0.2f;
-
-    // --- Dodge punish: special attack when player just dodged (range/time window) ---
-    [Header("Attack - Dodge Punish")]
-    [Tooltip("Use dodge-punish attack when player dodged within this many seconds")]
-    public float dodgePunishWindow = 0.6f;
-    [Tooltip("Use dodge-punish attack only when distance to player is at least this")]
-    public float dodgePunishDistMin = 2.5f;
-    [Tooltip("Use dodge-punish attack only when distance to player is at most this")]
-    public float dodgePunishDistMax = 6f;
-
-    // --- Personality: drives reaction timing, interrupt vs back-off decisions, trade willingness ---
+    // --- Personality: drives all combat/standoff behavior settings ---
     [Header("Personality")]
-    [Tooltip("ScriptableObject defining this enemy's reaction style. Create via Assets > Create > Enemy > Personality. Leave null to use hardcoded Normal defaults.")]
+    [Tooltip("ScriptableObject defining this enemy's combat style and reaction behavior. Create via Assets > Create > Enemy > Personality. Leave null to use hardcoded Normal defaults.")]
     public EnemyPersonality personality;
 
-    // --- Player reactivity: back off when player attacks; punish their recovery ---
-    [Header("Attack - Player Reactivity")]
-    [Tooltip("Speed the enemy moves backward when the player is attacking (units/sec). Slower than circleSpeed so the player can still close the gap with a lunge.")]
-    public float backOffSpeed = 2f;
-    [Tooltip("Minimum dot product between the player's forward and the direction to the enemy for back-off to trigger. 0.4 ≈ within ~66° of facing. Prevents backing off from attacks aimed elsewhere.")]
-    public float backOffFacingThreshold = 0.4f;
-    [Tooltip("Seconds after the player's attack lock ends during which the enemy will immediately punish (collapse attack timer to opportunityAttackDelay).")]
-    public float opportunityWindow = 0.5f;
-    [Tooltip("How long the enemy waits before punishing during the player's recovery (the enemy still telegraphs briefly so the window isn't zero-frame).")]
-    public float opportunityAttackDelay = 0.15f;
+    // --- Separation: prevent enemies from stacking on top of each other ---
+    [Header("Separation")]
+    [Tooltip("Radius within which this enemy pushes away from other enemies.")]
+    public float separationRadius = 2f;
+    [Tooltip("Strength of the separation push (units/sec).")]
+    public float separationForce = 3f;
 
     // --- Physics: gravity (CharacterController has no built-in gravity) ---
     [Header("Physics")]
@@ -298,7 +254,22 @@ public class SimpleEnemyAI : MonoBehaviour
 
     /// <summary>True when the enemy can run behavior (chase, standoff, attack). False when health is missing or during stun, airborne, crash, get-up, or dying.</summary>
     public bool CanAct => health != null && CurrentState == EnemyState.Normal;
-    
+
+    // Personality helpers — read from the personality asset with safe fallbacks matching old defaults.
+    public float StandoffEnterRange         => personality != null ? personality.standoffEnterRange         : 4f;
+    public float StandoffExitRange          => personality != null ? personality.standoffExitRange          : 6f;
+    public float StandoffRadius             => personality != null ? personality.standoffRadius             : 3f;
+    public float CircleSpeed                => personality != null ? personality.circleSpeed                : 2.5f;
+    public float DirChangeIntervalMin       => personality != null ? personality.directionChangeIntervalMin : 1.5f;
+    public float DirChangeIntervalMax       => personality != null ? personality.directionChangeIntervalMax : 4f;
+    public float AttackIntervalMin          => personality != null ? personality.attackIntervalMin          : 1.5f;
+    public float AttackIntervalMax          => personality != null ? personality.attackIntervalMax          : 4f;
+    public float AttackTelegraphDuration    => personality != null ? personality.attackTelegraphDuration    : 0.2f;
+    public float BackOffSpeed               => personality != null ? personality.backOffSpeed               : 2f;
+    public float BackOffFacingThreshold     => personality != null ? personality.backOffFacingThreshold     : 0.4f;
+    public float OpportunityWindow          => personality != null ? personality.opportunityWindow          : 0.5f;
+    public float OpportunityAttackDelay     => personality != null ? personality.opportunityAttackDelay     : 0.15f;
+
     /// <summary>Enemy combat component (for attack execution). May be null if not present.</summary>
     public EnemyCombat EnemyCombat { get; private set; }
 
@@ -839,12 +810,54 @@ public class SimpleEnemyAI : MonoBehaviour
         if (player == null) return;
         if (!cc.enabled) return;
 
+        // Always push away from nearby enemies regardless of combat state — prevents stacking.
+        ApplySeparation();
+
         // Block everything when not in Normal state (hitstun, airborne, crash, prone, get-up, dying).
         // CanAct reads CurrentState which is the priority-ordered interrupt check — one gate for all behavior.
         if (!CanAct) return;
 
         EvaluateBehaviorTransition(); // decide what state to be in
         stateMachine.Tick();          // run it
+    }
+
+    /*
+     * ApplySeparation — push away from nearby enemies to prevent clumping.
+     *
+     * Uses OverlapSphere to find all colliders within separationRadius, filters to
+     * other SimpleEnemyAI instances, then applies a push proportional to how close
+     * they are. Closer enemies push harder (inverse falloff within the radius).
+     * Runs every frame regardless of combat state so stunned enemies also spread out.
+     */
+    void ApplySeparation()
+    {
+        if (separationRadius <= 0f || separationForce <= 0f) return;
+
+        Collider[] nearby = Physics.OverlapSphere(transform.position, separationRadius);
+        Vector3 push = Vector3.zero;
+
+        foreach (Collider col in nearby)
+        {
+            if (col.gameObject == gameObject) continue;
+            if (col.GetComponent<SimpleEnemyAI>() == null) continue;
+
+            Vector3 away = transform.position - col.transform.position;
+            away.y = 0f;
+            float dist = away.magnitude;
+            if (dist < 0.001f)
+            {
+                // Exactly overlapping: push in a random horizontal direction to break the tie
+                away = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
+                dist = away.magnitude;
+            }
+
+            // Falloff: full force at dist=0, zero force at dist=separationRadius
+            float strength = 1f - Mathf.Clamp01(dist / separationRadius);
+            push += (away / dist) * strength;
+        }
+
+        if (push.sqrMagnitude > 0.0001f)
+            cc.Move(push.normalized * separationForce * Time.deltaTime);
     }
 
     // -------------------------------------------------------------------------
@@ -867,9 +880,9 @@ public class SimpleEnemyAI : MonoBehaviour
         //   Chase → Standoff at standoffEnterRange (e.g. 4 units)
         //   Standoff → Chase at standoffExitRange  (e.g. 6 units)
         //   Between 4–6: stay in whatever is already active
-        if (stateMachine.CurrentBehavior == chaseBehavior && dist <= standoffEnterRange)
+        if (stateMachine.CurrentBehavior == chaseBehavior && dist <= StandoffEnterRange)
             stateMachine.Transition(standoffBehavior);
-        else if (stateMachine.CurrentBehavior == standoffBehavior && dist > standoffExitRange)
+        else if (stateMachine.CurrentBehavior == standoffBehavior && dist > StandoffExitRange)
             stateMachine.Transition(chaseBehavior);
     }
 

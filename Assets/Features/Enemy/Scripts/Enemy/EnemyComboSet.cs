@@ -17,9 +17,6 @@ public class EnemyMoveEntry
     [Tooltip("Move can be selected only when distance to player is <= this value.")]
     public float maxDistance = 100f;
 
-    [Tooltip("If enabled, this move is only considered when the player recently dodged.")]
-    public bool requiresRecentDodge = false;
-
     [Tooltip("Higher values are selected first when multiple moves match.")]
     public int priority = 0;
 }

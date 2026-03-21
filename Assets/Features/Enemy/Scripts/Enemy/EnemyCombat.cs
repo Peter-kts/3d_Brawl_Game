@@ -65,66 +65,9 @@ public class EnemyCombat : MonoBehaviour
     // ATTACK DATA
     // ========================================================================
 
-    [Header("Basic Attack")]
-    [Tooltip("Attack configuration - same format as player attacks in Combat.cs")]
-    public AttackData basicAttack = new AttackData
-    {
-        damage = 8,
-        lockDuration = 0.6f,
-        cooldown = 0.5f,
-        knockback = 5f,
-        knockbackUp = 0f,
-        hitstun = 0.2f,
-        makesAirborne = false,
-        airborneDuration = 0f,
-        animationTrigger = "Punch",
-        lungeDistance = 0.4f,
-        lungeDuration = 0.1f,
-        hitStopDuration = 0.1f
-    };
-
-    [Header("Moveset (optional)")]
-    [Tooltip("If assigned, attack selection can be data-driven from this asset. If not assigned, legacy basic/kick/punish fields are used.")]
+    [Header("Moveset")]
+    [Tooltip("Data-driven moveset. Attack selection uses distance ranges and priority defined per entry.")]
     public EnemyComboSet enemyComboSet;
-
-    [Tooltip("Max distance to player to use punch; beyond this uses kick.")]
-    public float punchRangeThreshold = 2.2f;
-
-    [Header("Kick Attack (out of punch range)")]
-    [Tooltip("Used when the player is out of range of the basic attack.")]
-    public AttackData kickAttack = new AttackData
-    {
-        damage = 8,
-        lockDuration = 0.65f,
-        cooldown = 0.5f,
-        knockback = 8f,
-        knockbackUp = 0f,
-        hitstun = 0.2f,
-        makesAirborne = false,
-        airborneDuration = 0f,
-        animationTrigger = "Kick",
-        lungeDistance = 0.7f,
-        lungeDuration = 0.12f,
-        hitStopDuration = 0.1f
-    };
-
-    [Header("Dodge Punish Attack")]
-    [Tooltip("Used when the player recently dodged and is at punish distance.")]
-    public AttackData dodgePunishAttack = new AttackData
-    {
-        damage = 10,
-        lockDuration = 0.7f,
-        cooldown = 0.5f,
-        knockback = 6f,
-        knockbackUp = 0f,
-        hitstun = 0.25f,
-        makesAirborne = false,
-        airborneDuration = 0f,
-        animationTrigger = "Punch",
-        lungeDistance = 0.8f,
-        lungeDuration = 0.15f,
-        hitStopDuration = 0.1f
-    };
 
     [Header("VFX (optional)")]
     [Tooltip("Optional. Spawned when the attack animation starts.")]
@@ -233,12 +176,6 @@ public class EnemyCombat : MonoBehaviour
     // ATTACK EXECUTION
     // ========================================================================
 
-    /// <summary>Execute the basic attack.</summary>
-    public void DoAttack()
-    {
-        DoAttack(basicAttack);
-    }
-
     /// <summary>Execute a specific attack by passing its AttackData directly.</summary>
     public void DoAttack(AttackData attack)
     {
@@ -292,10 +229,11 @@ public class EnemyCombat : MonoBehaviour
     }
 
     /// <summary>
-    /// Try to select an attack from the EnemyComboSet using distance and player state.
+    /// Try to select an attack from the EnemyComboSet based on distance.
+    /// Among all matching entries, picks randomly from those tied at the highest priority.
     /// Returns false if no set is assigned or no entry matches.
     /// </summary>
-    public bool TrySelectAttack(float distanceToPlayer, bool playerRecentlyDodged, out AttackData selectedAttack)
+    public bool TrySelectAttack(float distanceToPlayer, out AttackData selectedAttack)
     {
         selectedAttack = null;
 
@@ -303,22 +241,31 @@ public class EnemyCombat : MonoBehaviour
             return false;
 
         int bestPriority = int.MinValue;
+        int candidateCount = 0;
 
+        // Two-pass: first find the highest priority that matches, then pick randomly among ties.
         for (int i = 0; i < enemyComboSet.moves.Count; i++)
         {
             EnemyMoveEntry entry = enemyComboSet.moves[i];
             if (entry == null || entry.attack == null) continue;
+            if (string.IsNullOrEmpty(entry.attack.animationTrigger)) continue;
 
             float minDist = Mathf.Min(entry.minDistance, entry.maxDistance);
             float maxDist = Mathf.Max(entry.minDistance, entry.maxDistance);
             if (distanceToPlayer < minDist || distanceToPlayer > maxDist) continue;
 
-            if (entry.requiresRecentDodge && !playerRecentlyDodged) continue;
-
-            if (selectedAttack == null || entry.priority > bestPriority)
+            if (entry.priority > bestPriority)
             {
-                selectedAttack = entry.attack;
                 bestPriority   = entry.priority;
+                selectedAttack = entry.attack;
+                candidateCount = 1;
+            }
+            else if (entry.priority == bestPriority)
+            {
+                // Reservoir sampling: replace with 1/n probability so all ties are equally likely.
+                candidateCount++;
+                if (Random.Range(0, candidateCount) == 0)
+                    selectedAttack = entry.attack;
             }
         }
 

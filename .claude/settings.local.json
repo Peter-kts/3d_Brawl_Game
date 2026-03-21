@@ -9,7 +9,18 @@
       "Bash(find d:3dbrawlerlearn -iname *outline*)",
       "Bash(find /d/3dbrawlerlearn/Assets -type f -name \"*.cs\" -exec grep -l \"renderer\\\\|Renderer\\\\|GetComponent.*Renderer\\\\|SkinnedMesh\\\\|MeshRenderer\" {})",
       "Bash(grep -E \"\\\\.\\(cs|mat|shadergraph\\)$\")",
-      "Bash(grep -r \"Material\\\\|material\\\\|renderer\\\\|Renderer\" /d/3dbrawlerlearn/Assets/bsoldierswordf/*.mat --include=*.mat)"
+      "Bash(grep -r \"Material\\\\|material\\\\|renderer\\\\|Renderer\" /d/3dbrawlerlearn/Assets/bsoldierswordf/*.mat --include=*.mat)",
+      "Bash(mv \"2handersounds\" \"Audio/SFX/\")",
+      "Bash(mv \"2handersounds.meta\" \"Audio/SFX/\")",
+      "Bash(mv \"Best Of Sound FX 2025\" \"Audio/SFX/\")",
+      "Bash(mv \"Best Of Sound FX 2025.meta\" \"Audio/SFX/\")",
+      "Bash(mv \"Fight Sound Effects 2\" \"Audio/SFX/\")",
+      "Bash(mv \"SandalStudio\" \"ThirdParty/\")",
+      "Bash(mv \"SandalStudio.meta\" \"ThirdParty/\")",
+      "Bash(mv \"FastScriptReload\" \"ThirdParty/\")",
+      "Bash(mv \"FastScriptReload.meta\" \"ThirdParty/\")",
+      "Bash(mv \"Frank_Slash_Pack\" \"ThirdParty/\")",
+      "Bash(grep -n \"OverlapSphere\\\\|OverlapCapsule\\\\|ExecuteThrow\\\\|hitConfirm\\\\|OnHitConfirm\" d:/3dbrawlerlearn/Assets/Features/Combat/Scripts/Combat/*.cs)"
     ]
   }
 }

@@ -66,10 +66,14 @@ public partial class PlayerController
 
     void TryStartDashFromInput()
     {
-        bool dashPressed = (Gamepad.current != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
-                          (Keyboard.current != null && Keyboard.current.bKey.wasPressedThisFrame);
-        if (dashPressed && Time.time >= nextDashTime && Time.time >= dashEndTime && (ActiveCombat == null || !ActiveCombat.IsInAttackLock))
-            StartDash();
+        bool pressed = (Gamepad.current  != null && Gamepad.current.buttonEast.wasPressedThisFrame) ||
+                       (Keyboard.current != null && Keyboard.current.leftShiftKey.wasPressedThisFrame);
+        if (!pressed) return;
+        if (IsBlocking) return;
+        if (Time.time < nextDashTime || Time.time < dashEndTime) return;
+        if (ActiveCombat != null && ActiveCombat.IsInAttackLock) return;
+
+        StartDash();
     }
 
     void TrackDashEnd()

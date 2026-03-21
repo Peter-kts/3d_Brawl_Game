@@ -15,6 +15,8 @@ public class ComboSetEditor : Editor
         "Neutral Jab 1 (Charged / Hold)",
         "Neutral Jab 2 (Normal / Tap)",
         "Neutral Jab 2 (Charged / Hold)",
+        "Neutral Jab 3 (Normal / Tap)",
+        "Neutral Jab 3 (Charged / Hold)",
         "Heavy Attack",
         "RB + X Attack",
         "Throw",
@@ -30,6 +32,8 @@ public class ComboSetEditor : Editor
         "neutralJab",
         "neutralJab2Normal",
         "neutralJab2",
+        "neutralJab3Normal",
+        "neutralJab3",
         "heavyAttack",
         "rbXAttack",
         "throwData",
@@ -53,6 +57,7 @@ public class ComboSetEditor : Editor
         EditorGUILayout.LabelField("Combo Settings", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("comboWindowDelay"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("comboWindowDuration"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("loopNeutralCombo"));
 
         // Dropdown: which of the 6 moves we're editing (selection persisted per asset via EditorPrefs)
         EditorGUILayout.Space(6);
@@ -68,7 +73,7 @@ public class ComboSetEditor : Editor
             EditorGUILayout.PropertyField(moveProp, new GUIContent(MoveNames[selectedIndex]), true);
 
         // Move template: only for attack moves (not Throw entries)
-        if (selectedIndex < 10)
+        if (selectedIndex < 12)
         {
             EditorGUILayout.Space(8);
             EditorGUILayout.LabelField("Move Template", EditorStyles.boldLabel);
@@ -105,35 +110,39 @@ public class ComboSetEditor : Editor
     {
         switch (index)
         {
-            case 0: return comboSet.forwardJabNormal;
-            case 1: return comboSet.forwardJab;
-            case 2: return comboSet.forwardJab2Normal;
-            case 3: return comboSet.forwardJab2;
-            case 4: return comboSet.neutralJabNormal;
-            case 5: return comboSet.neutralJab;
-            case 6: return comboSet.neutralJab2Normal;
-            case 7: return comboSet.neutralJab2;
-            case 8: return comboSet.heavyAttack;
-            case 9: return comboSet.rbXAttack;
+            case 0:  return comboSet.forwardJabNormal;
+            case 1:  return comboSet.forwardJab;
+            case 2:  return comboSet.forwardJab2Normal;
+            case 3:  return comboSet.forwardJab2;
+            case 4:  return comboSet.neutralJabNormal;
+            case 5:  return comboSet.neutralJab;
+            case 6:  return comboSet.neutralJab2Normal;
+            case 7:  return comboSet.neutralJab2;
+            case 8:  return comboSet.neutralJab3Normal;
+            case 9:  return comboSet.neutralJab3;
+            case 10: return comboSet.heavyAttack;
+            case 11: return comboSet.rbXAttack;
             default: return comboSet.forwardJabNormal;
         }
     }
 
-    /// <summary>Write AttackData into the selected move slot on the ComboSet. Only used for indices 0..9 (not Throw).</summary>
+    /// <summary>Write AttackData into the selected move slot on the ComboSet. Only used for attack indices (not Throw).</summary>
     private static void ApplyMoveToComboSet(ComboSet comboSet, int index, AttackData data)
     {
         switch (index)
         {
-            case 0: comboSet.forwardJabNormal = data; break;
-            case 1: comboSet.forwardJab = data; break;
-            case 2: comboSet.forwardJab2Normal = data; break;
-            case 3: comboSet.forwardJab2 = data; break;
-            case 4: comboSet.neutralJabNormal = data; break;
-            case 5: comboSet.neutralJab = data; break;
-            case 6: comboSet.neutralJab2Normal = data; break;
-            case 7: comboSet.neutralJab2 = data; break;
-            case 8: comboSet.heavyAttack = data; break;
-            case 9: comboSet.rbXAttack = data; break;
+            case 0:  comboSet.forwardJabNormal  = data; break;
+            case 1:  comboSet.forwardJab        = data; break;
+            case 2:  comboSet.forwardJab2Normal = data; break;
+            case 3:  comboSet.forwardJab2       = data; break;
+            case 4:  comboSet.neutralJabNormal  = data; break;
+            case 5:  comboSet.neutralJab        = data; break;
+            case 6:  comboSet.neutralJab2Normal = data; break;
+            case 7:  comboSet.neutralJab2       = data; break;
+            case 8:  comboSet.neutralJab3Normal = data; break;
+            case 9:  comboSet.neutralJab3       = data; break;
+            case 10: comboSet.heavyAttack       = data; break;
+            case 11: comboSet.rbXAttack         = data; break;
         }
         EditorUtility.SetDirty(comboSet);
     }
