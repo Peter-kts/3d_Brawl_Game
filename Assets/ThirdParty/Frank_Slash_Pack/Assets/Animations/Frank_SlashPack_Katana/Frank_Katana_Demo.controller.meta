@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 906f7d85ca343fb4c9d21df91745c3f2
+timeCreated: 1559019297
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_Katana/Frank_Katana_Demo.controller
+  uploadId: 850118

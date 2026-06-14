@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 07fc887828c2f9648b66ed1fda0dd816
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Prefab/HDRP/01_Setup/GrassSetupHDRP.prefab
+  uploadId: 596088

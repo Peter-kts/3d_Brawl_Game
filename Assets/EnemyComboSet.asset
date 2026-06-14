@@ -41,7 +41,6 @@ MonoBehaviour:
       suckToTargetStopDistance: 0.6
       hitStopDuration: 0.1
       trackingDuration: 0
-      trackingSpeed: 540
       attackStartSfx: {fileID: 0}
       hitConnectSfx: {fileID: 0}
       sfxCues: []
@@ -67,7 +66,7 @@ MonoBehaviour:
       inheritPlayerRotation: 1
       parentToPlayer: 0
     minDistance: 0
-    maxDistance: 2.2
+    maxDistance: 0
     priority: 10
   - moveId: MidRange
     attack:
@@ -97,9 +96,8 @@ MonoBehaviour:
       suckToTargetStopDistance: 0.6
       hitStopDuration: 0.1
       trackingDuration: 1
-      trackingSpeed: 540
-      attackStartSfx: {fileID: 0}
-      hitConnectSfx: {fileID: 0}
+      attackStartSfx: {fileID: 8300000, guid: a4a755b12e5112e4aaa19b0e7eb6f15e, type: 3}
+      hitConnectSfx: {fileID: 8300000, guid: eb3165604498a4f478a1483e4f3b2383, type: 3}
       sfxCues: []
       chargeLoopSfx: {fileID: 0}
       chargeLoopSfxVolume: 0.7
@@ -122,8 +120,8 @@ MonoBehaviour:
       spawnInLocalSpace: 1
       inheritPlayerRotation: 1
       parentToPlayer: 0
-    minDistance: 3
-    maxDistance: 100
+    minDistance: 1
+    maxDistance: 5
     priority: 0
   - moveId: MidRange2
     attack:
@@ -149,13 +147,12 @@ MonoBehaviour:
       lungeFrame: 0.2
       lungeDistance: 0.7
       lungeDuration: 0.12
-      suckToTarget: 0
+      suckToTarget: 1
       suckToTargetStopDistance: 0.6
       hitStopDuration: 0.1
       trackingDuration: 0
-      trackingSpeed: 540
-      attackStartSfx: {fileID: 0}
-      hitConnectSfx: {fileID: 0}
+      attackStartSfx: {fileID: 8300000, guid: 7d995ca69fc63a149b5359b323c2a340, type: 3}
+      hitConnectSfx: {fileID: 8300000, guid: 90af736081ce501468a39a417cdce156, type: 3}
       sfxCues: []
       chargeLoopSfx: {fileID: 0}
       chargeLoopSfxVolume: 0.7
@@ -178,6 +175,6 @@ MonoBehaviour:
       spawnInLocalSpace: 1
       inheritPlayerRotation: 1
       parentToPlayer: 0
-    minDistance: 3
-    maxDistance: 100
+    minDistance: 1
+    maxDistance: 5
     priority: 0

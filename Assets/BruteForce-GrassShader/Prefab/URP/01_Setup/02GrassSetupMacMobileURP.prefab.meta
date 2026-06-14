@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f8755d4366f064748b3125a048515253
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Prefab/URP/01_Setup/02GrassSetupMacMobileURP.prefab
+  uploadId: 596088

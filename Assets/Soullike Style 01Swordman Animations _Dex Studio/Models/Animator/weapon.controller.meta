@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 63f2a69ff76a8ab47804ff24bbc057dd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 232433
+  packageName: '[Soullike Style] Swordman Animations'
+  packageVersion: 1.1
+  assetPath: Assets/Soullike Style 01Swordman Animations _Dex Studio/Models/Animator/weapon.controller
+  uploadId: 528588

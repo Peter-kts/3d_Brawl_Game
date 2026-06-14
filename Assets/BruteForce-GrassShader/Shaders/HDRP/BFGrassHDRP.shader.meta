@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 26cee2a83feb2624c898843862b23f88
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Shaders/HDRP/BFGrassHDRP.shader
+  uploadId: 596088

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 24fcc285f1f52894e9a799aae3509244
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/Standard/Showcase01/2_BFGrassLite03.mat
+  uploadId: 596088

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 36c09aaa159c1a2458fcaa04a9d0f67b
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Prefab/HDRP/Player/TractorHDRP.prefab
+  uploadId: 596088

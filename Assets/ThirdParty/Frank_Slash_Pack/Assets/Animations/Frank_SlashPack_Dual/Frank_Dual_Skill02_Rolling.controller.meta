@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: cbd84f2190059754aa32c919a90d1cc4
+timeCreated: 1551612676
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_Dual/Frank_Dual_Skill02_Rolling.controller
+  uploadId: 850118

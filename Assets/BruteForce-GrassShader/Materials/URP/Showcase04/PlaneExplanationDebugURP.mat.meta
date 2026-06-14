@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7c961bb82caf39044848bcc6a75895b4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/URP/Showcase04/PlaneExplanationDebugURP.mat
+  uploadId: 596088

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e0f7ed051f4c45cbb149d085f4145601
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200709
+  packageName: Stylized Newbie Weapons Pack
+  packageVersion: 1.4.2
+  assetPath: Assets/StylizedCharacter/Materials/Item/Weapon/M_Shield_Newbie_Gn.mat
+  uploadId: 783623

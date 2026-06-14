@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e959206205542294ea9eaf1d3dc0dbe9
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Prefab/Standard/02_GrassTerrain/Lawn.prefab
+  uploadId: 596088

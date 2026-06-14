@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: afe18db27acdf004f82e04df45bbcc9a
+timeCreated: 1551612675
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_Warrior/Frank_Warrior_Skill02.controller
+  uploadId: 850118

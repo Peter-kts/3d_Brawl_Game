@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8bdeb50ccc8afd94097283a27ba2e8dc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/Standard/CheckerPattern.mat
+  uploadId: 596088

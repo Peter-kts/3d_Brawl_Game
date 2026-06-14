@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 578d9957f5f8cf34ea64b20f99bcae96
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Scripts/BF_TractorController.cs
+  uploadId: 596088

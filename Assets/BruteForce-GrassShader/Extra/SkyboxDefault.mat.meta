@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7a4ea0f7faab7f34cb8ea1d6efc4ed8e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Extra/SkyboxDefault.mat
+  uploadId: 596088

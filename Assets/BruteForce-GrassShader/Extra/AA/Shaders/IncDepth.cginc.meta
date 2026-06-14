@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: e84bd3245769b9746ae57a016126a416
+timeCreated: 1486464894
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Extra/AA/Shaders/IncDepth.cginc
+  uploadId: 596088

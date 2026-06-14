@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 228669e43365e55468de0ef0b707a4bd
+timeCreated: 1437991512
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Extra/AA/Shaders/IncNoise.cginc
+  uploadId: 596088

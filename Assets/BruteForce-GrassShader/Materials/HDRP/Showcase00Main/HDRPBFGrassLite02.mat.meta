@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 639ef436e17a1e24f95fae5837760ac9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/HDRP/Showcase00Main/HDRPBFGrassLite02.mat
+  uploadId: 596088

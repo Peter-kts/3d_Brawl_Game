@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 80e04b294c3c7274e8de3591619be5ce
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Scenes/HDRP/HDRPBFResources/Skin Diffusion
+    Profile.asset
+  uploadId: 596088

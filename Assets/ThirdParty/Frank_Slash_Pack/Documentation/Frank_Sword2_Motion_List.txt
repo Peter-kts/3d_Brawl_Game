@@ -1,0 +1,307 @@
+Unity		
+						Start	End
+Equip		
+Frank_Sword2@Unequip_Idle			300	400
+Frank_Sword2@Equip				400	460
+Frank_Sword2@Equip_Idle				480	750
+Frank_Sword2@Unequip				800	850
+		
+Evade		
+Frank_Sword2@Evade_F				100	150
+Frank_Sword2@Evade_L				180	230
+Frank_Sword2@Evade_R				260	310
+Frank_Sword2@Evade_B				340	390
+Frank_Sword2@Evade_FL				420	470
+Frank_Sword2@Evade_FR				500	550
+Frank_Sword2@Evade_BL				580	630
+Frank_Sword2@Evade_BR				660	710
+		
+		
+Locomotion		
+Frank_Sword2@8Way_Run_F				100	140
+Frank_Sword2@8Way_Run_B				170	210
+Frank_Sword2@8Way_Run_FL			250	290
+Frank_Sword2@8Way_Run_FR			330	370
+Frank_Sword2@8Way_Run_L				410	450
+Frank_Sword2@8Way_Run_R				490	530
+Frank_Sword2@8Way_Run_BL			570	610
+Frank_Sword2@8Way_Run_BR			650	690
+		
+Frank_Sword2@8Way_Walk_F			790	860
+Frank_Sword2@8Way_Walk_B			930	1000
+Frank_Sword2@8Way_Walk_FL			1080	1150
+Frank_Sword2@8Way_Walk_FR			1230	1300
+Frank_Sword2@8Way_Walk_L			1390	1460
+Frank_Sword2@8Way_Walk_R			1530	1600
+Frank_Sword2@8Way_Walk_BL			1670	1740
+Frank_Sword2@8Way_Walk_BR			1810	1880
+		
+Frank_Sword2@8Way_Walk_Guard_F			2050	2120
+Frank_Sword2@8Way_Walk_Guard_B			2190	2260
+Frank_Sword2@8Way_Walk_Guard_FL			2330	2400
+Frank_Sword2@8Way_Walk_Guard_FR			2480	2550
+Frank_Sword2@8Way_Walk_Guard_L			2640	2710
+Frank_Sword2@8Way_Walk_Guard_R			2780	2850
+Frank_Sword2@8Way_Walk_Guard_BL			2920	2990
+Frank_Sword2@8Way_Walk_Guard_BR			3060	3130
+		
+		
+Sprint		
+Frank_Sword2@equip_Run_Turbo1			100	134
+Frank_Sword2@equip_Run_Turbo2			160	188
+		
+Frank_Sword2@Unequip_Run_Turbo1			220	254
+Frank_Sword2@Unequip_Run_Turbo2			280	308
+		
+		
+Jump		
+Frank_Sword2@Jump_01_All				100	160
+Frank_Sword2@Jump_02_All				200	260
+Frank_Sword2@Jump_03_All				300	360
+		
+Frank_Sword2@Jump_01_All_0_Height			440	500
+Frank_Sword2@Jump_02_All_0_Height			540	600
+Frank_Sword2@Jump_03_All_0_Height			640	700
+		
+Frank_Sword2@Jump_01_Start			800	809
+Frank_Sword2@Jump_01_Air				820	854
+Frank_Sword2@Jump_01_End			870	887
+Frank_Sword2@Jump_01_Air_0_Height			900	934
+		
+Frank_Sword2@Jump_02_Start			980	989
+Frank_Sword2@Jump_02_Air				1000	1034
+Frank_Sword2@Jump_02_End			1050	1067
+Frank_Sword2@Jump_02_Air_0_Height			1080	1114
+		
+Frank_Sword2@Jump_03_Start			1160	1172
+Frank_Sword2@Jump_03_Air				1190	1223
+Frank_Sword2@Jump_03_End			1240	1255
+Frank_Sword2@Jump_03_Air_0_Height			1280	1313
+		
+		
+Guard_n_Parry		
+Frank_Sword2@Guard				100	160
+Frank_Sword2@Guard_Off				190	220
+Frank_Sword2@Blocked				250	280
+Frank_Sword2@Parry1				310	380
+Frank_Sword2@Parry2				420	490
+Frank_Sword2@Parry_Attack1			540	630
+Frank_Sword2@Parry_Attack2			700	806
+Frank_Sword2@Parry_Attack3			880	980
+		
+		
+Hit		
+Frank_Sword2@Hit01	100	145
+Frank_Sword2@Hit02	180	230
+Frank_Sword2@Hit03	280	340
+Frank_Sword2@Hit04	380	436
+Frank_Sword2@Hit05	500	640
+Frank_Sword2@Hit06	700	850
+Frank_Sword2@Hit07	900	1020
+Frank_Sword2@Hit08	1580	1620
+Frank_Sword2@Hit09	1660	1690
+Frank_Sword2@Hit10	1730	1790
+Frank_Sword2@Hit11	1850	1985
+		
+Frank_Sword2@Hit_L_High	1150	1190
+Frank_Sword2@Hit_L_Mid	1230	1270
+Frank_Sword2@Hit_R_High	1300	1340
+Frank_Sword2@Hit_R_Mid	1370	1410
+Frank_Sword2@Hit_B_High	1440	1480
+Frank_Sword2@Hit_B_Mid	1510	1550
+		
+Frank_Sword2@Hit_Air01	2050	2080
+Frank_Sword2@Hit_Air02	2100	2130
+Frank_Sword2@Hit_Air03	2150	2180
+Frank_Sword2@Hit_Air04	2200	2240
+		
+Die		
+Frank_Sword2@Die01	100	240
+Frank_Sword2@Die02	320	427
+Frank_Sword2@Die03	550	620
+Frank_Sword2@Die04	690	755
+Frank_Sword2@Die05	810	860
+		
+		
+Attack		
+Frank_Sword2@Attack01	100	150
+Frank_Sword2@Attack02	190	250
+Frank_Sword2@Attack03	290	380
+Frank_Sword2@Attack04	430	500
+Frank_Sword2@Attack05	550	615
+Frank_Sword2@Attack06	660	715
+Frank_Sword2@Attack07	800	860
+Frank_Sword2@Attack08	900	960
+Frank_Sword2@Attack09	1020	1105
+Frank_Sword2@Attack10	1200	1265
+Frank_Sword2@Attack11	1320	1400
+		
+		
+		
+Running Attack		
+Frank_Sword2@Running_Attack01	0	80
+		
+		
+Combo		
+Frank_Sword2@Combo01_All	100	280
+Frank_Sword2@Combo02_All	370	580
+Frank_Sword2@Combo03_All	720	900
+Frank_Sword2@Combo04_All	1020	1260
+Frank_Sword2@Combo05_All	1370	1520
+Frank_Sword2@Combo06_All	1620	1795
+Frank_Sword2@Combo07_All	1900	2091
+Frank_Sword2@Combo08_All	2140	2280
+		
+		
+		
+Air Attack		
+Frank_Sword2@Air_Idle	100	130
+Frank_Sword2@Air_Combo_Set	170	290
+Frank_Sword2@Air_Attack01	340	390
+Frank_Sword2@Air_Attack02	430	480
+Frank_Sword2@Air_Attack03	520	565
+Frank_Sword2@Air_Guard	600	650
+Frank_Sword2@Air_Blocked	690	720
+		
+		
+		
+Skill		
+Frank_Sword2@Skill01_cine	100	440
+Frank_Sword2@Skill02_cine	500	700
+Frank_Sword2@Skill03_cine	760	1002
+Frank_Sword2@Skill04	1100	1230
+Frank_Sword2@Skill05	1300	1433
+Frank_Sword2@Skill06	1550	1740
+Frank_Sword2@Skill07	1840	2040
+Frank_Sword2@Skill08	2140	2352
+		
+		
+GetUp		
+Frank_Sword2@Getup01	100	170
+Frank_Sword2@Getup02	200	260
+		
+		
+Dash		
+Frank_Sword2@F_Dash	100	135
+Frank_Sword2@B_Dash	160	195
+		
+Sliding		
+Frank_Sword2@Sliding_equip_Run	100	140
+Frank_Sword2@Sliding_equip_Sprint	160	200
+		
+Frank_Sword2@Sliding_UnEquip_Run	220	260
+Frank_Sword2@Sliding_UnEquip_Sprint	280	320
+		
+Frank_Sword2@Sliding_equip_Run_In_Place	360	400
+Frank_Sword2@Sliding_equip_Sprint_In_Place	420	460
+		
+Frank_Sword2@Sliding_Un_Equip_Run_In_Place	480	520
+Frank_Sword2@Sliding_Un_Equip_Sprint_In_Place	540	580
+		
+Turn 45, 90, 180		
+Frank_Sword2@Turn_Left_45	100	130
+Frank_Sword2@Turn_Left_90	150	180
+Frank_Sword2@Turn_Left_180	200	230
+		
+Frank_Sword2@Turn_Right_45	260	290
+Frank_Sword2@Turn_Right_90	310	340
+Frank_Sword2@Turn_Right_180	360	390
+		
+		
+Idle_Action		
+Frank_Sword2@Equip_Idle_Action01	100	240
+Frank_Sword2@Equip_Idle_Action02	300	590
+		
+		
+Grab		
+Frank_Sword2@Grab01	100	200
+Frank_Sword2@Grab02	250	340
+		
+		
+Combo_Split		
+Frank_Sword2@Combo01_1	100	170
+Frank_Sword2@Combo01_2	200	270
+Frank_Sword2@Combo01_3	300	395
+		
+		
+Frank_Sword2@Combo02_1	500	560
+Frank_Sword2@Combo02_2	600	670
+Frank_Sword2@Combo02_3	710	790
+Frank_Sword2@Combo02_4	820	904
+		
+		
+Frank_Sword2@Combo03_1	1040	1100
+Frank_Sword2@Combo03_2	1130	1215
+Frank_Sword2@Combo03_3	1250	1343
+		
+		
+Frank_Sword2@Combo04_1	1500	1560
+Frank_Sword2@Combo04_2	1590	1650
+Frank_Sword2@Combo04_3	1680	1773
+Frank_Sword2@Combo04_4	1810	1923
+		
+		
+Frank_Sword2@Combo05_1	2100	2160
+Frank_Sword2@Combo05_2	2200	2270
+Frank_Sword2@Combo05_3	2310	2386
+		
+		
+Frank_Sword2@Combo06_1	2580	2655
+Frank_Sword2@Combo06_2	2700	2780
+Frank_Sword2@Combo06_3	2820	2903
+		
+		
+Frank_Sword2@Combo07_1	3050	3110
+Frank_Sword2@Combo07_2	3150	3234
+Frank_Sword2@Combo07_3	3280	3384
+		
+		
+Frank_Sword2@Combo08_1	3520	3570
+Frank_Sword2@Combo08_2	3620	3685
+Frank_Sword2@Combo08_3	3740	3831
+		
+		
+		
+Hit Man		
+Frank_Sword2@Hit_Skill01_cine	0	340
+Frank_Sword2@Hit_Skill02_cine	400	600
+Frank_Sword2@Hit_Skill03_cine	700	942
+Frank_Sword2@Hit_Grab01	1000	1100
+Frank_Sword2@Hit_Grab02	1200	1290
+		
+		
+Locomotion-RM		
+Frank_Sword2@8Way_Run_F_RootMotion	100	140
+Frank_Sword2@8Way_Run_B_RootMotion	170	210
+Frank_Sword2@8Way_Run_FL_RootMotion	250	290
+Frank_Sword2@8Way_Run_FR_RootMotion	330	370
+Frank_Sword2@8Way_Run_L_RootMotion	410	450
+Frank_Sword2@8Way_Run_R_RootMotion	490	530
+Frank_Sword2@8Way_Run_BL_RootMotion	570	610
+Frank_Sword2@8Way_Run_BR_RootMotion	650	690
+		
+Frank_Sword2@8Way_Walk_F_RootMotion	790	860
+Frank_Sword2@8Way_Walk_B_RootMotion	930	1000
+Frank_Sword2@8Way_Walk_FL_RootMotion	1080	1150
+Frank_Sword2@8Way_Walk_FR_RootMotion	1230	1300
+Frank_Sword2@8Way_Walk_L_RootMotion	1390	1460
+Frank_Sword2@8Way_Walk_R_RootMotion	1530	1600
+Frank_Sword2@8Way_Walk_BL_RootMotion	1670	1740
+Frank_Sword2@8Way_Walk_BR_RootMotion	1810	1880
+		
+Frank_Sword2@8Way_Walk_Guard_F_RootMotion	2050	2120
+Frank_Sword2@8Way_Walk_Guard_B_RootMotion	2190	2260
+Frank_Sword2@8Way_Walk_Guard_FL_RootMotion	2330	2400
+Frank_Sword2@8Way_Walk_Guard_FR_RootMotion	2480	2550
+Frank_Sword2@8Way_Walk_Guard_L_RootMotion	2640	2710
+Frank_Sword2@8Way_Walk_Guard_R_RootMotion	2780	2850
+Frank_Sword2@8Way_Walk_Guard_BL_RootMotion	2920	2990
+Frank_Sword2@8Way_Walk_Guard_BR_RootMotion	3060	3130
+		
+		
+Frank_Sword2@equip_Run_Turbo1_RootMotion	3250	3284
+Frank_Sword2@equip_Run_Turbo2_RootMotion	3310	3338
+Frank_Sword2@Unequip_Run_Turbo1_RootMotion	3370	3404
+Frank_Sword2@Unequip_Run_Turbo2_RootMotion	3430	3458
+		
+Frank_Sword2@Running_Attack01_RootMotion	3500	3580

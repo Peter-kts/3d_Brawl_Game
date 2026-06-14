@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c261a703ac271c14981d1eaa74b69681
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Prefab/CameraEffect/CameraEffect.prefab
+  uploadId: 596088

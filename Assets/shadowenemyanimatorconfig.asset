@@ -17,6 +17,8 @@ MonoBehaviour:
   airborneParameter: IsAirborne
   stunLayerParameter: StunLayerActive
   deathTriggerParameter: Death
+  knockbackDeathStateName: DeathKnockback
+  knockbackDeathLayer: 1
   hitAnimationLayer: 1
   hitStateName: Stunned
   hitStateNames:

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3a49f0463521ddc4a9b14209c8670efc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/URP/BlueOpaqueURP.mat
+  uploadId: 596088

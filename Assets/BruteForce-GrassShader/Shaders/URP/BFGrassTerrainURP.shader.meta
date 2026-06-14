@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 374b0d9785a06b24bbbe612b37995204
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Shaders/URP/BFGrassTerrainURP.shader
+  uploadId: 596088

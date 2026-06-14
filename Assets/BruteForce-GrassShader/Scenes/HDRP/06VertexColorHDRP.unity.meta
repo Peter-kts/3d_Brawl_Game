@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 49b3c3a98ac38194b80739a284e54e6d
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Scenes/HDRP/06VertexColorHDRP.unity
+  uploadId: 596088

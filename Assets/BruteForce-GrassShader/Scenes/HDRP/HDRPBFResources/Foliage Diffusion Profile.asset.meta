@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8b73140fe70ba644888fa1eac0e60c54
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Scenes/HDRP/HDRPBFResources/Foliage Diffusion
+    Profile.asset
+  uploadId: 596088

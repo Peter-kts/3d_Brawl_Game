@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 66448b97df6f69e46957834cedbb212e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Scripts/BF_BallPlayerTriplanar.cs
+  uploadId: 596088

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d353e45853656c144b4a02d4dbe4e85b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Terrain/HDRP/NewLayer07HDRP.terrainlayer
+  uploadId: 596088

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 53bfe82e61e4d534fae2d9cfceb5e536
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/HDRP/z_Other/BlueTractorHDRP.mat
+  uploadId: 596088

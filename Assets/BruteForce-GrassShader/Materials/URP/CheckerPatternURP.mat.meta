@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f29e3e883297a9443bf1b08d5baea62b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/URP/CheckerPatternURP.mat
+  uploadId: 596088

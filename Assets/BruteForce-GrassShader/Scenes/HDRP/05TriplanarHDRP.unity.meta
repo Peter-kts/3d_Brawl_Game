@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5c0193cdce043ea45a75377139f3379b
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Scenes/HDRP/05TriplanarHDRP.unity
+  uploadId: 596088

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ccc0b71edfef8f54b993339badb7f2d8
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Extra/SkyboxGradient.shader
+  uploadId: 596088

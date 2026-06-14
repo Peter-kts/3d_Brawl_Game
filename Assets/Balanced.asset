@@ -12,13 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c6d48341acba0d4eb1bd50534788435, type: 3}
   m_Name: Balanced
   m_EditorClassIdentifier: Assembly-CSharp::EnemyPersonality
-  reactionTimeMin: 0.488
+  separationRadius: 5.6
+  playerTargetPriorityMultiplier: 0.85
+  allyTargetPriorityMultiplier: 0.67
+  standoffEnterRange: 6.68
+  standoffExitRange: 8.6
+  standoffRadius: 4.5
+  circleSpeed: 2.5
+  directionChangeIntervalMin: 1.5
+  directionChangeIntervalMax: 4
+  attackIntervalMin: 0.5
+  attackIntervalMax: 1
+  attackTelegraphDuration: 0.2
+  backOffSpeed: 2
+  backOffFacingThreshold: 0.4
+  opportunityWindow: 0.5
+  opportunityAttackDelay: 0.15
+  reactionTimeMin: 0.155
   reactionTimeMax: 0.6
-  reactionChance: 0.07
+  reactionChance: 0.996
   interruptChance: 0.5
   interruptMaxRange: 3.5
   tradeWillingness: 0.45
   safeWindowThreshold: 0.25
   interruptRushSpeed: 4.5
   interruptAttackDelay: 0.08
-  backOffSpeedMultiplier: 1

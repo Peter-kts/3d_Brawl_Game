@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: d1a62c24186955c49880a8328426390f
+timeCreated: 1551612676
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_2Handed/Frank_RPG_2Hand_Combo05_All.controller
+  uploadId: 850118

@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 1fad67d9a632437ba3308586c6fa144e
+timeCreated: 1638337751
+AssetOrigin:
+  serializedVersion: 1
+  productId: 200709
+  packageName: Stylized Newbie Weapons Pack
+  packageVersion: 1.4.2
+  assetPath: Assets/StylizedCharacter/Scripts/Editor/Editors/NHCameraEditor.cs
+  uploadId: 783623

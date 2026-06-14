@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 968a16012b963744183de42083f0ace7
+timeCreated: 1551612674
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_Dual/Frank_Dual_Combo03.controller
+  uploadId: 850118

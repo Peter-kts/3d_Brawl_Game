@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 294baf32ef2e4274bb268cc45fe87d15
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Prefab/HDRP/ParticleEffects/PEPlayerURP.prefab
+  uploadId: 596088

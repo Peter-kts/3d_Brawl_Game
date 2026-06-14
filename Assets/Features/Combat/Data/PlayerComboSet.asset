@@ -167,6 +167,41 @@ MonoBehaviour:
     attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
     hitConnectVfxPositionOffset: {x: -0.25, y: -0.1, z: 0}
     hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
+  neutralJab3:
+    range: 1.55
+    damage: 10
+    heaviness: 0
+    height: 0
+    hitboxRadius: 0.7
+    lockDuration: 0.8
+    cooldown: 0.85
+    comboWindowDelay: -1
+    comboWindowDuration: -1
+    knockback: 25
+    knockbackUp: 0
+    hitstun: 0.8
+    makesAirborne: 0
+    airborneDuration: 0
+    animationTrigger: Punch-N3
+    startUpLength: 0.12
+    startUpSpeed: 0.8
+    recoveryLength: 0.5
+    recoverySpeed: 0.8
+    lungeFrame: 0.2
+    lungeDistance: 0.5
+    lungeDuration: 0.01
+    hitboxOffset: {x: 0, y: -0.1, z: 0}
+    hitboxDelay: 0.29
+    hitStopDuration: 0.12
+    trackingDuration: 1
+    trackingSpeed: 540
+    attackStartSfx: {fileID: 8300000, guid: 4d4ef7516a431934681038a3dc391e55, type: 3}
+    hitConnectSfx: {fileID: 8300000, guid: d0f166575306db84091dc03fce0eff69, type: 3}
+    sfxCues: []
+    attackStartVfxPositionOffset: {x: 0, y: 0, z: 0}
+    attackStartVfxRotationOffset: {x: 0, y: 0, z: 0}
+    hitConnectVfxPositionOffset: {x: -0.25, y: -0.1, z: 0}
+    hitConnectVfxRotationOffset: {x: 0, y: 20, z: 0}
   heavyAttack:
     range: 1
     damage: 22

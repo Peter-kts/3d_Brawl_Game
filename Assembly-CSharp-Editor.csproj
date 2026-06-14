@@ -60,32 +60,37 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.4f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHCharacterControllerEditor.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\GUIUtils.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\StyleStateBuilder.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Editor\BF_MowingManagerEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\EnemyCombatEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\DebugSettingsEditor.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHItemEditor.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Extensions\InitializationHelper.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Windows\SelectionWindowAbstract.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\GUIUtils.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Editors\NHItemEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\AttackDataDrawer.cs" />
     <Compile Include="Assets\Archive\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Compile Include="Assets\Features\Combat\Editor\AnimationEventMethodCatalog.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Editor\BF_TerrainEditor.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\StyleBuilder.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Extensions\NHItemExtension.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\OrganizeAssets.cs" />
     <Compile Include="Assets\Features\Combat\Editor\AnimationEventAuthoringWindow.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\StyleStateBuilder.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHAvatarEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\ComboSetEditor.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\StyleBuilder.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Extensions\MaterialMapperExtension.cs" />
+    <Compile Include="Assets\Features\Shared\Editor\Editor\SpawnableTagDrawer.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Editors\NHCameraEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\ClearDestroyedSelection.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\TabComponent.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Extensions\NHItemExtension.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Windows\SelectorWindow.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Extensions\MaterialMapperExtension.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\Bloom\Editor\BloomEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\EnemyComboSetEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\SimpleEnemyAIEditor.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Editors\NHCameraEditor.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Editors\NHAvatarEditor.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Editors\NHCharacterControllerEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\FoldoutHeaderEditor.cs" />
     <Compile Include="Assets\Features\Shared\Editor\Editor\ScriptEditors.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Editor\Windows\SelectionWindowAbstract.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\Bloom\Editor\BloomGraphDrawer.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Extensions\InitializationHelper.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\TabComponent.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Editor\Windows\SelectorWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\PackageCache\com.unity.collab-proxy@1ec4e416a4af\Lib\Editor\Localization\cm-help.zh-Hans.txt" />
@@ -789,6 +794,10 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64\Runtime\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.TextureAssets">
       <HintPath>Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
       <Private>False</Private>
@@ -1343,6 +1352,10 @@
       <Project>{C98E1630-6ABE-178A-1EFB-F1EFF643A5A2}</Project>
       <Name>Unity.VisualScripting.SettingsProvider.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="CombatEditorCore.csproj">
+      <Project>{DDF8A5F9-ECD9-CFB2-C1AB-9B3210907646}</Project>
+      <Name>CombatEditorCore</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.Universal.2D.Editor.Overrides.csproj">
       <Project>{A657B81B-A4B5-7610-0D34-0948928EF3BB}</Project>
       <Name>Unity.RenderPipelines.Universal.2D.Editor.Overrides</Name>
@@ -1351,13 +1364,13 @@
       <Project>{B1104AC4-165F-9556-564D-58DD4B8CE61D}</Project>
       <Name>Unity.RenderPipelines.Universal.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.Timeline.csproj">
-      <Project>{0A7A18F8-EA3B-B87C-DCA3-A6C47E22C498}</Project>
-      <Name>Unity.Timeline</Name>
-    </ProjectReference>
     <ProjectReference Include="Unity.AI.Navigation.Updater.csproj">
       <Project>{15A3FAB0-1717-24DC-C702-71C4657A0CC1}</Project>
       <Name>Unity.AI.Navigation.Updater</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Timeline.csproj">
+      <Project>{0A7A18F8-EA3B-B87C-DCA3-A6C47E22C498}</Project>
+      <Name>Unity.Timeline</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.AI.Navigation.Editor.csproj">
       <Project>{C9E43A0B-9956-ADE7-F6A3-5B629429CE55}</Project>
@@ -1471,6 +1484,10 @@
       <Project>{CD297B3E-B949-BC3B-4439-D8C29D64332C}</Project>
       <Name>Unity.Mathematics</Name>
     </ProjectReference>
+    <ProjectReference Include="MCPForUnity.Editor.csproj">
+      <Project>{71A88A75-AA14-A6F1-A7AB-11D4D04B8DF1}</Project>
+      <Name>MCPForUnity.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.Universal.Shaders.csproj">
       <Project>{D32B00A9-CAFA-D7ED-8712-CA4E4F11237D}</Project>
       <Name>Unity.RenderPipelines.Universal.Shaders</Name>
@@ -1534,6 +1551,10 @@
     <ProjectReference Include="Unity.RenderPipelines.Core.Editor.Shared.csproj">
       <Project>{4F954787-17A4-8934-6EDC-63EB7E63024C}</Project>
       <Name>Unity.RenderPipelines.Core.Editor.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="MCPForUnity.Runtime.csproj">
+      <Project>{355A00A6-E70D-B37C-AA91-EED5501BAD6F}</Project>
+      <Name>MCPForUnity.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.InputSystem.csproj">
       <Project>{86953397-9C78-B114-C437-9A6646D1E8B9}</Project>

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0d7f09e63dd99504ca6e04212a21ec72
+timeCreated: 1437991034
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Extra/AA/Shaders/VelocityBuffer.shader
+  uploadId: 596088

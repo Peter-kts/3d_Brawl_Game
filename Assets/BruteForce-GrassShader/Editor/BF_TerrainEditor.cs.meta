@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f1c44ad8e2bf34e408cd927d6e35ae44
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Editor/BF_TerrainEditor.cs
+  uploadId: 596088

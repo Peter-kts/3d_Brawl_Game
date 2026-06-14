@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a814e3cd12e558d40a3cb9c5f802a5bd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/Standard/MacMobile/MacMobileGrass16.mat
+  uploadId: 596088

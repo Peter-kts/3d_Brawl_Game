@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cc25b481bff7c7e4998fbdd6bfff8544
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/URP/Showcase00/URPBFGrassMobile01.mat
+  uploadId: 596088

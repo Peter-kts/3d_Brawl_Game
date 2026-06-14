@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 45133cb5023d95c43913350e9e6e7fb3
+timeCreated: 1551612675
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 141184
+  packageName: Frank Slash Pack - 10 Assets
+  packageVersion: 3.8
+  assetPath: Assets/Frank_Slash_Pack/Assets/Animations/Frank_SlashPack_2Handed/Frank_RPG_2Hand_Skill02_Rolling.controller
+  uploadId: 850118

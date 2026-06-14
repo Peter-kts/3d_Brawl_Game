@@ -60,124 +60,209 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.4f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\StylizedCharacter\Scripts\Attributes\ItemTypeAttribute.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Utils\ItemTypeQuery.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\SpawnActionData.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyPersonality.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Attributes\BodyPartNameAttribute.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\TextureType.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Attributes\ItemTypeDescriptorAttribute.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Utils\UtilsAttributes.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Wrappers\GameObjectByBoneTypeWrapper.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\Combat.Spawn.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\SimpleEnemyAI.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Utils\UtilsProperties.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\PlayerCombatMemory.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\ItemTypeEnum.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\ThrowData.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\Gender.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyAnimationConfig.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Containers\BoneTarget.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHCharacterController\CharacterAnimator.cs" />
+    <Compile Include="Assets\Features\Player\Scripts\Player\BattleMomentum.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\SimpleEnemyAI.Targeting.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\AttackData.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\MoveTemplate.cs" />
     <Compile Include="Assets\Features\Debug\Scripts\Debug\DebugSettings.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\ComboSet.cs" />
-    <Compile Include="Assets\StylizedCharacter\Tools\ConvertMaterialsToURP.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\NHCharacterController.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHCharacterController\CharacterSettings.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Containers\ItemBoneMatch.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Wrappers\MaterialMapper.cs" />
     <Compile Include="Assets\Features\Airborne\Scripts\Airborne\AirborneSequence.cs" />
     <Compile Include="Assets\Features\Shared\Scripts\Core\EntityHealth.cs" />
+    <Compile Include="Assets\ThirdParty\FastScriptReload\Examples\Scripts\Graph.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_TractorCamera.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\BoneType.cs" />
     <Compile Include="Assets\Features\LockOn\Scripts\LockOn\LockOnSystem.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\ItemCategory.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterInput.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\Gender.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_RainActivator.cs" />
+    <Compile Include="Assets\Features\Shared\Scripts\Core\Team.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Containers\ItemWrapper.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\FlankCoordinator.cs" />
     <Compile Include="Assets\Features\Shared\Scripts\Core\IDamageable.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyBehaviorDebugVisual.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\SwordBlockEffect.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Attributes\ItemTypeAttribute.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\PlayerState.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyMeshParentDebugVisual.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHCharacterController\CharacterInput.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHCamera.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\SimpleEnemyAI.Animation.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\SimpleEnemyAI.Movement.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\CharacterStateEnum.cs" />
     <Compile Include="Assets\Art\VFX\Travis Game Assets\Hit Impact Effects\Demo Scene\Scripts\HitImpactEffectsPreview.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\TargetBodyparts.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_MeshExtrusion.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\TextureType.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHAvatar.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyStateDebugVisual.cs" />
     <Compile Include="Assets\Features\Debug\Scripts\Debug\DebugDrawHelper.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\StandoffBehavior.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\ItemTypeToBoneTypeWrapper.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Containers\BoneTarget.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_SubShowcase.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\ThrowAnimationEventForwarder.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Containers\BoneSetup.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\EnemyBehavior.cs" />
     <Compile Include="Assets\Features\Camera\Scripts\Camera\ScreenShake.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_FPSDisplay.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\Combat.Throw.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Containers\ItemBoneMatch.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyFacingDebugVisual.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\AA\Scripts\Extensions.cs" />
     <Compile Include="Assets\Features\Debug\Scripts\Debug\HealthDebugVisual.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerController.Dash.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Attributes\BodyPartNameAttribute.cs" />
+    <Compile Include="Assets\SpaceSkies Free\Demo\Scripts\LookCamera.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyComboSet.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyHealth.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsProperties.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Containers\ItemWrapper.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_BallPlayerTriplanar.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\WeaponCombat.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\PlayerState.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Attributes\ItemTypeDescriptorAttribute.cs" />
     <Compile Include="Assets\Archive\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Features\Camera\Scripts\Camera\ThirdPersonCamera.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\SocketingType.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterState.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_BallPlayer.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_Terrain.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\SocketingType.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\TargetBodyparts.cs" />
     <Compile Include="Assets\Features\Shared\Scripts\Core\ProneVariant.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerHealth.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Equipment.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHCamera.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHCharacterController\NHCharacterController.cs" />
+    <Compile Include="Assets\Features\Enemy\Scripts\Enemy\SimpleEnemyAI.Reactions.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHCharacterController\CharacterEngine.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyProneSystem.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Tools\ConvertMaterialsToURP.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\WeaponTrail.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsAssets.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\BodypartWrapper.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHItem.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\ThrowVictimNudge.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Containers\BoneSetup.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\Combat.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\EnemyStateMachine.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\AttackAnimationEventForwarder.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterAnimator.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\ItemTypeEnum.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\ItemCategoryString.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHAvatar.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\MaterialMapper.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Containers\ItemCache.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterSettings.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\InputSystemSwitcher.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\NHCharacterController\CharacterState.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\AA\Scripts\EffectBase.cs" />
+    <Compile Include="Assets\ThirdParty\FastScriptReload\Examples\Scripts\FunctionLibrary.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_SetInteractiveShaderEffectsTriplanar.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\ChaseBehavior.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerFacingDebugVisual.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\GameObjectByBoneTypeWrapper.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHCharacterController\CharacterEngine.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Equipment.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Wrappers\BodypartWrapper.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_TractorController.cs" />
+    <Compile Include="Assets\Features\Debug\Scripts\Debug\CombatMemoryDebugDisplay.cs" />
+    <Compile Include="Assets\Features\Shared\Scripts\Core\AutoDestroy.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\OrderType.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Wrappers\GameObjectByItemTypeWrapper.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Wrappers\ItemTypeToBoneTypeWrapper.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_RotatorDisplay.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\AA\Scripts\TemporalReprojection.cs" />
     <Compile Include="Assets\Features\LockOn\Scripts\LockOn\LockOnDebugVisuals.cs" />
     <Compile Include="Assets\Features\AI\Scripts\Behaviors\EnemyReactionStateMachine.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Utils\UtilsAttributes.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\NHItem.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\OrderType.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\BoneType.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_MowingUI.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\AA\Scripts\VelocityBufferTag.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\Bloom\Bloom.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\SwordGrip.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_MowingTool.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Utils\UtilsAssets.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\SpawnableTagAttribute.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyCombat.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Enums\CharacterStateEnum.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\ItemCategoryString.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Containers\ItemCache.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_MowingManager.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_AssetManager.cs" />
     <Compile Include="Assets\Features\Combat\Scripts\Combat\WeaponTipHitbox.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\GameObjectByItemTypeWrapper.cs" />
+    <Compile Include="Assets\SpaceSkies Free\Demo\Scripts\SkyboxChanger.cs" />
     <Compile Include="Assets\Features\Combat\AnimationPacks\Brawler Animations Sample\DisplayAnimation.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Utils\ItemTypeQuery.cs" />
     <Compile Include="Assets\Features\Airborne\Scripts\Airborne\AirborneAnimationSettings.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Attributes\NameAttribute.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\AA\Scripts\VelocityBuffer.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Attributes\NameAttribute.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_FxOnMouseClick.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Enums\ItemCategory.cs" />
+    <Compile Include="Assets\ThirdParty\StylizedCharacter\Scripts\Wrappers\ItemWrapperHandler.cs" />
     <Compile Include="Assets\Features\Debug\Scripts\Debug\DebugPauseHelper.cs" />
-    <Compile Include="Assets\StylizedCharacter\Scripts\Wrappers\ItemWrapperHandler.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Extra\AA\Scripts\FrustumJitter.cs" />
     <Compile Include="Assets\Features\Player\Scripts\Player\PlayerStepDebugVisual.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyState.cs" />
+    <Compile Include="Assets\BruteForce-GrassShader\Scripts\BF_SetInteractiveShaderEffects.cs" />
+    <Compile Include="Assets\Features\Combat\Scripts\Combat\Spawnable.cs" />
     <Compile Include="Assets\Features\Enemy\Scripts\Enemy\EnemyStunMeter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Whip_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Whip_Motion_List.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\VertexColor.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\Standard\BFGrassTerrain.shader" />
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library[Standard](1)\Universal Animation Library[Standard]\License.txt" />
     <None Include="Assets\Features\Combat\Shaders\SwordGlow.shader" />
-    <None Include="Assets\SandalStudio\Impact Pack\Shaders\Impart transparency.shader" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Sword2_Motion_List.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\Standard\Debug\BFGrassGeoDebug.shader" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Harmony\HarmonyLicense.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\AA\Shaders\IncNoise.cginc" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\ImmersiveVrToolsCommon\ImmersiveVRTools.Common.Runtime.dll" />
+    <None Include="Assets\ThirdParty\SandalStudio\Impact Pack\Shaders\Impart transparency.shader" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Sword2_Motion_List.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\Standard\BFGrassMobile.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\URP\BFGrassLiteURP.shader" />
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\License.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Assassin_Motion_List.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Warrior_Motion_List.txt" />
-    <None Include="Assets\VFX_Klaus\Prefabs\Hyper Casual FX\ReadMe_Hyper Casual FX Vol.1.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\HDRP\BFGrassMobileHDRP.shader" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Assassin_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Warrior_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\VFX_Klaus\Prefabs\Hyper Casual FX\ReadMe_Hyper Casual FX Vol.1.txt" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\System.Collections.Immutable.dll" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\ImmersiveVrToolsCommon\ImmersiveVRToolsCommonLicense.txt" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Third-Party Notices.txt" />
     <None Include="Assets\Features\Combat\AnimationPacks\Frank_Fighting_Set4\Documentation\Frank FS4 Motion list.files\filelist.xml" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Dual_Motion_List.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Damages_List.txt" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Dual_Motion_List.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\HDRP\BFGrassTerrainHDRP.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\HDRP\BFGrassHDRP.shader" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Examples\Point\Point Surface.shader" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Damages_List.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\URP\BFGrassTerrainURP.shader" />
     <None Include="Assets\Features\Combat\AnimationPacks\Universal Animation Library 2[Standard](1)\Universal Animation Library 2[Standard]\Female Mannequin\README.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_StealthKill_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_StealthKill_Motion_List.txt" />
     <None Include="Assets\Art\VFX\Travis Game Assets\Hit Impact Effects\Readme.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\AA\Shaders\IncDepth.cginc" />
     <None Include="Assets\Features\Combat\Shaders\SwordOutline.shader" />
     <None Include="Assets\Features\Shared\Packages\ai.meshy\Third-Party Notices.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Spear_Motion_List.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_2Handed_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Harmony\net48\0Harmony.dll" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Harmony\net48\0Harmony.xml" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\URP\Debug\BFGrassMobileDebugURP.shader" />
+    <None Include="Assets\StylizedGrass\READMEdoc.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\Standard\Debug\BFGrassMobileDebug.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\Bloom\Shader\Bloom.shader" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Spear_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_2Handed_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\System.Reflection.Metadata.dll" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\Bloom\Shader\Bloom.cginc" />
+    <None Include="Assets\BruteForce-GrassShader\ReadMe.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\URP\BFGrassURP.shader" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\RoslynLicense.txt" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\System.Threading.Tasks.Extensions.dll" />
     <None Include="Assets\Features\Shared\Packages\ai.meshy\README.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_Katana_Motion_List.txt" />
-    <None Include="Assets\Frank_Slash_Pack\Documentation\Frank_GreatSword_Motion_List.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\Standard\BFGrass.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\AA\Shaders\TemporalReprojection.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\SkyboxGradient.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\AA\LICENSE.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Extra\AA\Shaders\VelocityBuffer.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\Standard\BFGrassLite.shader" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_Katana_Motion_List.txt" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\Microsoft.CodeAnalysis.dll" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\Microsoft.CSharp.dll" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\Roslyn\Microsoft.CSharp.dll.IMPORTANT.txt.txt" />
+    <None Include="Assets\ThirdParty\FastScriptReload\Plugins\ImmersiveVrToolsCommon\ImmersiveVRTools.Common.Editor.dll" />
+    <None Include="Assets\ThirdParty\Frank_Slash_Pack\Documentation\Frank_GreatSword_Motion_List.txt" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\URP\Debug\BFGrassGeoDebugURP.shader" />
+    <None Include="Assets\BruteForce-GrassShader\Shaders\URP\BFGrassMobileURP.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -732,6 +817,10 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@191c0d7e3b69\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64\Runtime\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
@@ -1258,6 +1347,10 @@
       <Project>{C98E1630-6ABE-178A-1EFB-F1EFF643A5A2}</Project>
       <Name>Unity.VisualScripting.SettingsProvider.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="CombatEditorCore.csproj">
+      <Project>{DDF8A5F9-ECD9-CFB2-C1AB-9B3210907646}</Project>
+      <Name>CombatEditorCore</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.Universal.2D.Editor.Overrides.csproj">
       <Project>{A657B81B-A4B5-7610-0D34-0948928EF3BB}</Project>
       <Name>Unity.RenderPipelines.Universal.2D.Editor.Overrides</Name>
@@ -1266,13 +1359,13 @@
       <Project>{B1104AC4-165F-9556-564D-58DD4B8CE61D}</Project>
       <Name>Unity.RenderPipelines.Universal.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.Timeline.csproj">
-      <Project>{0A7A18F8-EA3B-B87C-DCA3-A6C47E22C498}</Project>
-      <Name>Unity.Timeline</Name>
-    </ProjectReference>
     <ProjectReference Include="Unity.AI.Navigation.Updater.csproj">
       <Project>{15A3FAB0-1717-24DC-C702-71C4657A0CC1}</Project>
       <Name>Unity.AI.Navigation.Updater</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.Timeline.csproj">
+      <Project>{0A7A18F8-EA3B-B87C-DCA3-A6C47E22C498}</Project>
+      <Name>Unity.Timeline</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.AI.Navigation.Editor.csproj">
       <Project>{C9E43A0B-9956-ADE7-F6A3-5B629429CE55}</Project>
@@ -1386,6 +1479,10 @@
       <Project>{CD297B3E-B949-BC3B-4439-D8C29D64332C}</Project>
       <Name>Unity.Mathematics</Name>
     </ProjectReference>
+    <ProjectReference Include="MCPForUnity.Editor.csproj">
+      <Project>{71A88A75-AA14-A6F1-A7AB-11D4D04B8DF1}</Project>
+      <Name>MCPForUnity.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.Universal.Shaders.csproj">
       <Project>{D32B00A9-CAFA-D7ED-8712-CA4E4F11237D}</Project>
       <Name>Unity.RenderPipelines.Universal.Shaders</Name>
@@ -1449,6 +1546,10 @@
     <ProjectReference Include="Unity.RenderPipelines.Core.Editor.Shared.csproj">
       <Project>{4F954787-17A4-8934-6EDC-63EB7E63024C}</Project>
       <Name>Unity.RenderPipelines.Core.Editor.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="MCPForUnity.Runtime.csproj">
+      <Project>{355A00A6-E70D-B37C-AA91-EED5501BAD6F}</Project>
+      <Name>MCPForUnity.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.InputSystem.csproj">
       <Project>{86953397-9C78-B114-C437-9A6646D1E8B9}</Project>

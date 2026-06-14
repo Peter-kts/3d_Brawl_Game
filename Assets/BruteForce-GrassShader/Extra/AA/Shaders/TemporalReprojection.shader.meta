@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7ca93c1a56ee0154b8c714591d6d211a
+timeCreated: 1437991034
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Extra/AA/Shaders/TemporalReprojection.shader
+  uploadId: 596088

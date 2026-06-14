@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5ec221166dc8c6a498210daa2efe177e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192388
+  packageName: Brute Force - Grass Shader
+  packageVersion: 1.9
+  assetPath: Assets/BruteForce-GrassShader/Materials/URP/Terrain/URPBFGrassTerrain01x1000.mat
+  uploadId: 596088
