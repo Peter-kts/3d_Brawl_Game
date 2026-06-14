@@ -26,17 +26,23 @@ public class HealthDebugVisual : MonoBehaviour
     private Texture2D labelBgTexture;
     private Texture2D barBgTexture;
     private Texture2D barFillTexture;
+    private bool isEnemyHealthVisual;
 
     void Start()
     {
         damageable = GetComponent<EnemyHealth>() as IDamageable ?? GetComponent<PlayerHealth>() as IDamageable;
+        isEnemyHealthVisual = GetComponent<EnemyHealth>() != null;
     }
 
     void OnGUI()
     {
         if (damageable == null) return;
         DebugSettings debug = DebugSettings.Instance;
-        if (debug == null || !debug.ShouldShow(debug.showHealthIndicator)) return;
+        if (debug == null) return;
+        bool shouldShow = isEnemyHealthVisual
+            ? debug.ShouldShowEnemyHealthStats(debug.showHealthIndicator)
+            : debug.ShouldShow(debug.showHealthIndicator);
+        if (!shouldShow) return;
 
         Camera cam = Camera.main;
         if (cam == null) return;

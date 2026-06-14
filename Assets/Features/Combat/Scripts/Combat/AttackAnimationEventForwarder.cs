@@ -10,14 +10,28 @@ public class AttackAnimationEventForwarder : MonoBehaviour
     {
         WeaponCombat weaponCombat = GetComponentInParent<WeaponCombat>();
         if (weaponCombat != null)
+        {
             weaponCombat.BeginHitbox(id);
+            return;
+        }
+
+        EnemyCombat enemyCombat = GetComponentInParent<EnemyCombat>();
+        if (enemyCombat != null)
+            enemyCombat.BeginHitbox(id);
     }
 
     void ForwardEndHitbox(int id)
     {
         WeaponCombat weaponCombat = GetComponentInParent<WeaponCombat>();
         if (weaponCombat != null)
+        {
             weaponCombat.EndHitbox(id);
+            return;
+        }
+
+        EnemyCombat enemyCombat = GetComponentInParent<EnemyCombat>();
+        if (enemyCombat != null)
+            enemyCombat.EndHitbox(id);
     }
 
     void ForwardChargeWindowStart()
@@ -118,6 +132,20 @@ public class AttackAnimationEventForwarder : MonoBehaviour
     public void OnEndHitbox()
     {
         OnEndHitbox(0);
+    }
+
+    public void OnThrowAttach()
+    {
+        Combat combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnThrowAttach();
+    }
+
+    public void OnThrowAttach(int socketIndex)
+    {
+        Combat combat = GetComponentInParent<Combat>();
+        if (combat != null)
+            combat.OnThrowAttachSocket(socketIndex);
     }
 
     public void OnBlockActiveWindowStart()

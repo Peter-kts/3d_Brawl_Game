@@ -56,7 +56,7 @@ using UnityEngine;
 public class StandoffBehavior : EnemyBehavior
 {
     // Internal sub-states — Reading is NOT a state, it's a parallel timer
-    private enum SubState { Circling, PreAttack, Attacking, BackingOff, Interrupting }
+    private enum SubState { Circling, ClosingIn, PreAttack, Attacking, Retreating, BackingOff, Interrupting }
 
     private SubState state = SubState.Circling;
 
@@ -72,7 +72,8 @@ public class StandoffBehavior : EnemyBehavior
     private float directionChangeTimer;
     private float attackTimer;
     private float preAttackTimer;
-    private float interruptRushTimer; // safety cap on Interrupting — abort if we can't close the gap in time
+    private float interruptRushTimer;
+    private float closeInTimer; // safety cap on ClosingIn — abort if we can't reach attack range in time // safety cap on Interrupting — abort if we can't close the gap in time
 
     // ---- Reaction system (parallel to sub-states) ----
     // reactionTimer >= 0 means a reaction is in progress (debug shows "Reading").
@@ -96,11 +97,13 @@ public class StandoffBehavior : EnemyBehavior
             return state switch
             {
                 SubState.Circling     => "Circling",
+                SubState.ClosingIn    => "ClosingIn",
                 SubState.PreAttack    => "PreAttack",
                 SubState.Attacking    => "Attacking",
+                SubState.Retreating   => "Retreating",
                 SubState.BackingOff   => "BackingOff",
                 SubState.Interrupting => "Interrupting",
-                _                     => "Standoff"
+                _                    => "Standoff"
             };
         }
     }
@@ -133,8 +136,10 @@ public class StandoffBehavior : EnemyBehavior
         switch (state)
         {
             case SubState.Circling:     ExecuteCircling();     break;
+            case SubState.ClosingIn:    ExecuteClosingIn();    break;
             case SubState.PreAttack:    ExecutePreAttack();    break;
             case SubState.Attacking:    ExecuteAttacking();    break;
+            case SubState.Retreating:   ExecuteRetreating();   break;
             case SubState.BackingOff:   ExecuteBackingOff();   break;
             case SubState.Interrupting: ExecuteInterrupting(); break;
         }
@@ -266,66 +271,110 @@ public class StandoffBehavior : EnemyBehavior
     // CIRCLING
     // ========================================================================
 
-    void ExecuteCircling()
+void ExecuteCircling()
     {
         var pc = ai.PlayerController;
         if (pc != null)
         {
-            // Opportunity punish: when player's attack lock JUST ended, collapse the attack timer
-            // so the enemy immediately moves to PreAttack instead of waiting the full random interval
             if (pc.RecentlyAttacked(ai.OpportunityWindow) && attackTimer > ai.OpportunityAttackDelay)
                 attackTimer = ai.OpportunityAttackDelay;
         }
 
         DoCirclingMovement();
 
-        // Attack timer: counts down each frame; when it hits zero the enemy commits to PreAttack
         attackTimer -= Time.deltaTime;
         if (attackTimer <= 0f)
         {
-            // Only attack if we have a combat component — without it there's nothing to fire
             if (ai.EnemyCombat != null)
             {
-                state = SubState.PreAttack;
-                preAttackTimer = ai.AttackTelegraphDuration;
+                Vector3 toPlayer = ai.player != null ? ai.player.position - ai.transform.position : Vector3.zero;
+                toPlayer.y = 0f;
+
+                AttackData dummy;
+                if (ai.EnemyCombat.TrySelectAttack(toPlayer.magnitude, out dummy))
+                {
+                    // Already in range — telegraph immediately
+                    state = SubState.PreAttack;
+                    preAttackTimer = ai.AttackTelegraphDuration;
+                }
+                else
+                {
+                    // Out of range — close in first
+                    closeInTimer = 3f;
+                    state = SubState.ClosingIn;
+                }
             }
             else
             {
-                // No combat component — reset and keep circling (enemy is unarmed/passive)
                 ResetAttackTimer();
             }
         }
     }
 
+// ========================================================================
+    // CLOSING IN (move into attack range before telegraphing)
+    // ========================================================================
+
+    void ExecuteClosingIn()
+    {
+        // Safety cap — abort if we can't reach attack range in time
+        closeInTimer -= Time.deltaTime;
+        if (closeInTimer <= 0f)
+        {
+            state = SubState.Circling;
+            ResetAttackTimer();
+            return;
+        }
+
+        Vector3 toPlayer    = ai.player.position - ai.transform.position;
+        toPlayer.y          = 0f;
+        float dist          = toPlayer.magnitude;
+        Vector3 dirToPlayer = toPlayer.normalized;
+
+        // Light separation blend so enemies don't stack while both closing in
+        Vector3 separation = Vector3.ClampMagnitude(ai.GetSeparationSteering(), 0.5f);
+        Vector3 moveDir    = (dirToPlayer + separation).normalized;
+
+        ai.CC.Move(moveDir * ai.moveSpeed * Time.deltaTime);
+        ai.RotateTowardWithDelay(dirToPlayer);
+        ai.TargetAnimSpeed = 1f;
+
+        // Transition to PreAttack once we're in range of any attack
+        AttackData dummy;
+        if (ai.EnemyCombat != null && ai.EnemyCombat.TrySelectAttack(dist, out dummy))
+        {
+            state = SubState.PreAttack;
+            preAttackTimer = ai.AttackTelegraphDuration;
+        }
+    }
+
+
     // Shared movement used by both Circling and Interrupting approach phase.
     // Handles tangent orbit, radial correction, rotation, animation speed, and direction-flip timer.
     // The attack timer is NOT ticked here — callers handle that separately.
-    void DoCirclingMovement()
+void DoCirclingMovement()
     {
         Vector3 toPlayer    = ai.player.position - ai.transform.position;
         toPlayer.y          = 0f;
         float dist          = toPlayer.magnitude;
         Vector3 dirToPlayer = toPlayer / Mathf.Max(dist, 0.001f);
 
-        // Tangent: perpendicular to the line toward the player, flipped by circleDirection for CW vs CCW orbit
         Vector3 tangent = Vector3.Cross(Vector3.up, dirToPlayer) * circleDirection;
 
-        // Radial correction: how far off are we from the preferred orbit radius?
-        // Positive = too far, negative = too close. We blend toward it so the enemy self-corrects naturally.
-        float radiusError         = dist - ai.StandoffRadius;
-        Vector3 radialCorrection  = dirToPlayer * Mathf.Sign(radiusError);  // push toward or away from player
-        float radialWeight        = Mathf.Clamp01(Mathf.Abs(radiusError) / ai.StandoffRadius); // stronger correction the further off we are
-        Vector3 moveDir           = Vector3.Lerp(tangent, radialCorrection, radialWeight).normalized;
+        float radiusError        = dist - ai.StandoffRadius;
+        Vector3 radialCorrection = dirToPlayer * Mathf.Sign(radiusError);
+        float radialWeight       = Mathf.Clamp01(Mathf.Abs(radiusError) / ai.StandoffRadius);
+        Vector3 primaryDir       = Vector3.Lerp(tangent, radialCorrection, radialWeight).normalized;
+
+        // Blend separation steering so enemies orbit without stacking on each other.
+        Vector3 separation = Vector3.ClampMagnitude(ai.GetSeparationSteering(), 1f);
+        Vector3 moveDir    = (primaryDir + separation).normalized;
 
         ai.CC.Move(moveDir * ai.CircleSpeed * Time.deltaTime);
 
-        // Face the player while moving — orbit should always look like we're watching the target
-        ai.RotateTowardWithDelay(dirToPlayer);
-
-        // 0.5 = strafing blend in the animator (between idle and full run)
+        ai.RotateTowardWithDelay(dirToPlayer); // always face the player regardless of moveDir
         ai.TargetAnimSpeed = 0.5f;
 
-        // Periodically reverse orbit direction so the enemy doesn't just loop forever in one direction
         directionChangeTimer -= Time.deltaTime;
         if (directionChangeTimer <= 0f)
         {
@@ -385,18 +434,36 @@ public class StandoffBehavior : EnemyBehavior
      * the hitbox teleport and feel disconnected from the animation.
      * Once EnemyCombat.IsAttacking goes false, return to circling.
      */
-    void ExecuteAttacking()
+void ExecuteAttacking()
     {
-        // Stop dead while the attack plays — hitbox fires via EnemyCombat independently
         ai.TargetAnimSpeed = 0f;
 
-        // IsAttacking uses Time.time < attackEndTime — when the lock expires, resume circling
         if (!ai.EnemyCombat.IsAttacking)
+            state = SubState.Retreating; // back up to standoff distance before circling again
+    }
+
+// ========================================================================
+    // RETREATING (back up to standoff radius after attacking)
+    // ========================================================================
+
+    void ExecuteRetreating()
+    {
+        Vector3 toPlayer    = ai.player.position - ai.transform.position;
+        toPlayer.y          = 0f;
+        float dist          = toPlayer.magnitude;
+        Vector3 dirToPlayer = toPlayer.normalized;
+
+        ai.CC.Move(-dirToPlayer * ai.BackOffSpeed * Time.deltaTime);
+        ai.RotateTowardWithDelay(dirToPlayer); // keep facing the player while backing away
+        ai.TargetAnimSpeed = 0.5f;
+
+        if (dist >= ai.StandoffRadius)
         {
             state = SubState.Circling;
-            ResetAttackTimer(); // pick a new random interval before the next attack
+            ResetAttackTimer();
         }
     }
+
 
     // ========================================================================
     // BACKING OFF (reaction decision: step away while player attacks)

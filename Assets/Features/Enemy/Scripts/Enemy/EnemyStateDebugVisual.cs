@@ -48,7 +48,7 @@ public class EnemyStateDebugVisual : MonoBehaviour
     {
         if (indicator == null || health == null) return;
         DebugSettings debug = DebugSettings.Instance;
-        bool shouldShow = debug.ShouldShow(debug.showEnemyStateIndicator);
+        bool shouldShow = debug.ShouldShowEnemyHealthStats(debug.showEnemyStateIndicator);
         indicator.SetActive(shouldShow);
         if (!shouldShow) return;
 
@@ -140,7 +140,7 @@ public class EnemyStateDebugVisual : MonoBehaviour
     {
         if (health == null || indicator == null) return;
         DebugSettings debug = DebugSettings.Instance;
-        if (!debug.ShouldShow(debug.showEnemyStateIndicator)) return;
+        if (!debug.ShouldShowEnemyHealthStats(debug.showEnemyStateIndicator)) return;
 
         Camera cam = Camera.main;
         if (cam == null) return;

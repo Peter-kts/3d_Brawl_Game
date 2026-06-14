@@ -122,6 +122,13 @@ public class EnemyHealth : EntityHealth
     private int lastHurtSfxIndex = -1;          // Index of the last hurt clip played — prevents the same clip twice in a row
     private int lastDeathSfxIndex = -1;         // Index of the last death clip played — prevents repeat
     private Dictionary<int, float> collisionCooldowns = new Dictionary<int, float>(); // Per-enemy cooldown: instanceID → last hit time
+    private bool deathCollisionDisabled;        // True once corpse collision has been fully disabled after knockback settles
+    private bool dyingAwaitingKnockbackEnd;     // True while dying but knockback is still active; collision stays on
+    private bool throwDeathPending;             // True when hp hit 0 during a throw; death deferred until throw releases victim
+    private Vector3 throwDeathKnockback;        // Knockback saved from the hit that would have killed during throw
+    private float throwDeathAirborneDuration;   // Airborne duration saved from the lethal hit during throw
+    private string _pendingThrownStateName;     // Thrown animation state waiting for OnThrowAttach to play
+    private float _pendingThrownDuration;       // Duration for the pending thrown animation
 
     // ========================================================================
     // UNITY LIFECYCLE
@@ -136,13 +143,33 @@ public class EnemyHealth : EntityHealth
         enemyCombat = GetComponent<EnemyCombat>();
         stunMeter = GetComponent<EnemyStunMeter>();
         if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
-        deathSfxSource = ResolveSfxSource(deathSfxSource);
+        // ResolveSfxSource (from EntityHealth) falls back to hurtSfxSource so the death clips
+        // share the same AudioSource when no dedicated death source is wired up in the Inspector.
+        deathSfxSource = ResolveSfxSource(deathSfxSource, hurtSfxSource);
     }
 
     void Update()
     {
         // Always apply knockback (even while dying — lets corpse get pushed around)
         ApplyKnockback(knockbackFriction);
+
+        // While dying: keep collision alive until knockback settles, then disable.
+        if (dyingAwaitingKnockbackEnd)
+        {
+            if (kbVel.sqrMagnitude < 0.01f && pendingKnockback.sqrMagnitude < 0.01f)
+            {
+                dyingAwaitingKnockbackEnd = false;
+                DisableCollisionOnDeath();
+            }
+        }
+
+        // Deferred throw death: throw has expired, process the pending death now.
+        if (throwDeathPending && Time.time >= throwVictimUntil)
+        {
+            throwDeathPending = false;
+            HandleDeath(throwDeathAirborneDuration, throwDeathKnockback);
+            return;
+        }
 
         // Skip other processing while death animation plays
         if (isDying) return;
@@ -158,14 +185,32 @@ public class EnemyHealth : EntityHealth
     // HELPERS
     // ========================================================================
 
-    /// <summary>Returns the assigned source if set, otherwise falls back to hurtSfxSource, then any AudioSource on this object.</summary>
-    private AudioSource ResolveSfxSource(AudioSource assigned) =>
-        assigned != null ? assigned :
-        hurtSfxSource != null ? hurtSfxSource :
-        GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
+    // ResolveSfxSource lives in EntityHealth (base class) — see EntityHealth.cs for details.
 
     void PlayHurtSfx()  => PlayRandomSfx(hurtSfxSource,  hurtSfxClips,  ref lastHurtSfxIndex,  hurtSfxPitchMin,  hurtSfxPitchMax,  hurtSfxVolume);
     void PlayDeathSfx() => PlayRandomSfx(deathSfxSource, deathSfxClips, ref lastDeathSfxIndex, deathSfxPitchMin, deathSfxPitchMax, deathSfxVolume);
+
+    void BeginDeferredCollisionDisable()
+    {
+        if (deathCollisionDisabled) return;
+        dyingAwaitingKnockbackEnd = true;
+    }
+
+    void DisableCollisionOnDeath()
+    {
+        if (deathCollisionDisabled) return;
+        deathCollisionDisabled = true;
+        dyingAwaitingKnockbackEnd = false;
+
+        if (cc != null) cc.enabled = false;
+
+        Collider[] colliders = GetComponentsInChildren<Collider>(includeInactive: true);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i] != null)
+                colliders[i].enabled = false;
+        }
+    }
 
     // ========================================================================
     // GET-UP / AIRBORNE CALLBACKS
@@ -211,6 +256,7 @@ public class EnemyHealth : EntityHealth
     /// </summary>
     public void CompleteDeath()
     {
+        DisableCollisionOnDeath();
         if (enemyAI != null) enemyAI.enabled = false;
         if (enemyCombat != null) enemyCombat.enabled = false;
         if (cc != null) cc.enabled = false;
@@ -246,6 +292,22 @@ public class EnemyHealth : EntityHealth
         hitStopEndTime = 0f;
     }
 
+    /// <summary>Directly set the airborne timer so IsAirborne becomes true immediately.</summary>
+    public void SetAirborne(float duration)
+    {
+        if (duration <= 0f) return;
+        airborneUntil = Mathf.Max(airborneUntil, Time.time + duration);
+    }
+
+    /// <summary>Clear airborne and hitstun timers so the throw system has full control of the enemy.</summary>
+    public void ClearAirborneAndHitstun()
+    {
+        airborneUntil = 0f;
+        hitstunUntil = 0f;
+        pendingKnockback = Vector3.zero;
+        pendingLaunchApplyTime = 0f;
+    }
+
     // Called by EntityHealth when cc.Move() reports a side collision during knockback.
     // If speed is high enough, reflect velocity off the wall and play the bounce animation.
     protected override void OnWallBounce(Vector3 wallNormal)
@@ -271,9 +333,13 @@ public class EnemyHealth : EntityHealth
 
     // Called by EntityHealth when this enemy collides with another entity while being knocked back.
     // Deals damage and transfers knockback to the other enemy, scaled by current speed.
-    protected override void OnEnemyKnockbackCollision(EntityHealth other, Vector3 velocity)
+protected override void OnEnemyKnockbackCollision(EntityHealth other, Vector3 velocity)
     {
         if (isDying) return;
+        // Don't damage entities on the same side (e.g. two enemies knocked together still damage each other,
+        // but an ally knocked into an enemy — or vice versa — respects team hostility).
+        if (!TeamUtil.AreHostile(team, other.team)) return;
+
         float speed = velocity.magnitude;
         if (speed < collisionMinSpeed) return;
 
@@ -288,18 +354,49 @@ public class EnemyHealth : EntityHealth
     }
 
     /// <summary>
-    /// Start throw-victim state: stun for duration and play the thrown animation.
+    /// Start throw-victim state: only sets the throw-victim timer and stores pending animation data.
+    /// No visible change on the enemy — stun, animation, and AI lockdown are all deferred to
+    /// PlayThrowVictimAnimation() (called from OnThrowAttach) so the enemy shows zero reaction
+    /// until the player's hands actually close around them.
     /// </summary>
     public void StartThrowVictim(float durationSeconds, string thrownStateName)
     {
         if (isDying) return;
         throwVictimUntil = Mathf.Max(throwVictimUntil, Time.time + durationSeconds);
-        // Throw lock should be represented as standing stun (not micro hitstun).
+        _pendingThrownStateName = thrownStateName;
+        _pendingThrownDuration = durationSeconds;
+    }
+
+    /// <summary>
+    /// Commit the throw: apply stun, play the thrown/receive animation, and lock AI.
+    /// Called from OnThrowAttach so the enemy only reacts when the player's hands actually close.
+    /// </summary>
+    public void PlayThrowVictimAnimation()
+    {
+        if (isDying) return;
         hitstunUntil = Time.time;
         if (stunMeter != null)
-            stunMeter.ForceStandingStun(durationSeconds, asKnockback: false);
-        if (enemyAI != null)
-            enemyAI.TriggerThrownAnimation(durationSeconds, thrownStateName);
+            stunMeter.ForceStandingStun(_pendingThrownDuration, asKnockback: false);
+        if (enemyAI != null && !string.IsNullOrEmpty(_pendingThrownStateName))
+            enemyAI.TriggerThrownAnimation(_pendingThrownDuration, _pendingThrownStateName);
+        _pendingThrownStateName = null;
+    }
+
+    /// <summary>
+    /// Called when the throw fully releases this victim. Clears the throw-victim window
+    /// and processes any death that was deferred while held.
+    /// </summary>
+    public void EndThrowVictimState()
+    {
+        throwVictimUntil = 0f;
+        _pendingThrownStateName = null;
+        if (stunMeter != null)
+            stunMeter.ClearStandingStun();
+        if (throwDeathPending)
+        {
+            throwDeathPending = false;
+            HandleDeath(throwDeathAirborneDuration, throwDeathKnockback);
+        }
     }
 
     /// <summary>
@@ -330,114 +427,219 @@ public class EnemyHealth : EntityHealth
         float airborneDuration,
         float hitStopDuration = 0f,
         AttackHeaviness heaviness = AttackHeaviness.Medium,
-        AttackHeight height = AttackHeight.Mid
+        AttackHeight height = AttackHeight.Mid,
+        GameObject attacker = null
     )
     {
-        // Ignore hits if already dying (death animation playing)
         if (isDying) return;
 
-        // Crash mode: allow one hit; that hit gets 1.5x knockback and re-launches with 1.4x animation speed
-        bool inCrash = enemyAI != null && enemyAI.AirborneSequence != null && enemyAI.AirborneSequence.InCrash;
-        bool inGrounded = enemyAI != null && enemyAI.ProneSystem != null && enemyAI.ProneSystem.IsInProne;
-        if (inCrash && crashHitAlreadyUsed)
-            return;
-        if (inCrash && !crashHitAlreadyUsed)
+        // Bonus damage and knockback when hitting a stunned enemy.
+        if (stunMeter != null && stunMeter.IsStunned)
         {
-            crashHitAlreadyUsed = true;
-            airborneSpeedMultiplier = 1.4f;
-            // Y scaled down so knockback goes further, not higher
-            knockback.y *= crashRelaunchKnockbackYScale;
-            knockback *= 1.5f;
-            airborneDuration = (airborneDuration > 0f ? airborneDuration : crashRelaunchAirborneDurationDefault) / airborneSpeedMultiplier;
+            damage = Mathf.RoundToInt(damage * 1.5f);
+            knockback *= 2f;
         }
 
-        // STEP 1: Apply damage
-        int hpBeforeDamage = hp;
-        hp -= damage;
-        ScreenShake.RequestShake();
-        if (hp < hpBeforeDamage)
-            PlayHurtSfx();
+        // Extreme knockback instantly fills the stun meter and triggers knockback stun.
+        if (stunMeter != null && !stunMeter.IsStunned && knockback.magnitude >= stunMeter.knockbackStunThreshold)
+            stunMeter.AddStun(1f, knockback.magnitude);
 
-        // When prone (on floor after crash): take damage; heavy hits also apply knockback and hitstun.
+        // Crash relaunch: one free re-juggle hit while the enemy is landing.
+        // Modifies knockback/airborneDuration in place; returns false if crash-hit already used (block the hit).
+        if (!ApplyCrashRelaunch(ref knockback, ref airborneDuration))
+            return;
+
+        // Prone path: enemy is flat on the floor after crashing.
+        // Takes damage; heavy hits slide them and extend stun. Always returns after this block.
+        bool inGrounded = enemyAI != null && enemyAI.ProneSystem != null && enemyAI.ProneSystem.IsInProne;
         if (inGrounded)
         {
-            bool heavyKnockback = stunMeter != null
-                ? knockback.magnitude >= stunMeter.knockbackStunThreshold
-                : heaviness == AttackHeaviness.Heavy;
-
-            // Heavy hit while prone: slide them across the floor and extend the stun window
-            if (heavyKnockback)
-            {
-                kbVel += knockback;
-                hitstunUntil = Mathf.Max(hitstunUntil, Time.time + hitstun);
-                if (hitStopDuration > 0f)
-                    hitStopEndTime = Time.time + hitStopDuration;
-            }
-
-            if (hp <= 0)
-            {
-                isDying = true;
-                PlayDeathSfx();
-                if (enemyAI != null)
-                    enemyAI.TriggerDeathAnimation();
-                else
-                    CompleteDeath();
-            }
-            else if (enemyAI != null)
-            {
-                enemyAI.TriggerHitAnimation(hitstun, height, heavyKnockback);
-            }
+            HandlePronePath(damage, knockback, hitstun, hitStopDuration, height, heaviness);
             return;
         }
 
-        // STEP 2: Apply knockback (stored; movement frozen during hitstop, resumes after)
-        if (airborneDuration > 0f)
-        {
-            pendingKnockback = knockback;
-            pendingAirborneDuration = airborneDuration;
-        }
-        else
-        {
-            kbVel += knockback;
-        }
-        if (hitStopDuration > 0f)
-            hitStopEndTime = Time.time + hitStopDuration;
-
-        // STEP 3: Apply hit stun — Mathf.Max so we don't shorten an existing longer stun
-        hitstunUntil = Mathf.Max(hitstunUntil, Time.time + hitstun);
-        if (airborneDuration > 0f)
-            pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;
-
-        // STEP 4: Trigger hit animation (skip if currently being thrown)
-        bool isBeingThrown = Time.time < throwVictimUntil;
-        // If already standing stunned and this was a heavy knockback hit, re-enter the knockback stun entry.
-        // TryRetriggerAsKnockback resets the phase so TriggerHitAnimation can detect it via TriggerWasHeavy.
-        if (stunMeter != null && stunMeter.IsStandingStunned)
-            stunMeter.TryRetriggerAsKnockback(knockback.magnitude);
-        if (enemyAI != null && !isBeingThrown)
-            enemyAI.TriggerHitAnimation(hitstun, height);
-
-        // STEP 5: Check for death
+        // Normal standing/airborne hit path.
+        ApplyDamageAndSfx(damage);
+        ApplyHitPhysics(knockback, airborneDuration, hitStopDuration);
+        ApplyHitstun(hitstun, airborneDuration, hitStopDuration);
+        TriggerHitReaction(knockback, hitstun, height);
         if (hp <= 0)
         {
-            isDying = true;
-            PlayDeathSfx();
-            /*
-             * If killed by an airborne attack, the airborne animation (liftoff/loop/crash)
-             * is used as the death — SimpleEnemyAI calls OnAirborneSequenceComplete() when it ends.
-             */
-            if (airborneDuration > 0f)
+            if (Time.time < throwVictimUntil)
             {
-                if (enemyAI == null)
-                    CompleteDeath();
+                throwDeathPending = true;
+                throwDeathKnockback = knockback;
+                throwDeathAirborneDuration = airborneDuration;
             }
             else
             {
-                if (enemyAI != null)
-                    enemyAI.TriggerDeathAnimation();
-                else
-                    CompleteDeath();
+                HandleDeath(airborneDuration, knockback);
             }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // TakeHit helpers — each covers one logical concern
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Crash relaunch gate: only one hit is allowed during the landing crash phase.
+    /// That hit gets 1.5× knockback and 1.4× animation speed so the re-launch looks snappy.
+    /// Returns false if the crash-hit quota is already spent (caller should return immediately).
+    /// </summary>
+    bool ApplyCrashRelaunch(ref Vector3 knockback, ref float airborneDuration)
+    {
+        bool inCrash = enemyAI != null && enemyAI.AirborneSequence != null && enemyAI.AirborneSequence.InCrash;
+        if (!inCrash) return true;         // Not crashing — nothing to do, proceed normally.
+        if (crashHitAlreadyUsed) return false; // Crash-hit already spent — ignore this hit.
+
+        crashHitAlreadyUsed     = true;
+        airborneSpeedMultiplier = 1.4f;
+
+        // Scale Y down so the enemy flies further across the floor, not straight up.
+        knockback.y      *= crashRelaunchKnockbackYScale;
+        knockback        *= 1.5f;
+
+        // Shorter airborne duration compensates for the faster animation speed so the clip still fits.
+        airborneDuration  = (airborneDuration > 0f ? airborneDuration : crashRelaunchAirborneDurationDefault)
+                            / airborneSpeedMultiplier;
+        return true;
+    }
+
+    /// <summary>
+    /// Hit response while the enemy is prone (flat on the floor after a crash landing).
+    /// Damage always applies. Heavy hits (above the stun threshold) also slide the body
+    /// and extend the stun window so the enemy can't get up instantly.
+    /// Light hits only deal damage and play a ground-hit animation.
+    /// </summary>
+void HandlePronePath(int damage, Vector3 knockback, float hitstun, float hitStopDuration,
+                         AttackHeight height, AttackHeaviness heaviness)
+    {
+        // Apply damage first so HP is correct when we check death.
+        int hpBefore = hp;
+        hp -= damage;
+        ScreenShake.RequestShake();
+        if (hp < hpBefore) PlayHurtSfx();
+
+        // A hit counts as "heavy" if the knockback exceeds the stun threshold (tunable on EnemyStunMeter),
+        // falling back to the AttackHeaviness enum when no stun meter is present.
+        bool heavyKnockback = stunMeter != null
+            ? knockback.magnitude >= stunMeter.knockbackStunThreshold
+            : heaviness == AttackHeaviness.Heavy;
+
+        if (heavyKnockback)
+        {
+            kbVel       += knockback;
+            hitstunUntil  = Mathf.Max(hitstunUntil, Time.time + hitstun);
+            if (hitStopDuration > 0f) hitStopEndTime = Time.time + hitStopDuration;
+        }
+
+        if (hp <= 0)
+        {
+            isDying = true;
+            BeginDeferredCollisionDisable();
+            PlayDeathSfx();
+            if (enemyAI != null) enemyAI.TriggerDeathAnimation(heavyKnockback);
+            else                 CompleteDeath();
+        }
+        else if (enemyAI != null)
+        {
+            enemyAI.TriggerHitAnimation(hitstun, height, heavyKnockback);
+        }
+    }
+
+    /// <summary>
+    /// Applies damage and plays the hurt SFX. Separated so that the prone and normal
+    /// paths both have a consistent damage application step.
+    /// </summary>
+    void ApplyDamageAndSfx(int damage)
+    {
+        int hpBefore = hp;
+        hp -= damage;
+        ScreenShake.RequestShake();
+        if (hp < hpBefore) PlayHurtSfx();
+    }
+
+    /// <summary>
+    /// Stores knockback into the velocity (or into pendingKnockback for launchers)
+    /// and records the hit-stop end time.
+    /// Launchers use pending knockback so the launch fires after hitstop — giving the
+    /// "cut to midair" effect instead of launching from a frozen position.
+    /// </summary>
+    void ApplyHitPhysics(Vector3 knockback, float airborneDuration, float hitStopDuration)
+    {
+        if (airborneDuration > 0f)
+        {
+            pendingKnockback        = knockback;
+            pendingAirborneDuration = airborneDuration;
+        }
+        else
+            kbVel += knockback;
+
+        if (hitStopDuration > 0f)
+            hitStopEndTime = Time.time + hitStopDuration;
+    }
+
+    /// <summary>
+    /// Extends hitstun (never shortens an existing longer stun) and sets the pending
+    /// launch time for launcher hits so ApplyKnockback() fires the velocity when hitstop ends.
+    /// </summary>
+    void ApplyHitstun(float hitstun, float airborneDuration, float hitStopDuration)
+    {
+        hitstunUntil = Mathf.Max(hitstunUntil, Time.time + hitstun);
+        if (airborneDuration > 0f)
+            pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;
+    }
+
+    /// <summary>
+    /// Triggers the hit animation on SimpleEnemyAI.
+    /// If the enemy is mid-throw, animation is suppressed (the throw animation takes precedence).
+    /// If already in standing stun and the hit has heavy knockback, re-enters the knockback
+    /// stun entry so the pose resets rather than holding the existing stun freeze.
+    /// </summary>
+    void TriggerHitReaction(Vector3 knockback, float hitstun, AttackHeight height)
+    {
+        // During a throw the enemy's animation is controlled by the throw sequence; don't override it.
+        bool isBeingThrown = Time.time < throwVictimUntil;
+
+        // Re-trigger: if the enemy is already standing-stunned, a heavy enough new hit should
+        // reset the stun pose rather than just extending the timer silently.
+        if (stunMeter != null && stunMeter.IsStandingStunned)
+            stunMeter.TryRetriggerAsKnockback(knockback.magnitude);
+
+        if (enemyAI != null && !isBeingThrown)
+            enemyAI.TriggerHitAnimation(hitstun, height);
+    }
+
+    /// <summary>
+    /// Sets isDying, plays the death SFX, and delegates to the appropriate death animation path.
+    /// Airborne kills use the ongoing liftoff/loop/crash sequence as the death anim;
+    /// SimpleEnemyAI calls OnAirborneSequenceComplete() when that sequence ends.
+    /// Standing kills trigger TriggerDeathAnimation() immediately.
+    /// </summary>
+void HandleDeath(float airborneDuration, Vector3 knockback)
+    {
+        isDying = true;
+        BeginDeferredCollisionDisable();
+        PlayDeathSfx();
+
+        bool isKnockbackDeath = stunMeter != null
+            ? knockback.magnitude >= stunMeter.knockbackStunThreshold
+            : false;
+
+        if (isKnockbackDeath)
+            kbVel *= 1.5f;  // Extra knockback pop for the death stumble
+
+        if (airborneDuration > 0f)
+        {
+            // Killed mid-launch: the airborne animation plays out as the death anim.
+            // CompleteDeath() is called by OnAirborneSequenceComplete() once it finishes.
+            if (enemyAI == null) CompleteDeath();
+        }
+        else
+        {
+            if (enemyAI != null) enemyAI.TriggerDeathAnimation(isKnockbackDeath);
+            else                 CompleteDeath();
         }
     }
 }

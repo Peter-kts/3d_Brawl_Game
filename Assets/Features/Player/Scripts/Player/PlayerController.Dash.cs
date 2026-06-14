@@ -17,8 +17,10 @@ public partial class PlayerController
     [Header("Dash")]
     [Tooltip("Distance covered by one dash")]
     public float dashDistance = 5f;
-    [Tooltip("Duration of the dash in seconds")]
+    [Tooltip("Duration of the dash movement in seconds")]
     public float dashDuration = 0.12f;
+    [Tooltip("How long after dash start the player cannot act (move/attack). Can be longer than dashDuration to add recovery.")]
+    public float dashLockdownDuration = 0.12f;
     [Tooltip("Cooldown before the next dash can be used (seconds)")]
     public float dashCooldown = 0.8f;
     [Tooltip("If an enemy is in this range ahead during dash, you get pulled toward them")]
@@ -27,6 +29,24 @@ public partial class PlayerController
     public float dashSuckConeAngle = 90f;
     [Tooltip("How strongly to curve toward the enemy per second (higher = stronger pull)")]
     public float dashSuckStrength = 8f;
+
+    [Header("Dash - Spam Penalty")]
+    [Tooltip("Time window in seconds. Dashes started within this period count as consecutive.")]
+    public float consecutiveDashWindow = 3f;
+    [Tooltip("How many dashes are allowed before the penalty kicks in. Default 2 = penalty starts on the 3rd dash.")]
+    public int consecutiveDashThreshold = 2;
+    [Tooltip("Multiplier applied to dash duration per extra consecutive dash past the threshold. 1.4 = 40% longer each step.")]
+    public float durationPenaltyPerStep = 1.4f;
+    [Tooltip("Multiplier applied to lockdown duration per extra consecutive dash past the threshold.")]
+    public float lockdownPenaltyPerStep = 1.6f;
+    [Tooltip("Multiplier applied to cooldown duration per extra consecutive dash past the threshold.")]
+    public float cooldownPenaltyPerStep = 2.0f;
+    [Tooltip("Cap on the total duration multiplier — prevents infinite scaling.")]
+    public float maxDurationMultiplier = 3f;
+    [Tooltip("Cap on the total lockdown multiplier.")]
+    public float maxLockdownMultiplier = 4f;
+    [Tooltip("Cap on the total cooldown multiplier.")]
+    public float maxCooldownMultiplier = 5f;
 
     [Header("Dash - Stop Past Enemy")]
     [Tooltip("Enable stopping at a set distance past the enemy during forward dashes")]
@@ -46,7 +66,16 @@ public partial class PlayerController
     [Tooltip("Crossfade duration when transitioning into dash animation (seconds)")]
     public float dashCrossfadeDuration = 0.1f;
 
-    private float dashEndTime = 0f;             // Time.time when the current dash expires
+    private int   consecutiveDashCount = 0;      // how many dashes have been started within the current window
+    private float lastDashStartTime   = -999f;  // Time.time when the most recent dash started; used to measure the window
+
+    /// <summary>Current consecutive dash count (resets when gap between dashes exceeds consecutiveDashWindow).</summary>
+    public int ConsecutiveDashCount => consecutiveDashCount;
+    /// <summary>How many penalty steps are currently active (0 = no penalty, 1+ = scaling applied).</summary>
+    public int DashPenaltySteps => Mathf.Max(0, consecutiveDashCount - consecutiveDashThreshold);
+
+    private float dashEndTime = 0f;             // Time.time when the current dash movement expires
+    private float dashLockdownEndTime = 0f;    // Time.time when dash lockout ends (gates new dashes and actions)
     private float nextDashTime = 0f;            // Time.time before which a new dash isn't allowed (cooldown)
     private Vector3 dashDirection;              // World-space flat direction the dash travels
     private float dashSpeed;                    // Pre-calculated as dashDistance / dashDuration
@@ -60,6 +89,8 @@ public partial class PlayerController
 
     /// <summary>True while the player is in the middle of a dash (dodge).</summary>
     public bool IsDashing => Time.time < dashEndTime;
+    /// <summary>True while dash recovery lockout is active (player cannot act yet).</summary>
+    public bool IsDashActionLocked => Time.time < dashLockdownEndTime;
 
     /// <summary>True if the player's dodge ended within the last windowSeconds. Used by enemies to choose punish attacks.</summary>
     public bool RecentlyDodged(float windowSeconds) => lastDashEndTime > 0f && (Time.time - lastDashEndTime) <= windowSeconds;
@@ -70,7 +101,7 @@ public partial class PlayerController
                        (Keyboard.current != null && Keyboard.current.leftShiftKey.wasPressedThisFrame);
         if (!pressed) return;
         if (IsBlocking) return;
-        if (Time.time < nextDashTime || Time.time < dashEndTime) return;
+        if (Time.time < nextDashTime || IsDashActionLocked) return;
         if (ActiveCombat != null && ActiveCombat.IsInAttackLock) return;
 
         StartDash();
@@ -174,9 +205,38 @@ public partial class PlayerController
         }
 
         dashDirection = moveDir;
-        dashSpeed = dashDuration > 0f ? dashDistance / dashDuration : 0f;
-        dashEndTime = Time.time + dashDuration;
-        nextDashTime = Time.time + dashCooldown;
+
+        /* ---- Spam penalty ----------------------------------------
+         * Count this dash. If it started within consecutiveDashWindow
+         * of the last one, it's consecutive; otherwise reset the count.
+         * Penalty kicks in once count exceeds consecutiveDashThreshold.
+         * Each extra dash past the threshold multiplies each timing value
+         * by its per-step multiplier, capped at its max multiplier. */
+        if (Time.time - lastDashStartTime <= consecutiveDashWindow)
+            consecutiveDashCount++;
+        else
+            consecutiveDashCount = 1; // first dash of a fresh window
+        lastDashStartTime = Time.time;
+
+        int   penaltySteps    = Mathf.Max(0, consecutiveDashCount - consecutiveDashThreshold);
+        float effectiveDuration = dashDuration;
+        float effectiveLockdown = dashLockdownDuration;
+        float effectiveCooldown = dashCooldown;
+        if (penaltySteps > 0)
+        {
+            float dm = Mathf.Min(Mathf.Pow(durationPenaltyPerStep, penaltySteps), maxDurationMultiplier);
+            float lm = Mathf.Min(Mathf.Pow(lockdownPenaltyPerStep, penaltySteps), maxLockdownMultiplier);
+            float cm = Mathf.Min(Mathf.Pow(cooldownPenaltyPerStep, penaltySteps), maxCooldownMultiplier);
+            effectiveDuration *= dm;
+            effectiveLockdown *= lm;
+            effectiveCooldown *= cm;
+        }
+        /* ---------------------------------------------------------- */
+
+        dashSpeed           = effectiveDuration > 0f ? dashDistance / effectiveDuration : 0f;
+        dashEndTime         = Time.time + effectiveDuration;
+        dashLockdownEndTime = Time.time + effectiveLockdown;
+        nextDashTime        = Time.time + effectiveCooldown;
 
         if (animator != null)
         {

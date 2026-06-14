@@ -170,6 +170,17 @@ public class AirborneSequence
         return health != null && (health.IsAirborne || (settings.IsConfigured && CurrentPhase != Phase.None));
     }
 
+    /// <summary>
+    /// Immediately cancels the airborne sequence without triggering crash-landed or death callbacks.
+    /// Used when the enemy is grabbed mid-air so the throw system takes full control.
+    /// </summary>
+    public void ForceCancel()
+    {
+        CurrentPhase = Phase.None;
+        wasAirborne = false;
+        cachedStateNameHash = 0;
+    }
+
     // ------------------------------------------------------------------------
     // Per-frame update
     // ------------------------------------------------------------------------

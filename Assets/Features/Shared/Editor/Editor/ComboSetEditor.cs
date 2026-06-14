@@ -20,7 +20,8 @@ public class ComboSetEditor : Editor
         "Heavy Attack",
         "RB + X Attack",
         "Throw",
-        "Back Throw"
+        "Back Throw",
+        "LB Throw (LB + Y + B)"
     };
     private static readonly string[] PropertyNames =
     {
@@ -37,7 +38,8 @@ public class ComboSetEditor : Editor
         "heavyAttack",
         "rbXAttack",
         "throwData",
-        "backThrowData"
+        "backThrowData",
+        "lbThrowData"
     };
 
     public override void OnInspectorGUI()
@@ -59,6 +61,16 @@ public class ComboSetEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("comboWindowDuration"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("loopNeutralCombo"));
 
+        // Throw grab sockets (shared across all throws)
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField("Throw Grab Sockets", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("throwGrabSockets"), true);
+
+        // Throw hit stops (shared across all throws)
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField("Throw Hit Stops", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("throwHitStops"), true);
+
         // Dropdown: which of the 6 moves we're editing (selection persisted per asset via EditorPrefs)
         EditorGUILayout.Space(6);
         string prefsKey = PrefsKeyPrefix + target.GetInstanceID();
@@ -66,11 +78,20 @@ public class ComboSetEditor : Editor
         selectedIndex = EditorGUILayout.Popup("Edit move:", selectedIndex, MoveNames);
         EditorPrefs.SetInt(prefsKey, selectedIndex);
 
+        // Animation trigger for selected move (shown inline, skip Throw/BackThrow which have no animationTrigger)
+        if (selectedIndex < PropertyNames.Length - 2)
+        {
+            SerializedProperty movePropForTrigger = serializedObject.FindProperty(PropertyNames[selectedIndex]);
+            SerializedProperty triggerProp = movePropForTrigger?.FindPropertyRelative("animationTrigger");
+            if (triggerProp != null)
+                EditorGUILayout.PropertyField(triggerProp, new GUIContent("Animation Trigger"));
+        }
+
         // Selected move: AttackData for attacks 0..9, ThrowData for Throw/Back Throw (10/11)
         EditorGUILayout.Space(4);
-        SerializedProperty moveProp = serializedObject.FindProperty(PropertyNames[selectedIndex]);
-        if (moveProp != null)
-            EditorGUILayout.PropertyField(moveProp, new GUIContent(MoveNames[selectedIndex]), true);
+        SerializedProperty selectedMoveProp = serializedObject.FindProperty(PropertyNames[selectedIndex]);
+        if (selectedMoveProp != null)
+            EditorGUILayout.PropertyField(selectedMoveProp, new GUIContent(MoveNames[selectedIndex]), true);
 
         // Move template: only for attack moves (not Throw entries)
         if (selectedIndex < 12)

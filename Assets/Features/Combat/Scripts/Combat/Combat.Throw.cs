@@ -8,6 +8,7 @@
  */
 
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -36,6 +37,7 @@ public partial class Combat
     // Active throw config selected at throw start (forward vs back), used for the full throw lifecycle.
     private ThrowData _activeThrowData;
     private bool _hasActiveThrowData;
+    private bool _activeThrowIsExplicit;   // True when DoThrowWithData was called directly (e.g. LB throw); skips connect-time profile re-fetch.
     // Set by OnThrowDamage animation event; consumed in LateUpdate to apply throw damage on the exact frame.
     private bool _deferThrowDamageToLateUpdate;
     // When we release without launching, we reapply the baked victim position next frame so physics doesn't snap them.
@@ -53,7 +55,10 @@ public partial class Combat
     private float throwChargeStartTime;        // Time.time when the hold began
     private float throwChargeKnockbackScale = 1f; // baked at release; applied in ApplyThrowDamage
     private float throwChargeDamageScale    = 1f; // baked at release; applied in ApplyThrowDamage
+    private float throwChargeHitStopScale   = 1f; // baked at release; applied in OnThrowHitStop
     private Animator _throwVictimAnimator;     // cached at charge start so we can mirror speed changes to the victim
+    private int _victimThrownAnimLayer;        // animator layer the thrown state plays on; used for NT scrubbing sync
+    private string _victimThrownStateName;     // state name on that layer; used to scrub victim NT to match player each frame
     // True while directional throw rotation is actively steering — OnAnimatorMove skips
     // rotation root motion so our manual RotateTowards is not overwritten each frame.
     private bool _directionalThrowRotationActive;
@@ -68,10 +73,28 @@ public partial class Combat
     // used as the authoritative knockback direction, ignoring socket offsets and bake artifacts.
     private Vector3 _committedThrowDirection;
     private bool _hasCommittedThrowDirection;
+    // Player facing at grab connect — immune to root motion drift; used as knockback fallback.
+    private Vector3 _throwStartDirection;
     // Position-only pseudo-parent state while throw hold is active.
     private Transform _throwVictimPseudoParentTarget;
     private bool _throwVictimPseudoParentActive;
     private Vector3 _throwVictimPseudoParentOffset;
+    private Transform _activeGrabSocket;       // Resolved grab socket for current throw (may differ from default grabSocket).
+    private Vector3 _activeGrabSocketLocalOffset;  // Local-space offset from ThrowGrabSocket.offset; set by ResolveGrabSocketByIndex, consumed by AttachVictimToGrabSocket.
+    // Per-frame additive nudges applied on top of the socket follow (see OnThrowVictimNudge).
+    private struct ActiveNudge
+    {
+        public Vector3 target;          // socket-local target offset
+        public float duration;          // total interpolation time in seconds
+        public float elapsed;           // accumulated time (scaled by animator speed)
+    }
+    private readonly List<ActiveNudge> _activeNudges = new List<ActiveNudge>();
+    // Standalone nudge state: applies nudges as world-space deltas after pseudo-parent is stopped.
+    private Transform _standaloneNudgeTarget;
+    private Quaternion _standaloneNudgeRotation;
+    private Vector3 _standaloneNudgePrevTotal;
+    // Victim waiting for OnThrowAttach animation event before being snapped to the grab socket.
+    private Transform _pendingThrowAttachVictim;
     // Player mesh local pose before throw root motion; restored in BakePlayerThrowRootMotionAndRestore.
     private Vector3 _throwPlayerMeshLocalPosition;
     private Quaternion _throwPlayerMeshLocalRotation;
@@ -142,6 +165,22 @@ public partial class Combat
     {
         // Used when expected animation events are interrupted/missed.
         // This keeps transforms/collision/state from getting stuck in throw mode.
+        // Handle the case where hitbox connected but OnThrowAttach never fired.
+        if (_pendingThrowAttachVictim != null)
+        {
+            var pendingHealth = _pendingThrowAttachVictim.GetComponent<EnemyHealth>();
+            if (pendingHealth != null)
+                pendingHealth.PlayThrowVictimAnimation();
+            Transform pendingVt = _pendingThrowAttachVictim;
+            _pendingThrowAttachVictim = null;
+            if (currentThrowVictim == null)
+            {
+                // No current victim either — only cleanup needed.
+                ClearThrowState();
+                return;
+            }
+        }
+
         if (currentThrowVictim == null) return;
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null)
@@ -152,14 +191,27 @@ public partial class Combat
 
         // Mirror the standard release order so victim/player transforms and controller state stay consistent.
         ResetThrowChargeState(); // restore animator speed if frozen mid-charge
-        BakePlayerThrowRootMotionAndRestore();
+        // BakePlayerThrowRootMotionAndRestore();
         ReleaseThrowVictimFromSocket();
         CompleteThrowRelease(vt, damageAlreadyAppliedThisFrame: true, applyReleaseEffects: applyReleaseEffects);
     }
 
     #region Throw (attempted grab -> hitbox -> hold -> release)
-    /// <summary>Starts a throw attempt: sets attack state, schedules the grab hitbox after hitboxDelay, plays grab-attempt anim.</summary>
+    /// <summary>Starts a throw attempt using the default throw profile selected by stick input. Forward/back resolved at connect time.</summary>
     void DoThrow()
+    {
+        _activeThrowIsExplicit = false;
+        DoThrowInternal(GetThrowAttemptData());
+    }
+
+    /// <summary>Starts a throw attempt with an explicitly provided ThrowData (e.g. LB throw). Skips connect-time forward/back re-fetch.</summary>
+    void DoThrowWithData(ThrowData t)
+    {
+        _activeThrowIsExplicit = true;
+        DoThrowInternal(t);
+    }
+
+    void DoThrowInternal(ThrowData t)
     {
         // Snap to face the nearest enemy in the stick direction, same as regular attacks.
         if (threatSystem != null && !threatSystem.IsLockedOn)
@@ -176,8 +228,7 @@ public partial class Combat
 
         // New committed throw clears the previous interrupt-suppression window.
         suppressHitboxActivationsUntilNextCommit = false;
-        _currentThrowIsBack = false; // Throw direction now resolves on grab connect (not at throw begin).
-        ThrowData t = GetThrowAttemptData();
+        _currentThrowIsBack = false;
         if (!t.enableThrow) return; // Hard gate: do not enter throw flow if no throw profile is active.
         if (!TryConsumeMomentum(t.consumesMomentum, t.momentumCost)) return;
         _activeThrowData = t; // Keep attempt data active for start cues/timing until connect resolves profile.
@@ -195,53 +246,232 @@ public partial class Combat
         PlayThrowCues(AttackSfxTriggerType.OnAttackStart, 0);
     }
 
-    /// <summary>OverlapSphere at throw hitbox center; returns first IDamageable with EnemyHealth (excluding self).</summary>
+    /// <summary>OverlapSphere at throw hitbox center; returns nearest valid enemy damageable.</summary>
     bool TryFindThrowVictim(ThrowData t, out EnemyHealth victim, out IDamageable victimDamageable)
     {
         victim = null;
         victimDamageable = null;
         Vector3 center = CalculateThrowHitboxCenter(t);
-        Collider[] hits = Physics.OverlapSphere(center, t.hitboxRadius, ~0, QueryTriggerInteraction.Ignore);
+        Collider[] hits = Physics.OverlapSphere(center, t.hitboxRadius, throwTargetLayers.value, QueryTriggerInteraction.Ignore);
+        EntityHealth selfHealth = GetComponent<EntityHealth>();
+        float bestDistanceSqr = float.PositiveInfinity;
+        bool found = false;
         foreach (var c in hits)
         {
             var damageable = c.GetComponentInParent<IDamageable>();
-            if (damageable == null || (damageable as Component)?.gameObject == gameObject) continue; // Skip self
-            var eh = (damageable as Component)?.GetComponent<EnemyHealth>();
+            Component damageableComponent = damageable as Component;
+            if (damageableComponent == null) continue;
+            if (damageableComponent.transform.root == transform.root) continue; // Skip self
+
+            EntityHealth targetHealth = damageableComponent.GetComponentInParent<EntityHealth>();
+            if (selfHealth != null && targetHealth != null && !TeamUtil.AreHostile(selfHealth.team, targetHealth.team))
+                continue;
+
+            var eh = damageableComponent.GetComponent<EnemyHealth>();
             if (eh == null) continue; // Only grab enemies that have EnemyHealth (and thus throw/get-up support)
+
+            float distSqr = (damageableComponent.transform.position - center).sqrMagnitude;
+            if (distSqr >= bestDistanceSqr) continue;
+
+            bestDistanceSqr = distSqr;
             victim = eh;
             victimDamageable = damageable;
-            return true;
+            found = true;
         }
-        return false;
+        return found;
+    }
+
+    /// <summary>
+    /// Returns the grab socket for the current throw. Priority:
+    /// 1. Centralized ComboSet.throwGrabSockets[0] (if the array is populated)
+    /// 2. Per-throw ThrowData.grabSocketName (legacy, only when centralized array is empty)
+    /// 3. Default grabSocket Transform on Combat
+    /// </summary>
+    Transform ResolveGrabSocket()
+    {
+        if (comboSet != null && comboSet.throwGrabSockets != null && comboSet.throwGrabSockets.Length > 0)
+            return ResolveGrabSocketByIndex(0);
+
+        _activeGrabSocketLocalOffset = Vector3.zero;
+        if (_hasActiveThrowData && !string.IsNullOrEmpty(_activeThrowData.grabSocketName))
+        {
+            Transform found = FindTransformByName(transform, _activeThrowData.grabSocketName);
+            if (found != null) return found;
+            UnityEngine.Debug.LogWarning($"[Throw] grabSocketName '{_activeThrowData.grabSocketName}' not found in hierarchy — falling back to default grabSocket.", this);
+        }
+        return grabSocket;
+    }
+
+    /// <summary>
+    /// Resolves a grab socket by index into ComboSet.throwGrabSockets.
+    /// Also stores the entry's local-space offset into _activeGrabSocketLocalOffset for the caller.
+    /// All fallback paths return grabSocket directly to avoid mutual recursion with ResolveGrabSocket().
+    /// </summary>
+    Transform ResolveGrabSocketByIndex(int socketIndex)
+    {
+        _activeGrabSocketLocalOffset = Vector3.zero;
+        if (comboSet == null || comboSet.throwGrabSockets == null || comboSet.throwGrabSockets.Length == 0)
+        {
+            UnityEngine.Debug.LogWarning($"[Throw] OnThrowAttach({socketIndex}) — ComboSet has no throwGrabSockets configured. Falling back to default.", this);
+            return grabSocket;
+        }
+        if (socketIndex < 0 || socketIndex >= comboSet.throwGrabSockets.Length)
+        {
+            UnityEngine.Debug.LogWarning($"[Throw] OnThrowAttach({socketIndex}) — index out of range (array length {comboSet.throwGrabSockets.Length}). Falling back to default.", this);
+            return grabSocket;
+        }
+        ThrowGrabSocket entry = comboSet.throwGrabSockets[socketIndex];
+        if (string.IsNullOrEmpty(entry.socketName))
+        {
+            UnityEngine.Debug.LogWarning($"[Throw] throwGrabSockets[{socketIndex}].socketName is empty. Falling back to default.", this);
+            return grabSocket;
+        }
+        Transform found = FindTransformByName(transform, entry.socketName);
+        if (found == null)
+        {
+            UnityEngine.Debug.LogWarning($"[Throw] throwGrabSockets[{socketIndex}].socketName = '{entry.socketName}' not found in hierarchy. Falling back to default.", this);
+            return grabSocket;
+        }
+        _activeGrabSocketLocalOffset = entry.offset;
+        return found;
+    }
+
+    /// <summary>Depth-first search for a named transform in a hierarchy.</summary>
+    static Transform FindTransformByName(Transform root, string name)
+    {
+        if (root.name == name) return root;
+        for (int i = 0; i < root.childCount; i++)
+        {
+            Transform found = FindTransformByName(root.GetChild(i), name);
+            if (found != null) return found;
+        }
+        return null;
     }
 
     /// <summary>Starts position-only pseudo-parent follow to grabSocket (no real parenting, no scale inheritance).</summary>
-    void AttachVictimToGrabSocket(Transform victimTransform) // Snap the grabbed enemy to our hold socket.
+    void AttachVictimToGrabSocket(Transform victimTransform, Transform socketOverride = null)
     {
-        if (grabSocket == null) return; // If no socket is assigned, we cannot attach.
+        Transform socket = socketOverride ?? ResolveGrabSocket();
+        UnityEngine.Debug.Log($"[Throw] OnThrowAttach → socket={socket?.name ?? "NULL"}");
+
+        if (socket == null) return; // If no socket is assigned, we cannot attach.
+        _activeGrabSocket = socket;
         _throwVictimPseudoParentTarget = victimTransform;
-        _throwVictimPseudoParentOffset = Vector3.zero;
+        _throwVictimPseudoParentOffset = _activeGrabSocketLocalOffset;
         _throwVictimPseudoParentActive = true;
-        victimTransform.position = grabSocket.position; // Start snapped to socket; follow updates in LateUpdate.
-        Vector3 toPlayer = transform.position - victimTransform.position; // One-time facing snap at throw start.
+        // If the animator is a separate child mesh, store and reset its local pose so root motion
+        // drift or animation offsets don't misalign the visual when snapping to the socket.
+        if (_throwVictimAnimator != null && _throwVictimAnimator.transform != victimTransform)
+        {
+            _throwVictimMeshLocalPosition = _throwVictimAnimator.transform.localPosition;
+            _throwVictimMeshLocalRotation = _throwVictimAnimator.transform.localRotation;
+            _throwVictimAnimator.transform.localPosition = Vector3.zero;
+            _throwVictimAnimator.transform.localRotation = Quaternion.identity;
+        }
+        // Rotate to face the player BEFORE snapping position so the direction is computed from the victim's real location.
+        // Disable root motion briefly so the animator doesn't immediately overwrite the rotation we set;
+        // re-enable after a short delay so the facing has time to settle.
+        bool hadRootMotion = _throwVictimAnimator != null && _throwVictimAnimator.applyRootMotion;
+        if (hadRootMotion) _throwVictimAnimator.applyRootMotion = false;
+        Vector3 toPlayer = transform.position - victimTransform.position;
         toPlayer.y = 0f;
-        if (toPlayer.sqrMagnitude > 0.0001f)
-            victimTransform.rotation = Quaternion.LookRotation(toPlayer);
-        else
-            victimTransform.rotation = Quaternion.LookRotation(-transform.forward);
+        victimTransform.rotation = toPlayer.sqrMagnitude > 0.0001f
+            ? Quaternion.LookRotation(toPlayer.normalized)
+            : Quaternion.LookRotation(-transform.forward);
+        if (hadRootMotion) StartCoroutine(ReenableVictimRootMotionDelayed(_throwVictimAnimator, 0.1f));
+        victimTransform.position = socket.position + socket.rotation * _throwVictimPseudoParentOffset;
+    }
+
+    float GetNudgeTimeScale()
+    {
+        if (animator == null) return 1f;
+        return Mathf.Max(animator.speed, 0f);
     }
 
     void UpdateThrowVictimPseudoParent()
     {
-        if (!_throwVictimPseudoParentActive || _throwVictimPseudoParentTarget == null || grabSocket == null) return;
-        _throwVictimPseudoParentTarget.position = grabSocket.position + _throwVictimPseudoParentOffset;
+        if (!_throwVictimPseudoParentActive || _throwVictimPseudoParentTarget == null || _activeGrabSocket == null) return;
+
+        float scaledDt = Time.deltaTime * GetNudgeTimeScale();
+        Vector3 totalNudge = Vector3.zero;
+        for (int i = 0; i < _activeNudges.Count; i++)
+        {
+            ActiveNudge n = _activeNudges[i];
+            n.elapsed += scaledDt;
+            float t = n.duration > 0f ? Mathf.Clamp01(n.elapsed / n.duration) : 1f;
+            totalNudge += n.target * t;
+            _activeNudges[i] = n;
+        }
+
+        _throwVictimPseudoParentTarget.position = _activeGrabSocket.position
+            + _activeGrabSocket.rotation * (_throwVictimPseudoParentOffset + totalNudge);
+
+        // Generic-rig animators keep root bone position in object space even with applyRootMotion=false,
+        // causing the skeleton to drift visually from the root transform. Zero the mesh local position
+        // each frame so the visual skeleton stays anchored to Enemy_root while bones animate normally.
+        if (_throwVictimAnimator != null && _throwVictimAnimator.transform != _throwVictimPseudoParentTarget)
+            _throwVictimAnimator.transform.localPosition = Vector3.zero;
     }
 
     void StopThrowVictimPseudoParent()
     {
+        if (debugNeverDetach) return;
+        // Snapshot for standalone nudge only on the first active→inactive transition;
+        // later redundant calls (e.g. from ClearThrowState) must not overwrite the snapshot.
+        if (_throwVictimPseudoParentActive)
+        {
+            _standaloneNudgeTarget = _throwVictimPseudoParentTarget;
+            _standaloneNudgeRotation = _activeGrabSocket != null ? _activeGrabSocket.rotation : transform.rotation;
+            Vector3 currentTotal = Vector3.zero;
+            for (int i = 0; i < _activeNudges.Count; i++)
+            {
+                ActiveNudge n = _activeNudges[i];
+                float t = n.duration > 0f ? Mathf.Clamp01(n.elapsed / n.duration) : 1f;
+                currentTotal += n.target * t;
+            }
+            _standaloneNudgePrevTotal = currentTotal;
+        }
+
         _throwVictimPseudoParentActive = false;
         _throwVictimPseudoParentTarget = null;
         _throwVictimPseudoParentOffset = Vector3.zero;
+        _activeGrabSocketLocalOffset = Vector3.zero;
+        _activeGrabSocket = null;
+    }
+
+    void UpdateStandaloneNudges()
+    {
+        if (_throwVictimPseudoParentActive) return;
+        if (_standaloneNudgeTarget == null || _activeNudges.Count == 0) return;
+
+        float scaledDt = Time.deltaTime * GetNudgeTimeScale();
+        Vector3 totalNudge = Vector3.zero;
+        for (int i = 0; i < _activeNudges.Count; i++)
+        {
+            ActiveNudge n = _activeNudges[i];
+            n.elapsed += scaledDt;
+            float t = n.duration > 0f ? Mathf.Clamp01(n.elapsed / n.duration) : 1f;
+            totalNudge += n.target * t;
+            _activeNudges[i] = n;
+        }
+
+        Vector3 delta = totalNudge - _standaloneNudgePrevTotal;
+        _standaloneNudgePrevTotal = totalNudge;
+        _standaloneNudgeTarget.position += _standaloneNudgeRotation * delta;
+    }
+
+    void ClearStandaloneNudgeState()
+    {
+        _activeNudges.Clear();
+        _standaloneNudgeTarget = null;
+        _standaloneNudgePrevTotal = Vector3.zero;
+    }
+
+    IEnumerator ReenableVictimRootMotionDelayed(Animator anim, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (anim != null && _throwVictimPseudoParentActive)
+            anim.applyRootMotion = true;
     }
 
     /// <summary>Steps the player toward the grab target while the throw hitbox is still pending.</summary>
@@ -278,6 +508,8 @@ public partial class Combat
     {
         if (duration <= 0f) return;
         hitStopEndTime = Time.time + duration;
+        if (isAttacking)
+            currentAttackEndTime += duration;
         if (animator != null)
         {
             if (!frozenAnimators.Any(f => f.animator == animator))
@@ -322,45 +554,87 @@ public partial class Combat
     void ExecuteThrowHitbox()
     {
         if (IsHitboxActivationSuppressed) return; // Ignore stale throw-hitbox timing after damage interrupt.
-        ThrowData attemptData = GetThrowAttemptData();
+
+        // If the throw was explicitly set (e.g. LB throw), use _activeThrowData directly.
+        // Otherwise resolve forward/back at connect time from stick input.
+        ThrowData attemptData = _activeThrowIsExplicit ? _activeThrowData : GetThrowAttemptData();
         if (!attemptData.enableThrow) return; // Safety: profile may have changed since throw attempt started.
 
         // No victim found means whiff: keep existing attack lock behavior and exit quietly.
         if (!TryFindThrowVictim(attemptData, out EnemyHealth victim, out IDamageable victimDamageable)) return;
 
-        // Resolve forward/back throw at connect time using current stick input.
-        _currentThrowIsBack = IsBackThrowStickInput();
-        ThrowData connectData = GetThrowDataForInput(_currentThrowIsBack);
-        if (connectData.enableThrow)
+        if (!_activeThrowIsExplicit)
         {
-            // Commit to the connect-time profile so subsequent events (damage/release/vfx/prone)
-            // use the same throw variant consistently for the rest of this throw.
-            _activeThrowData = connectData;
-            _hasActiveThrowData = true;
+            // Resolve forward/back throw at connect time using current stick input.
+            _currentThrowIsBack = IsBackThrowStickInput();
+            ThrowData connectData = GetThrowDataForInput(_currentThrowIsBack);
+            if (connectData.enableThrow)
+            {
+                _activeThrowData = connectData;
+                _hasActiveThrowData = true;
+            }
         }
         ThrowData t = _activeThrowData;
 
         currentThrowVictim = victimDamageable;
         Transform victimTransform = (victimDamageable as Component).transform;
+
+        // Snap the player to face the victim at grab connect so both animations align consistently.
+        Vector3 toVictim = victimTransform.position - transform.position;
+        toVictim.y = 0f;
+        if (toVictim.sqrMagnitude > 0.001f)
+        {
+            transform.rotation = Quaternion.LookRotation(toVictim.normalized, Vector3.up);
+            // Optionally step the player to a fixed distance from the victim for consistent spacing.
+            if (t.grabSnapDistance > 0f)
+                transform.position = victimTransform.position - toVictim.normalized * t.grabSnapDistance;
+        }
+
+        _throwStartDirection = transform.forward;
+        _throwStartDirection.y = 0f;
+        _throwStartDirection.Normalize();
+
         SetThrowVictimCollisionIgnore(victimTransform, true);  // Prevent player and victim colliders from fighting during throw
 
-        AttachVictimToGrabSocket(victimTransform);
+        // Store victim root motion state before StartThrowVictim disables it, so BakeVictimThrowRootMotionAndRestore can restore it.
+        var victimAnimator = victimTransform.GetComponentInChildren<Animator>();
+        if (victimAnimator != null)
+        {
+            _throwVictimRootMotionRestore = victimAnimator.applyRootMotion;
+            _throwVictimRootMotionChanged = true;
+        }
+
+        // Don't snap to socket yet — wait for OnThrowAttach animation event on the player's throw clip.
+        // This lets the animation drive when the hands close around the victim.
+        _pendingThrowAttachVictim = victimTransform;
 
         string thrownState = GetThrownStateName(t, victim);
         victim.StartThrowVictim(t.throwPhaseDuration, thrownState);  // Enemy enters thrown state and plays thrown anim
 
-        ApplyGrabHitStop(t.grabHitStopDuration, victimTransform);
+        // ApplyGrabHitStop(t.grabHitStopDuration, victimTransform);
 
-        Vector3 center = CalculateThrowHitboxCenter(t);
-        SpawnGrabConnectVfx(t, center);
+        // Vector3 center = CalculateThrowHitboxCenter(t);
+        // SpawnGrabConnectVfx(t, center);
 
-        nextThrowTime = Time.time + t.throwCooldown; // Use the connected throw profile's cooldown.
+        // nextThrowTime = Time.time + t.throwCooldown; // Use the connected throw profile's cooldown.
         currentAttackEndTime = Time.time + t.grabHitStopDuration + t.throwPhaseDuration;
+        // Cache victim animator now (charge start may not happen for uncharged throws).
+        _throwVictimAnimator = victimTransform.GetComponentInChildren<Animator>();
+        // Layer detection deferred to OnThrowAttach — animation isn't playing yet.
+        _victimThrownAnimLayer = 0;
+        _victimThrownStateName = null;
         StartPlayerThrowAnimation(t.throwAnimationTrigger);
+        // Switch startup/recovery tracking to the throw animation so UpdateAttackStartUpSpeed applies correctly.
+        currentAttackStateName = t.throwAnimationTrigger;
+        currentStartUpLength   = t.throwStartUpLength;
+        currentStartUpSpeed    = t.throwStartUpSpeed > 0f ? t.throwStartUpSpeed : 1f;
+        currentRecoveryLength  = t.throwRecoveryLength;
+        currentRecoverySpeed   = t.throwRecoverySpeed > 0f ? t.throwRecoverySpeed : 1f;
         PlayThrowCues(AttackSfxTriggerType.OnHitConfirm, 0);
 
         if (threatSystem != null)
             threatSystem.RegisterInteraction((victimDamageable as Component).transform);
+
     }
 
     void PlayThrowCues(AttackSfxTriggerType trigger, int eventId)
@@ -389,7 +663,6 @@ public partial class Combat
         if (!_playerThrowRootMotionChanged || animator == null) return;
         // Snapshot where the animator root ended up in world space (root motion moved it during throw)
         Vector3 bakePosition = animator.transform.position;
-        UnityEngine.Debug.Log($"[Throw] Baking player root position: {bakePosition}");
         Quaternion bakeRotation = animator.transform.rotation;
         animator.applyRootMotion = _playerThrowRootMotionRestore;
         _playerThrowRootMotionChanged = false;
@@ -413,9 +686,14 @@ public partial class Combat
         Quaternion bakeRotation = vt.rotation;
         if (victimAnim != null)
         {
-            // Use grab socket world position as release origin so charge duration doesn't affect launch position.
-            bakePosition = grabSocket != null ? grabSocket.position : victimAnim.rootPosition;
-            bakeRotation = victimAnim.rootRotation;
+            // Snap the victim's animation to its final frame before baking so root-motion
+            // result is deterministic regardless of when the release event fires.
+            var stateInfo = victimAnim.GetCurrentAnimatorStateInfo(0);
+            victimAnim.Play(stateInfo.fullPathHash, 0, 1f);
+            victimAnim.Update(0f);
+
+            bakePosition = victimAnim.transform.position;
+            bakeRotation = victimAnim.transform.rotation;
             if (_throwVictimRootMotionChanged)
             {
                 victimAnim.applyRootMotion = _throwVictimRootMotionRestore;
@@ -444,7 +722,6 @@ public partial class Combat
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
         StopThrowVictimPseudoParent();
-        UnityEngine.Debug.Log($"[Throw] Release victim: vt={vt.name}, pos={vt.position}");
 
         (Vector3 bakePosition, Quaternion bakeRotation) = BakeVictimThrowRootMotionAndRestore(vt);
 
@@ -466,11 +743,49 @@ public partial class Combat
     /// <summary>Apply release outcome: optionally enter prone, then clear collision ignore and throw state. Damage is applied only by OnThrowDamage events.</summary>
     void CompleteThrowRelease(Transform victimTransform, bool damageAlreadyAppliedThisFrame, bool applyReleaseEffects = true)
     {
-        if (applyReleaseEffects && _hasActiveThrowData && _activeThrowData.enableThrow && ShouldEnterProneOnThrowRelease(victimTransform))
+        if (applyReleaseEffects && _hasActiveThrowData && _activeThrowData.enableThrow)
         {
-            EnterThrowProne(victimTransform);
+            ThrowData t = _activeThrowData;
+            bool goingAirborne = t.launchOnRelease || t.airborneOnRelease;
+            if (goingAirborne)
+            {
+                // Snap victim facing to the knockback direction so liftoff root motion aligns consistently.
+                Vector3 knockDir = _hasCommittedThrowDirection ? _committedThrowDirection : _throwStartDirection;
+                if (t.invertKnockbackDirection) knockDir = -knockDir;
+                Vector3 facing = t.faceVictimTowardPlayerOnRelease ? -knockDir : knockDir;
+                if (facing.sqrMagnitude > 0.001f)
+                {
+                    Quaternion rot = Quaternion.LookRotation(facing, Vector3.up);
+                    victimTransform.rotation = rot;
+                    _reapplyThrowBakeRotation = rot;
+                }
+
+                var victimAI = victimTransform.GetComponentInParent<SimpleEnemyAI>();
+                if (victimAI?.ProneSystem != null)
+                {
+                    float dur = t.proneDuration > 0f ? t.proneDuration : (victimAI != null ? victimAI.groundedDuration : 1f);
+                    victimAI.ProneSystem.OverrideNextProneDuration(dur);
+                    victimAI.ProneSystem.OverrideNextProneVariant(t.proneVariant);
+                }
+            }
+            else if (ShouldEnterProneOnThrowRelease(victimTransform))
+            {
+                EnterThrowProne(victimTransform);
+            }
         }
         StartCoroutine(RestoreCollisionAfterDelay(victimTransform, 1f));
+
+        var victimHealth = victimTransform != null ? victimTransform.GetComponent<EnemyHealth>() : null;
+        if (victimHealth != null)
+        {
+            if (_hasActiveThrowData && (_activeThrowData.launchOnRelease || _activeThrowData.airborneOnRelease)
+                && _activeThrowData.endAirborneDuration > 0f)
+            {
+                victimHealth.SetAirborne(_activeThrowData.endAirborneDuration);
+            }
+            victimHealth.EndThrowVictimState();
+        }
+
         ClearThrowState();
     }
 
@@ -487,11 +802,14 @@ public partial class Combat
     void ClearThrowState()
     {
         StopThrowVictimPseudoParent();
+        ClearStandaloneNudgeState();
+        _pendingThrowAttachVictim = null;
         currentThrowVictim = null;
         isAttacking = false;
         pendingThrowHitbox = false;
         _hasActiveThrowData = false;
         ResetChargeState();
+        ResetThrowChargeState();
         if (animator != null && !frozenAnimators.Any(f => f.animator == animator))
             animator.speed = 1f;
         foreach (var frozen in frozenAnimators)
@@ -501,6 +819,110 @@ public partial class Combat
         }
         frozenAnimators.Clear();
         hitStopEndTime = 0f;
+    }
+
+    /// <summary>
+    /// Animation event: snap the grabbed victim to the player's grab socket and start pseudo-parent follow.
+    /// Place this on the player throw animation at the frame the hands close around the enemy.
+    /// If the event never fires (e.g. no event authored), the victim stays in place until OnThrowRelease.
+    /// </summary>
+    public void OnThrowAttach()
+    {
+        OnThrowAttachInternal(null);
+    }
+
+    /// <summary>
+    /// Animation event (int): snap the grabbed victim to a specific grab socket by index into
+    /// ComboSet.throwGrabSockets. Can be called multiple times during a throw to swap
+    /// between attachment points mid-animation.
+    /// Renamed from OnThrowAttach(int) to avoid Unity animation event overload ambiguity —
+    /// Unity treats intParameter=0 the same as "no int" and may call the void overload instead.
+    /// </summary>
+    public void OnThrowAttachSocket(int socketIndex)
+    {
+        Transform socket = ResolveGrabSocketByIndex(socketIndex);
+        OnThrowAttachInternal(socket);
+    }
+
+    /// <summary>
+    /// Animation event (Object): smoothly nudge the throw victim by a local-space offset over time.
+    /// Drag a ThrowVictimNudge asset into the event's Object field. Multiple nudges accumulate
+    /// additively — each independently interpolates from zero to its target, then holds there
+    /// until the throw ends. Safe to fire multiple times on the same clip.
+    /// </summary>
+    public void OnThrowVictimNudge(Object nudgeAsset)
+    {
+        var nudge = nudgeAsset as ThrowVictimNudge;
+        if (nudge == null) return;
+        _activeNudges.Add(new ActiveNudge
+        {
+            target   = nudge.offset,
+            duration = nudge.duration,
+            elapsed  = 0f,
+        });
+    }
+
+    void OnThrowAttachInternal(Transform socketOverride)
+    {
+        if (_pendingThrowAttachVictim != null)
+        {
+            var victimHealth = _pendingThrowAttachVictim.GetComponent<EnemyHealth>();
+            if (victimHealth != null)
+                victimHealth.PlayThrowVictimAnimation();
+
+            AttachVictimToGrabSocket(_pendingThrowAttachVictim, socketOverride);
+            _pendingThrowAttachVictim = null;
+
+            DetectVictimThrownAnimLayer();
+        }
+        else if (currentThrowVictim != null)
+        {
+            Transform vt = (currentThrowVictim as Component)?.transform;
+            if (vt != null)
+            {
+                if (_throwVictimPseudoParentActive)
+                {
+                    // Mid-throw socket swap: update the active socket so LateUpdate follows the new point.
+                    // ResolveGrabSocket/ResolveGrabSocketByIndex also stores the new offset in _activeGrabSocketLocalOffset.
+                    Transform newSocket = socketOverride ?? ResolveGrabSocket();
+                    if (newSocket != null)
+                    {
+                        _activeGrabSocket = newSocket;
+                        _throwVictimPseudoParentOffset = _activeGrabSocketLocalOffset;
+                        vt.position = newSocket.position + newSocket.rotation * _throwVictimPseudoParentOffset;
+                    }
+                }
+                else
+                {
+                    AttachVictimToGrabSocket(vt, socketOverride);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Finds which animator layer the victim's thrown state is playing on and stores it
+    /// for per-frame NT scrubbing in UpdateAttackStartUpSpeed.
+    /// Must be called after PlayThrowVictimAnimation() so the state is active.
+    /// </summary>
+    void DetectVictimThrownAnimLayer()
+    {
+        if (_throwVictimAnimator == null || currentThrowVictim == null) return;
+        var victimHealth = (currentThrowVictim as Component)?.GetComponent<EnemyHealth>();
+        if (victimHealth == null) return;
+        var victimAI = victimHealth.GetComponent<SimpleEnemyAI>();
+        ThrowData t = _activeThrowData;
+        string thrownStateName = GetThrownStateName(t, victimHealth);
+        if (string.IsNullOrEmpty(thrownStateName)) return;
+        for (int l = 0; l < _throwVictimAnimator.layerCount; l++)
+        {
+            if (_throwVictimAnimator.GetCurrentAnimatorStateInfo(l).IsName(thrownStateName))
+            {
+                _victimThrownAnimLayer = l;
+                _victimThrownStateName = thrownStateName;
+                return;
+            }
+        }
     }
 
     /// <summary>Animation event compatibility hook: stops pseudo-parent follow early. Full release still runs on OnThrowRelease.</summary>
@@ -590,6 +1012,16 @@ public partial class Combat
         // Ignore stale release events after interrupts/cleanup.
         // Without this guard, old clip events could release/apply prone on the wrong target.
         if (currentThrowVictim == null || !_hasActiveThrowData || !_activeThrowData.enableThrow) return;
+        // If OnThrowAttach never fired (event not authored on this clip), attach + play anim as fallback.
+        if (_pendingThrowAttachVictim != null)
+        {
+            var victimHealth = _pendingThrowAttachVictim.GetComponent<EnemyHealth>();
+            if (victimHealth != null)
+                victimHealth.PlayThrowVictimAnimation();
+            AttachVictimToGrabSocket(_pendingThrowAttachVictim);
+            _pendingThrowAttachVictim = null;
+            DetectVictimThrownAnimLayer();
+        }
         // Idempotency guard for fail-safe dual authoring (player + victim clip):
         // once release is queued for this frame, ignore duplicate release events.
         if (_deferThrowReleaseToLateUpdate) return;
@@ -621,6 +1053,46 @@ public partial class Combat
         Quaternion rot = dir.sqrMagnitude > 0.001f ? Quaternion.LookRotation(dir) : transform.rotation;
         var go = Instantiate(t.throwEndVfxPrefab, pos, rot);
         PlayVfx(go);
+    }
+
+    /// <summary>
+    /// Animation event (int): freeze both thrower and victim animators using a
+    /// ThrowHitStopProfile from ComboSet.throwHitStops[index]. Reuses the existing
+    /// frozenAnimators / hitStopEndTime pipeline so UpdateHitStop handles restoration.
+    /// </summary>
+    public void OnThrowHitStop(int index)
+    {
+        if (comboSet == null || comboSet.throwHitStops == null) return;
+        if (index < 0 || index >= comboSet.throwHitStops.Length)
+        {
+            UnityEngine.Debug.LogWarning($"[Throw] OnThrowHitStop({index}) — index out of range (array length {comboSet.throwHitStops.Length}). Ignored.", this);
+            return;
+        }
+        ThrowHitStopProfile profile = comboSet.throwHitStops[index];
+        if (profile.duration <= 0f) return;
+
+        float scaledDuration = profile.duration * throwChargeHitStopScale;
+        hitStopEndTime = Time.time + scaledDuration;
+        if (isAttacking)
+            currentAttackEndTime += scaledDuration;
+
+        if (animator != null && !IsAnimatorFrozen(animator))
+        {
+            frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });
+            animator.speed = 0f;
+        }
+
+        Animator victimAnim = _throwVictimAnimator;
+        if (victimAnim == null && currentThrowVictim != null)
+            victimAnim = (currentThrowVictim as Component)?.GetComponentInChildren<Animator>();
+        if (victimAnim != null && !IsAnimatorFrozen(victimAnim))
+        {
+            frozenAnimators.Add(new FrozenAnimator { animator = victimAnim, originalSpeed = victimAnim.speed });
+            victimAnim.speed = 0f;
+        }
+
+        if (profile.rumble && UnityEngine.InputSystem.Gamepad.current != null)
+            StartCoroutine(RumbleForSeconds(scaledDuration));
     }
 
     public void OnThrowSfxEvent(int eventId)
@@ -676,16 +1148,9 @@ public partial class Combat
         // Otherwise fall back to the player's current facing.
         Vector3 horizontalDir;
         if (_hasCommittedThrowDirection)
-        {
             horizontalDir = _committedThrowDirection;
-        }
         else
-        {
-            horizontalDir = transform.forward;
-            horizontalDir.y = 0f;
-            if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = Vector3.forward;
-            horizontalDir.Normalize();
-        }
+            horizontalDir = _throwStartDirection;
         int damage = t.endDamage;
         float knockback = t.endKnockback;
         float knockbackUp = t.endKnockbackUp;
@@ -694,13 +1159,11 @@ public partial class Combat
         float scaledKnockback = knockback * throwChargeKnockbackScale;
         float scaledKnockbackUp = knockbackUp * throwChargeKnockbackScale;
 
+        if (t.invertKnockbackDirection) horizontalDir = -horizontalDir;
+
         Vector3 knockbackVector = applyKnockback
             ? ((horizontalDir * scaledKnockback) + (Vector3.up * scaledKnockbackUp))
             : Vector3.zero;
-
-        // TEMP DEBUG — show exactly what direction the knockback is fired in
-        Debug.Log($"[Throw knockback] horizontalDir={horizontalDir}, transform.fwd={transform.forward}, committedDir={_committedThrowDirection}, hasCommitted={_hasCommittedThrowDirection}");
-        Debug.DrawRay(transform.position + Vector3.up, horizontalDir * 4f, Color.magenta, 3f, false);
 
         // Throw release can explicitly route into knockback-stun animation path based on release knockback.
         // This guarantees IsKnockbackStun can activate even if the previous standing-stun phase has ended.
@@ -728,7 +1191,8 @@ public partial class Combat
         }
 
         int damageToApply = applyDamage ? scaledDamage : 0;
-        currentThrowVictim.TakeHit(damageToApply, knockbackVector, 0f, 0f);
+        float airborneDur = ((applyKnockback && t.launchOnRelease) || t.airborneOnRelease) ? t.endAirborneDuration : 0f;
+        currentThrowVictim.TakeHit(damageToApply, knockbackVector, 0f, airborneDur);
     }
 
     /// <summary>Enter prone on the throw victim. Called at release (OnThrowRelease) regardless of whether damage was already applied mid-throw.</summary>
@@ -748,6 +1212,7 @@ public partial class Combat
             victimTransform.rotation = Quaternion.LookRotation(desiredFacing, Vector3.up);
         }
         victimAI?.ProneSystem?.Enter(dur, t.invertProneRotation, t.proneVariant, preserveCurrentFacing: true);
+        victimAI?.KickDownwardVelocity();
 
         // Keep deferred one-frame bake reapply aligned with the final prone-facing rotation.
         if (_reapplyThrowBakeTransform == victimTransform)
@@ -779,10 +1244,10 @@ public partial class Combat
         if (!isChargingThrow) return;
         ThrowData t = _activeThrowData;
 
-        // Slow both the player and victim animations while holding
+        // Slow both the player and victim animations while holding (skip if hit-stopped)
         float chargeSpeed = t.chargeAnimatorSpeed > 0f ? t.chargeAnimatorSpeed : 0.05f;
-        if (animator != null) animator.speed = chargeSpeed;
-        if (_throwVictimAnimator != null) _throwVictimAnimator.speed = chargeSpeed;
+        if (animator != null && !IsAnimatorFrozen(animator)) animator.speed = chargeSpeed;
+        if (_throwVictimAnimator != null && !IsAnimatorFrozen(_throwVictimAnimator)) _throwVictimAnimator.speed = chargeSpeed;
 
         // Directional throw: pivot thrower and victim together toward the held movement direction.
         // Because animator.speed is nearly 0 during charge, root-motion delta per frame is negligible
@@ -838,19 +1303,13 @@ public partial class Combat
         _directionalThrowTargetRotation = transform.rotation;
         _hasDirectionalThrowTarget      = true;
 
-        // Keep victim facing the thrower so they look like a single rotating unit.
-        // The victim's world position already tracks the grabSocket (child of our rig),
-        // so a pure facing correction here is all that's needed.
+        // Snap victim to face opposite the player's new direction so they
+        // rotate as a unit. Using -dir avoids stale-position issues (victim
+        // position isn't updated to the new socket location until LateUpdate).
         Transform vt = (currentThrowVictim as Component)?.transform;
         if (vt == null) return;
 
-        Vector3 toPlayer = transform.position - vt.position;
-        toPlayer.y = 0f;
-        if (toPlayer.sqrMagnitude > 0.001f)
-        {
-            Quaternion victimTarget = Quaternion.LookRotation(toPlayer, Vector3.up);
-            vt.rotation = Quaternion.RotateTowards(vt.rotation, victimTarget, rotSpeed * Time.deltaTime);
-        }
+        vt.rotation = Quaternion.LookRotation(-dir, Vector3.up);
 
         // Store victim rotation for LateUpdate enforcement (enemy AI/animator may clobber it)
         _directionalThrowVictimTransform = vt;
@@ -901,6 +1360,7 @@ public partial class Combat
         // Lerp multipliers from 1x (no charge) to configured max (full charge)
         throwChargeKnockbackScale = Mathf.Lerp(1f, t.chargeKnockbackMultiplier > 0f ? t.chargeKnockbackMultiplier : 1f, normalized);
         throwChargeDamageScale    = Mathf.Lerp(1f, t.chargeDamageMultiplier    > 0f ? t.chargeDamageMultiplier    : 1f, normalized);
+        throwChargeHitStopScale   = Mathf.Lerp(1f, t.chargeHitStopMultiplier   > 0f ? t.chargeHitStopMultiplier   : 1f, normalized);
 
         // Extend the attack lock to cover the time we held — the throw animation was frozen,
         // so it still needs that much time to finish playing after the release.
@@ -923,8 +1383,8 @@ public partial class Combat
         // The throw animation's root motion rotation would snap the player back to the
         // clip's authored direction the moment the charge ends. We keep suppressing
         // rotation root motion until the full throw is over (ResetThrowChargeState clears it).
-        if (animator != null) animator.speed = 1f;
-        if (_throwVictimAnimator != null) _throwVictimAnimator.speed = 1f; // resume victim throw animation speed
+        if (animator != null && !IsAnimatorFrozen(animator)) animator.speed = 1f;
+        if (_throwVictimAnimator != null && !IsAnimatorFrozen(_throwVictimAnimator)) _throwVictimAnimator.speed = 1f;
     }
 
     // Clears all throw charge state. Called on attack end, stun interrupt, and ForceThrowReleaseFallback.
@@ -932,18 +1392,21 @@ public partial class Combat
     {
         if (isChargingThrow)
         {
-            if (animator != null) animator.speed = 1f;
-            if (_throwVictimAnimator != null) _throwVictimAnimator.speed = 1f; // restore victim speed if still frozen
+            if (animator != null && !IsAnimatorFrozen(animator)) animator.speed = 1f;
+            if (_throwVictimAnimator != null && !IsAnimatorFrozen(_throwVictimAnimator)) _throwVictimAnimator.speed = 1f;
         }
         isChargingThrow                    = false;
         throwChargeWindowOpen              = false;
         throwChargeKnockbackScale          = 1f;
         throwChargeDamageScale             = 1f;
+        throwChargeHitStopScale            = 1f;
         _directionalThrowRotationActive    = false;
         _hasDirectionalThrowTarget         = false;
         _hasCommittedThrowDirection        = false;
         _directionalThrowVictimTransform   = null;
         _throwVictimAnimator               = null;
+        _victimThrownAnimLayer             = 0;
+        _victimThrownStateName             = null;
     }
 
     // =========================================================================

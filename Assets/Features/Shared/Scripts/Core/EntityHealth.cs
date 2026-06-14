@@ -34,7 +34,18 @@ using UnityEngine;
 public abstract class EntityHealth : MonoBehaviour, IDamageable
 {
     // ========================================================================
-    // HEALTH (shared)
+    // ========================================================================
+    // TEAM (shared)
+    // ========================================================================
+
+    [Header("Team")]
+    [Tooltip("Which faction this entity belongs to. Controls who can damage whom. " +
+             "Player = player character, Enemy = hostile AI, Ally = friendly AI.")]
+    public Team team = Team.Enemy;
+
+    // ========================================================================
+    
+// HEALTH (shared)
     // ========================================================================
 
     protected int hp;       // Current hit points; decremented by TakeHit(), checked against 0 for death
@@ -75,7 +86,8 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
         float airborneDuration,
         float hitStopDuration = 0f,
         AttackHeaviness heaviness = AttackHeaviness.Medium,
-        AttackHeight height = AttackHeight.Mid
+        AttackHeight height = AttackHeight.Mid,
+        GameObject attacker = null
     );
 
     // ========================================================================
@@ -145,6 +157,34 @@ public abstract class EntityHealth : MonoBehaviour, IDamageable
     // Called when the entity hits a wall during knockback movement.
     // Override in subclasses to apply bounce logic (reflect kbVel, play animation, etc.).
     protected virtual void OnWallBounce(Vector3 wallNormal) { }
+
+    // ========================================================================
+    // AIRBORNE ANIMATION PHASE (shared — PlayerHealth drives this for the player)
+    // ========================================================================
+
+    /// <summary>
+    /// Which section of the airborne animation clip is currently playing.
+    /// Liftoff = rising, Loop = in-air (repeats for juggling), Crash = landing.
+    /// Defined here so PlayerHealth and any future entity with airborne animation
+    /// can share the same type without re-declaring it.
+    /// </summary>
+    protected enum AirbornePhase { None, Liftoff, Loop, Crash }
+
+    // ========================================================================
+    // AUDIO SOURCE HELPER (shared)
+    // ========================================================================
+
+    /// <summary>
+    /// Returns <paramref name="assigned"/> if set; otherwise falls back to
+    /// <paramref name="hurtFallback"/> (the primary hurt source on the entity),
+    /// then any AudioSource found on this GameObject or its children.
+    /// Call this in Awake() to resolve secondary SFX sources (death, block, parry)
+    /// so they share the hurt source when no dedicated source is wired up.
+    /// </summary>
+    protected AudioSource ResolveSfxSource(AudioSource assigned, AudioSource hurtFallback) =>
+        assigned      != null ? assigned :
+        hurtFallback  != null ? hurtFallback :
+        GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
 
     // ========================================================================
     // RANDOM SFX HELPER (shared)

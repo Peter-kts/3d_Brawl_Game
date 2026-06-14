@@ -49,71 +49,29 @@ public class ChaseBehavior : EnemyBehavior
     {
         if (ai.player == null) return;
 
-        // --------------------------------------------------------------------
-        // Calculate direction to player (XZ only — ignore height)
-        // --------------------------------------------------------------------
-
         Vector3 toPlayer = ai.player.position - ai.transform.position;
-        toPlayer.y = 0f; // flatten to ground plane so slopes don't affect movement direction
+        toPlayer.y = 0f;
 
         float dist = toPlayer.magnitude;
-        if (dist < 0.1f) return; // already overlapping the player, nothing to chase
+        if (dist < 0.1f) return;
 
-        // --------------------------------------------------------------------
-        // Compute flank target — a point near the player offset by our
-        // assigned approach angle (0° when alone, spread when grouped).
-        // --------------------------------------------------------------------
-
-        /*
-         * awayDir points from the player back toward the enemy's current side.
-         * Rotating it by the assigned flank angle picks a different point
-         * around the player that the enemy steers toward.
-         *
-         *   flankTarget = player + Rotate(awayDir, flankAngle) * FlankBuffer
-         *
-         * With flankAngle = 0: target sits directly between player and enemy
-         *   → same as the old straight-in approach.
-         * With flankAngle = ±90°: target is to the player's side
-         *   → enemy curves around to approach from a different angle.
-         *
-         * Because FlankBuffer is small relative to chase distances, enemies
-         * still close in quickly — the curve is subtle but clearly visible.
-         */
         float flankAngle    = FlankCoordinator.GetFlankAngle(ai);
-        Vector3 awayDir     = -(toPlayer / dist);  // normalised, points player→enemy
+        Vector3 awayDir     = -(toPlayer / dist);
         Vector3 flankOffset = Quaternion.AngleAxis(flankAngle, Vector3.up) * awayDir * FlankBuffer;
         Vector3 flankTarget = ai.player.position + flankOffset;
 
-        // --------------------------------------------------------------------
-        // Move toward flank target
-        // --------------------------------------------------------------------
+        Vector3 primaryDir = flankTarget - ai.transform.position;
+        primaryDir.y = 0f;
 
-        Vector3 moveDir = flankTarget - ai.transform.position;
-        moveDir.y = 0f;
+        if (primaryDir.magnitude < 0.1f) return;
+        primaryDir.Normalize();
 
-        if (moveDir.magnitude < 0.1f) return;
+        // Blend separation steering into move direction so enemies naturally spread apart.
+        Vector3 separation = Vector3.ClampMagnitude(ai.GetSeparationSteering(), 1f);
+        Vector3 moveDir = (primaryDir + separation).normalized;
 
-        /*
-         * Normalize manually — moveDir.magnitude is already computed above.
-         * CharacterController.Move():
-         *   - Respects collisions with walls and other CharacterControllers
-         *   - Slides along surfaces automatically
-         *   - Does NOT apply gravity — handled separately in SimpleEnemyAI
-         */
-        Vector3 dir = moveDir.normalized;
-        ai.CC.Move(dir * ai.moveSpeed * Time.deltaTime);
-
-        // --------------------------------------------------------------------
-        // Face movement direction
-        // --------------------------------------------------------------------
-
-        /*
-         * RotateTowardWithDelay smoothly turns the enemy toward dir each frame.
-         * Keeps facing logic consistent with Standoff — no duplication needed.
-         */
-        ai.RotateTowardWithDelay(dir);
-
-        // Set walking speed; actual animator parameter is smoothed in SimpleEnemyAI.UpdateAnimator
+        ai.CC.Move(moveDir * ai.moveSpeed * Time.deltaTime);
+        ai.RotateTowardWithDelay(primaryDir); // still face toward the flank target, not the separation offset
         ai.TargetAnimSpeed = 1f;
     }
 }

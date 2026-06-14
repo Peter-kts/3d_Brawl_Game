@@ -17,6 +17,27 @@ public class ThrowAnimationEventForwarder : MonoBehaviour
             Debug.LogWarning("ThrowAnimationEventForwarder could not find EnemyCombat on the same GameObject.", this);
     }
 
+    /// <summary>Enemy-side relay for OnThrowAttach (no-arg). Warns if no handler exists.</summary>
+    public void OnThrowAttach()
+    {
+        WarnMissingThrowHandlers(nameof(OnThrowAttach));
+    }
+    /// <summary>Enemy-side relay for OnThrowAttachSocket(int socketIndex). Warns if no handler exists.</summary>
+    public void OnThrowAttachSocket(int socketIndex)
+    {
+        WarnMissingThrowHandlers(nameof(OnThrowAttachSocket));
+    }
+
+    /// <summary>
+    /// Enemy-side relay for OnThrowVictimNudge. Finds the Combat holding this victim and
+    /// forwards the nudge so events authored on victim clips reach the player throw system.
+    /// </summary>
+    public void OnThrowVictimNudge(Object nudgeAsset)
+    {
+        Combat c = FindHoldingCombat();
+        if (c != null) c.OnThrowVictimNudge(nudgeAsset);
+    }
+
     /// <summary>Call at the frame you want to detach the victim from the grab socket (before OnThrowRelease).</summary>
     public void OnThrowUnparent()
     {
@@ -53,6 +74,25 @@ public class ThrowAnimationEventForwarder : MonoBehaviour
     public void OnThrowDamage()
     {
         WarnMissingThrowHandlers(nameof(OnThrowDamage));
+    }
+
+    public void OnThrowHitStop(int index)
+    {
+        Combat c = FindHoldingCombat();
+        if (c != null) c.OnThrowHitStop(index);
+    }
+
+    Combat FindHoldingCombat()
+    {
+        EnemyHealth myHealth = GetComponentInParent<EnemyHealth>();
+        if (myHealth == null) return null;
+        Combat[] combats = FindObjectsOfType<Combat>();
+        for (int i = 0; i < combats.Length; i++)
+        {
+            if (combats[i] != null && combats[i].IsHoldingThrowVictim(myHealth))
+                return combats[i];
+        }
+        return null;
     }
 
     void WarnMissingThrowHandlers(string eventName)

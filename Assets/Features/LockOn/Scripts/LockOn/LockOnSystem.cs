@@ -89,6 +89,14 @@ public class LockOnSystem : MonoBehaviour
     public GameObject lockOnIndicatorPrefab;
     [Tooltip("World-space offset from the locked target's position (above head)")]
     public Vector3 lockOnIndicatorOffset = new Vector3(0f, 2.2f, 0f);
+    [Tooltip("Prefab for the current soft-target marker. Leave null for an auto-generated small white dot.")]
+    public GameObject softTargetDotPrefab;
+    [Tooltip("Offset from the soft target center where the dot is placed.")]
+    public Vector3 softTargetDotOffset = new Vector3(0f, 0.1f, 0f);
+    [Tooltip("When enabled, draws the soft-target dot in screen space so it always renders on top.")]
+    public bool softTargetDotAlwaysOnTop = true;
+    [Tooltip("Screen-space size of the always-on-top soft-target dot (pixels).")]
+    public float softTargetDotScreenSize = 10f;
 
 
     // ========================================================================
@@ -107,6 +115,8 @@ public class LockOnSystem : MonoBehaviour
     public bool IsFreeLooking { get; private set; }
     /// <summary>All threats currently in range, sorted by score descending (best first).</summary>
     public List<ThreatInfo> TrackedThreats { get; private set; } = new List<ThreatInfo>();
+    /// <summary>Preview target for directional attacks when not hard-locked. Updated every frame.</summary>
+    public Transform AttackPreviewTarget { get; private set; }
 
     // Legacy compatibility
     public Transform Target => SoftTarget;
@@ -141,6 +151,10 @@ public class LockOnSystem : MonoBehaviour
     private GameObject lockOnIndicatorInstance; // Instantiated once; repositioned/shown each frame when locked on
     private Transform lockOnIndicatorLastTarget; // Tracks when the locked target changes so we can refresh the height cache
     private float lockOnIndicatorCachedTopY;     // Cached height above target.position for the current locked target
+    private GameObject softTargetDotInstance;    // Instantiated once; shown whenever SoftTarget exists
+    private Texture2D softTargetDotTexture;      // Tiny white circle used for always-on-top GUI rendering
+    private bool hasSoftTargetDotScreenPos;      // True when preview target is in front of camera this frame
+    private Vector2 softTargetDotScreenPos;      // Cached screen position for GUI dot (pixels)
 
     private const int MAX_COLLIDERS = 32;                                // Max simultaneous overlaps; increase if the scene has more than ~32 enemies at once
     private Collider[] colliderBuffer = new Collider[MAX_COLLIDERS];     // Reused every detection tick to avoid per-frame allocation
@@ -154,6 +168,7 @@ public class LockOnSystem : MonoBehaviour
         mainCamera = Camera.main;
         playerController = GetComponent<PlayerController>();
         InitializeLockOnIndicator();
+        InitializeSoftTargetDot();
     }
 
     void InitializeLockOnIndicator()
@@ -167,6 +182,19 @@ public class LockOnSystem : MonoBehaviour
             lockOnIndicatorInstance.SetActive(false);
     }
 
+    void InitializeSoftTargetDot()
+    {
+        if (softTargetDotPrefab != null)
+            softTargetDotInstance = Instantiate(softTargetDotPrefab);
+        else
+            softTargetDotInstance = CreateDefaultSoftTargetDot();
+
+        if (softTargetDotInstance != null)
+            softTargetDotInstance.SetActive(false);
+
+        softTargetDotTexture = CreateSoftTargetDotTexture();
+    }
+
     void Update()
     {
         if (mainCamera == null) mainCamera = Camera.main;
@@ -175,6 +203,16 @@ public class LockOnSystem : MonoBehaviour
         // Without this, a destroyed SoftTarget persists until the next 10 Hz tick (up to 100 ms).
         if (SoftTarget == null)
             SoftTarget = null;  // Replace the destroyed wrapper with a true C# null.
+        else if (!IsTargetAlive(SoftTarget))
+            SoftTarget = null;  // Dead targets are invalid immediately (don't wait for next detection tick).
+
+        // Keep the cached threat list clean between detection ticks so no dead threat
+        // can influence soft targeting/selection during that interval.
+        for (int i = TrackedThreats.Count - 1; i >= 0; i--)
+        {
+            if (!IsTargetAlive(TrackedThreats[i].transform))
+                TrackedThreats.RemoveAt(i);
+        }
 
         // Run threat detection at fixed rate (e.g. 10 Hz) instead of every frame for performance.
         if (Time.time >= nextDetectionTime)
@@ -184,7 +222,62 @@ public class LockOnSystem : MonoBehaviour
             nextDetectionTime = Time.time + (1f / detectionRate);
         }
 
+        AttackPreviewTarget = ResolveAttackPreviewTarget();
         UpdateLockOnIndicator();
+        UpdateSoftTargetDot();
+    }
+
+    bool IsTargetAlive(Transform target)
+    {
+        if (target == null) return false;
+        EnemyHealth enemyHealth = target.GetComponentInParent<EnemyHealth>();
+        return enemyHealth != null
+            && !enemyHealth.IsDying
+            && TeamUtil.AreHostile(Team.Player, enemyHealth.team);
+    }
+
+    Transform ResolveAttackPreviewTarget()
+    {
+        if (IsLockedOn && SoftTarget != null && IsTargetAlive(SoftTarget))
+            return SoftTarget;
+        if (TrackedThreats.Count == 0) return null;
+
+        Vector3 referenceDir = transform.forward;
+        if (playerController != null)
+        {
+            Vector2 stick = playerController.GetStickInput();
+            if (stick.sqrMagnitude > 0.01f && mainCamera != null)
+            {
+                Vector3 camForward = mainCamera.transform.forward; camForward.y = 0f; camForward.Normalize();
+                Vector3 camRight   = mainCamera.transform.right;   camRight.y   = 0f; camRight.Normalize();
+                Vector3 worldStick = camForward * stick.y + camRight * stick.x;
+                if (worldStick.sqrMagnitude > 0.001f)
+                    referenceDir = worldStick.normalized;
+            }
+        }
+
+        Transform best = null;
+        float bestDistSq = float.MaxValue;
+        float maxAngle = Mathf.Max(0f, focusConeAngle);
+        foreach (var threat in TrackedThreats)
+        {
+            Transform threatTransform = threat.transform;
+            if (!IsTargetAlive(threatTransform)) continue;
+
+            Vector3 toThreat = threatTransform.position - transform.position;
+            toThreat.y = 0f;
+            float distSq = toThreat.sqrMagnitude;
+            if (distSq < 0.01f) continue;
+            if (Vector3.Angle(referenceDir, toThreat) > maxAngle) continue;
+
+            if (distSq < bestDistSq)
+            {
+                bestDistSq = distSq;
+                best = threatTransform;
+            }
+        }
+
+        return best;
     }
 
     // ========================================================================
@@ -213,9 +306,10 @@ public class LockOnSystem : MonoBehaviour
             if (col == null) continue;
             if (col.transform == transform) continue;  // Ignore our own collider
 
-            var enemyHealth = col.GetComponent<EnemyHealth>();
+            var enemyHealth = col.GetComponentInParent<EnemyHealth>();
             if (enemyHealth == null) continue;
             if (enemyHealth.IsDying) continue;
+            if (!TeamUtil.AreHostile(Team.Player, enemyHealth.team)) continue;
 
             Transform threatTransform = enemyHealth.transform;
 
@@ -301,9 +395,9 @@ public class LockOnSystem : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, maxDist, threatMask, QueryTriggerInteraction.Ignore))
         {
             // Hit something: must be an enemy (EnemyHealth on the hit collider's GameObject)
-            var enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+            var enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
             // EnemyHealth presence is sufficient: if the collider has EnemyHealth, it cannot be the player.
-            if (enemyHealth != null && !enemyHealth.IsDying)
+            if (enemyHealth != null && !enemyHealth.IsDying && TeamUtil.AreHostile(Team.Player, enemyHealth.team))
             {
                 SoftTarget = enemyHealth.transform;
                 return;
@@ -640,6 +734,62 @@ public class LockOnSystem : MonoBehaviour
         }
     }
 
+    void UpdateSoftTargetDot()
+    {
+        if (softTargetDotInstance == null) return;
+
+        Transform dotTarget = AttackPreviewTarget;
+        if (dotTarget != null)
+        {
+            Renderer targetRenderer = dotTarget.GetComponentInChildren<Renderer>();
+            Vector3 center = targetRenderer != null ? targetRenderer.bounds.center : dotTarget.position;
+            Vector3 worldPos = center + softTargetDotOffset;
+
+            if (softTargetDotAlwaysOnTop)
+            {
+                Camera cam = mainCamera != null ? mainCamera : Camera.main;
+                hasSoftTargetDotScreenPos = false;
+                if (cam != null)
+                {
+                    Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+                    if (screenPos.z > 0f)
+                    {
+                        hasSoftTargetDotScreenPos = true;
+                        softTargetDotScreenPos = new Vector2(screenPos.x, screenPos.y);
+                    }
+                }
+                softTargetDotInstance.SetActive(false);
+            }
+            else
+            {
+                hasSoftTargetDotScreenPos = false;
+                softTargetDotInstance.SetActive(true);
+                softTargetDotInstance.transform.position = worldPos;
+            }
+        }
+        else
+        {
+            hasSoftTargetDotScreenPos = false;
+            softTargetDotInstance.SetActive(false);
+        }
+    }
+
+    void OnGUI()
+    {
+        if (!softTargetDotAlwaysOnTop) return;
+        if (!hasSoftTargetDotScreenPos) return;
+        if (softTargetDotTexture == null) return;
+
+        float size = Mathf.Max(1f, softTargetDotScreenSize);
+        Rect rect = new Rect(
+            softTargetDotScreenPos.x - (size * 0.5f),
+            (Screen.height - softTargetDotScreenPos.y) - (size * 0.5f),
+            size,
+            size
+        );
+        GUI.DrawTexture(rect, softTargetDotTexture, ScaleMode.StretchToFill, true);
+    }
+
     /// <summary>
     /// Creates a simple gold spinning ring using a LineRenderer.
     /// Used automatically when no lockOnIndicatorPrefab is assigned.
@@ -671,5 +821,54 @@ public class LockOnSystem : MonoBehaviour
         }
 
         return root;
+    }
+
+    GameObject CreateDefaultSoftTargetDot()
+    {
+        GameObject dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        dot.name = "SoftTargetDot_Default";
+        dot.transform.localScale = Vector3.one * 0.09f;
+
+        Collider dotCollider = dot.GetComponent<Collider>();
+        if (dotCollider != null)
+            Destroy(dotCollider);
+
+        Renderer renderer = dot.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
+            renderer.material = new Material(shader);
+            renderer.material.color = Color.white;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+        }
+
+        return dot;
+    }
+
+    Texture2D CreateSoftTargetDotTexture()
+    {
+        const int size = 16;
+        Texture2D tex = new Texture2D(size, size, TextureFormat.ARGB32, false);
+        tex.wrapMode = TextureWrapMode.Clamp;
+        tex.filterMode = FilterMode.Bilinear;
+
+        float radius = (size - 1) * 0.5f;
+        Vector2 center = new Vector2(radius, radius);
+        Color clear = new Color(0f, 0f, 0f, 0f);
+        Color white = Color.white;
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                Vector2 p = new Vector2(x, y);
+                tex.SetPixel(x, y, Vector2.Distance(p, center) <= radius ? white : clear);
+            }
+        }
+
+        tex.Apply();
+        return tex;
     }
 }

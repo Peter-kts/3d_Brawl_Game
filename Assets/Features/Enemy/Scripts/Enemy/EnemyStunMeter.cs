@@ -194,6 +194,20 @@ public class EnemyStunMeter : MonoBehaviour
     }
 
     /// <summary>
+    /// Immediately end any active standing stun and reset the meter.
+    /// Used when the throw releases so lingering stun doesn't re-trigger thrown animations.
+    /// </summary>
+    public void ClearStandingStun()
+    {
+        standingStunTimer = 0f;
+        stunMeter = 0f;
+        graceTimer = 0f;
+        entryTimer = 0f;
+        triggerWasHeavy = false;
+        currentPhase = StunPhase.None;
+    }
+
+    /// <summary>
     /// Add stun buildup from a hit. Resets the grace timer so slow decay restarts.
     /// Ignored while already standing stunned. Knockback force is recorded if the hit fills the meter.
     /// </summary>
@@ -270,7 +284,7 @@ public class EnemyStunMeter : MonoBehaviour
     void OnGUI()
     {
         DebugSettings debug = DebugSettings.Instance;
-        if (debug == null || !debug.ShouldShow(debug.showEnemyStunMeter)) return;
+        if (debug == null || !debug.ShouldShowEnemyHealthStats(debug.showEnemyStunMeter)) return;
 
         Camera cam = Camera.main;
         if (cam == null) return;

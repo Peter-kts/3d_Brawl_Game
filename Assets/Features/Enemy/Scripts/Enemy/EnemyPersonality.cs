@@ -19,6 +19,19 @@ public class EnemyPersonality : ScriptableObject
     // STANDOFF — how close to get and how to circle
     // =========================================================================
 
+    [Header("Spacing")]
+    [Tooltip("Radius within which this enemy steers away from other enemies. Separation is blended into movement direction — no teleport push.")]
+    public float separationRadius = 2f;
+
+    [Header("Target Priority")]
+    [Tooltip("Priority weight for Player targets. Higher = more likely to be selected.")]
+    [Range(0f, 2f)]
+    public float playerTargetPriorityMultiplier = 2f;
+
+    [Tooltip("Priority weight for Ally targets. Higher = more likely to be selected.")]
+    [Range(0f, 2f)]
+    public float allyTargetPriorityMultiplier = 1f;
+
     [Header("Standoff - Range")]
     [Tooltip("Distance at which enemy stops chasing and begins circling the target.")]
     public float standoffEnterRange = 4f;

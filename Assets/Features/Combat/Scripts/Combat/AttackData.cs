@@ -143,9 +143,6 @@ public class AttackData
     [Tooltip("For this many seconds after attack start, facing rotates toward the soft target so the hitbox can follow moving enemies. 0 = no tracking.")]
     public float trackingDuration = 0f;
     
-    [Tooltip("Max rotation speed toward target in degrees per second (smooth follow, not snap). Used when trackingDuration > 0.")]
-    public float trackingSpeed = 540f;
-
     [Header("SFX (optional)")]
     [Tooltip("Sound played once when this attack starts.")]
     public AudioClip attackStartSfx;

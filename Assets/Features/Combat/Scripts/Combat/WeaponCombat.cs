@@ -121,6 +121,8 @@ public class WeaponCombat : Combat
 
     protected override void OnAttackCommitted(AttackData attack)
     {
+        base.OnAttackCommitted(attack); // records move into PlayerCombatMemory
+
         // Reset per-attack hit cache first so the new attack can hit enemies that were
         // hit by the previous attack, but cannot re-hit the same enemy within this attack.
         EnsureWeaponTipHitbox();

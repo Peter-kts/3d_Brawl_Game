@@ -76,7 +76,8 @@ public interface IDamageable
         float airborneDuration,
         float hitStopDuration = 0f,
         AttackHeaviness heaviness = AttackHeaviness.Medium,
-        AttackHeight height = AttackHeight.Mid
+        AttackHeight height = AttackHeight.Mid,
+        GameObject attacker = null
     );
     
     /*

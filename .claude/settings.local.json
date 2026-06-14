@@ -20,7 +20,43 @@
       "Bash(mv \"FastScriptReload\" \"ThirdParty/\")",
       "Bash(mv \"FastScriptReload.meta\" \"ThirdParty/\")",
       "Bash(mv \"Frank_Slash_Pack\" \"ThirdParty/\")",
-      "Bash(grep -n \"OverlapSphere\\\\|OverlapCapsule\\\\|ExecuteThrow\\\\|hitConfirm\\\\|OnHitConfirm\" d:/3dbrawlerlearn/Assets/Features/Combat/Scripts/Combat/*.cs)"
+      "Bash(grep -n \"OverlapSphere\\\\|OverlapCapsule\\\\|ExecuteThrow\\\\|hitConfirm\\\\|OnHitConfirm\" d:/3dbrawlerlearn/Assets/Features/Combat/Scripts/Combat/*.cs)",
+      "Bash(uvx --prerelease explicit --from \"mcpforunityserver>=0.0.0a0\" mcp-for-unity --transport http --http-url http://localhost:8080 --project-scoped-tools)",
+      "Bash(where uvx:*)",
+      "Read(//d/3dbrawlerlearn/$USERPROFILE/.local/bin/**)",
+      "Read(//d/3dbrawlerlearn/$APPDATA/uv/bin/**)",
+      "Read(//d/3dbrawlerlearn/Local/uv/bin/**)",
+      "Read(//d/3dbrawlerlearn/Local/**)",
+      "Read(//d/3dbrawlerlearn/$USERPROFILE/.cargo/bin/**)",
+      "Read(//c/Users/**)",
+      "Bash(/c/Users/peter/.local/bin/uvx.exe --prerelease explicit --from \"mcpforunityserver>=0.0.0a0\" mcp-for-unity --transport http --http-url http://localhost:8080 --project-scoped-tools)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill /PID 42416 /F)",
+      "Bash(cmd.exe /c \"taskkill /PID 42416 /F\")",
+      "Bash(cmd.exe /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :8080 ^| findstr LISTENING''\\) do taskkill /PID %a /F\")",
+      "mcp__mcp-for-unity__manage_scene",
+      "mcp__mcp-for-unity__manage_asset",
+      "mcp__mcp-for-unity__manage_components",
+      "Bash(git -C \"D:/3dbrawlerlearn\" ls-files \"Assets/Scenes/\")",
+      "Bash(powershell.exe -Command \"Get-ChildItem -Force 'D:\\\\3dbrawlerlearn\\\\Assets\\\\Scenes'\")",
+      "Bash(git -C \"D:/3dbrawlerlearn\" status --short \"Assets/Scenes/dasd.unity\")",
+      "mcp__mcp-for-unity__manage_script",
+      "mcp__mcp-for-unity__read_console",
+      "mcp__mcp-for-unity__execute_menu_item",
+      "mcp__mcp-for-unity__create_script",
+      "mcp__mcp-for-unity__script_apply_edits",
+      "mcp__mcp-for-unity__delete_script",
+      "mcp__mcp-for-unity__refresh_unity",
+      "mcp__mcp-for-unity__set_active_instance",
+      "Bash(curl -s http://localhost:8080/mcp -X POST -H \"Content-Type: application/json\" -d \"{\"\"jsonrpc\"\":\"\"2.0\"\",\"\"id\"\":1,\"\"method\"\":\"\"tools/list\"\"}\")",
+      "Bash(curl -s http://localhost:8080/mcp -X POST -H \"Content-Type: application/json\" -H \"Accept: application/json, text/event-stream\" -d \"{\"\"jsonrpc\"\":\"\"2.0\"\",\"\"id\"\":1,\"\"method\"\":\"\"tools/list\"\"}\")",
+      "mcp__unityMCP__set_active_instance"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "mcp-for-unity"
+  ]
 }

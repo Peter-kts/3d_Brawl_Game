@@ -47,7 +47,7 @@ public class EnemyBehaviorDebugVisual : MonoBehaviour
             return;
         }
         DebugSettings debug = DebugSettings.Instance;
-        bool shouldShow = debug.ShouldShow(debug.showEnemyBehaviorIndicator);
+        bool shouldShow = debug.ShouldShowEnemyHealthStats(debug.showEnemyBehaviorIndicator);
         indicator.SetActive(shouldShow);
         if (!shouldShow) { currentLabel = ""; return; }
 

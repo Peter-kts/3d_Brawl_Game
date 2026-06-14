@@ -141,12 +141,28 @@ public class DebugSettings : MonoBehaviour
     [Header("Enemies")]
     [Tooltip("Show enemy facing direction")]
     public bool showEnemyFacing = true;
+
+    [Header("Enemy Health + Stats")]
+    [Tooltip("Master toggle for enemy health/stat debug visuals (health bar, stun meter, state, behavior)")]
+    public bool showEnemyHealthAndStats = true;
     
     [Tooltip("Show enemy state indicator (stunned/airborne/normal)")]
     public bool showEnemyStateIndicator = true;
     
     [Tooltip("Show enemy behavior indicator (chase/circling/preattack/attacking)")]
     public bool showEnemyBehaviorIndicator = true;
+
+    // ========================================================================
+    // HEALTH VISUALIZATION
+    // ========================================================================
+
+    // ========================================================================
+    // COMBAT MEMORY VISUALIZATION
+    // ========================================================================
+
+    [Header("Combat Memory")]
+    [Tooltip("Show the shared enemy combat memory panel in the top-left corner.")]
+    public bool showCombatMemory = true;
 
     // ========================================================================
     // HEALTH VISUALIZATION
@@ -174,6 +190,15 @@ public class DebugSettings : MonoBehaviour
     {
         return enableAllDebug && specificToggle;
     }
+
+    /// <summary>
+    /// Check if an enemy health/stat visualization should be shown.
+    /// Respects both master toggles.
+    /// </summary>
+    public bool ShouldShowEnemyHealthStats(bool specificToggle)
+    {
+        return ShouldShow(showEnemyHealthAndStats && specificToggle);
+    }
     
     /// <summary>
     /// Disable all visualizations at once
@@ -196,9 +221,26 @@ public class DebugSettings : MonoBehaviour
         showThreatLines = true;
         showThreatIndicators = true;
         showEnemyFacing = true;
+        showEnemyHealthAndStats = true;
         showEnemyStateIndicator = true;
         showEnemyBehaviorIndicator = true;
         showHealthIndicator = true;
         showEnemyStunMeter = true;
+    }
+
+    /// <summary>
+    /// Disable the grouped enemy health/stat debug visuals.
+    /// </summary>
+    public void DisableEnemyHealthAndStats()
+    {
+        showEnemyHealthAndStats = false;
+    }
+
+    /// <summary>
+    /// Enable the grouped enemy health/stat debug visuals.
+    /// </summary>
+    public void EnableEnemyHealthAndStats()
+    {
+        showEnemyHealthAndStats = true;
     }
 }

@@ -28,7 +28,27 @@ public struct ThrowData
     [Tooltip("Duration of the throw phase (enemy stun and both animations).")]
     public float throwPhaseDuration;
 
+    [Header("Phase 2 - Start Up")]
+    [Tooltip("Normalized (0-1) portion of the throw animation played as start-up. 0 = no start-up slowdown.")]
+    [Range(0f, 1f)]
+    public float throwStartUpLength;
+    [Tooltip("Playback speed during start-up (e.g. 0.5 = half speed).")]
+    [Range(0.01f, 1f)]
+    public float throwStartUpSpeed;
+
+    [Header("Phase 2 - Recovery")]
+    [Tooltip("Normalized (0-1) portion at the end of the throw animation played as recovery. 0 = no recovery slowdown.")]
+    [Range(0f, 1f)]
+    public float throwRecoveryLength;
+    [Tooltip("Playback speed during recovery (e.g. 0.5 = half speed).")]
+    [Range(0.01f, 1f)]
+    public float throwRecoverySpeed;
+
     [Header("Grab Connect")]
+    [Tooltip("Name of a Transform in the player's hierarchy to use as the grab socket for this throw. Leave empty to use the default grabSocket on Combat.")]
+    public string grabSocketName;
+    [Tooltip("Snap the player to this distance from the victim on grab connect (ensures consistent throw alignment). 0 = no position snap, keep current distance.")]
+    public float grabSnapDistance;
     [Tooltip("Hit stop duration when grab connects (freeze player + victim animators).")]
     public float grabHitStopDuration;
     [Tooltip("VFX spawned at hitbox center when grab connects. Optional.")]
@@ -50,8 +70,16 @@ public struct ThrowData
     public int endDamage;
     [Tooltip("Knockback force applied when throw ends (direction = away from player).")]
     public float endKnockback;
+    [Tooltip("Invert knockback direction so the victim is knocked toward the player instead of away.")]
+    public bool invertKnockbackDirection;
     [Tooltip("Vertical component of knockback at throw end.")]
     public float endKnockbackUp;
+    [Tooltip("Send the enemy airborne on throw release (liftoff/loop/crash sequence).")]
+    public bool launchOnRelease;
+    [Tooltip("Make the enemy enter the airborne state on release (uses endAirborneDuration). Works independently of launchOnRelease.")]
+    public bool airborneOnRelease;
+    [Tooltip("Airborne duration (seconds) when launchOnRelease or airborneOnRelease is enabled.")]
+    public float endAirborneDuration;
     [Tooltip("Override how long the enemy lies prone after landing from this throw (seconds). 0 = use the enemy's default groundedDuration.")]
     public float proneDuration;
     [Tooltip("Default prone variant for this throw. Release profile can override this.")]
@@ -76,6 +104,8 @@ public struct ThrowData
     public float chargeKnockbackMultiplier;
     [Tooltip("Damage multiplier at full charge. Set to 1 to leave damage unchanged.")]
     public float chargeDamageMultiplier;
+    [Tooltip("Hit-stop duration multiplier at full charge. Lerps from 1x (tap) to this value (full hold).")]
+    public float chargeHitStopMultiplier;
     [Tooltip("Animator speed while the player is holding the charge. Lower = more dramatic freeze.")]
     public float chargeAnimatorSpeed;
 

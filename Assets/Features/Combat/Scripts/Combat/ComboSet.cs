@@ -1,6 +1,37 @@
 using UnityEngine;
 
 /// <summary>
+/// One entry in the throw grab socket list: a named Transform in the player hierarchy
+/// plus a local-space position offset applied when the victim attaches to that socket.
+/// </summary>
+[System.Serializable]
+public struct ThrowGrabSocket
+{
+    [Tooltip("Name of the Transform in the player's hierarchy to use as the grab anchor.")]
+    public string socketName;
+
+    [Tooltip("Position offset in the socket's local space. " +
+             "X = right of socket, Y = up, Z = forward. " +
+             "Moves the victim root relative to the socket without changing the socket itself.")]
+    public Vector3 offset;
+}
+
+/// <summary>
+/// A named hit-stop preset that can be triggered during a throw via animation event.
+/// Multiple entries let you author different freeze durations at different throw beats.
+/// </summary>
+[System.Serializable]
+public struct ThrowHitStopProfile
+{
+    [Tooltip("Duration in seconds to freeze both thrower and victim animators.")]
+    [Min(0f)]
+    public float duration;
+
+    [Tooltip("If enabled, trigger a short gamepad rumble matching the hit-stop duration.")]
+    public bool rumble;
+}
+
+/// <summary>
 /// Holds all attack data and combo timing for the player. Assign to Combat.comboSet
 /// so the Inspector stays short; edit this asset via its custom editor (dropdown per move).
 /// </summary>
@@ -221,6 +252,16 @@ public class ComboSet : ScriptableObject
     [Tooltip("When enabled, pressing attack after the last neutral hit loops back to neutral jab 1 instead of ending the combo.")]
     public bool loopNeutralCombo = true;
 
+    [Header("Throw Grab Sockets")]
+    [Tooltip("Centralized grab attachment points shared across all throws. " +
+             "Use OnThrowAttach() for index 0 or OnThrowAttachSocket(int) animation events to pick a slot by index. " +
+             "Each entry names a Transform in the player hierarchy and an optional local-space offset for the victim.")]
+    public ThrowGrabSocket[] throwGrabSockets = new ThrowGrabSocket[0];
+
+    [Header("Throw Hit Stops")]
+    [Tooltip("Array of hit-stop presets for throws. Use OnThrowHitStop(int index) animation events to trigger them by index.")]
+    public ThrowHitStopProfile[] throwHitStops = new ThrowHitStopProfile[0];
+
     [Header("Throw")]
     [Tooltip("Throw move config (attempted grab then synced throw on success). Expand to edit; uncheck Enable Throw to disable.")]
     public ThrowData throwData = new ThrowData
@@ -260,6 +301,27 @@ public class ComboSet : ScriptableObject
         endKnockbackUp = 0f,
         faceVictimTowardPlayerOnRelease = true,
         enemyThrownStateName = "BackThrown",
+        throwCooldown = 0.8f
+    };
+
+    [Header("LB Throw (LB + Y + B)")]
+    [Tooltip("Special throw triggered by holding LB while pressing Y+B. Uses the same throw pipeline as the normal throw.")]
+    public ThrowData lbThrowData = new ThrowData
+    {
+        enableThrow = true,
+        grabAttemptAnimationTrigger = "GrabAttempt",
+        attemptLockDuration = 0.5f,
+        hitboxDelay = 0.25f,
+        throwAnimationTrigger = "LBThrow",
+        throwPhaseDuration = 1f,
+        grabHitStopDuration = 0.08f,
+        range = 1.4f,
+        hitboxRadius = 0.6f,
+        endDamage = 20,
+        endKnockback = 8f,
+        endKnockbackUp = 2f,
+        faceVictimTowardPlayerOnRelease = true,
+        enemyThrownStateName = "Thrown",
         throwCooldown = 0.8f
     };
 }

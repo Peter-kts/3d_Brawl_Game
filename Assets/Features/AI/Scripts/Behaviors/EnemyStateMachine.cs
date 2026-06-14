@@ -22,7 +22,15 @@
 
 public class EnemyStateMachine
 {
-    public EnemyBehavior CurrentBehavior { get; private set; }
+    // Explicit version of { get; private set; } — same behavior, easier to read while learning.
+    private EnemyBehavior _currentBehavior;
+
+    public EnemyBehavior CurrentBehavior
+    {
+        get { return _currentBehavior; }
+        private set { _currentBehavior = value; }
+    }
+        // public EnemyBehavior CurrentBehavior { get; private set; }
 
     // Called once from Awake — sets the starting behavior and runs its Enter()
     // without needing a "previous" behavior to exit first.

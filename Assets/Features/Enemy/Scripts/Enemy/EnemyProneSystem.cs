@@ -10,6 +10,9 @@ public class EnemyProneSystem
     /// <summary>True while the enemy is lying prone (crash landed, before get-up starts).</summary>
     public bool IsInProne { get; private set; }
 
+    /// <summary>Immediately cancel prone without triggering the get-up callback. Used when grabbed mid-prone.</summary>
+    public void ForceCancel() { IsInProne = false; }
+
     readonly Transform ownerTransform;
     readonly Animator animator;
     readonly string proneStateName;

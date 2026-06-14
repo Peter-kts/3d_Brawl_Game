@@ -28,6 +28,13 @@ public class EnemyAnimationConfig : ScriptableObject
     [Tooltip("Trigger parameter name that starts the death animation.")]
     public string deathTriggerParameter = "Death";
 
+    [Tooltip("Animator state name played instead of the death trigger when the killing hit has high knockback (>= EnemyStunMeter.knockbackStunThreshold). Leave empty to always use deathTriggerParameter.")]
+    public string knockbackDeathStateName = "";
+
+    [Tooltip("Animator layer index for the knockback death state.")]
+    public int knockbackDeathLayer = 1;
+
+
     [Header("Hit Reaction")]
     [Tooltip("Animator layer index for hit reaction, prone, get-up, and thrown states (e.g. 1 = Stun layer).")]
     public int hitAnimationLayer = 1;

@@ -102,6 +102,7 @@ public class EnemyCombat : MonoBehaviour
     private Vector3 lungeDirection;
 
     private bool hitConfirmedThisAttack; // gates first-hit VFX, SFX, and self hit-stop
+    private bool suppressHitboxActivationsUntilNextCommit; // blocks stale animation-event hitbox reactivation after interrupts
 
     private struct FrozenAnimator
     {
@@ -141,6 +142,8 @@ public class EnemyCombat : MonoBehaviour
 
     void OnDisable()
     {
+        suppressHitboxActivationsUntilNextCommit = true;
+        currentAttack = null;
         EndAllHitboxes();
     }
 
@@ -151,6 +154,9 @@ public class EnemyCombat : MonoBehaviour
         {
             RestoreAnimatorSpeedStateAfterDamageOrStun();
             attackEndTime = 0f;
+            currentAttack = null;
+            suppressHitboxActivationsUntilNextCommit = true;
+            hitConfirmedThisAttack = false;
             EndAllHitboxes();
             lungePending = false;
             return;
@@ -169,7 +175,7 @@ public class EnemyCombat : MonoBehaviour
         }
         frozenAnimators.Clear();
         hitStopEndTime = 0f;
-        if (animator != null) animator.speed = 1f;
+        if (animator != null && animator.speed != 0f) animator.speed = 1f;
     }
 
     // ========================================================================
@@ -181,6 +187,7 @@ public class EnemyCombat : MonoBehaviour
     {
         currentAttack = attack;
         hitConfirmedThisAttack = false;
+        suppressHitboxActivationsUntilNextCommit = false;
 
         attackEndTime = Time.time + attack.lockDuration;
 
@@ -281,6 +288,8 @@ public class EnemyCombat : MonoBehaviour
     {
         WeaponTipHitbox hitbox = GetHitboxById(id);
         if (hitbox == null || currentAttack == null) return;
+        if (suppressHitboxActivationsUntilNextCommit) return;
+        if (!IsAttacking) return;
 
         hitbox.HitConfirmed -= OnHitConfirmed;
         hitbox.HitConfirmed += OnHitConfirmed;
@@ -342,37 +351,7 @@ public class EnemyCombat : MonoBehaviour
 
     void OnHitConfirmed(AttackData attack, Transform targetTransform, Vector3 hitPoint)
     {
-        var damageable = targetTransform.GetComponentInParent<IDamageable>();
-        if (damageable == null) return;
-
-        Vector3 horizontalDir = targetTransform.position - transform.position;
-        horizontalDir.y = 0f;
-        if (horizontalDir.sqrMagnitude < 0.001f) horizontalDir = transform.forward;
-        horizontalDir.Normalize();
-
-        Vector3 knockbackVector = (horizontalDir * attack.knockback) + (Vector3.up * attack.knockbackUp);
-
-        var targetStunMeter = targetTransform.GetComponent<EnemyStunMeter>();
-        if (targetStunMeter != null)
-            targetStunMeter.AddStun(attack.stunBuildup, attack.knockback);
-
-        if (attack.makesAirborne)
-        {
-            SimpleEnemyAI targetAI = targetTransform.GetComponentInParent<SimpleEnemyAI>();
-            if (targetAI != null && targetAI.ProneSystem != null)
-                targetAI.ProneSystem.OverrideNextProneVariant(attack.proneVariant);
-        }
-
-        float airborne = attack.makesAirborne ? attack.airborneDuration : 0f;
-        damageable.TakeHit(
-            attack.damage,
-            knockbackVector,
-            attack.hitstun,
-            airborne,
-            attack.hitStopDuration,
-            attack.heaviness,
-            attack.height
-        );
+        if (attack == null || targetTransform == null) return;
 
         if (attack.hitStopDuration > 0f)
         {
@@ -403,6 +382,7 @@ public class EnemyCombat : MonoBehaviour
             if (attack.hitStopDuration > 0f)
             {
                 hitStopEndTime = Time.time + attack.hitStopDuration;
+                attackEndTime += attack.hitStopDuration; // keep lock timing aligned with frozen attacker animation
                 if (animator != null && !IsFrozen(animator))
                 {
                     frozenAnimators.Add(new FrozenAnimator { animator = animator, originalSpeed = animator.speed });

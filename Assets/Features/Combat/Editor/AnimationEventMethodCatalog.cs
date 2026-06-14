@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public enum AnimationEventParameterKind
-{
-    None = 0,
-    Int = 1,
-    Float = 2,
-    String = 3,
-    Object = 4
-}
+
 
 public static class AnimationEventMethodCatalog
 {
@@ -67,6 +60,11 @@ public static class AnimationEventMethodCatalog
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnAttackSFXEvent", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnAttackSFXEvent()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnAttackSFXEvent", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnAttackSFXEvent(int)" },
 
+        // ── Combat (throw attach / socket swap) ──────────────────────────────
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowAttach", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowAttach()  [default/first socket]" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowAttachSocket", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowAttachSocket(int)  [socket index from ComboSet.throwGrabSockets]" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowVictimNudge", parameterKind = AnimationEventParameterKind.Object, label = "Combat.OnThrowVictimNudge(Object)  [ThrowVictimNudge asset — additive positional nudge]" },
+
         // ── Combat (throw events) ─────────────────────────────────────────────
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowChargeWindowStart", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowChargeWindowStart()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowChargeWindowEnd",   parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowChargeWindowEnd()" },
@@ -82,8 +80,12 @@ public static class AnimationEventMethodCatalog
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowEndVfxEvent", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowEndVfxEvent()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowSfxEvent", parameterKind = AnimationEventParameterKind.None, label = "Combat.OnThrowSfxEvent()" },
         new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowSfxEvent", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowSfxEvent(int)" },
+        new CuratedEntry { componentType = typeof(Combat), functionName = "OnThrowHitStop", parameterKind = AnimationEventParameterKind.Int, label = "Combat.OnThrowHitStop(int)  [index into ComboSet.throwHitStops]" },
 
         // ── ThrowAnimationEventForwarder (enemy-side throw clips) ─────────────
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowAttach", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowAttach()" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowAttachSocket", parameterKind = AnimationEventParameterKind.Int, label = "ThrowAnimationEventForwarder.OnThrowAttachSocket(int)  [socket index]" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowVictimNudge", parameterKind = AnimationEventParameterKind.Object, label = "ThrowAnimationEventForwarder.OnThrowVictimNudge(Object)  [ThrowVictimNudge asset — relay to holding Combat]" },
         new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowUnparent", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowUnparent()" },
         new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowVictimRootMotion", parameterKind = AnimationEventParameterKind.Int, label = "ThrowAnimationEventForwarder.OnThrowVictimRootMotion(int)  [0=off 1=on]" },
         new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowVictimRootMotionOn", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowVictimRootMotionOn()" },
@@ -93,6 +95,8 @@ public static class AnimationEventMethodCatalog
         new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowPlayerRootMotionOff", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowPlayerRootMotionOff()" },
         new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowRelease", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowRelease()" },
         new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowDamage", parameterKind = AnimationEventParameterKind.None, label = "ThrowAnimationEventForwarder.OnThrowDamage()  [damage only, knockback fires at Release]" },
+        new CuratedEntry { componentType = typeof(ThrowAnimationEventForwarder), functionName = "OnThrowHitStop", parameterKind = AnimationEventParameterKind.Int, label = "ThrowAnimationEventForwarder.OnThrowHitStop(int)  [relay to holding Combat]" },
+
 
         // ── EnemyCombat (attack SFX) ──────────────────────────────────────────
         new CuratedEntry { componentType = typeof(EnemyCombat), functionName = "OnAttackSfxEvent", parameterKind = AnimationEventParameterKind.None, label = "EnemyCombat.OnAttackSfxEvent()" },

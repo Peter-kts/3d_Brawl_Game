@@ -6,21 +6,30 @@ using System;
 /// Weapon hitbox component. Attach to the weapon GameObject alongside a BoxCollider.
 /// The box collider's shape, size, and position define the exact hit volume each frame.
 /// Uses Physics.OverlapBox polling instead of OnTriggerEnter — no Rigidbody required,
-/// immune to tunneling on fast swings.
+/// with swept sub-sampling between frames to reduce misses on fast swings.
 /// </summary>
 [RequireComponent(typeof(BoxCollider))]
 public class WeaponTipHitbox : MonoBehaviour
 {
     public event Action<AttackData, Transform, Vector3> HitConfirmed;
+    [Tooltip("Physics layers considered valid hit targets for this hitbox overlap.")]
+    public LayerMask hitLayers = ~0;
 
     private BoxCollider boxCollider;
     private Transform attackerRoot;
+    private Animator attackerAnimator;
     private AttackData currentAttack;
     private bool active;
     private float damageMultiplier = 1f;
     private float knockbackMultiplier = 1f;
     private readonly HashSet<Component> alreadyHit = new HashSet<Component>();
-    private static readonly Collider[] overlapBuffer = new Collider[32]; // reused — avoids per-frame allocation
+    private static readonly Collider[] overlapBuffer = new Collider[64]; // reused — avoids per-frame allocation
+    private Vector3 previousCenter;
+    private Quaternion previousRotation;
+    private bool hasPreviousSample;
+    private const float SweepStepDistance = 0.2f;
+    private const float SweepStepAngle = 12f;
+    private const int MaxSweepSteps = 6;
 
     void Awake()
     {
@@ -30,6 +39,7 @@ public class WeaponTipHitbox : MonoBehaviour
     public void BeginActiveFrames(Transform attacker, AttackData attack, float damageScale = 1f, float knockbackScale = 1f)
     {
         attackerRoot = attacker;
+        attackerAnimator = attacker != null ? attacker.GetComponentInChildren<Animator>() : null;
         currentAttack = attack;
         damageMultiplier = damageScale;
         knockbackMultiplier = knockbackScale;
@@ -38,22 +48,30 @@ public class WeaponTipHitbox : MonoBehaviour
         // the same attack. ResetHitCache() is called by WeaponCombat.OnAttackCommitted()
         // when a brand-new attack starts.
         active = (boxCollider != null && attack != null);
+        hasPreviousSample = false;
+        if (active)
+            HitOverlapBox();
     }
 
     public void EndActiveFrames()
     {
+        // Capture one last sample before closing the window to avoid dropping
+        // the final pose when EndHitbox is fired during animator evaluation.
+        if (active && currentAttack != null)
+            HitOverlapBox();
         active = false;
         currentAttack = null;
+        hasPreviousSample = false;
         // Do NOT clear alreadyHit here — a multi-window attack calls EndActiveFrames
         // between windows and we need the hit cache to persist across those windows.
     }
 
-    void Update()
+    void LateUpdate()
     {
         if (!active || currentAttack == null) return;
+        if (attackerAnimator != null && Mathf.Approximately(attackerAnimator.speed, 0f)) return;
 
-        // Poll the box collider's exact shape every frame.
-        // Polling every frame means no tunneling regardless of swing speed.
+        // Poll after animator updates so the sampled volume matches this frame's final pose.
         // alreadyHit deduplicates so each enemy is only hit once per attack.
         HitOverlapBox();
     }
@@ -69,23 +87,65 @@ public class WeaponTipHitbox : MonoBehaviour
 
     void HitOverlapBox()
     {
-        // Use the box collider's world-space center, half extents, and rotation
-        // so the hit volume exactly matches what's visible in the Inspector.
         Vector3 center      = transform.TransformPoint(boxCollider.center);
+        Quaternion rotation = transform.rotation;
+        Vector3 halfExtents = GetHalfExtents();
+
+        if (hasPreviousSample)
+        {
+            float centerDistance = Vector3.Distance(previousCenter, center);
+            float rotationDelta = Quaternion.Angle(previousRotation, rotation);
+            int sweepSteps = Mathf.Clamp(
+                Mathf.CeilToInt(Mathf.Max(centerDistance / SweepStepDistance, rotationDelta / SweepStepAngle)),
+                1,
+                MaxSweepSteps
+            );
+
+            for (int step = 1; step <= sweepSteps; step++)
+            {
+                float t = step / (float)sweepSteps;
+                Vector3 sampleCenter = Vector3.Lerp(previousCenter, center, t);
+                Quaternion sampleRotation = Quaternion.Slerp(previousRotation, rotation, t);
+                ProcessOverlapSample(sampleCenter, halfExtents, sampleRotation);
+            }
+        }
+        else
+        {
+            ProcessOverlapSample(center, halfExtents, rotation);
+        }
+
+        previousCenter = center;
+        previousRotation = rotation;
+        hasPreviousSample = true;
+    }
+
+    Vector3 GetHalfExtents()
+    {
         Vector3 s = transform.lossyScale;
-        Vector3 halfExtents = new Vector3(
+        return new Vector3(
             Mathf.Abs(boxCollider.size.x * 0.5f * s.x),
             Mathf.Abs(boxCollider.size.y * 0.5f * s.y),
             Mathf.Abs(boxCollider.size.z * 0.5f * s.z));
+    }
 
-        int count = Physics.OverlapBoxNonAlloc(center, halfExtents, overlapBuffer, transform.rotation, ~0, QueryTriggerInteraction.Ignore);
+    void ProcessOverlapSample(Vector3 center, Vector3 halfExtents, Quaternion rotation)
+    {
+        EntityHealth attackerHealth = attackerRoot != null ? attackerRoot.GetComponentInParent<EntityHealth>() : null;
+        int count = Physics.OverlapBoxNonAlloc(center, halfExtents, overlapBuffer, rotation, hitLayers.value, QueryTriggerInteraction.Ignore);
 
         for (int i = 0; i < count; i++)
         {
-            IDamageable damageable = overlapBuffer[i].GetComponentInParent<IDamageable>();
+            Collider overlapCollider = overlapBuffer[i];
+            if (overlapCollider == null) continue;
+
+            IDamageable damageable = overlapCollider.GetComponentInParent<IDamageable>();
             Component target = damageable as Component;
             if (target == null) continue;
             if (attackerRoot != null && target.transform.root == attackerRoot.root) continue;
+            
+            EntityHealth targetHealth = overlapCollider.GetComponentInParent<EntityHealth>();
+            if (attackerHealth != null && targetHealth != null && !TeamUtil.AreHostile(attackerHealth.team, targetHealth.team))
+                continue;
             if (alreadyHit.Contains(target)) continue;
             HitSingleTarget(damageable, target);
         }
@@ -125,6 +185,13 @@ public class WeaponTipHitbox : MonoBehaviour
         if (targetStunMeter != null)
             targetStunMeter.AddStun(currentAttack.stunBuildup, currentAttack.knockback * knockbackMultiplier);
 
+        if (currentAttack.makesAirborne)
+        {
+            var targetAI = target.GetComponentInParent<SimpleEnemyAI>();
+            if (targetAI != null && targetAI.ProneSystem != null)
+                targetAI.ProneSystem.OverrideNextProneVariant(currentAttack.proneVariant);
+        }
+
         damageable.TakeHit(
             Mathf.RoundToInt(currentAttack.damage * damageMultiplier),
             knockbackVector,
@@ -132,7 +199,8 @@ public class WeaponTipHitbox : MonoBehaviour
             airborne,
             currentAttack.hitStopDuration,
             currentAttack.heaviness,
-            currentAttack.height
+            currentAttack.height,
+            attackerRoot?.gameObject
         );
 
         Vector3 hitPoint = target.GetComponent<Collider>()?.ClosestPoint(transform.position) ?? target.transform.position;

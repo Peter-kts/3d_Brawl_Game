@@ -69,9 +69,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         public float floatParameter = 0f;
         public string stringParameter = string.Empty;
         public UnityEngine.Object objectParameter;
-        // True for markers the user created this session; false for markers loaded from the clip.
-        // Used by Append mode to avoid re-writing events already present in the clip.
-        public bool isNewMarker = true;
+        
     }
 
     private static readonly GUIContent[] HitboxPresetLabels =
@@ -109,6 +107,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
     private bool isPlaying;
     private double lastEditorTime;
     private MethodPickerMode methodPickerMode = MethodPickerMode.Curated;
+    private Vector2 rootScroll;
     private Vector2 eventListScroll;
     private bool showSelectedEventQuickEditor = true;
     private bool previewEnabled = true;
@@ -128,6 +127,9 @@ public class AnimationEventAuthoringWindow : EditorWindow
     private readonly Dictionary<string, FunctionDescriptorEntry> functionDescriptorMap = new Dictionary<string, FunctionDescriptorEntry>();
     private readonly HashSet<string> importedClipWriteConfirmedPaths = new HashSet<string>();
     private int selectedMarkerIndex = -1;
+    // Bug 1: separate source clip for the copy-events workflow (see DrawMarkerActions).
+    private AnimationClip copySourceClip;
+
     private int draggingMarkerIndex = -1;
     private DateTime functionDescriptorLastWriteUtc = DateTime.MinValue;
 
@@ -180,6 +182,9 @@ public class AnimationEventAuthoringWindow : EditorWindow
 
     private void OnGUI()
     {
+        // Root scroll view: without it, content below the window height (event list, save
+        // buttons) is clipped with no way to reach it once a clip's events are loaded.
+        rootScroll = EditorGUILayout.BeginScrollView(rootScroll);
         // UI is organized into collapsible sections so long event lists stay manageable.
         EditorGUILayout.Space(4f);
         if (BeginSection("Selection & Mode"))
@@ -227,6 +232,8 @@ public class AnimationEventAuthoringWindow : EditorWindow
                 EndSection();
             }
         }
+        EditorGUILayout.Space(8f);
+        EditorGUILayout.EndScrollView();
     }
 
     private bool BeginSection(string title)
@@ -302,7 +309,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         }
     }
 
-    private void DrawTargetClipSelectorFromAnimator()
+private void DrawTargetClipSelectorFromAnimator()
     {
         if (targetAnimator == null)
         {
@@ -313,25 +320,51 @@ public class AnimationEventAuthoringWindow : EditorWindow
         if (animatorClipOptions.Count == 0)
             RefreshAnimatorClipOptions();
 
-        string[] clipNames = new string[animatorClipOptions.Count + 1];
-        clipNames[0] = "<None>";
-        int foundIndex = 0;
-        for (int i = 0; i < animatorClipOptions.Count; i++)
+        // Bug 4 fix: when the current clip is not in this animator's controller keep it visible
+        // with an "(ext)" prefix and a warning instead of silently nulling it, which would
+        // discard any unsaved marker work.
+        bool clipIsExternal = targetClip != null && !animatorClipOptions.Contains(targetClip);
+        if (clipIsExternal)
         {
-            AnimationClip clip = animatorClipOptions[i];
-            clipNames[i + 1] = clip != null ? clip.name : "<Missing>";
-            if (clip == targetClip)
-                foundIndex = i + 1;
+            EditorGUILayout.HelpBox(
+                "'" + targetClip.name + "' is not in this animator's controller. " +
+                "Select a different clip from the list, or choose <None> to clear.",
+                MessageType.Warning);
+
+            string[] clipNames = new string[animatorClipOptions.Count + 2];
+            clipNames[0] = "<None>";
+            clipNames[1] = "(ext) " + targetClip.name;
+            for (int i = 0; i < animatorClipOptions.Count; i++)
+            {
+                AnimationClip clip = animatorClipOptions[i];
+                clipNames[i + 2] = clip != null ? clip.name : "<Missing>";
+            }
+
+            int nextIndex = EditorGUILayout.Popup("Target Clip", 1, clipNames);
+            if (nextIndex == 0)
+                targetClip = null;
+            else if (nextIndex >= 2 && nextIndex - 2 < animatorClipOptions.Count)
+                targetClip = animatorClipOptions[nextIndex - 2];
+            // nextIndex == 1 means keep current external clip, no change
         }
+        else
+        {
+            string[] clipNames = new string[animatorClipOptions.Count + 1];
+            clipNames[0] = "<None>";
+            int foundIndex = 0;
+            for (int i = 0; i < animatorClipOptions.Count; i++)
+            {
+                AnimationClip clip = animatorClipOptions[i];
+                clipNames[i + 1] = clip != null ? clip.name : "<Missing>";
+                if (clip == targetClip)
+                    foundIndex = i + 1;
+            }
 
-        // If clip isn't in this animator's controller, force clear selection.
-        if (targetClip != null && foundIndex == 0)
-            targetClip = null;
-
-        animatorClipPopupIndex = EditorGUILayout.Popup("Target Clip", foundIndex, clipNames);
-        targetClip = animatorClipPopupIndex <= 0
-            ? null
-            : animatorClipOptions[Mathf.Clamp(animatorClipPopupIndex - 1, 0, animatorClipOptions.Count - 1)];
+            animatorClipPopupIndex = EditorGUILayout.Popup("Target Clip", foundIndex, clipNames);
+            targetClip = animatorClipPopupIndex <= 0
+                ? null
+                : animatorClipOptions[Mathf.Clamp(animatorClipPopupIndex - 1, 0, animatorClipOptions.Count - 1)];
+        }
     }
 
     private void RefreshAnimatorClipOptions()
@@ -443,7 +476,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         }
     }
 
-    private void DrawMarkerActions()
+private void DrawMarkerActions()
     {
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Add Marker At Preview Time", GUILayout.Width(200f)))
@@ -457,6 +490,18 @@ public class AnimationEventAuthoringWindow : EditorWindow
             LoadMarkersFromClip();
         }
         GUILayout.FlexibleSpace();
+        EditorGUILayout.EndHorizontal();
+
+        // Bug 1 fix: copy source workflow — load markers from a different clip without
+        // changing targetClip so events can be transferred between clips.
+        EditorGUILayout.BeginHorizontal();
+        copySourceClip = (AnimationClip)EditorGUILayout.ObjectField(
+            "Copy Source Clip", copySourceClip, typeof(AnimationClip), false);
+        using (new EditorGUI.DisabledScope(copySourceClip == null))
+        {
+            if (GUILayout.Button("Load Events From Source", GUILayout.Width(180f)))
+                LoadMarkersFromClip(copySourceClip);
+        }
         EditorGUILayout.EndHorizontal();
     }
 
@@ -1091,56 +1136,51 @@ public class AnimationEventAuthoringWindow : EditorWindow
             t.rotation = rootSnapshot.rotation;
     }
 
-    private void LoadMarkersFromClip()
+// clipOverride: when set, loads from that clip instead of targetClip (Bug 1 — copy source).
+    private void LoadMarkersFromClip(AnimationClip clipOverride = null)
     {
         markers.Clear();
         selectedMarkerIndex = -1;
-        if (targetClip == null) return;
+        AnimationClip source = clipOverride != null ? clipOverride : targetClip;
+        if (source == null) return;
 
-        AnimationEvent[] events = AnimationUtility.GetAnimationEvents(targetClip);
+        AnimationEvent[] events = AnimationUtility.GetAnimationEvents(source);
         for (int i = 0; i < events.Length; i++)
         {
             AnimationEvent ev = events[i];
             EventMarker marker = new EventMarker();
-            marker.normalizedTime = targetClip.length > 0f ? Mathf.Clamp01(ev.time / targetClip.length) : 0f;
+            marker.normalizedTime = source.length > 0f ? Mathf.Clamp01(ev.time / source.length) : 0f;
             marker.functionName = ev.functionName;
             marker.intParameter = ev.intParameter;
             marker.floatParameter = ev.floatParameter;
             marker.stringParameter = ev.stringParameter;
             marker.objectParameter = ev.objectReferenceParameter;
-            // Unity event data does not always encode overload intent; infer + resolve best match.
-            marker.parameterKind = GuessParameterKind(ev);
+            // Infer parameter kind from stored values, then refine via animator reflection.
+            marker.parameterKind = AnimationEventWindowUtils.GuessParameterKind(ev);
             marker.parameterKind = ResolveParameterKindFromAnimator(marker.functionName, marker.parameterKind, out marker.hasAmbiguousOverload, out marker.ambiguityReason);
+            // Bug 3 fix: events with intParameter == 0 are guessed as None, which breaks known
+            // combat functions like BeginHitbox(0) (weapon slot). Force Int for those functions.
+            if (marker.parameterKind == AnimationEventParameterKind.None
+                && AnimationEventWindowUtils.IsKnownIntParamFunction(marker.functionName))
+                marker.parameterKind = AnimationEventParameterKind.Int;
             marker.loadedFunctionName = marker.functionName;
             marker.loadedParameterKind = marker.parameterKind;
-            marker.isNewMarker = false;
             markers.Add(marker);
         }
     }
 
-    private void SaveMarkersToClip(bool overwrite)
+private void SaveMarkersToClip(bool overwrite)
     {
         if (targetClip == null) return;
         if (!ValidateMarkers()) return;
 
-        // Overwrite replaces all clip events with the current marker list.
-        // Append keeps existing clip events and adds only markers the user created this session
-        // (isNewMarker == true), preventing loaded markers from being written twice.
+        // Both Overwrite and Append write all current in-memory markers.
+        // The only difference is that Overwrite shows a confirmation dialog (handled by caller).
+        // Bug 2 fix: the old Append path filtered by isNewMarker, which silently dropped any
+        // edits the user made to previously-loaded markers before saving.
         List<AnimationEvent> output = new List<AnimationEvent>();
-        if (!overwrite)
-        {
-            output.AddRange(AnimationUtility.GetAnimationEvents(targetClip));
-            for (int i = 0; i < markers.Count; i++)
-            {
-                if (markers[i].isNewMarker)
-                    output.Add(BuildAnimationEvent(markers[i]));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < markers.Count; i++)
-                output.Add(BuildAnimationEvent(markers[i]));
-        }
+        for (int i = 0; i < markers.Count; i++)
+            output.Add(BuildAnimationEvent(markers[i]));
 
         output.Sort((a, b) => a.time.CompareTo(b.time));
         if (IsClipReadOnly(targetClip))
@@ -1187,6 +1227,15 @@ public class AnimationEventAuthoringWindow : EditorWindow
             return false;
         }
 
+        // Importer clip events store NORMALIZED time (0-1 across the clip), not seconds —
+        // see any .fbx.meta "events:" block. Incoming events are in seconds (runtime clip
+        // convention), so convert here or everything past 1 second clamps to the clip end.
+        float clipLength = targetClip.length;
+        for (int i = 0; i < eventsToWrite.Length; i++)
+            eventsToWrite[i].time = clipLength > 0f
+                ? Mathf.Clamp01(eventsToWrite[i].time / clipLength)
+                : 0f;
+
         ModelImporterClipAnimation clip = clips[clipIndex];
         clip.events = eventsToWrite;
         clips[clipIndex] = clip;
@@ -1210,27 +1259,8 @@ public class AnimationEventAuthoringWindow : EditorWindow
         return true;
     }
 
-    private static int FindImportedClipIndex(ModelImporterClipAnimation[] clips, string clipName)
-    {
-        if (clips == null || clips.Length == 0) return -1;
-
-        // Exact match first.
-        for (int i = 0; i < clips.Length; i++)
-        {
-            if (string.Equals(clips[i].name, clipName, StringComparison.Ordinal))
-                return i;
-        }
-
-        // Case-insensitive fallback — some importers use different casing than the sub-asset name.
-        for (int i = 0; i < clips.Length; i++)
-        {
-            if (string.Equals(clips[i].name, clipName, StringComparison.OrdinalIgnoreCase))
-                return i;
-        }
-
-        // Last resort for single-clip imports where take naming can differ entirely.
-        return clips.Length == 1 ? 0 : -1;
-    }
+private static int FindImportedClipIndex(ModelImporterClipAnimation[] clips, string clipName)
+        => AnimationEventWindowUtils.FindImportedClipIndex(clips, clipName);
 
     private static AnimationClip LoadImportedClipByName(string clipPath, string clipName)
     {
@@ -1353,11 +1383,8 @@ public class AnimationEventAuthoringWindow : EditorWindow
         return -1;
     }
 
-    private static float NormalizedFromTimeline(Rect timelineRect, float mouseX)
-    {
-        float n = (mouseX - timelineRect.x) / Mathf.Max(1f, timelineRect.width);
-        return Mathf.Clamp01(n);
-    }
+private static float NormalizedFromTimeline(Rect timelineRect, float mouseX)
+        => AnimationEventWindowUtils.NormalizedFromTimeline(timelineRect, mouseX);
 
     private static bool IsClipReadOnly(AnimationClip clip)
     {
@@ -1387,15 +1414,7 @@ public class AnimationEventAuthoringWindow : EditorWindow
         Debug.Log("Duplicated clip from " + sourcePath + " to " + savePath);
     }
 
-    private static AnimationEventParameterKind GuessParameterKind(AnimationEvent ev)
-    {
-        if (ev == null) return AnimationEventParameterKind.None;
-        if (ev.objectReferenceParameter != null) return AnimationEventParameterKind.Object;
-        if (!string.IsNullOrEmpty(ev.stringParameter)) return AnimationEventParameterKind.String;
-        if (Mathf.Abs(ev.floatParameter) > 0.0001f) return AnimationEventParameterKind.Float;
-        if (ev.intParameter != 0) return AnimationEventParameterKind.Int;
-        return AnimationEventParameterKind.None;
-    }
+
 
     private AnimationEventParameterKind ResolveParameterKindFromAnimator(
         string functionName,

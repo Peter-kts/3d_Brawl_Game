@@ -59,6 +59,24 @@ public class PlayerHealth : EntityHealth
     [Tooltip("Multiplier applied to knockback, hitstun, and hitstop on blocked hits.")]
     [Range(0f, 1f)]
     public float blockedHitEffectMultiplier = 0.5f;
+    [Tooltip("Seconds added to the active block window each time a hit is successfully blocked.")]
+    [Min(0f)]
+    public float blockWindowExtensionOnHit = 0.2f;
+
+    [Header("Parry")]
+    [Tooltip("Seconds after pressing block during which an incoming hit counts as a parry (zero damage, zero hitstun). " +
+             "Hits that land while blocking but outside this window are treated as regular hits.")]
+    [Min(0f)]
+    public float parryWindowDuration = 0.2f;
+
+    [Tooltip("Hitstun (seconds) applied to the attacker on a successful parry.")]
+    [Min(0f)]
+    public float parryCounterHitstun = 0.4f;
+
+    [Tooltip("Stun meter buildup added to the attacker on a successful parry (0–1 scale). " +
+             "0.5 = half the meter, which triggers standing stun if they're already at 50%+.")]
+    [Range(0f, 1f)]
+    public float parryCounterStunBuildup = 0.5f;
 
     [Header("Hurt SFX (optional)")]
     [Tooltip("Audio source used for hurt sounds. Auto-finds on this object/children if not assigned.")]
@@ -105,6 +123,13 @@ public class PlayerHealth : EntityHealth
     [Range(0f, 1f)]
     public float blockSfxVolume = 1f;
 
+    [Header("Block / Parry VFX")]
+    [Tooltip("Prefab spawned at the weapon tip whenever a hit is blocked. " +
+             "Should have a ParticleSystem + AutoDestroy so it cleans itself up.")]
+    public GameObject blockVfxPrefab;
+    [Tooltip("Prefab spawned at the weapon tip on a successful parry. Falls back to blockVfxPrefab if not assigned.")]
+    public GameObject parryVfxPrefab;
+
     [Header("Parry SFX (optional — plays only during the active block window)")]
     [Tooltip("Audio source used for parry sounds. Falls back to blockSfxSource if not assigned.")]
     public AudioSource parrySfxSource;
@@ -135,7 +160,7 @@ public class PlayerHealth : EntityHealth
     private bool isDead;                        // True once HP reaches 0; blocks further TakeHit() calls
 
     // Airborne animation: one clip split into Liftoff (0→liftoffEnd), Loop (loopStart→loopEnd), Crash (crashStart→crashEnd)
-    private enum AirbornePhase { None, Liftoff, Loop, Crash }
+    // AirbornePhase enum is defined in EntityHealth (shared base class) so it can be reused by any entity with airborne animation.
     private AirbornePhase airbornePhase = AirbornePhase.None;  // Which section of the airborne clip is currently playing
     private bool wasAirborne;              // Previous frame airborne state — used to detect the rising edge (became airborne) and falling edge (landed)
     private int lastHitStateIndex  = -1;   // Index of the last randomly played hit state — prevents the same state playing twice in a row
@@ -156,9 +181,11 @@ public class PlayerHealth : EntityHealth
         combat = GetComponent<Combat>();
         if (animator == null) animator = PlayerController.FindAnimator(gameObject);
         if (hurtSfxSource == null) hurtSfxSource = GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
-        deathSfxSource = ResolveSfxSource(deathSfxSource);
-        blockSfxSource = ResolveSfxSource(blockSfxSource);
-        parrySfxSource = ResolveSfxSource(parrySfxSource);
+        // ResolveSfxSource (from EntityHealth) falls back to hurtSfxSource so secondary sources
+        // share the same AudioSource when no dedicated one is wired up in the Inspector.
+        deathSfxSource = ResolveSfxSource(deathSfxSource, hurtSfxSource);
+        blockSfxSource = ResolveSfxSource(blockSfxSource, hurtSfxSource);
+        parrySfxSource = ResolveSfxSource(parrySfxSource, hurtSfxSource);
     }
 
     void Update()
@@ -167,16 +194,6 @@ public class PlayerHealth : EntityHealth
         ApplyKnockback(knockbackFriction);
         UpdateAirborneAnimation();
     }
-
-    // ========================================================================
-    // HELPERS
-    // ========================================================================
-
-    /// <summary>Returns the assigned source if set, otherwise falls back to hurtSfxSource, then any AudioSource on this object.</summary>
-    private AudioSource ResolveSfxSource(AudioSource assigned) =>
-        assigned != null ? assigned :
-        hurtSfxSource != null ? hurtSfxSource :
-        GetComponent<AudioSource>() ?? GetComponentInChildren<AudioSource>();
 
     // ========================================================================
     // AIRBORNE ANIMATION (Liftoff → Loop → Crash)
@@ -363,84 +380,230 @@ public class PlayerHealth : EntityHealth
         float airborneDuration,
         float hitStopDuration = 0f,
         AttackHeaviness heaviness = AttackHeaviness.Medium,
-        AttackHeight height = AttackHeight.Mid
+        AttackHeight height = AttackHeight.Mid,
+        GameObject attacker = null
     )
     {
         if (isDead) return;
 
-        bool isBlocking = playerController != null && playerController.IsBlocking && playerController.IsBlockWindowActive;
-        if (isBlocking)
-        {
-            damage = 0;
-            hitstun = 0;
-            float multiplier = Mathf.Clamp01(blockedHitEffectMultiplier);
-            knockback *= multiplier;
-            hitStopDuration *= multiplier;
-            PlayParrySfx();
+        // Two-stage block check:
+        //   isParry  — hit landed in the first parryWindowDuration seconds after pressing block
+        //              → zero damage, zero hitstun, counter the attacker, parry VFX
+        //   isBlock  — block window is active (animation event opened it) but past the parry window
+        //              → damage/knockback/hitstun scaled by blockedHitEffectMultiplier, block VFX
+        //   otherwise → full damage (block window expired or wasn't open yet)
+        bool isParry = IsParryActive();
+        bool isBlock = !isParry && playerController != null && playerController.IsBlockWindowActive;
+        bool isBlocking = isParry || isBlock; // used below to suppress attack-interrupt and hurt SFX
 
-            // Face the attacker: knockback points away from attacker, so we reverse it.
-            if (faceAttackerOnParry && knockback != Vector3.zero)
-            {
-                Vector3 toAttacker = new Vector3(-knockback.x, 0f, -knockback.z).normalized;
-                if (toAttacker != Vector3.zero)
-                    transform.rotation = Quaternion.LookRotation(toAttacker);
-            }
-        }
+        if (isParry) HandleParry(ref damage, ref knockback, ref hitstun, ref hitStopDuration, attacker);
+        else if (isBlock) HandleBlock(ref damage, ref knockback, ref hitstun, ref hitStopDuration, attacker);
 
         hp -= damage;
         ScreenShake.RequestShake();
-        if (damage > 0)
+
+        // forceAttackInterrupt: real damage (not blocked) during an attack flow cancels the current attack.
+        bool forceAttackInterrupt = ApplyDamageEffects(damage, isBlocking);
+
+        ApplyHitPhysics(knockback, airborneDuration, hitStopDuration);
+
+        // Don't shorten an existing longer stun; pad to at least 0.1s when interrupting an attack.
+        float effectiveHitstun = forceAttackInterrupt ? Mathf.Max(hitstun, 0.1f) : hitstun;
+        hitstunUntil = Mathf.Max(hitstunUntil, Time.time + effectiveHitstun);
+        if (airborneDuration > 0f)
+            pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;
+
+        TriggerHitReaction(isBlocking, effectiveHitstun, forceAttackInterrupt);
+
+        if (forceAttackInterrupt)
+            combat.InterruptAttackAndChargeForStun();
+
+        if (hp <= 0)
+            HandleDeath();
+    }
+
+    // -------------------------------------------------------------------------
+    // TakeHit helpers — each covers one logical concern
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Returns true if the block button is held AND the hit landed within parryWindowDuration
+    /// seconds of first pressing block (the "perfect" window).
+    /// If block is held but past this window, IsParryActive() is false — that path is a regular block.
+    /// </summary>
+    bool IsParryActive() =>
+        playerController != null
+        && playerController.IsBlocking
+        && (Time.time - playerController.BlockPressTime) <= parryWindowDuration;
+
+    /// <summary>
+    /// Called when a hit lands inside the parry window.
+    /// Zeroes out damage/hitstun, scales down knockback and hitstop, plays the parry SFX,
+    /// optionally turns to face the attacker, and fires the counter-stun on the attacker.
+    /// Parameters are ref so TakeHit sees the modified values immediately after this returns.
+    /// </summary>
+    /// <summary>
+    /// Perfect parry: hit landed inside the parry window.
+    /// Zeroes damage and hitstun entirely, scales knockback/hitstop by the block multiplier,
+    /// spawns the parry VFX, plays parry SFX, optionally faces the attacker,
+    /// and fires the counter-hit on the attacker.
+    /// </summary>
+    void HandleParry(ref int damage, ref Vector3 knockback, ref float hitstun, ref float hitStopDuration, GameObject attacker)
+    {
+        damage          = 0;
+        hitstun         = 0;
+        float mult      = Mathf.Clamp01(blockedHitEffectMultiplier);
+        knockback      *= mult;
+        hitStopDuration *= mult;
+        PlayParrySfx();
+        GameObject parryVfxToUse = parryVfxPrefab != null ? parryVfxPrefab : blockVfxPrefab;
+        var parryVfx = SpawnHitVfx(parryVfxToUse, attacker);
+        if (parryVfx != null) Destroy(parryVfx, 1f);
+
+        // knockback points away from the attacker, so reverse it to get the facing direction.
+        if (faceAttackerOnParry && knockback != Vector3.zero)
         {
-            OnDamageTaken?.Invoke(damage);
-            // Safety reset: if Combat slowed animator speed (startup/recovery/charge),
-            // restore baseline speed immediately when real damage is taken.
-            if (animator != null)
-                animator.speed = 1f;
-            // Clear any armed attack input so held buttons don't auto-fire post-hit.
-            if (!isBlocking && combat != null)
-                combat.CancelBufferedAttackInputs();
-            PlayHurtSfx();
+            Vector3 toAttacker = new Vector3(-knockback.x, 0f, -knockback.z).normalized;
+            if (toAttacker != Vector3.zero)
+                transform.rotation = Quaternion.LookRotation(toAttacker);
         }
-        // Treat the entire charge flow (window + active hold) as interruptible on real damage.
-        bool forceAttackInterruptOnDamage = damage > 0 && !isBlocking && combat != null && (combat.IsAttacking || combat.IsInChargeFlow);
+
+        // Counter-hit: attacker plays the High animation, takes hitstun, and gains stun-meter buildup.
+        // No damage — the parry is a reversal, not a free punch.
+        if (attacker != null)
+        {
+            var attackerHealth = attacker.GetComponent<EnemyHealth>();
+            var attackerStun   = attacker.GetComponent<EnemyStunMeter>();
+
+            if (attackerHealth != null)
+                attackerHealth.TakeHit(0, Vector3.zero, parryCounterHitstun, 0f, 0f,
+                    AttackHeaviness.Light, AttackHeight.High);
+
+            if (attackerStun != null)
+                attackerStun.AddStun(parryCounterStunBuildup);
+        }
+    }
+
+    /// <summary>
+    /// Regular block: holding block but past the parry window.
+    /// Scales damage, knockback, hitstun, and hitstop by blockedHitEffectMultiplier
+    /// (e.g. 0.5 = half damage and knockback), plays block SFX, and spawns the block VFX.
+    /// No counter-hit — the attacker is unaffected.
+    /// </summary>
+    void HandleBlock(ref int damage, ref Vector3 knockback, ref float hitstun, ref float hitStopDuration, GameObject attacker)
+    {
+        float mult      = Mathf.Clamp01(blockedHitEffectMultiplier);
+        damage          = Mathf.RoundToInt(damage * mult);
+        knockback      *= mult;
+        hitstun        *= mult;
+        hitStopDuration *= mult;
+        PlayBlockSfx();
+        SpawnHitVfx(blockVfxPrefab, attacker);
+        if (playerController != null && blockWindowExtensionOnHit > 0f)
+            playerController.ExtendBlockWindow(blockWindowExtensionOnHit);
+    }
+
+    /// <summary>
+    /// Spawns a VFX prefab at the attacker's weapon tip (WeaponTipHitbox transform),
+    /// falling back to the midpoint between player and attacker if no hitbox is found.
+    /// Rotated so its forward axis faces away from the attacker (outward clash direction) —
+    /// correct for sparks, flashes, shockwaves, etc.
+    /// Expects the prefab to have a ParticleSystem + AutoDestroy for self-cleanup.
+    /// </summary>
+GameObject SpawnHitVfx(GameObject prefab, GameObject attacker)
+    {
+        if (prefab == null) return null;
+
+        var weaponHitbox = attacker != null ? attacker.GetComponentInChildren<WeaponTipHitbox>() : null;
+        Vector3 spawnPos = weaponHitbox != null
+            ? weaponHitbox.transform.position
+            : attacker != null
+                ? Vector3.Lerp(transform.position, attacker.transform.position, 0.5f)
+                : transform.position;
+
+        Quaternion spawnRot = Quaternion.identity;
+        if (attacker != null)
+        {
+            Vector3 dir = transform.position - attacker.transform.position;
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.001f)
+                spawnRot = Quaternion.LookRotation(dir.normalized);
+        }
+
+        return Instantiate(prefab, spawnPos, spawnRot);
+    }
+
+    /// <summary>
+    /// Handles side-effects of real (non-blocked) damage: fires OnDamageTaken,
+    /// resets animator speed, cancels buffered attack inputs, and plays the hurt SFX.
+    /// Returns true if the current attack flow should be interrupted (used to time the stun bump).
+    /// </summary>
+    bool ApplyDamageEffects(int damage, bool isBlocking)
+    {
+        if (damage <= 0) return false;
+
+        if (!isBlocking)
+            OnDamageTaken?.Invoke(damage);
+
+        // Safety reset: Combat may have slowed animator speed during startup/recovery/charge.
+        if (animator != null) animator.speed = 1f;
+
+        // Clear armed inputs so held buttons don't auto-fire once the hitstun ends.
+        if (!isBlocking && combat != null)
+            combat.CancelBufferedAttackInputs();
+
+        if (!isBlocking) PlayHurtSfx();
+
+        // Treat the entire charge flow (startup window + active hold) as interruptible on real damage.
+        return !isBlocking && combat != null && (combat.IsAttacking || combat.IsInChargeFlow);
+    }
+
+    /// <summary>
+    /// Stores knockback into the velocity (or into pendingKnockback for launchers),
+    /// records hit-stop end time, and starts gamepad rumble for the hit-stop duration.
+    /// Launchers use pending knockback so the launch fires after hitstop, giving the
+    /// "cut to midair" effect rather than launching from a frozen position.
+    /// </summary>
+    void ApplyHitPhysics(Vector3 knockback, float airborneDuration, float hitStopDuration)
+    {
         if (airborneDuration > 0f)
         {
-            pendingKnockback = knockback;
+            // Launcher hit: hold knockback; ApplyKnockback() in EntityHealth releases it when hitstop ends.
+            pendingKnockback        = knockback;
             pendingAirborneDuration = airborneDuration;
         }
         else
             kbVel += knockback;
+
         if (hitStopDuration > 0f)
         {
             hitStopEndTime = Time.time + hitStopDuration;
             if (Gamepad.current != null)
                 StartCoroutine(RumbleForSeconds(hitStopDuration));
         }
+    }
 
-        // Don't shorten an existing longer stun; launcher: apply knockback when stun ends.
-        // If damage lands during any active attack flow, ensure a tiny stun so interrupt always wins this frame.
-        float effectiveHitstun = forceAttackInterruptOnDamage ? Mathf.Max(hitstun, 0.1f) : hitstun;
-        hitstunUntil = Mathf.Max(hitstunUntil, Time.time + effectiveHitstun);
-        if (airborneDuration > 0f)
-            pendingLaunchApplyTime = (hitStopDuration > 0f) ? (Time.time + hitStopDuration) : Time.time;
+    /// <summary>
+    /// Plays the appropriate hit or block-hit animation given the current state.
+    /// forceInterrupt also cancels any base-layer attack animation so charge frames can't slip through.
+    /// </summary>
+    void TriggerHitReaction(bool isBlocking, float effectiveHitstun, bool forceInterrupt)
+    {
+        if (animator == null) return;
+        if (isBlocking) TriggerBlockHitAnimation();
+        else            TriggerHitAnimation(effectiveHitstun, forceInterrupt);
+    }
 
-        if (animator != null)
-        {
-            if (isBlocking) TriggerBlockHitAnimation();
-            else TriggerHitAnimation(effectiveHitstun, forceAttackInterruptOnDamage);
-        }
-
-        if (forceAttackInterruptOnDamage)
-            combat.InterruptAttackAndChargeForStun();
-
-        if (hp <= 0)
-        {
-            isDead = true;
-            PlayDeathSfx();
-            // Disable input by disabling components; game-over flow can be added later
-            if (playerController != null) playerController.enabled = false;
-            if (combat != null) combat.enabled = false;
-        }
+    /// <summary>
+    /// Sets isDead, plays the death SFX, and disables player input components.
+    /// Game-over flow (UI, restart, etc.) is expected to be handled by a separate system.
+    /// </summary>
+    void HandleDeath()
+    {
+        isDead = true;
+        PlayDeathSfx();
+        if (playerController != null) playerController.enabled = false;
+        if (combat          != null) combat.enabled           = false;
     }
 
     /// <summary>Rumble gamepad for hit-stop duration (low = left motor 0.25, high = right motor 0.5). Uses realtime so pause doesn't affect it.</summary>

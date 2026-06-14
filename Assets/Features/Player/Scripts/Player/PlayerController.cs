@@ -187,6 +187,16 @@ public partial class PlayerController : MonoBehaviour
         blockActiveWindowDuration <= 0f
             ? wasBlockingThisPress
             : (wasBlockingThisPress && Time.time < blockWindowEndTime);
+
+    /// <summary>
+    /// True while the block animation should be playing: button held AND (window not yet fired OR window still active).
+    /// Goes false once the window fires and then expires, returning the character to neutral.
+    /// </summary>
+    public bool IsBlockAnimationActive =>
+        wasBlockingThisPress && (!blockWindowFiredThisPress || IsBlockWindowActive);
+
+    /// <summary>Time.time when the block button was first pressed this press. Used by PlayerHealth to calculate parry window.</summary>
+    public float BlockPressTime => blockPressTime;
     
     /// <summary>
     /// Current stick input in character space (for attack direction sampling)
@@ -240,6 +250,7 @@ public partial class PlayerController : MonoBehaviour
     private bool wasBlockingThisPress = false;  // Latched on press; keeps IsBlocking true for the full press duration
     private float blockWindowEndTime = 0f;      // Time.time when the active block window expires; set by OnBlockActiveWindowStart
     private bool blockWindowFiredThisPress = false; // Prevents the looping block animation from re-opening the window mid-press
+    private float blockPressTime = -999f;       // Time.time when the block button was first pressed this press; used by PlayerHealth for parry timing
     private float stepCycleTimer = 0f;         // Advances while moving; wraps at stepCycleDuration; used by GetStepSyncMultiplier
     // Right-stick lock-on state machine (tap = cycle, hold = camera tilt).
     private enum RSState { Idle, Pending, Tilting }
@@ -317,8 +328,7 @@ public partial class PlayerController : MonoBehaviour
         // Normal movement: dispatches to HandleFreeRoamMovement or HandleCombatMovement
         // based on IsInCombatMode. These set targetAnimSpeed, targetMoveX/Z, and call
         // cc.Move() using the previous frame's currentMoveMagnitude for physical speed.
-        if (Time.time >= nextDashTime)
-            HandleMovementByMode();
+        HandleMovementByMode();
 
         // Ramp currentMoveMagnitude toward targetAnimSpeed (now set by movement handler).
         // This drives both the physical cc.Move() speed next frame and the BlendTree
@@ -470,6 +480,7 @@ public partial class PlayerController : MonoBehaviour
         }
 
         blockJustPressedThisFrame = wasBlockingThisPress && !prevWasBlocking;
+        if (blockJustPressedThisFrame) blockPressTime = Time.time;
         IsBlocking = buttonHeld && wasBlockingThisPress;
 
         // Hard-block behavior: pressing block immediately halts locomotion/dash.
@@ -477,7 +488,8 @@ public partial class PlayerController : MonoBehaviour
         {
             currentMoveMagnitude = 0f;
             currentAnimSpeed = 0f;
-            dashEndTime = Time.time;
+            dashEndTime         = Time.time;
+            dashLockdownEndTime = Time.time;
         }
     }
 
@@ -521,12 +533,12 @@ public partial class PlayerController : MonoBehaviour
     // FREE ROAM MOVEMENT
     // ========================================================================
 
-    /// <summary>Dispatches to combat strafe or free roam based on IsInCombatMode. No movement during dash cooldown, but still faces target.</summary>
+    /// <summary>Dispatches to combat strafe or free roam based on IsInCombatMode. Movement is blocked only during dash action lockout.</summary>
     void HandleMovementByMode()
     {
-        if (Time.time < nextDashTime)
+        if (IsDashActionLocked)
         {
-            // Still face the soft target while on cooldown (e.g. dash too short to move — too close)
+            // Still face the soft target while action-locked after dash.
             if (!IsDashing && IsInCombatMode && threatSystem != null && threatSystem.HasSoftTarget)
                 HandleCombatFacing();
             return;
@@ -547,7 +559,7 @@ public partial class PlayerController : MonoBehaviour
             GetStepSyncMultiplier(false);
             return;
         }
-        if (IsBlocking)
+        if (IsBlockAnimationActive)
         {
             targetAnimSpeed = 0f;
             CombatStickInput = Vector2.zero;
@@ -589,7 +601,7 @@ public partial class PlayerController : MonoBehaviour
         );
 
         float stepMultiplier = GetStepSyncMultiplier(true);
-        float blockMultiplier = IsBlocking ? blockMoveMultiplier : 1f;
+        float blockMultiplier = IsBlockAnimationActive ? blockMoveMultiplier : 1f;
         cc.Move(moveDir * freeRoamSpeed * stepMultiplier * blockMultiplier * currentMoveMagnitude * Time.deltaTime);
         CombatStickInput = stickInput;
         targetAnimSpeed = input.magnitude;
@@ -611,7 +623,7 @@ public partial class PlayerController : MonoBehaviour
             GetStepSyncMultiplier(false);
             return;
         }
-        if (IsBlocking)
+        if (IsBlockAnimationActive)
         {
             targetAnimSpeed = 0f;
             CombatStickInput = Vector2.zero;
@@ -622,7 +634,7 @@ public partial class PlayerController : MonoBehaviour
 
         Vector2 stickInput = GetStickInput();
         CombatStickInput = stickInput;
-        float blockMultiplier = IsBlocking ? blockMoveMultiplier : 1f;
+        float blockMultiplier = IsBlockAnimationActive ? blockMoveMultiplier : 1f;
         Vector3 input = new Vector3(stickInput.x, 0f, stickInput.y);
         input = Vector3.ClampMagnitude(input, 1f);
         bool hasTarget = threatSystem != null && threatSystem.HasSoftTarget;
@@ -866,13 +878,13 @@ public partial class PlayerController : MonoBehaviour
             currentAnimSpeed = 0f;
         currentMoveX = Mathf.Lerp(currentMoveX, targetMoveX, blendAlpha);
         currentMoveZ = Mathf.Lerp(currentMoveZ, targetMoveZ, blendAlpha);
-        bool forceBlockEntryFrame = IsBlocking && blockJustPressedThisFrame;
+        bool forceBlockEntryFrame = IsBlockAnimationActive && blockJustPressedThisFrame;
         animator.SetFloat(speedParameter, forceBlockEntryFrame ? 0f : currentAnimSpeed);
         animator.SetFloat(moveXParameter, forceBlockEntryFrame ? 0f : (currentMoveX * currentMoveMagnitude));
         animator.SetFloat(moveZParameter, forceBlockEntryFrame ? 0f : (currentMoveZ * currentMoveMagnitude));
         animator.SetBool(combatModeParameter, IsInCombatMode);
         if (hasBlockParameter)
-            animator.SetBool(blockParameter, IsBlocking);
+            animator.SetBool(blockParameter, IsBlockAnimationActive);
         if (hasStunParameter)
             animator.SetBool(stunParameter, playerHealth != null && playerHealth.IsHitstunned && !IsBlockWindowActive);
 
@@ -899,6 +911,16 @@ public partial class PlayerController : MonoBehaviour
         if (blockWindowFiredThisPress) return;
         blockWindowFiredThisPress = true;
         blockWindowEndTime = Time.time + blockActiveWindowDuration;
+    }
+
+    /// <summary>
+    /// Extends the active block window by the given seconds.
+    /// Called by PlayerHealth on a successful block so sustained pressure is rewarded.
+    /// </summary>
+    public void ExtendBlockWindow(float seconds)
+    {
+        if (seconds <= 0f) return;
+        blockWindowEndTime = Mathf.Max(blockWindowEndTime, Time.time) + seconds;
     }
 
     static bool HasBoolParameter(Animator targetAnimator, string parameterName)
